@@ -331,10 +331,10 @@ namespace PartsApp
                         sparePart.ManufacturerId = null;
                     else //Если такого ManufacturerName нет в базе, значит добавить.
                     {
-                        if (PartsDAL.SearchManufacturersName(manufacturerTextBox.Text, 1).Length == 0)
+                        if (PartsDAL.SearchManufacturersName(manufacturerTextBox.Text.Trim(), 1).Length == 0)
                             sparePart.ManufacturerId = PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
                         else
-                            sparePart.ManufacturerId = PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text)[0]; //!!! Кроется опасность путаницы в случае одинакового имени производителей, необходимо будет внести добавление в базу для избежания потенциальной угрозы!
+                            sparePart.ManufacturerId = PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim())[0]; //!!! Кроется опасность путаницы в случае одинакового имени производителей, необходимо будет внести добавление в базу для избежания потенциальной угрозы!
                     }//else
                     //Вставляем ед. изм. 
                     //if (unitComboBox.DropDownStyle == ComboBoxStyle.DropDown) //если вставляется новое значение в бд.

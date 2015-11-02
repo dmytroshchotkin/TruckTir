@@ -138,8 +138,8 @@ namespace PartsApp
             var strCol = new AutoCompleteStringCollection();
             for (int i = 0; i < searchSpList.Count; ++i)
             {
-                title = String.Format(searchSpList[i].Title.Trim() + "   " + searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Manufacturer.Trim());
-                articul = String.Format(searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Title.Trim() + "   " + searchSpList[i].Manufacturer.Trim());
+                title = String.Format(searchSpList[i].Title.Trim() + "   " + searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Manufacturer);
+                articul = String.Format(searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Title.Trim() + "   " + searchSpList[i].Manufacturer);
                 //manuf = String.Format(searchSpList[i].Manufacturer + " " + searchSpList[i].Title + " " + searchSpList[i].Articul);
                 strCol.AddRange(new string[] { title, articul });
             }//for
@@ -637,14 +637,23 @@ namespace PartsApp
                         //photoPictureBox.Location = new Point(partsDataGridView.Width - photoPictureBox.PreferredSize.Width, partsDataGridView.Location.Y);
                         #endregion
 
-                        photoPictureBox.Size = photoPictureBox.PreferredSize;
+                        //Задаём выводимый на экран размер фото. 
+                        System.Drawing.Size photoSize = new System.Drawing.Size(625, 450); //размер взят случайный. 
+
+                        if (photoPictureBox.PreferredSize.Width <= photoSize.Width && photoPictureBox.PreferredSize.Height <= photoSize.Height)
+                            photoPictureBox.Size = photoPictureBox.PreferredSize;
+                        else
+                        {
+                            photoPictureBox.Image = ResizeOrigImg(photoPictureBox.Image, photoSize.Width, photoSize.Height);
+                            photoPictureBox.Size = photoPictureBox.PreferredSize;
+                        }
                         photoPictureBox.Visible = true;
                     }
                 }//if
             }
             catch
             {
-
+                //По-моему эта обработка нужна, для игнорирования ошибки. Проверить!
             }
         }//partsDataGridView_CellMouseEnter
         //Событие для окончания отображения Фотографии.
@@ -882,6 +891,44 @@ namespace PartsApp
 
             return isSameMarkup;
         }//IsSamePriceAndMarkup
+        /// <summary>
+        /// Возвращает новый Image на основе переданного, с пропорционального уменьшения размеров до заданных.
+        /// </summary>
+        /// <param name="image">Image на основе которого возв-ся новый Image с измененным размером.</param>
+        /// <param name="nWidth">Предположительная ширина нового Image.</param>
+        /// <param name="nHeight">Предположительная высота нового Image.</param>
+        /// <returns></returns>
+        public Image ResizeOrigImg(Image image, int nWidth, int nHeight)
+        {
+            int newWidth, newHeight;
+            
+            var coefH = (double)nHeight / (double)image.Height;
+            var coefW = (double)nWidth / (double)image.Width;
+            if (coefW >= coefH)
+            {
+                newHeight = (int)(image.Height * coefH);
+                newWidth = (int)(image.Width * coefH);
+            }//if
+            else
+            {
+                newHeight = (int)(image.Height * coefW);
+                newWidth = (int)(image.Width * coefW);
+            }//else
+
+            Image result = new Bitmap(newWidth, newHeight);
+            using (var g = Graphics.FromImage(result))
+            {
+
+                g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+
+                g.DrawImage(image, 0, 0, newWidth, newHeight);
+                g.Dispose();
+            }//using
+
+            return result;
+        }//ResizeOrigImg
         /// <summary>
         /// Возвращает из списка ExtSpList список запчастей с заданным SparePartId.
         /// </summary>

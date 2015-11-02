@@ -15,6 +15,7 @@ namespace PartsApp
         public DateTime PurchaseDate                 { get; set; }
         public string   Currency                     { get; set; }
         public double   ExcRate                      { get; set; }
+        public string   Description                  { get; set; }
         public IList<PurchaseDetail> PurchaseDetails { get; set; }
           
         public Purchase() {}

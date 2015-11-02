@@ -532,8 +532,8 @@ namespace PartsApp
         {
             int purchaseId = 0;
             
-            string query = String.Format("INSERT INTO Purchases (EmployeeID, SupplierId, SupplierEmployee, PurchaseDate, Currency, ExcRate)"
-                                       + "VALUES (@EmployeeID, @SupplierId, @SupplierEmployee, @PurchaseDate, @Currency, @ExcRate);"
+            string query = String.Format("INSERT INTO Purchases (EmployeeID, SupplierId, SupplierEmployee, PurchaseDate, Currency, ExcRate, Description)"
+                                       + "VALUES (@EmployeeID, @SupplierId, @SupplierEmployee, @PurchaseDate, @Currency, @ExcRate, @Description);"
                                        + "SELECT PurchaseId FROM Purchases WHERE rowid = last_insert_rowid();");
 
             cmd.CommandText = query;
@@ -546,7 +546,9 @@ namespace PartsApp
 
             cmd.Parameters.AddWithValue("@Currency", purchase.Currency);
             cmd.Parameters.AddWithValue("@ExcRate", purchase.ExcRate);
+            cmd.Parameters.AddWithValue("@Description", purchase.Description);
 
+            //Переводим время в Utc формат.
             //DateTime dt = TimeZoneInfo.ConvertTimeToUtc(purchase.PurchaseDate);
             DateTime dt1970 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             TimeSpan tsInterval = purchase.PurchaseDate.Subtract(dt1970);
@@ -642,9 +644,9 @@ namespace PartsApp
         {
             int saleId = 0;
 
-            string query = String.Format("INSERT INTO Sales (EmployeeID, CustomerId, CustomerEmployee, SaleDate, Currency, ExcRate) "
-                                       + "VALUES (@EmployeeID, @CustomerId, @CustomerEmployee, @SaleDate, @Currency, @ExcRate); "
-                                       + "SELECT SaleId FROM Sales WHERE rowid = last_insert_rowid();");
+            var query = String.Format("INSERT INTO Sales (EmployeeID, CustomerId, CustomerEmployee, SaleDate, Currency, ExcRate, Description) "
+                                    + "VALUES (@EmployeeID, @CustomerId, @CustomerEmployee, @SaleDate, @Currency, @ExcRate, @Description); "
+                                    + "SELECT SaleId FROM Sales WHERE rowid = last_insert_rowid();");
 
             cmd.CommandText = query;
 
@@ -656,7 +658,8 @@ namespace PartsApp
 
             cmd.Parameters.AddWithValue("@Currency", sale.Currency);
             cmd.Parameters.AddWithValue("@ExcRate", sale.ExcRate);
-
+            cmd.Parameters.AddWithValue("@Description", sale.Description);
+            
             //DateTime dt = TimeZoneInfo.ConvertTimeToUtc(sale.SaleDate);
             DateTime dt1970 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             TimeSpan tsInterval = sale.SaleDate.Subtract(dt1970);

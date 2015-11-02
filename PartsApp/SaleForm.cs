@@ -1066,10 +1066,11 @@ namespace PartsApp
                     Sale sale = new Sale();
                     sale.EmployeeId = null; //GetEmployeeIdByName(receiverAgentTextBox);
                     sale.CustomerId = PartsDAL.FindCustomerIdByName(customerTextBox.Text);
-                    sale.CustomerEmployee = (customerAgentTextBox.Text != String.Empty) ? customerAgentTextBox.Text : null;
+                    sale.CustomerEmployee = (String.IsNullOrWhiteSpace(customerAgentTextBox.Text) == false) ? customerAgentTextBox.Text.Trim() : null;
                     sale.SaleDate = saleDateTimePicker.Value;
                     sale.Currency = currencyComboBox.SelectedItem.ToString();
                     sale.ExcRate = (double)excRateNumericUpDown.Value;
+                    sale.Description = (String.IsNullOrWhiteSpace(descriptionRichTextBox.Text) == false) ? descriptionRichTextBox.Text.Trim() : null;
                     
                     try
                     {

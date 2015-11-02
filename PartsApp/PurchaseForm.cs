@@ -935,10 +935,11 @@ namespace PartsApp
                     Purchase purchase = new Purchase();
                     purchase.EmployeeId = null; //GetEmployeeIdByName(receiverAgentTextBox);
                     purchase.SupplierId = PartsDAL.FindSupplierIdByName(supplierTextBox.Text);
-                    purchase.SupplierEmployee = (supplierAgentTextBox.Text != String.Empty) ? supplierAgentTextBox.Text : null;
+                    purchase.SupplierEmployee = (String.IsNullOrWhiteSpace(supplierAgentTextBox.Text) == false) ? supplierAgentTextBox.Text.Trim() : null;
                     purchase.PurchaseDate = purchaseDateTimePicker.Value;
                     purchase.Currency = currencyComboBox.SelectedItem.ToString();
                     purchase.ExcRate = (double)excRateNumericUpDown.Value;
+                    purchase.Description = (String.IsNullOrWhiteSpace(descriptionRichTextBox.Text) == false) ? descriptionRichTextBox.Text.Trim() : null;
                     
                     try
                     {

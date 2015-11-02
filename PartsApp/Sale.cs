@@ -12,9 +12,10 @@ namespace PartsApp
         public int?     EmployeeId                   { get; set; }
         public int      CustomerId                   { get; set; }
         public string   CustomerEmployee             { get; set; }
-        public DateTime SaleDate                 { get; set; }
+        public DateTime SaleDate                     { get; set; }
         public string   Currency                     { get; set; }
         public double   ExcRate                      { get; set; }
+        public string   Description                  { get; set; }
         public IList<PurchaseDetail> PurchaseDetails { get; set; }
           
         public Sale() {}

@@ -422,7 +422,7 @@
             this.partsDataGridView.Location = new System.Drawing.Point(0, 0);
             this.partsDataGridView.Name = "partsDataGridView";
             this.partsDataGridView.ReadOnly = true;
-            this.partsDataGridView.Size = new System.Drawing.Size(967, 409);
+            this.partsDataGridView.Size = new System.Drawing.Size(967, 461);
             this.partsDataGridView.TabIndex = 0;
             this.partsDataGridView.DataSourceChanged += new System.EventHandler(this.partsDataGridView_DataSourceChanged);
             this.partsDataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.partsDataGridView_CellMouseClick);
@@ -434,7 +434,7 @@
             // 
             this.photoPictureBox.Location = new System.Drawing.Point(24, 6);
             this.photoPictureBox.Name = "photoPictureBox";
-            this.photoPictureBox.Size = new System.Drawing.Size(38, 50);
+            this.photoPictureBox.Size = new System.Drawing.Size(623, 449);
             this.photoPictureBox.TabIndex = 1;
             this.photoPictureBox.TabStop = false;
             this.photoPictureBox.Visible = false;
@@ -458,8 +458,8 @@
             this.dataSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.dataSplitContainer.Panel2.Controls.Add(this.extPartsGroupBox);
             this.dataSplitContainer.Panel2.Controls.Add(this.extPartsStatusStrip);
-            this.dataSplitContainer.Size = new System.Drawing.Size(967, 606);
-            this.dataSplitContainer.SplitterDistance = 432;
+            this.dataSplitContainer.Size = new System.Drawing.Size(967, 679);
+            this.dataSplitContainer.SplitterDistance = 484;
             this.dataSplitContainer.SplitterWidth = 5;
             this.dataSplitContainer.TabIndex = 6;
             // 
@@ -470,14 +470,14 @@
             this.partsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.partsPanel.Location = new System.Drawing.Point(0, 0);
             this.partsPanel.Name = "partsPanel";
-            this.partsPanel.Size = new System.Drawing.Size(967, 409);
+            this.partsPanel.Size = new System.Drawing.Size(967, 461);
             this.partsPanel.TabIndex = 3;
             // 
             // partsStatusStripPanel
             // 
             this.partsStatusStripPanel.Controls.Add(this.partsStatusStrip);
             this.partsStatusStripPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.partsStatusStripPanel.Location = new System.Drawing.Point(0, 409);
+            this.partsStatusStripPanel.Location = new System.Drawing.Point(0, 461);
             this.partsStatusStripPanel.Name = "partsStatusStripPanel";
             this.partsStatusStripPanel.Size = new System.Drawing.Size(967, 23);
             this.partsStatusStripPanel.TabIndex = 2;
@@ -489,7 +489,7 @@
             this.extPartsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extPartsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.extPartsGroupBox.Name = "extPartsGroupBox";
-            this.extPartsGroupBox.Size = new System.Drawing.Size(967, 147);
+            this.extPartsGroupBox.Size = new System.Drawing.Size(967, 168);
             this.extPartsGroupBox.TabIndex = 1;
             this.extPartsGroupBox.TabStop = false;
             this.extPartsGroupBox.Text = "Доп. информ.";
@@ -504,7 +504,7 @@
             this.extPartsDataGridView.Location = new System.Drawing.Point(3, 16);
             this.extPartsDataGridView.Name = "extPartsDataGridView";
             this.extPartsDataGridView.ReadOnly = true;
-            this.extPartsDataGridView.Size = new System.Drawing.Size(961, 128);
+            this.extPartsDataGridView.Size = new System.Drawing.Size(961, 149);
             this.extPartsDataGridView.TabIndex = 0;
             this.extPartsDataGridView.DataSourceChanged += new System.EventHandler(this.extPartsDataGridView_DataSourceChanged);
             this.extPartsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.partsDataGridView_RowPrePaint);
@@ -513,7 +513,7 @@
             // 
             this.extPartsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progressBar});
-            this.extPartsStatusStrip.Location = new System.Drawing.Point(0, 147);
+            this.extPartsStatusStrip.Location = new System.Drawing.Point(0, 168);
             this.extPartsStatusStrip.Name = "extPartsStatusStrip";
             this.extPartsStatusStrip.Size = new System.Drawing.Size(967, 22);
             this.extPartsStatusStrip.TabIndex = 0;
@@ -545,7 +545,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(967, 660);
+            this.ClientSize = new System.Drawing.Size(967, 733);
             this.Controls.Add(this.dataSplitContainer);
             this.Controls.Add(this.componentPanel);
             this.Controls.Add(this.menuStrip);
