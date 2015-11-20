@@ -275,9 +275,9 @@ namespace PartsApp
                     foreach (var sparePart in searchSparePartsList)
                     {
                         if (lastEditCell.OwningColumn.Name == "Title")
-                            str = sparePart.Title + "   " + sparePart.Articul;
+                            str = sparePart.Title + "     " + sparePart.Articul;
                         else if (lastEditCell.OwningColumn.Name == "Articul")
-                               str = sparePart.Articul + "   " + sparePart.Title;
+                               str = sparePart.Articul + "     " + sparePart.Title;
 
 /*!!!! Ошибка!*/        autoCompleteListBox.Items.Add(str);
                     }//foreach                                                                        
@@ -350,7 +350,7 @@ namespace PartsApp
                 //Если есть такой товар в базе.
                 if (searchSparePartsList.Count > 0)
                 {
-                    string[] titleAndArticul = (cell.Value as string).Split(new string[] { "   " }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] titleAndArticul = (cell.Value as string).Split(new string[] { "     " }, StringSplitOptions.RemoveEmptyEntries);
                     string title, articul;
                     //если выбор сделан из выпадающего списка.
                     if (titleAndArticul.Length == 2)
@@ -1051,7 +1051,7 @@ namespace PartsApp
                 indent = 1;
   
             ExcelApp.Cells[row, column + 2 + indent] = inTotalLabel.Text;
-            ExcelApp.Cells[row, column + 3 + indent] = inTotal;// NumberLabel.Text;
+            ExcelApp.Cells[row, column + 3 + indent] = inTotalNumberLabel.Text; //inTotal;// 
             (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Underline = true;
             (ExcelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
             (ExcelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;

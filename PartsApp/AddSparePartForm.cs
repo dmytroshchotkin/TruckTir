@@ -12,55 +12,85 @@ namespace PartsApp
 {
     public partial class AddSparePartForm : Form
     {
-        string beginfilePath = null;        //переменные не будут равны null если требуется скопировать файл в нужную папку.
+        string beginFilePath = null;        //переменные не будут равны null если требуется скопировать файл в нужную папку.
         string endFilePath = null;
-              
-        //bool textChangeEvent = true;        //переменная равна true -- если у события manufacturerTextBox.TextChanged есть подписчик.
 
-        //AutoCompleteStringCollection manufColl;
+        SparePart editSparePart = null;                  //Переменная требуемая для модификации данных уже сущ-щего товара.
 
         public AddSparePartForm()
         {
             InitializeComponent();
-            //manufColl = new AutoCompleteStringCollection();
         }
+        public AddSparePartForm(int sparePartModifyId)
+        {
+            InitializeComponent();
+            editSparePart = PartsDAL.FindSparePartById(sparePartModifyId); 
+
+            //Заполняем все поля в форме по заданному Id.
+            articulTextBox.Text = editSparePart.Articul;
+            titleTextBox.Text = editSparePart.Title;
+            manufacturerTextBox.Text = editSparePart.Manufacturer;
+            unitComboBox.SelectedItem = editSparePart.Unit;
+            if (String.IsNullOrWhiteSpace(editSparePart.Photo) == false)
+            {
+                if (System.IO.File.Exists(System.IO.Path.GetFullPath(editSparePart.Photo)))
+                {
+                    photoPictureBox.Image = new Bitmap(Image.FromFile(editSparePart.Photo), photoPictureBox.Size);
+                    toolTip.SetToolTip(photoPictureBox, System.IO.Path.GetFileName(editSparePart.Photo));
+                }//if
+            }//if
+
+            descrRichTextBox.Text = editSparePart.Description;
+        }//AddSparePartForm
 
         private void AddSparePartForm_Load(object sender, EventArgs e)
         {
             //добавляем все варианты выбора единицы измерения.
             unitComboBox.DataSource = PartsDAL.FindAllUnitsOfMeasure();
-            unitComboBox.SelectedItem = "шт.";
-
+            if (editSparePart == null)
+                unitComboBox.SelectedIndex = -1;
+            else unitComboBox.SelectedItem = editSparePart.Unit;
+            //Добавляем в выпадающий список всех Производителей.
             manufacturerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllManufacturersName());
+
+
         }//Form1_Load   
 
         private void articulTextBox_Leave(object sender, EventArgs e)
         {
-            if (String.IsNullOrWhiteSpace(articulTextBox.Text)) //если артикул не введен.
+            //если артикул не введен.
+            if (String.IsNullOrWhiteSpace(articulTextBox.Text)) 
             {
-                articulStarLabel.ForeColor = articulTextBoxBackPanel.BackColor = Color.Red;
-                toolTip.SetToolTip(articulTextBox, "Введите артикул");
-                toolTip.Show("Введите артикул", this, articulTextBoxBackPanel.Location, 5000);
+                WrongValueInput(articulTextBox, articulTextBoxBackPanel, articulStarLabel, "Введите артикул", 5000);
                 articulTextBox.Clear();
             }//if
-            else
-                if (PartsDAL.FindSparePartsIdByArticul(articulTextBox.Text).Count > 0) //если такой артикул уже есть 
+            else //Если артикул введен.
+            {
+                //если такой артикул уже есть в базе
+                if (PartsDAL.FindSparePartsIdByArticul(articulTextBox.Text).Count > 0)
                 {
-                    articulStarLabel.ForeColor = articulTextBoxBackPanel.BackColor = Color.Yellow;
-                    toolTip.SetToolTip(articulTextBox, "Такой артикул уже есть в базе");
-                    toolTip.Show("Такой артикул уже есть в базе", this, articulTextBoxBackPanel.Location, 5000);
-
-                    //Добавление всей остальной информации на форму из товара с таким же артикулом                    
+                    //если (доб-ся новая ед. товара или (редактируется уже существующая, но артикул изменен)), выводим предупреждение, но разрешаем дальнейший ввод инф-ции.
+                    if (editSparePart == null || (editSparePart != null && editSparePart.Articul != articulTextBox.Text))
+                    {
+                        articulStarLabel.ForeColor = articulTextBoxBackPanel.BackColor = Color.Yellow;
+                        toolTip.SetToolTip(articulTextBox, "Такой артикул уже есть в базе");
+                        toolTip.Show("Такой артикул уже есть в базе", this, articulTextBoxBackPanel.Location, 5000);
+                    }//if
+                    else //если артикул введен правильно
+                    {
+                        CorrectValueInput(articulTextBox, articulTextBoxBackPanel, articulStarLabel);
+                    }//else
                 }//if                
                 else //если артикул введен правильно
                 {
-                    articulStarLabel.ForeColor = Color.Black;
-                    articulTextBoxBackPanel.BackColor = SystemColors.Control;
-                    toolTip.SetToolTip(articulTextBox, String.Empty);
+                    CorrectValueInput(articulTextBox, articulTextBoxBackPanel, articulStarLabel);
                 }//else
 
-            if (String.IsNullOrWhiteSpace(titleTextBox.Text) == false)
-                titleTextBox_Leave(sender, e);
+                //Проверяем корректность Title (если не пустой) после корректного ввода Articul.
+                if (String.IsNullOrWhiteSpace(titleTextBox.Text) == false)
+                    titleTextBox_Leave(sender, e);
+                    
+            }//else
         }//articulTextBox_Leave
 
         private void titleTextBox_Leave(object sender, EventArgs e)
@@ -95,37 +125,81 @@ namespace PartsApp
         //Проверить вылеты.
         private void unitComboBox_Leave(object sender, EventArgs e)
         {
-            //если добавляется новая ед.изм.
+            //Если добавляется новая ед.изм.
             if (unitComboBox.DropDownStyle == ComboBoxStyle.DropDown)
             {
-                if (unitComboBox.Text == String.Empty)
+                if (String.IsNullOrWhiteSpace(unitComboBox.Text))
                 {
-                    unitStarLabel.ForeColor = unitComboBoxBackPanel.BackColor = Color.Red;
-                    toolTip.SetToolTip(unitComboBox, "Введите новую единицу измерения");
-                    toolTip.Show("Введите новую единицу измерения", this, unitComboBoxBackPanel.Location, 5000);
+                    WrongValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel, "Введите новую единицу измерения", 5000);
                 }//if
-                else if (unitComboBox.Items.Contains(unitComboBox.Text))//если введена уже существующая ед.изм.
-                {
-                    unitStarLabel.ForeColor = Color.Black;
-                    unitComboBoxBackPanel.BackColor = SystemColors.Control;
-                    toolTip.SetToolTip(unitComboBox, String.Empty);
-                    toolTip.Show("Такая единица измерения уже существует!", this, unitComboBoxBackPanel.Location, 5000);
+                else
+                    if (unitComboBox.Items.Contains(unitComboBox.Text))//если введена уже существующая ед.изм.
+                    {
+                        CorrectValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel);
+                        toolTip.Show("Такая единица измерения уже существует!", this, unitComboBoxBackPanel.Location, 5000);
 
-                    string text = unitComboBox.Text;
-                    unitComboBox.Leave -= unitComboBox_Leave;
-                    unitComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-                    unitComboBox.Leave += unitComboBox_Leave;
+                        string text = unitComboBox.Text;
+                        unitComboBox.Leave -= unitComboBox_Leave;
+                        unitComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                        unitComboBox.Leave += unitComboBox_Leave;
 
-                    unitComboBox.Text = text;
-                }
-                else //если tilte введен правильно
-                {
-                    unitStarLabel.ForeColor = Color.Black;
-                    unitComboBoxBackPanel.BackColor = SystemColors.Control;
-                    toolTip.SetToolTip(unitComboBox, String.Empty);
-                }//else
+                        unitComboBox.Text = text;
+                    }// else if
+                    else //если title введен правильно
+                    {
+                        CorrectValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel);
+                    }//else
             }//if
+            else //Если новая ед. изм. не добавляется
+            {
+                if (String.IsNullOrWhiteSpace(unitComboBox.Text))
+                    WrongValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel, "Выберите ед. изм.", 2000);
+                else
+                    CorrectValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel);            
+            }//else
         }//unitComboBox_Leave
+
+        /// <summary>
+        /// Метод выдачи визуального сообщения о том что введены некорректные данные.
+        /// </summary>
+        /// <param name="inputControl">Контрол ввода инф-ции</param>
+        /// <param name="backControl">Контрол исп-мый как рамка</param>
+        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
+        /// <param name="toolTipMessage">Всплывающее сообщение.</param>
+        /// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param>
+        private void WrongValueInput(Control inputControl, Control backControl, Control starControl, string toolTipMessage, int toolTipShowTime)
+        {
+            starControl.ForeColor = backControl.BackColor = Color.Red;
+            toolTip.SetToolTip(inputControl, toolTipMessage);
+            toolTip.Show(toolTipMessage, this, backControl.Location, toolTipShowTime);
+        }//wrongValueInput
+        /// <summary>
+        /// Метод выдачи визуального сообщения о том что введены корректные данные.
+        /// </summary>
+        /// <param name="inputControl">Контрол ввода инф-ции</param>
+        /// <param name="backControl">Контрол исп-мый как рамка</param>
+        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
+        private void CorrectValueInput(Control inputControl, Control backControl, Control starControl)
+        {
+            starControl.ForeColor = Color.Black;
+            backControl.BackColor = SystemColors.Control;
+            toolTip.SetToolTip(inputControl, String.Empty);
+        }//CorrectValueInput
+        /// <summary>
+        /// Метод выдачи визуального сообщения о том что введены корректные данные.
+        /// </summary>
+        /// <param name="inputControl">Контрол ввода инф-ции</param>
+        /// <param name="backControl">Контрол исп-мый как рамка</param>
+        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
+        /// <param name="toolTipMessage">Всплывающее сообщение.</param>
+        /// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param>
+        private void CorrectValueInput(Control inputControl, Control backControl, Control starControl, string toolTipMessage, int toolTipShowTime)
+        {
+            starControl.ForeColor = Color.Black;
+            backControl.BackColor = SystemColors.Control;
+            toolTip.SetToolTip(inputControl, toolTipMessage);
+            toolTip.Show(toolTipMessage, this, backControl.Location, toolTipShowTime);
+        }//CorrectValueInput
 
         //Событие для добавления новой единицы измерения в БД.
         private void addUnitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -169,14 +243,14 @@ namespace PartsApp
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(System.IO.Path.GetFullPath(path)), photoPictureBox.Size);
                         //Если файл в нужной папке не является подходящим, то очищаем pictureBox.
-                        if (DialogResult.Cancel == MessageBox.Show("Этот файл или файл с таким именем уже существует в папке \"Товар\".\nЕсли данное фото, является правильным, нажмите \"Ok\".\nИначе нажмите \"Отмена\" и измените имя выбираемого файла и попробуйте ещё раз.", "Совпадение имен файлов", MessageBoxButtons.OKCancel))
+                        if (DialogResult.Cancel == MessageBox.Show("Этот файл или файл с таким именем уже существует в папке \"Товар\".\nЕсли данное фото, является правильным, нажмите \"Ok\".\nИначе нажмите \"Отмена\" измените имя выбираемого файла и попробуйте ещё раз.", "Совпадение имен файлов", MessageBoxButtons.OKCancel))
                             deselectToolStripMenuItem_Click(sender, e);
                     }//if
                     //Если файл не находится в нужной папке, и при этом нет совпадения имен, копируем его.
                     else
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
-                        beginfilePath = photoOpenFileDialog.FileName;
+                        beginFilePath = photoOpenFileDialog.FileName;
                         endFilePath = System.IO.Path.GetFullPath(path);
                     }//else
 
@@ -313,9 +387,9 @@ namespace PartsApp
                         sparePart.Photo = null;
                     else
                     {
-                        if (beginfilePath != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе вначале копируем файл.  
+                        if (beginFilePath != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе вначале копируем файл.  
                         {
-                            System.IO.File.Copy(beginfilePath, endFilePath);
+                            System.IO.File.Copy(beginFilePath, endFilePath);
                         }
                         sparePart.Photo = @"Товар\" + toolTip.GetToolTip(photoPictureBox);
                     }//else
@@ -331,7 +405,7 @@ namespace PartsApp
                         sparePart.ManufacturerId = null;
                     else //Если такого ManufacturerName нет в базе, значит добавить.
                     {
-                        if (PartsDAL.SearchManufacturersName(manufacturerTextBox.Text.Trim(), 1).Length == 0)
+                        if (PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim()).Count == 0)
                             sparePart.ManufacturerId = PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
                         else
                             sparePart.ManufacturerId = PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim())[0]; //!!! Кроется опасность путаницы в случае одинакового имени производителей, необходимо будет внести добавление в базу для избежания потенциальной угрозы!
@@ -341,8 +415,14 @@ namespace PartsApp
                     //PartsDAL.AddUnitOfMeasure();
                     sparePart.Unit = unitComboBox.SelectedValue.ToString();
 
-                    PartsDAL.AddSparePart(sparePart);
-
+                    //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.
+                    if (editSparePart == null)
+                        PartsDAL.AddSparePart(sparePart);
+                    else 
+                    {
+                        sparePart.SparePartId = editSparePart.SparePartId;
+                        PartsDAL.UpdateSparePart(sparePart);
+                    }
                     this.Close();
                 }//if
             }//if
@@ -360,7 +440,3 @@ namespace PartsApp
 //!!! Решить проблему с "попытка записи в защищенную область памяти" или сделать listbox выпадающим списком.
 //1)Добавить возможность выбора множества категорий (как в MovieDB).
 //2)Добавить воззможность добавлять новую ед. изм. в базу.
-
-
-/*Долгим ковырянием проблему решил, пересобрал проект заново. По одной все формы исключил и добавил снова.
- * Короче проблема была в кривой сборке*/

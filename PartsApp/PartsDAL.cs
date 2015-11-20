@@ -244,6 +244,38 @@ namespace PartsApp
                 connection.Close();
             }//using
         }//AddSparePart
+        /// <summary>
+        /// Метод модификации записи с заданным Id.
+        /// </summary>
+        /// <param name="sparePart">Товар инф-ция о котором модифицируется.</param>
+        public static void UpdateSparePart(SparePart sparePart)
+        {
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                //Вставляем запись в табл. "SparePart"
+                const string query = "UPDATE SpareParts SET Photo = @Photo, Articul = @Articul, Title = @Title, "
+                                   + "Description = @Description, ExtInfoId = @ExtInfoId, ManufacturerId = @ManufacturerId, Unit = @Unit " 
+                                   + "WHERE SparePartId = @SparePartId;";
+                 
+
+                var cmd = new SQLiteCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
+                cmd.Parameters.AddWithValue("@Photo", sparePart.Photo);
+                cmd.Parameters.AddWithValue("@Articul", sparePart.Articul);
+                cmd.Parameters.AddWithValue("@Title", sparePart.Title);
+                cmd.Parameters.AddWithValue("@Description", sparePart.Description);
+                cmd.Parameters.AddWithValue("@ExtInfoId", sparePart.ExtInfoId);
+                cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.ManufacturerId);
+                cmd.Parameters.AddWithValue("@Unit", sparePart.Unit);
+
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }//using
+        
+        }//UpdateSparePart
 
         //Модификация таблицы Suppliers.
         public static void AddSupplier(Contragent supplier)
@@ -1490,35 +1522,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    SparePart sparePart = new SparePart();
-                    #region //конструктор
-                    /*
-                    {
-                        Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
-                        SparePartId= Convert.ToInt32(dataReader["Id"]),
-                        Articul = dataReader["Articul"] as string,
-                        Title = dataReader["Title"] as string,
-                        Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                        //Price = Convert.ToDouble(dataReader["Price"]),
-                        //Markup = Convert.ToInt32(dataReader["Markup"]),
-                        //Count = Convert.ToDouble(dataReader["Count"]),
-                        //Unit = dataReader["Unit"] as string
-                    }; 
-                    */
-                    #endregion
-                    sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                    sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
-                    sparePart.Articul = dataReader["Articul"] as string;
-                    sparePart.Title = dataReader["Title"] as string;
-
-                    sparePart.ExtInfoId = (dataReader["ExtInfoId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ExtInfoId"]);
-                    sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
-
-                    sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                    //sparePart.Manufacturer = (sparePart.ManufacturerId == null) ? String.Empty : FindManufacturerNameById(sparePart.ManufacturerId, connection);
-                    //sparePart.Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"]), connection);
-
-                    sparePart.Unit = dataReader["Unit"] as string;
+                    SparePart sparePart = CreateSparePart(dataReader);
 
                     spareParts.Add(sparePart);
                 }//while
@@ -1534,35 +1538,7 @@ namespace PartsApp
             var dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
             {
-                SparePart sparePart = new SparePart();
-                #region //конструктор
-                /*
-                    {
-                        Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
-                        SparePartId= Convert.ToInt32(dataReader["Id"]),
-                        Articul = dataReader["Articul"] as string,
-                        Title = dataReader["Title"] as string,
-                        Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                        //Price = Convert.ToDouble(dataReader["Price"]),
-                        //Markup = Convert.ToInt32(dataReader["Markup"]),
-                        //Count = Convert.ToDouble(dataReader["Count"]),
-                        //Unit = dataReader["Unit"] as string
-                    }; 
-                    */
-                #endregion
-                sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
-                sparePart.Articul = dataReader["Articul"] as string;
-                sparePart.Title = dataReader["Title"] as string;
-
-                sparePart.ExtInfoId = (dataReader["ExtInfoId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ExtInfoId"]);
-                sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
-
-                sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                //sparePart.Manufacturer = (sparePart.ManufacturerId == null) ? String.Empty : FindManufacturerNameById(sparePart.ManufacturerId, openConnection);
-                //sparePart.Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"]), connection);
-
-                sparePart.Unit = dataReader["Unit"] as string;
+                SparePart sparePart = CreateSparePart(dataReader);
                 spareParts.Add(sparePart);
             }//while    
 
@@ -1585,36 +1561,10 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
 
                 var dataReader = cmd.ExecuteReader();
-                dataReader.Read();
-
-                #region //конструктор
-                /*
-                    {
-                        Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
-                        SparePartId= Convert.ToInt32(dataReader["Id"]),
-                        Articul = dataReader["Articul"] as string,
-                        Title = dataReader["Title"] as string,
-                        Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                        //Price = Convert.ToDouble(dataReader["Price"]),
-                        //Markup = Convert.ToInt32(dataReader["Markup"]),
-                        //Count = Convert.ToDouble(dataReader["Count"]),
-                        //Unit = dataReader["Unit"] as string
-                    }; 
-                    */
-                #endregion
-                sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
-                sparePart.Articul = dataReader["Articul"] as string;
-                sparePart.Title = dataReader["Title"] as string;
-
-                sparePart.ExtInfoId = (dataReader["ExtInfoId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ExtInfoId"]);
-                sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
-
-                sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                //sparePart.Manufacturer = (sparePart.ManufacturerId == null) ? String.Empty : FindManufacturerNameById(sparePart.ManufacturerId, connection);
-                //sparePart.Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"]), connection);
-
-                sparePart.Unit = dataReader["Unit"] as string;
+                while (dataReader.Read())
+                {
+                    sparePart = CreateSparePart(dataReader);
+                }//while
 
                 connection.Close();
             }//using

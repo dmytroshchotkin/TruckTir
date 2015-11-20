@@ -74,6 +74,8 @@
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.partsDGVContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editSparePartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -90,6 +92,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.extPartsDataGridView)).BeginInit();
             this.extPartsStatusStrip.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
+            this.partsDGVContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // BottomToolStripPanel
@@ -434,7 +437,7 @@
             // 
             this.photoPictureBox.Location = new System.Drawing.Point(24, 6);
             this.photoPictureBox.Name = "photoPictureBox";
-            this.photoPictureBox.Size = new System.Drawing.Size(623, 449);
+            this.photoPictureBox.Size = new System.Drawing.Size(84, 116);
             this.photoPictureBox.TabIndex = 1;
             this.photoPictureBox.TabStop = false;
             this.photoPictureBox.Visible = false;
@@ -540,6 +543,20 @@
             this.toolStripContainer1.Text = "toolStripContainer1";
             this.toolStripContainer1.TopToolStripPanelVisible = false;
             // 
+            // partsDGVContextMenuStrip
+            // 
+            this.partsDGVContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editSparePartToolStripMenuItem});
+            this.partsDGVContextMenuStrip.Name = "partsDGVContextMenuStrip";
+            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(158, 48);
+            // 
+            // editSparePartToolStripMenuItem
+            // 
+            this.editSparePartToolStripMenuItem.Name = "editSparePartToolStripMenuItem";
+            this.editSparePartToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.editSparePartToolStripMenuItem.Text = "Редактировать ";
+            this.editSparePartToolStripMenuItem.Click += new System.EventHandler(this.editSparePartToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -578,6 +595,7 @@
             this.extPartsStatusStrip.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
+            this.partsDGVContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -630,6 +648,8 @@
         private System.Windows.Forms.ToolStripMenuItem addNewSaleToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.CheckBox onlyAvaliabilityCheckBox;
+        private System.Windows.Forms.ContextMenuStrip partsDGVContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem editSparePartToolStripMenuItem;
 
     }
 }

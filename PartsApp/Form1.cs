@@ -30,10 +30,10 @@ namespace PartsApp
             ExtSpList = origExtSpList = new List<SparePart>();
             markupTypes = new List<KeyValuePair<string, double>>()
             {
-                new KeyValuePair<string, double>("Розница", 25),
-                new KeyValuePair<string, double>("Мелкий опт", 20),
-                new KeyValuePair<string, double>("Средний опт", 15),
-                new KeyValuePair<string, double>("Крупный опт", 10),            
+                new KeyValuePair<string, double>("Розница", 100),
+                new KeyValuePair<string, double>("Мелкий опт", 75),
+                new KeyValuePair<string, double>("Средний опт", 50),
+                new KeyValuePair<string, double>("Крупный опт", 25),            
             };
             textChangeEvent = true;
         }
@@ -574,12 +574,28 @@ namespace PartsApp
             //Если заголовок то ничего не делаем.
             if (e.RowIndex == partsDataGridView.Columns[0].HeaderCell.RowIndex) return;
 
-            excRateNumericUpDown.Enabled = true;
-            markupComboBox.Enabled = true; //Делаем доступным функционал изменения наценки. 
-            
-            //Находим список всех приходов в наличии искомой запчасти.
-            int sparePartId = Convert.ToInt32(partsDataGridView.Rows[e.RowIndex].Cells["SparePartId"].Value);
-            extPartsDataGridView.DataSource = FindSparePartsFromExtSpListBySparePartId(sparePartId);
+            //Если ЛКМ
+            if (e.Button == MouseButtons.Left)
+            {
+                excRateNumericUpDown.Enabled = true;
+                markupComboBox.Enabled = true; //Делаем доступным функционал изменения наценки. 
+
+                //Находим список всех приходов в наличии искомой запчасти.
+                int sparePartId = Convert.ToInt32(partsDataGridView.Rows[e.RowIndex].Cells["SparePartId"].Value);
+                extPartsDataGridView.DataSource = FindSparePartsFromExtSpListBySparePartId(sparePartId);
+            }//if
+            //Если ПКМ, выводим контекстное меню.
+            else
+            {
+                //Очищаем все выделения в таблице, и выделяем выбранную только клетку.
+                partsDataGridView.ClearSelection();
+                partsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected = true;
+                //Находим позицию в таблице, где был сделан клик.
+                Point cellLocation = partsDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
+                Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
+                //Выводим контекстное меню.
+                partsDGVContextMenuStrip.Show(partsDataGridView, location);
+            }//else
         }//partsDataGridView_CellMouseClick
 
         //События инициируемые для сброса выделения строк в partsDataGridView
@@ -965,6 +981,11 @@ namespace PartsApp
         {
             new SaleForm().Show(this);
         }//addNewSaleToolStripMenuItem_Click
+
+        private void editSparePartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AddSparePartForm(Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value)).Show();
+        }
 
     }//Form1
 

@@ -271,9 +271,9 @@ namespace PartsApp
                     foreach (var sparePart in searchSparePartsList)
                     {
                         if (lastEditCell.OwningColumn.Name == "Title")
-                            str = sparePart.Title + "   " + sparePart.Articul;
+                            str = sparePart.Title + "     " + sparePart.Articul;
                         else if (lastEditCell.OwningColumn.Name == "Articul")
-                               str = sparePart.Articul + "   " + sparePart.Title;
+                               str = sparePart.Articul + "     " + sparePart.Title;
 
 /*!!!! Ошибка!*/        autoCompleteListBox.Items.Add(str);
                     }//foreach                                                                        
@@ -345,7 +345,7 @@ namespace PartsApp
                 //Если есть такой товар в базе.
                 if (searchSparePartsList.Count > 0)
                 {
-                    string[] titleAndArticul = (cell.Value as string).Split(new string[] { "   " }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] titleAndArticul = (cell.Value as string).Split(new string[] { "     " }, StringSplitOptions.RemoveEmptyEntries);
                     string title, articul;
                     //если выбор сделан из выпадающего списка.
                     if (titleAndArticul.Length == 2)
@@ -1145,7 +1145,6 @@ namespace PartsApp
             //Обводим заголовки таблицы рамкой. 
             excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
             //Устанавливаем стиль и толщину линии
-            //excelCells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
             
             //Устанавливаем ширину первой Колонки для Title.
