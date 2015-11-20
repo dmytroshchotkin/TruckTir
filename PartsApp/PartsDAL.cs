@@ -2593,8 +2593,73 @@ namespace PartsApp
 
             return purchase;
         }//FindPurchaseById
-        
 
+        #region Поиск по полям Markups.
+
+        public static IList<KeyValuePair<double, string>> FindAllMarkups()
+        {
+            IList<KeyValuePair<double, string>> markups = new List<KeyValuePair<double, string>>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT MarkupValue, MarkupType FROM Markups;";
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    double key   = Convert.ToDouble(dataReader["MarkupValue"]);
+                    string value = dataReader["MarkupType"] as string; 
+
+                    markups.Add(new KeyValuePair<double, string>(key, value));
+                }//while
+
+                connection.Close();
+            }//using
+
+            return markups;        
+        }//FindAllMarkups
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
 
 
 
