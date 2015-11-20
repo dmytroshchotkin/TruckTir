@@ -17,7 +17,7 @@ namespace PartsApp
         IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;  //для изменения наценки.  
         IList<SparePart> SpList, origSpList;                                //для вывода в partsDataGridView.  
         IList<SparePart> ExtSpList, origExtSpList;                          //для вывода в extPartsDataGridView.  
-        public static IList<KeyValuePair<string, double>> markupTypes;      //для задания видов наценки.  
+        public static IList<KeyValuePair<double, string>> markupTypes;      //для задания видов наценки.  
         bool textChangeEvent;                                               //есть ли подписчик на searchTextBox_TextChanged
 
         public Form1()
@@ -28,13 +28,16 @@ namespace PartsApp
             changeMarkupBufferDict = new Dictionary<int, IDictionary<int, double>>();
             SpList = origSpList = new List<SparePart>();
             ExtSpList = origExtSpList = new List<SparePart>();
-            markupTypes = new List<KeyValuePair<string, double>>()
-            {
-                new KeyValuePair<string, double>("Розница", 100),
-                new KeyValuePair<string, double>("Мелкий опт", 75),
-                new KeyValuePair<string, double>("Средний опт", 50),
-                new KeyValuePair<string, double>("Крупный опт", 25),            
-            };
+            //markupTypes = new List<KeyValuePair<string, double>>()
+            //{
+            //    new KeyValuePair<string, double>("Розница", 100),
+            //    new KeyValuePair<string, double>("Мелкий опт", 75),
+            //    new KeyValuePair<string, double>("Средний опт", 50),
+            //    new KeyValuePair<string, double>("Крупный опт", 25),            
+            //};
+
+            markupTypes = PartsDAL.FindAllMarkups();
+
             textChangeEvent = true;
         }
 
@@ -107,9 +110,8 @@ namespace PartsApp
 
             //Вносим список наценок.             
             foreach (var type in markupTypes)
-                markupComboBox.Items.Add(type.Key);
+                markupComboBox.Items.Add(type.Value);
 
-            
             /////////////////////////////////////////////////////////////////////////////
             /* Пробная зона */
 
@@ -472,7 +474,7 @@ namespace PartsApp
             foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
             foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
             //узнаем процент заданной наценки.
-            double markup = MarkupTypes.GetMarkupValue(markupComboBox.Text);//GetMarkupValue();
+            double markup = PartsDAL.FindMarkupValue(markupComboBox.Text);//GetMarkupValue();
             //Если выделены только строки в partsDataGridView.
             if (extPartsDataGridView.SelectedRows.Count == 0)
             {
@@ -858,7 +860,7 @@ namespace PartsApp
             //узнаем процент заданной наценки.
             double? markup = null;
             foreach (var markType in markupTypes)
-                if (markType.Key == markupComboBox.Text) { markup = markType.Value; break; }
+                if (markType.Value == markupComboBox.Text) { markup = markType.Key; break; }
             //если наценка задавалась вручную (нужна проверка корректности ввода)
             if (markup == null)
                 markup = Convert.ToDouble(markupComboBox.Text);

@@ -2622,6 +2622,35 @@ namespace PartsApp
             return markups;        
         }//FindAllMarkups
 
+        public static double FindMarkupValue(string markupType)
+        {
+            double? markup = null;
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                //узнаем процент заданной наценки.
+                //foreach (var markType in FindAllMarkups())
+                //{
+                //    if (markType.Value == markupType)
+                //    {
+                //        markup = markType.Key; 
+                //        break;
+                //    }
+                //}
+
+                markup = FindAllMarkups().Where(mark => mark.Value == markupType).Select(mark => mark.Key).First();
+
+                //если наценка задавалась вручную (нужна проверка корректности ввода)
+                if (markup == null)
+                    markup = Convert.ToDouble(markupType);
+
+                connection.Close();
+            }//using
+
+            return (double)markup;
+        }//FindMarkupValue
 
 
 
