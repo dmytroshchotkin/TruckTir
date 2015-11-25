@@ -4022,7 +4022,7 @@ namespace PartsApp
             this.StorageAdress  = storageAdress;
             this.Price          = price;
             this.Markup         = markup;
-            this.MarkupType     = MarkupTypes.GetMarkupType(markup);
+            this.MarkupType     = (markup == null) ? null : MarkupTypes.GetMarkupType((double)markup);
         }
 
         public override string ToString()

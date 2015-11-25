@@ -29,7 +29,6 @@ namespace PartsApp
 
         double inTotal;
         IList<int> sparePartsId = new List<int>();   //коллекция для хранения Id того товара, что уже есть в таблице.
-        List<KeyValuePair<string, double>> markupTypes; //убрать.
 
         string fullExtCount, fullSaleCount;    //переменная для запоминания полного количества конкретного прихода в extDGV.
 
@@ -47,17 +46,9 @@ namespace PartsApp
             currencyComboBox.SelectedItem = "руб";
 /*!!!*/     customerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllCustomersName()); //находим сразу всех, вместо подгрузки по вводу.
 
-            //var markupTypes = Form1.markupTypes;
-            markupTypes = new List<KeyValuePair<string, double>>()
-            {
-                new KeyValuePair<string, double>("Розница", 100),
-                new KeyValuePair<string, double>("Мелкий опт", 70),
-                new KeyValuePair<string, double>("Средний опт", 50),
-                new KeyValuePair<string, double>("Крупный опт", 30),            
-            };
+            //Вносим все типы наценок в markupComboBox             
+            markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().Select(markup => markup.Value).ToArray<string>());
 
-            foreach (var type in markupTypes)
-                markupComboBox.Items.Add(type.Key);
         }//saleForm_Load
 
         private void customerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -838,16 +829,22 @@ namespace PartsApp
                // extDataGridView.Rows[i].Cells["extMarkup"].Value = sparePartsAvaliability[i].Markup;
                 if (sparePartsAvaliability[i].Markup != null)
                 {
-                    foreach (var markType in markupTypes)
-                    {
-                        if (markType.Value == sparePartsAvaliability[i].Markup)
-                        {
-                            extDataGridView.Rows[i].Cells["extMarkup"].Value = markType.Key;
-                            break;
-                        }
-                    }//foreach 
-                    if (extDataGridView.Rows[i].Cells["extMarkup"].Value == null)
-                        extDataGridView.Rows[i].Cells["extMarkup"].Value = "Другая";
+                    //foreach (var markType in PartsDAL.FindAllMarkups())
+                    //{
+                    //    if (markType.Key == sparePartsAvaliability[i].Markup)
+                    //    {
+
+                    //Находим тип наценки.
+                    //string markupValue = PartsDAL.FindAllMarkups().Where(markup => markup.Key == sparePartsAvaliability[i].Markup).Select(markup => markup.Value).First();
+                    extDataGridView.Rows[i].Cells["extMarkup"].Value = MarkupTypes.GetMarkupType((double)sparePartsAvaliability[i].Markup);
+
+                            //break;
+                        //}
+
+                        
+                    //}//foreach 
+                    //if (extDataGridView.Rows[i].Cells["extMarkup"].Value == null)
+                        //extDataGridView.Rows[i].Cells["extMarkup"].Value = "Другая";
                 }//if
                 extDataGridView.Rows[i].Cells["extSellingPrice"].Value = sparePartsAvaliability[i].SellingPrice;
                 extDataGridView.Rows[i].Cells["extPurchaseId"].Value = sparePartsAvaliability[i].PurchaseId;
@@ -988,17 +985,15 @@ namespace PartsApp
             //узнаем процент заданной наценки.
             try
             {
-                KeyValuePair<string, double> markup = GetMarkupType();
+                double markupValue = MarkupTypes.GetMarkupValue(markupComboBox.Text);
+                string markupType = MarkupTypes.GetMarkupType(markupValue);
+
                 foreach (DataGridViewRow row in extDataGridView.SelectedRows)
                 {
-                    //если не указана цена, то наценку не присваиваем.
-                    //if (row.Cells[extSellingPrice.Name].Value == null)
-                        //continue;
-
-                    row.Cells[extMarkup.Name].Value = markup.Key;
+                    row.Cells[extMarkup.Name].Value = markupType;
 
                     double price = Convert.ToDouble(row.Cells[extPrice.Name].Value);
-                    var sellPrice = Math.Round(price + (price * markup.Value / 100), 2, MidpointRounding.AwayFromZero);
+                    double sellPrice = Math.Round(price + (price * markupValue / 100), 2, MidpointRounding.AwayFromZero);
                     row.Cells[extSellingPrice.Name].Value = sellPrice;
                 }//foreach
             }//try
@@ -1205,7 +1200,7 @@ namespace PartsApp
         /// Возвращает процент наценки. Если она задана неправильно возвращается null.
         /// </summary>
         /// <returns></returns> 
-        private KeyValuePair<string, double> GetMarkupValue()
+      /*  private KeyValuePair<string, double> GetMarkupValue()
         {
             //узнаем процент заданной наценки.
             KeyValuePair<string, double>? markup = null;
@@ -1215,54 +1210,9 @@ namespace PartsApp
             if (markup == null)
                 markup = new KeyValuePair<string,double>("Другая наценка", Convert.ToDouble(markupComboBox.Text));
             return (KeyValuePair<string, double>)markup;
-        }
+        }*/
 
-        /// <summary>
-        /// Возвращает выбранное поль-лем значение наценки. При вводе не числового значения выбрасывает ошибку.
-        /// </summary>
-        /// <returns></returns>
-        //private double GetMarkupValue()
-        //{
-        //    double markup = 0;
-        //    //Проверяем выбранное или введенное значение наценки на наличие в базе.
-        //    try
-        //    {
-        //        markup = PartsDAL.FindMarkupValue(markupComboBox.Text);
-        //    }//try
-        //    //Если значение введено вручную и не содержится в базе.    
-        //    catch (InvalidOperationException)
-        //    {
-        //        //Проверяем является введенное поль-лем значение числом.
-        //        markup = Convert.ToDouble(markupComboBox.Text);
-        //    }//catch
 
-        //    return markup;
-        //}//GetMarkupValue
-
-        /// <summary>
-        /// Возвращает тип наценки по заданному значению. 
-        /// </summary>
-        /// <param name="markup">Заданная наценка.</param>
-        /// <returns></returns>
-        private string GetMarkupType(double markup)
-        {
-            string markupType = null;
-            //Проверяем выбранное или введенное значение наценки на наличие в базе.
-            try
-            {
-                markupType = PartsDAL.FindMarkupType(markup);
-            }//try
-            //Если значение введено вручную и не содержится в базе.    
-            catch (InvalidOperationException)
-            {
-                if (markup > 0)
-                    markupType = "Другая наценка";
-                else if (markup < 0)
-                    markupType = "Уценка";
-            }//catch
-
-            return markupType;
-        }//GetMarkupType
                                                                              
 
         

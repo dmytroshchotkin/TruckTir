@@ -17,7 +17,6 @@ namespace PartsApp
         IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;  //для изменения наценки.  
         IList<SparePart> SpList, origSpList;                                //для вывода в partsDataGridView.  
         IList<SparePart> ExtSpList, origExtSpList;                          //для вывода в extPartsDataGridView.  
-        public static IList<KeyValuePair<double, string>> markupTypes;      //для задания видов наценки.  
         bool textChangeEvent;                                               //есть ли подписчик на searchTextBox_TextChanged
 
         public Form1()
@@ -28,8 +27,6 @@ namespace PartsApp
             changeMarkupBufferDict = new Dictionary<int, IDictionary<int, double>>();
             SpList = origSpList = new List<SparePart>();
             ExtSpList = origExtSpList = new List<SparePart>();
-
-            markupTypes = PartsDAL.FindAllMarkups();
 
             textChangeEvent = true;
         }
@@ -50,14 +47,13 @@ namespace PartsApp
             Rectangle rect = partsDataGridView.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
             photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDataGridView.Location.Y);
 
-            //Вносим список наценок.             
-            foreach (var type in markupTypes)
-                markupComboBox.Items.Add(type.Value);
+            //Вносим все типы наценок в markupComboBox             
+            markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().Select(markup => markup.Value).ToArray<string>());
 
             /////////////////////////////////////////////////////////////////////////////
             /* Пробная зона */
 
-            //MessageBox.Show();
+          
 
             //////////////////////////////////////////////////////////////////////////////
         }//Form1_Load
@@ -419,7 +415,7 @@ namespace PartsApp
             double markup = 0;
             try
             {
-                markup = GetMarkupValue(markupComboBox.Text);
+                markup = MarkupTypes.GetMarkupValue(markupComboBox.Text);
                 //Если выделены только строки в partsDataGridView.
                 if (extPartsDataGridView.SelectedRows.Count == 0)
                 {
@@ -437,51 +433,51 @@ namespace PartsApp
             }//catch            
         }//markupComboBox_SelectedIndexChanged
 
-        /// <summary>
-        /// Возвращает выбранное поль-лем значение наценки. При вводе не числового значения выбрасывает ошибку.
-        /// </summary>
-        /// <returns></returns>
-        private double GetMarkupValue(string markupType)
-        {
-            double markup = 0;
-            //Проверяем выбранное или введенное значение наценки на наличие в базе.
-            try
-            {
-                markup = PartsDAL.FindMarkupValue(markupType);
-            }//try
-            //Если значение введено вручную и не содержится в базе.    
-            catch (InvalidOperationException)
-            {
-                //Проверяем является введенное поль-лем значение числом.
-                markup = Convert.ToDouble(markupComboBox.Text);              
-            }//catch
+        ///// <summary>
+        ///// Возвращает выбранное поль-лем значение наценки. При вводе не числового значения выбрасывает ошибку.
+        ///// </summary>
+        ///// <returns></returns>
+        //private double GetMarkupValue(string markupType)
+        //{
+        //    double markup = 0;
+        //    //Проверяем выбранное или введенное значение наценки на наличие в базе.
+        //    try
+        //    {
+        //        markup = PartsDAL.FindMarkupValue(markupType);
+        //    }//try
+        //    //Если значение введено вручную и не содержится в базе.    
+        //    catch (InvalidOperationException)
+        //    {
+        //        //Проверяем является введенное поль-лем значение числом.
+        //        markup = Convert.ToDouble(markupComboBox.Text);              
+        //    }//catch
 
-            return markup;
-        }//GetMarkupValue
-        /// <summary>
-        /// Возвращает тип наценки по заданному значению. 
-        /// </summary>
-        /// <param name="markup">Заданная наценка.</param>
-        /// <returns></returns>
-        private string GetMarkupType(double markup)
-        {
-            string markupType = null;
-            //Проверяем выбранное или введенное значение наценки на наличие в базе.
-            try
-            {
-                markupType = PartsDAL.FindMarkupType(markup);
-            }//try
-            //Если значение введено вручную и не содержится в базе.    
-            catch (InvalidOperationException)
-            {
-                if (markup > 0) 
-                    markupType = "Другая наценка";
-                else if (markup < 0)
-                    markupType = "Уценка";
-            }//catch
+        //    return markup;
+        //}//GetMarkupValue
+        ///// <summary>
+        ///// Возвращает тип наценки по заданному значению. 
+        ///// </summary>
+        ///// <param name="markup">Заданная наценка.</param>
+        ///// <returns></returns>
+        //private string GetMarkupType(double markup)
+        //{
+        //    string markupType = null;
+        //    //Проверяем выбранное или введенное значение наценки на наличие в базе.
+        //    try
+        //    {
+        //        markupType = PartsDAL.FindMarkupType(markup);
+        //    }//try
+        //    //Если значение введено вручную и не содержится в базе.    
+        //    catch (InvalidOperationException)
+        //    {
+        //        if (markup > 0) 
+        //            markupType = "Другая наценка";
+        //        else if (markup < 0)
+        //            markupType = "Уценка";
+        //    }//catch
 
-            return markupType;
-        }//GetMarkupType
+        //    return markupType;
+        //}//GetMarkupType
 
         private void saveChangesButton_Click(object sender, EventArgs e)
         {                      
@@ -555,7 +551,7 @@ namespace PartsApp
                     if (sparePart.SparePartId == sparePartId)
                     {
                         sparePart.Markup = markup;
-                        sparePart.MarkupType = GetMarkupType(markup);//MarkupTypes.GetMarkupType(markup);
+                        sparePart.MarkupType = MarkupTypes.GetMarkupType(markup);//MarkupTypes.GetMarkupType(markup);
                         SaveMarkupChangeToBuffer(sparePart.SparePartId, sparePart.PurchaseId, markup);
                     }//if
                 }//foreach
@@ -585,7 +581,7 @@ namespace PartsApp
                     if (sparePart.SparePartId == sparePartId && sparePart.PurchaseId == purchaseId)
                     {
                         sparePart.Markup = markup;
-                        sparePart.MarkupType = GetMarkupType(markup);
+                        sparePart.MarkupType = MarkupTypes.GetMarkupType(markup);
                         SaveMarkupChangeToBuffer(sparePartId, purchaseId, markup);
                     }//if
                 }//foreach                
