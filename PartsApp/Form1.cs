@@ -28,13 +28,6 @@ namespace PartsApp
             changeMarkupBufferDict = new Dictionary<int, IDictionary<int, double>>();
             SpList = origSpList = new List<SparePart>();
             ExtSpList = origExtSpList = new List<SparePart>();
-            //markupTypes = new List<KeyValuePair<string, double>>()
-            //{
-            //    new KeyValuePair<string, double>("Розница", 100),
-            //    new KeyValuePair<string, double>("Мелкий опт", 75),
-            //    new KeyValuePair<string, double>("Средний опт", 50),
-            //    new KeyValuePair<string, double>("Крупный опт", 25),            
-            //};
 
             markupTypes = PartsDAL.FindAllMarkups();
 
@@ -43,57 +36,6 @@ namespace PartsApp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            #region вставить запись.
-
-            //string photoPath1 = @"Photos\Болт.jpg";
-            //string photoPath2 = @"Photos\Unknown.png";
-
-            //for (int i = 13; i < 15; ++i)
-            //{
-            //    try
-            //    {
-            //        SparePart sp = new SparePart();
-            //        sp.Photo = null;
-            //        sp.Articul = "iii" + i;
-            //        sp.Title = "Тормозная жидкость" + i;
-            //        sp.DescriptionId = 3;
-            //        sp.CategoryId = 1;
-            //        sp.ManufacturerId = 1;
-            //        sp.Unit = "шт.";
-
-            //        PartsDAL.AddSparePart(sp);
-            //    }//try
-            //    catch (Exception ex) { MessageBox.Show(ex.Message); }
-            //}//for
-
-            //IList<SparePart> spareParts = new List<SparePart>();
-
-            //PartsDAL.AddSupplier(new Supplier("Восток", "1018211512", "Юр. лицо", null, "Надежный поставщик качественного товара"));
-
-            //PartsDAL.AddSparePart(spareParts);
-            //}//for
-
-            //PartsDAL.AddCategory("Жидкости");
-            //PartsDAL.AddManufacturer("Zanussi");
-            //PartsDAL.AddProvider("Kirovka");
-            //PartsDAL.AddUnitOfMeasure("Галон");
-
-            //PartsDAL.AddSparePart(spareParts);
-            //PartsDAL.AddSparePartsWithUpdateCount(spareParts);
-
-            //MessageBox.Show(PartsDAL.FindSparePartByTitle("Самолет").Title.ToString());
-
-            //PartsDAL.AddSparePart(new SparePart(null, "Yoyo", "Выхлопная труба", "Оригинальные масла", 3, providers, "шт.", 2, 3500000.5, 25));
-            //PartsDAL.DeleteSparePartByArticul("aaa1");
-            //PartsDAL.DeleteSparePartByTitle("Самолет");
-            //partsDataGridView.DataSource = PartsDAL.SearchByArticul("z");
-            //partsDataGridView.DataSource = PartsDAL.SearchByTitle("Сам");
-
-            //searchTextBox.AutoCompleteCustomSource = new AutoCompleteStringCollection(); //пока не ясно, надо или нет
-
-            //PartsDAL.AddSparePartsFromExcelFile(@"D:\Учеба\MVS2013Community\СОХРАНЕНИЯ\PartsApp\PartsApp\MyExcel2.xlsx");
-            #endregion
-
             /*Создаём коллекцию SparePart присваиваем её DataGridView и работаем с ней для инициализации 
               нашей коллекции для поиска по базе данных*/
             partsDataGridView.DataSource = SpList = PartsDAL.FindAllSparePartsAvaliableToDisplay();
@@ -477,7 +419,7 @@ namespace PartsApp
             double markup = 0;
             try
             {
-                markup = GetMarkupValue();
+                markup = GetMarkupValue(markupComboBox.Text);
                 //Если выделены только строки в partsDataGridView.
                 if (extPartsDataGridView.SelectedRows.Count == 0)
                 {
@@ -499,13 +441,13 @@ namespace PartsApp
         /// Возвращает выбранное поль-лем значение наценки. При вводе не числового значения выбрасывает ошибку.
         /// </summary>
         /// <returns></returns>
-        private double GetMarkupValue()
+        private double GetMarkupValue(string markupType)
         {
             double markup = 0;
             //Проверяем выбранное или введенное значение наценки на наличие в базе.
             try
             {
-                markup = PartsDAL.FindMarkupValue(markupComboBox.Text);
+                markup = PartsDAL.FindMarkupValue(markupType);
             }//try
             //Если значение введено вручную и не содержится в базе.    
             catch (InvalidOperationException)
@@ -563,7 +505,8 @@ namespace PartsApp
             catch (System.Data.SQLite.SQLiteException ex)
             {
                 if (ex.Message == "database is locked\r\ndatabase is locked")
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show("Вероятно кто-то другой сейчас осуществляет запись в базу\nПопробуйте ещё раз.", "База данных занята в данный момент." );
+                else MessageBox.Show(String.Format("Ошибка записи изменения наценки\n{0}", ex.Message));
             }//catch    
 
             
@@ -585,7 +528,129 @@ namespace PartsApp
 
         }//cancelChangesButton_Click
 
+        /// <summary>
+        /// Осущ-ние действий вызванных изменением наценки.
+        /// </summary>
+        /// <param name="markup">Наценка на которую требуется изменить.</param>
+        private void partsDataGridViewMarkupChange(double markup)
+        {
+            //Модифицировать!!! Сделать изменение через DataGridView, без циклов.
+            //Находим все SP с изменяемой наценкой. 
+            foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
+            {
+                if (row.Cells["Avaliability"].Value.ToString() == "0") continue;
+                int sparePartId = Convert.ToInt32(row.Cells["SparePartId"].Value);
+                //Находим запись в SpList с данным SparePartId.
+                foreach (var sparePart in SpList)
+                {
+                    if (sparePart.SparePartId == sparePartId)
+                    {
+                        sparePart.Markup = markup;
+                        break;
+                    }
+                }//foreach
+                //Ищем все записи с нужным SparaPartId.
+                foreach (var sparePart in ExtSpList)
+                {
+                    if (sparePart.SparePartId == sparePartId)
+                    {
+                        sparePart.Markup = markup;
+                        sparePart.MarkupType = GetMarkupType(markup);//MarkupTypes.GetMarkupType(markup);
+                        SaveMarkupChangeToBuffer(sparePart.SparePartId, sparePart.PurchaseId, markup);
+                    }//if
+                }//foreach
 
+                partsDataGridView.InvalidateCell(row.Cells["SellingPrice"]);
+            }//foreach   
+            //Обновляем отображение столбцов в extPartsDataGridView.
+            extPartsDataGridView.Invalidate();
+        }//partsDataGridViewMarkupChange
+
+        /// <summary>
+        /// Осущ-ние действий вызванных изменением наценки.
+        /// </summary>
+        /// <param name="markup">Наценка на которую требуется изменить.</param>
+        private void extPartsDataGridViewMarkupChange(double markup)
+        {
+            //IList<SparePart> spareParts = new List<SparePart>(); //список для всех запчастей с изменяемой наценкой.
+            //Находим Id запчастей с изменяемой наценкой, т.к. SpId у всех вхождений одинаковый, берем его у первого вхождения.
+            int sparePartId = Convert.ToInt32(extPartsDataGridView.SelectedRows[0].Cells["SparePartId"].Value);
+            //Находим все SP с изменяемой наценкой. 
+            foreach (DataGridViewRow row in extPartsDataGridView.SelectedRows)
+            {
+                int purchaseId = Convert.ToInt32(row.Cells["PurchaseId"].Value);
+                //Ищем все записи с нужным SparaPartId.
+                foreach (var sparePart in ExtSpList)
+                {
+                    if (sparePart.SparePartId == sparePartId && sparePart.PurchaseId == purchaseId)
+                    {
+                        sparePart.Markup = markup;
+                        sparePart.MarkupType = GetMarkupType(markup);
+                        SaveMarkupChangeToBuffer(sparePartId, purchaseId, markup);
+                    }//if
+                }//foreach                
+            }//foreach   
+            //Если одинаковя Наценка у всех SparePart с данным Id.
+            SparePart sP = null;
+            //Находим запись в SpList с данным SparePartId.
+            foreach (var sparePart in SpList)
+                if (sparePart.SparePartId == sparePartId)
+                {
+                    sP = sparePart;
+                    break;
+                }
+            if (IsSameMarkup(FindSparePartsFromExtSpListBySparePartId(sparePartId)) == true)
+                sP.Markup = markup;
+            else sP.Markup = null;
+            //Обновляем отображение столбцов в extPartsDataGridView.
+            partsDataGridView.Invalidate();
+            extPartsDataGridView.Invalidate();
+
+        }//extPartsDataGridViewMarkupChange
+
+        /// <summary>
+        /// Метод сохраняющий в буфер изменения связанные с наценкой. 
+        /// </summary>
+        /// <param name="sparePartId">Id запчасти с изменяемой наценкой.</param>
+        /// <param name="purchaseId">Id прихода с изменяемой наценкой.</param>
+        /// <param name="markup">Наценка на которую нужно изменить старое значение.</param>
+        private void SaveMarkupChangeToBuffer(int sparePartId, int purchaseId, double markup)
+        {
+            if (changeMarkupBufferDict.ContainsKey(sparePartId)) //Если уже есть такой SparePartId.
+            {
+                if (changeMarkupBufferDict[sparePartId].ContainsKey(purchaseId)) //если уже есть такой PurchaseId. 
+                    (changeMarkupBufferDict[sparePartId])[purchaseId] = markup;
+                else //если у данной SparePartId ещё нет такой PurchaseId.
+                    (changeMarkupBufferDict[sparePartId]).Add(new KeyValuePair<int, double>(purchaseId, markup));
+            }//if
+            else //Если ещё нет данной SparePartId
+            {
+                IDictionary<int, double> dict = new Dictionary<int, double>();
+                dict.Add(new KeyValuePair<int, double>(purchaseId, markup));
+                changeMarkupBufferDict.Add(new KeyValuePair<int, IDictionary<int, double>>(sparePartId, dict));
+            }//else
+        }//SaveMarkupChangeToBuffer
+
+        /// <summary>
+        /// Проверяет одинаков ли Процент Наценки у всех эл-тов переданного списка запчастей. 
+        /// </summary>
+        /// <param name="spareParts">Список проверяемых запчастей</param>
+        /// <returns></returns>
+        private bool IsSameMarkup(IList<SparePart> spareParts)
+        {
+            //Проверяем не одинаковая ли у всех записей цена продажи и процент наценки.
+            bool isSameMarkup = true;
+            for (int i = 0; i < spareParts.Count - 1; ++i)
+            {
+                for (int j = i + 1; j < spareParts.Count; ++j)
+                {
+                    if (spareParts[i].Markup != spareParts[j].Markup) isSameMarkup = false;
+                }//for j
+                if (isSameMarkup == false) break;
+            }//for i
+
+            return isSameMarkup;
+        }//IsSamePriceAndMarkup
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
@@ -828,126 +893,7 @@ namespace PartsApp
             partsDataGridView.ClearSelection(); //Очищаем буфер выбранных эл-тов
             extPartsDataGridView.DataSource = null;
         }//Deselection        
-        /// <summary>
-        /// Осущ-ние действий вызванных изменением наценки.
-        /// </summary>
-        /// <param name="markup">Наценка на которую требуется изменить.</param>
-        private void partsDataGridViewMarkupChange(double markup)
-        {
-            //Модифицировать!!! Сделать изменение через DataGridView, без циклов.
-            //Находим все SP с изменяемой наценкой. 
-            foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
-            {
-                if (row.Cells["Avaliability"].Value.ToString() == "0") continue; 
-                int sparePartId = Convert.ToInt32(row.Cells["SparePartId"].Value);               
-                //Находим запись в SpList с данным SparePartId.
-                foreach (var sparePart in SpList)
-                {                   
-                    if (sparePart.SparePartId == sparePartId)
-                    {
-                        sparePart.Markup = markup;
-                        break;
-                    }
-                }//foreach
-                //Ищем все записи с нужным SparaPartId.
-                foreach (var sparePart in ExtSpList)
-                {
-                    if (sparePart.SparePartId == sparePartId)
-                    {
-                        sparePart.Markup = markup;
-                        sparePart.MarkupType = GetMarkupType(markup);//MarkupTypes.GetMarkupType(markup);
-                        SaveMarkupChangeToBuffer(sparePart.SparePartId, sparePart.PurchaseId, markup);
-                    }//if
-                }//foreach
-                
-                partsDataGridView.InvalidateCell(row.Cells["SellingPrice"]);
-            }//foreach   
-            //Обновляем отображение столбцов в extPartsDataGridView.
-            extPartsDataGridView.Invalidate();
-        }//partsDataGridViewMarkupChange
-        /// <summary>
-        /// Осущ-ние действий вызванных изменением наценки.
-        /// </summary>
-        /// <param name="markup">Наценка на которую требуется изменить.</param>
-        private void extPartsDataGridViewMarkupChange(double markup)
-        {
-            //IList<SparePart> spareParts = new List<SparePart>(); //список для всех запчастей с изменяемой наценкой.
-            //Находим Id запчастей с изменяемой наценкой, т.к. SpId у всех вхождений одинаковый, берем его у первого вхождения.
-            int sparePartId = Convert.ToInt32(extPartsDataGridView.SelectedRows[0].Cells["SparePartId"].Value);
-            //Находим все SP с изменяемой наценкой. 
-            foreach (DataGridViewRow row in extPartsDataGridView.SelectedRows)
-            {
-                int purchaseId = Convert.ToInt32(row.Cells["PurchaseId"].Value);
-                //Ищем все записи с нужным SparaPartId.
-                foreach (var sparePart in ExtSpList)
-                {
-                    if (sparePart.SparePartId == sparePartId && sparePart.PurchaseId == purchaseId)
-                    {
-                        sparePart.Markup = markup;
-                        sparePart.MarkupType = GetMarkupType(markup);
-                        SaveMarkupChangeToBuffer(sparePartId, purchaseId, markup);
-                    }//if
-                }//foreach                
-            }//foreach   
-            //Если одинаковя Наценка у всех SparePart с данным Id.
-            SparePart sP = null;
-            //Находим запись в SpList с данным SparePartId.
-            foreach (var sparePart in SpList)
-                if (sparePart.SparePartId == sparePartId)
-                {
-                    sP = sparePart;
-                    break;
-                }
-            if (IsSameMarkup(FindSparePartsFromExtSpListBySparePartId(sparePartId)) == true)
-                sP.Markup = markup;
-            else sP.Markup = null;
-            //Обновляем отображение столбцов в extPartsDataGridView.
-            partsDataGridView.Invalidate();
-            extPartsDataGridView.Invalidate();
 
-        }//extPartsDataGridViewMarkupChange
-        /// <summary>
-        /// Метод сохраняющий в буфер изменения связанные с наценкой. 
-        /// </summary>
-        /// <param name="sparePartId">Id запчасти с изменяемой наценкой.</param>
-        /// <param name="purchaseId">Id прихода с изменяемой наценкой.</param>
-        /// <param name="markup">Наценка на которую нужно изменить старое значение.</param>
-        private void SaveMarkupChangeToBuffer(int sparePartId, int purchaseId, double markup)
-        {
-            if (changeMarkupBufferDict.ContainsKey(sparePartId)) //Если уже есть такой SparePartId.
-            {
-                if (changeMarkupBufferDict[sparePartId].ContainsKey(purchaseId)) //если уже есть такой PurchaseId. 
-                    (changeMarkupBufferDict[sparePartId])[purchaseId] = markup;
-                else //если у данной SparePartId ещё нет такой PurchaseId.
-                    (changeMarkupBufferDict[sparePartId]).Add(new KeyValuePair<int, double>(purchaseId, markup));
-            }//if
-            else //Если ещё нет данной SparePartId
-            {
-                IDictionary<int, double> dict = new Dictionary<int, double>();
-                dict.Add(new KeyValuePair<int, double>(purchaseId, markup));
-                changeMarkupBufferDict.Add(new KeyValuePair<int, IDictionary<int, double>>(sparePartId, dict));
-            }//else
-        }//SaveMarkupChangeToBuffer
-        /// <summary>
-        /// Проверяет одинаков ли Процент Наценки у всех эл-тов переданного списка запчастей. 
-        /// </summary>
-        /// <param name="spareParts">Список проверяемых запчастей</param>
-        /// <returns></returns>
-        private bool IsSameMarkup(IList<SparePart> spareParts)
-        {
-            //Проверяем не одинаковая ли у всех записей цена продажи и процент наценки.
-            bool isSameMarkup = true;
-            for (int i = 0; i < spareParts.Count - 1; ++i)
-            {
-                for (int j = i + 1; j < spareParts.Count; ++j)
-                {
-                    if (spareParts[i].Markup != spareParts[j].Markup) isSameMarkup = false;
-                }//for j
-                if (isSameMarkup == false) break;
-            }//for i
-
-            return isSameMarkup;
-        }//IsSamePriceAndMarkup
         /// <summary>
         /// Возвращает новый Image на основе переданного, с пропорционального уменьшения размеров до заданных.
         /// </summary>
@@ -998,6 +944,12 @@ namespace PartsApp
                     select sp).ToList<SparePart>();
         }//FindSparePartsFromExtSpListBySparePartId
 
+
+        #region Методы вызова дополнительных окон.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
         private void addNewSpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AddSparePartForm().Show(this);
@@ -1028,6 +980,20 @@ namespace PartsApp
             new AddSparePartForm(Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value)).Show();
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
     }//Form1
 
     public static class Cloner

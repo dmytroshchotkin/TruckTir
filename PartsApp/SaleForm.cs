@@ -988,7 +988,7 @@ namespace PartsApp
             //узнаем процент заданной наценки.
             try
             {
-                KeyValuePair<string, double> markup = GetMarkupValue();
+                KeyValuePair<string, double> markup = GetMarkupType();
                 foreach (DataGridViewRow row in extDataGridView.SelectedRows)
                 {
                     //если не указана цена, то наценку не присваиваем.
@@ -1217,8 +1217,52 @@ namespace PartsApp
             return (KeyValuePair<string, double>)markup;
         }
 
+        /// <summary>
+        /// Возвращает выбранное поль-лем значение наценки. При вводе не числового значения выбрасывает ошибку.
+        /// </summary>
+        /// <returns></returns>
+        //private double GetMarkupValue()
+        //{
+        //    double markup = 0;
+        //    //Проверяем выбранное или введенное значение наценки на наличие в базе.
+        //    try
+        //    {
+        //        markup = PartsDAL.FindMarkupValue(markupComboBox.Text);
+        //    }//try
+        //    //Если значение введено вручную и не содержится в базе.    
+        //    catch (InvalidOperationException)
+        //    {
+        //        //Проверяем является введенное поль-лем значение числом.
+        //        markup = Convert.ToDouble(markupComboBox.Text);
+        //    }//catch
 
+        //    return markup;
+        //}//GetMarkupValue
 
+        /// <summary>
+        /// Возвращает тип наценки по заданному значению. 
+        /// </summary>
+        /// <param name="markup">Заданная наценка.</param>
+        /// <returns></returns>
+        private string GetMarkupType(double markup)
+        {
+            string markupType = null;
+            //Проверяем выбранное или введенное значение наценки на наличие в базе.
+            try
+            {
+                markupType = PartsDAL.FindMarkupType(markup);
+            }//try
+            //Если значение введено вручную и не содержится в базе.    
+            catch (InvalidOperationException)
+            {
+                if (markup > 0)
+                    markupType = "Другая наценка";
+                else if (markup < 0)
+                    markupType = "Уценка";
+            }//catch
+
+            return markupType;
+        }//GetMarkupType
                                                                              
 
         
