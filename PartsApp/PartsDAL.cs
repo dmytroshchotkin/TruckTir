@@ -2595,7 +2595,10 @@ namespace PartsApp
         }//FindPurchaseById
 
         #region Поиск по полям Markups.
-
+        /// <summary>
+        /// Возвращает список из всех типов и значений наценки.
+        /// </summary>
+        /// <returns></returns>
         public static IList<KeyValuePair<double, string>> FindAllMarkups()
         {
             IList<KeyValuePair<double, string>> markups = new List<KeyValuePair<double, string>>();
@@ -2622,6 +2625,11 @@ namespace PartsApp
             return markups;        
         }//FindAllMarkups
 
+        /// <summary>
+        /// Находит числовое значение наценки по заданному типу.
+        /// </summary>
+        /// <param name="markupType"></param>
+        /// <returns></returns>
         public static double FindMarkupValue(string markupType)
         {
             double? markup = null;
@@ -2630,29 +2638,34 @@ namespace PartsApp
             {
                 connection.Open();
 
-                //узнаем процент заданной наценки.
-                //foreach (var markType in FindAllMarkups())
-                //{
-                //    if (markType.Value == markupType)
-                //    {
-                //        markup = markType.Key; 
-                //        break;
-                //    }
-                //}
-
                 markup = FindAllMarkups().Where(mark => mark.Value == markupType).Select(mark => mark.Key).First();
-
-                //если наценка задавалась вручную (нужна проверка корректности ввода)
-                if (markup == null)
-                    markup = Convert.ToDouble(markupType);
-
+                
                 connection.Close();
             }//using
 
             return (double)markup;
         }//FindMarkupValue
+        /// <summary>
+        /// Находит тип наценки по числовому ключу.
+        /// </summary>
+        /// <param name="markupValue"></param>
+        /// <returns></returns>
+        public static string FindMarkupType(double markupValue)
+        {
+            //if (markupValue == null) return null;
+            string markupType = null;
 
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
 
+                markupType = FindAllMarkups().Where(mark => mark.Key == markupValue).Select(mark => mark.Value).First();
+
+                connection.Close();
+            }//using
+
+            return markupType;
+        }//FindMarkupValue
 
 
 

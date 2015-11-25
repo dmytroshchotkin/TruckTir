@@ -451,15 +451,7 @@ namespace PartsApp
         {
             if (e.KeyCode == Keys.Enter)
             {
-                try 
-                {
-                    //проверяем корректность ввода данных.
-                    double markup = Convert.ToDouble(markupComboBox.Text);
-                    if (markup <= 0) throw new Exception();
-                    //если введены корректные значения.
-                    markupComboBox_SelectedIndexChanged(sender, null);                
-                }//try
-                catch { toolTip.Show("Введены некорректные значения", this, markupComboBox.Location, 2000); }
+                markupComboBox_SelectedIndexChanged(sender, null);                                
             }//if
         }//markupComboBox_PreviewKeyDown 
 
@@ -471,23 +463,76 @@ namespace PartsApp
             saveChangesButton.Enabled = true; //сделать доступной кнопку "Сохранить изменения"
             cancelChangesButton.Enabled = true; //сделать доступной кнопку "Отменить изменения"
             //выделяем строки всех выделенных клеток.
-            foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+            foreach (DataGridViewCell cell in partsDataGridView.SelectedCells)    cell.OwningRow.Selected = true;
             foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
             //узнаем процент заданной наценки.
-            double markup = PartsDAL.FindMarkupValue(markupComboBox.Text);//GetMarkupValue();
-            //Если выделены только строки в partsDataGridView.
-            if (extPartsDataGridView.SelectedRows.Count == 0)
+            double markup = 0;
+            try
             {
-                partsDataGridViewMarkupChange(markup);              
-            }//if
-            //Если есть выделенные строки в extPartsDataGridView.
-            else 
-            {
-                extPartsDataGridViewMarkupChange(markup);                    
-            }//else
-
-
+                markup = GetMarkupValue();
+                //Если выделены только строки в partsDataGridView.
+                if (extPartsDataGridView.SelectedRows.Count == 0)
+                {
+                    partsDataGridViewMarkupChange(markup);
+                }//if
+                //Если есть выделенные строки в extPartsDataGridView.
+                else
+                {
+                    extPartsDataGridViewMarkupChange(markup);
+                }//else
+            }//try
+            catch 
+            { 
+                toolTip.Show("Введены некорректные значения", this, markupComboBox.Location, 2000); 
+            }//catch            
         }//markupComboBox_SelectedIndexChanged
+
+        /// <summary>
+        /// Возвращает выбранное поль-лем значение наценки. При вводе не числового значения выбрасывает ошибку.
+        /// </summary>
+        /// <returns></returns>
+        private double GetMarkupValue()
+        {
+            double markup = 0;
+            //Проверяем выбранное или введенное значение наценки на наличие в базе.
+            try
+            {
+                markup = PartsDAL.FindMarkupValue(markupComboBox.Text);
+            }//try
+            //Если значение введено вручную и не содержится в базе.    
+            catch (InvalidOperationException)
+            {
+                //Проверяем является введенное поль-лем значение числом.
+                markup = Convert.ToDouble(markupComboBox.Text);              
+            }//catch
+
+            return markup;
+        }//GetMarkupValue
+        /// <summary>
+        /// Возвращает тип наценки по заданному значению. 
+        /// </summary>
+        /// <param name="markup">Заданная наценка.</param>
+        /// <returns></returns>
+        private string GetMarkupType(double markup)
+        {
+            string markupType = null;
+            //Проверяем выбранное или введенное значение наценки на наличие в базе.
+            try
+            {
+                markupType = PartsDAL.FindMarkupType(markup);
+            }//try
+            //Если значение введено вручную и не содержится в базе.    
+            catch (InvalidOperationException)
+            {
+                if (markup > 0) 
+                    markupType = "Другая наценка";
+                else if (markup < 0)
+                    markupType = "Уценка";
+            }//catch
+
+            return markupType;
+        }//GetMarkupType
+
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
@@ -800,7 +845,7 @@ namespace PartsApp
                     if (sparePart.SparePartId == sparePartId)
                     {
                         sparePart.Markup = markup;
-                        sparePart.MarkupType = MarkupTypes.GetMarkupType(markup);
+                        sparePart.MarkupType = GetMarkupType(markup);//MarkupTypes.GetMarkupType(markup);
                         SaveMarkupChangeToBuffer(sparePart.SparePartId, sparePart.PurchaseId, markup);
                     }//if
                 }//foreach
@@ -829,7 +874,7 @@ namespace PartsApp
                     if (sparePart.SparePartId == sparePartId && sparePart.PurchaseId == purchaseId)
                     {
                         sparePart.Markup = markup;
-                        sparePart.MarkupType = MarkupTypes.GetMarkupType(markup);
+                        sparePart.MarkupType = GetMarkupType(markup);
                         SaveMarkupChangeToBuffer(sparePartId, purchaseId, markup);
                     }//if
                 }//foreach                
@@ -851,21 +896,6 @@ namespace PartsApp
             extPartsDataGridView.Invalidate();
 
         }//extPartsDataGridViewMarkupChange
-        /// <summary>
-        /// Возвращает процент наценки. Если она задана неправильно возвращается null.
-        /// </summary>
-        /// <returns></returns>
-        private double GetMarkupValue()
-        {
-            //узнаем процент заданной наценки.
-            double? markup = null;
-            foreach (var markType in markupTypes)
-                if (markType.Value == markupComboBox.Text) { markup = markType.Key; break; }
-            //если наценка задавалась вручную (нужна проверка корректности ввода)
-            if (markup == null)
-                markup = Convert.ToDouble(markupComboBox.Text);
-            return (double)markup;
-        }//GeyMarkupValue
         /// <summary>
         /// Метод сохраняющий в буфер изменения связанные с наценкой. 
         /// </summary>
