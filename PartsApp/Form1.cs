@@ -447,6 +447,14 @@ namespace PartsApp
         }//extPartsDataGridView_DataSourceChanged
         //События обработки изменения markupNumericUpDown     
 
+        
+
+        #region Методы связанные с изменением Наценки.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -533,6 +541,55 @@ namespace PartsApp
             return markupType;
         }//GetMarkupType
 
+        private void saveChangesButton_Click(object sender, EventArgs e)
+        {                      
+            //Визуальное выделение.
+/*!!!*/     //Task.Factory.StartNew(() => { progressBar.Maximum / 2; }); //Не пополняется прогресс бар, возм-но нужно запустить в отд. потоке.
+            progressBar.Value = progressBar.Maximum / 2;
+            Cursor = Cursors.WaitCursor;
+
+            try
+            {
+                PartsDAL.UpdateSparePartMarkup(changeMarkupBufferDict);
+                //Действия осущ-мые при удачной записи в базу.
+                saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопки недоступными.
+                progressBar.Value = progressBar.Maximum;
+                //Перезаписываем начальный список.            
+                origSpList = Cloner.Clone(SpList);
+                origExtSpList = Cloner.Clone(ExtSpList);
+
+                changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
+            }//try			
+            catch (System.Data.SQLite.SQLiteException ex)
+            {
+                if (ex.Message == "database is locked\r\ndatabase is locked")
+                    MessageBox.Show(ex.Message);
+            }//catch    
+
+            
+            progressBar.Value = 0;
+            Cursor = Cursors.Default;
+        }//saveChangesButton_Click
+
+        private void cancelChangesButton_Click(object sender, EventArgs e)
+        {
+            saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопку недоступной.
+             
+            //Отменяем все изменения.
+            SpList = (List<SparePart>)Cloner.Clone(origSpList);
+            ExtSpList = (List<SparePart>)Cloner.Clone(origExtSpList);
+
+            partsDataGridView.DataSource = SpList;
+
+            changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
+
+        }//cancelChangesButton_Click
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
@@ -566,54 +623,7 @@ namespace PartsApp
             extPartsDataGridView.Invalidate();    
 
         }//excRateNumericUpDown_ValueChanged
-        private void saveChangesButton_Click(object sender, EventArgs e)
-        {
-            saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопки недоступными.          
-
-            progressBar.Value += progressBar.Step;
-            Cursor = Cursors.WaitCursor;
-
-            int count = 0;
-            while(true)
-            {
-                try
-                {
-                    PartsDAL.UpdateSparePartMarkup(changeMarkupBufferDict);
-                    if (count > 0) MessageBox.Show("All right in this time!");
-                    
-                    break;                    
-                }//try
-                catch (Exception ex)
-                {
-                    progressBar.Value = progressBar.Maximum / 2;
-                    ++count;
-                    MessageBox.Show(ex.Message);
-                    System.Threading.Thread.Sleep(1000);
-                }//catch
-            }//while
-            //Перезаписываем начальный список.
-            progressBar.Value = progressBar.Maximum;
-            origSpList = (List<SparePart>)Cloner.Clone(SpList);
-            origExtSpList = (List<SparePart>)Cloner.Clone(ExtSpList);
-
-            changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
-            progressBar.Value = 0;
-            Cursor = Cursors.Default;
-        }//saveChangesButton_Click
-        private void cancelChangesButton_Click(object sender, EventArgs e)
-        {
-            saveChangesButton.Enabled = false; //делаем кнопку недоступной.
-            cancelChangesButton.Enabled = false; //делаем кнопку недоступной.
-
-            //Отменяем все изменения.
-            SpList = (List<SparePart>)Cloner.Clone(origSpList);
-            ExtSpList = (List<SparePart>)Cloner.Clone(origExtSpList);
-
-            partsDataGridView.DataSource = SpList;
-
-            changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
-            
-        }//cancelChangesButton_Click
+        
         //Событие для отображения расширенной информации о Наличии запчасти.
         private void partsDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -1071,3 +1081,7 @@ namespace PartsApp
 
 /*Сам столкнулся с этим когда работают два процесса. Один создаёт буфер, второй пишет в него. 
  Ошибка возникает, когда первый процесс внезапно сменяет буфер, второй в это время "промахивается".*/
+
+
+/*Рефакторинг*/
+//1)saveChangesButton_Click

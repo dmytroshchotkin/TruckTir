@@ -123,9 +123,12 @@ namespace PartsApp
         /// <param name="purchaseId">Id прихода с изменяемой наценкой</param>
         /// <param name="markup">Значение наценки на которое стоит поменять текущее значение.</param>
         /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
-        public static void UpdateSparePartMarkup(int sparePartId, int purchaseId, double markup, SQLiteConnection openConnection)
+        public static void UpdateSparePartMarkup(int sparePartId, int purchaseId, double markup, SQLiteCommand cmd)
         {
-            var cmd = new SQLiteCommand("UPDATE Avaliability SET Markup = @Markup WHERE SparePartId = @SparePartId AND PurchaseId = @PurchaseId;", openConnection);
+            const string query = "UPDATE Avaliability SET Markup = @Markup WHERE SparePartId = @SparePartId AND PurchaseId = @PurchaseId;";
+            cmd.CommandText = query;
+
+            cmd.Parameters.Clear();
 
             cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
             cmd.Parameters.AddWithValue("@Markup", markup);
@@ -139,22 +142,22 @@ namespace PartsApp
         /// <param name="sparePartsId">Список Id запчастей изменяемых записей.</param>
         /// <param name="purchasesId">Список Id приходов изменяемых записей</param>
         /// <param name="markups">Значения наценки на которое стоит поменять текущие значения.</param>
-        public static void UpdateSparePartMarkup(IList<int> sparePartsId, IList<int> purchasesId, IList<double> markups)
-        {
-            //Проверяем равенство размеров всех переданных коллекций.
-            if (sparePartsId.Count != purchasesId.Count || purchasesId.Count != markups.Count)
-                throw new InvalidEnumArgumentException("Кол-во записей в передаваемых коллекциях не совпадает");
+        //public static void UpdateSparePartMarkup(IList<int> sparePartsId, IList<int> purchasesId, IList<double> markups)
+        //{
+        //    //Проверяем равенство размеров всех переданных коллекций.
+        //    if (sparePartsId.Count != purchasesId.Count || purchasesId.Count != markups.Count)
+        //        throw new InvalidEnumArgumentException("Кол-во записей в передаваемых коллекциях не совпадает");
 
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
+        //    using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+        //    {
+        //        connection.Open();
 
-                for (int i = 0; i < sparePartsId.Count; ++i)
-                    UpdateSparePartMarkup(sparePartsId[i], purchasesId[i], markups[i], connection);
+        //        for (int i = 0; i < sparePartsId.Count; ++i)
+        //            UpdateSparePartMarkup(sparePartsId[i], purchasesId[i], markups[i], connection);
                 
-                connection.Close();
-            }//using 
-        }//UpdateSparePartMarkup
+        //        connection.Close();
+        //    }//using 
+        //}//UpdateSparePartMarkup
         /// <summary>
         /// Изменяет наценку у записей с заданными SparePartId и PurchaseId на заданную Markup
         /// </summary>
@@ -164,20 +167,36 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                
-                int sparePartId = 0, purchaseId = 0;
-                double markup = 0;
-                foreach (KeyValuePair<int, IDictionary<int, double>> spIdKeyValue in changeMarkupDict)
-                {
-                    sparePartId = spIdKeyValue.Key;
 
-                    foreach (KeyValuePair<int, double> purchIdKeyValue in spIdKeyValue.Value)
+                using (SQLiteTransaction trans = connection.BeginTransaction())
+                {
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
                     {
-                        purchaseId = purchIdKeyValue.Key;
-                        markup = purchIdKeyValue.Value;
-                        UpdateSparePartMarkup(sparePartId, purchaseId, markup, connection);
-                    }//foreach                    
-                }//foreach
+                        try
+                        {
+                            int sparePartId = 0, purchaseId = 0;
+                            double markup = 0;
+                            foreach (KeyValuePair<int, IDictionary<int, double>> spIdKeyValue in changeMarkupDict)
+                            {
+                                sparePartId = spIdKeyValue.Key;
+
+                                foreach (KeyValuePair<int, double> purchIdKeyValue in spIdKeyValue.Value)
+                                {
+                                    purchaseId = purchIdKeyValue.Key;
+                                    markup = purchIdKeyValue.Value;
+                                    UpdateSparePartMarkup(sparePartId, purchaseId, markup, cmd);
+                                }//foreach                    
+                            }//foreach
+
+                            trans.Commit();
+                        }//try
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new System.Data.SQLite.SQLiteException(ex.Message);
+                        }//catch
+                    }//using cmd
+                }//using transasction
 
                 connection.Close();
             }//using 
@@ -659,7 +678,7 @@ namespace PartsApp
                 }//using transaction
 
                 connection.Close();
-            }//using connectio
+            }//using connection
             if (message != null) throw new Exception(message);
 
             return saleId;
@@ -2595,6 +2614,7 @@ namespace PartsApp
         }//FindPurchaseById
 
         #region Поиск по полям Markups.
+
         /// <summary>
         /// Возвращает список из всех типов и значений наценки.
         /// </summary>
