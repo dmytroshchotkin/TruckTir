@@ -27,7 +27,7 @@ namespace PartsApp
 
         double inTotal;
         IList<int> sparePartsId = new List<int>();   //коллекция для хранения Id того товара, что уже есть в таблице.
-        List<KeyValuePair<string, double>> markupTypes; //убрать.
+        //List<KeyValuePair<string, double>> markupTypes; //убрать.
 
 
         public PurchaseForm()
@@ -44,17 +44,8 @@ namespace PartsApp
             purchaseDateTimePicker.MaxDate = DateTime.Now.Date;
             purchaseDateTimePicker.Value = DateTime.Now.Date;
 
-            //var markupTypes = Form1.markupTypes;
-            markupTypes = new List<KeyValuePair<string, double>>()
-            {
-                new KeyValuePair<string, double>("Розница", 100),
-                new KeyValuePair<string, double>("Мелкий опт", 70),
-                new KeyValuePair<string, double>("Средний опт", 50),
-                new KeyValuePair<string, double>("Крупный опт", 30),            
-            };
-
-            foreach (var type in markupTypes)
-                markupComboBox.Items.Add(type.Key);
+            //Вносим все типы наценок в markupComboBox             
+            markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().Select(markup => markup.Value).ToArray<string>());
 
             currencyComboBox.SelectedItem = "руб";
         }//PurchaseForm_Load
@@ -555,9 +546,10 @@ namespace PartsApp
                         int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
                         if (sparePartId != currentSparePart.SparePartId)
                         {
-                            foreach (var sparePart in spareParts)
-                                if (sparePart.SparePartId == sparePartId)
-                                    currentSparePart = sparePart;                            
+                            currentSparePart = spareParts.Where(sparePart => sparePart.SparePartId == sparePartId).First();
+                            //foreach (var sparePart in spareParts)
+                                //if (sparePart.SparePartId == sparePartId)
+                                    //currentSparePart = sparePart;                            
                         }
 
                         //Округляем Price до 2-х десятичных знаков.
@@ -566,6 +558,9 @@ namespace PartsApp
                         cell.Value = String.Format("{0:N2}", price);
 
                         amountCalculation(cell.OwningRow);
+
+                        //Присваиваем автоматическую наценку равную розничной цене. 
+/*!!!*/                 RowMarkupChanges(row, "Розница"); //!!!Костыль! Необх-мо пометить какую-то запись в табл. Markups как дефолтную и присваивать её здесь.
                     }//try
                     catch
                     {
@@ -592,9 +587,10 @@ namespace PartsApp
                         int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
                         if (sparePartId != currentSparePart.SparePartId)
                         {
-                            foreach (var sparePart in spareParts)
-                                if (sparePart.SparePartId == sparePartId)
-                                    currentSparePart = sparePart;
+                            currentSparePart = spareParts.Where(sparePart => sparePart.SparePartId == sparePartId).First();
+                            //foreach (var sparePart in spareParts)
+                              //  if (sparePart.SparePartId == sparePartId)
+                                //    currentSparePart = sparePart;
                         }//if
                         currentSparePart.Count = count;
 
@@ -842,7 +838,7 @@ namespace PartsApp
             try
             {
                 //узнаем процент заданной наценки.
-                double markup = MarkupTypes.GetMarkupValue(markupComboBox.Text);
+                //double markup = MarkupTypes.GetMarkupValue(markupComboBox.Text);
 
                 foreach (DataGridViewRow row in purchaseDataGridView.SelectedRows)
                 {
@@ -857,15 +853,16 @@ namespace PartsApp
                             continue;
                         }
 
-                        row.Cells["Markup"].Value = MarkupTypes.GetMarkupType(markup);
+                        RowMarkupChanges(row, markupComboBox.Text);
+                        //row.Cells["Markup"].Value = MarkupTypes.GetMarkupType(markup);
 
-                        foreach (SparePart sparePart in spareParts)
-                            if (sparePart.SparePartId == sparePartId)
-                            {
-                                sparePart.Markup = markup;
-                                //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
-                                row.Cells["SellingPrice"].Value = sparePart.SellingPrice;
-                            }
+                        //foreach (SparePart sparePart in spareParts)
+                        //    if (sparePart.SparePartId == sparePartId)
+                        //    {
+                        //        sparePart.Markup = markup;
+                        //        //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
+                        //        row.Cells["SellingPrice"].Value = sparePart.SellingPrice;
+                        //    }
                     }//if
                 }//foreach
             }//try
@@ -874,6 +871,28 @@ namespace PartsApp
                 toolTip.Show("Введено некорректное значение.", this, markupComboBox.Location, 2000);
             }
         }//markupComboBox_SelectedIndexChanged
+
+        /// <summary>
+        /// Метод изменения наценки на заданную.
+        /// </summary>
+        /// <param name="row">Строка в которой происходит из-ние наценки.</param>
+        /// <param name="MarkupType">Тип наценки присваиваемая данной строке.</param>
+        private void RowMarkupChanges(DataGridViewRow row, string MarkupType)
+        {
+            double markup = MarkupTypes.GetMarkupValue(MarkupType);
+
+            row.Cells["Markup"].Value = MarkupTypes.GetMarkupType(markup);
+
+            foreach (SparePart sparePart in spareParts)
+            {
+                if (sparePart.SparePartId == Convert.ToInt32(row.Cells["SparePartId"].Value));
+                {
+                    sparePart.Markup = markup;
+                    //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
+                    row.Cells["SellingPrice"].Value = sparePart.SellingPrice;
+                }//if
+            }//foreach
+        }//RowMarkupChanges
 
         private void purchaseDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -1067,29 +1086,9 @@ namespace PartsApp
             ExcelApp.UserControl = true;
 
             this.Close();
-        }//LoadPurchaseToExcelFile
+        }//LoadPurchaseToExcelFile        
 
-
-        //Удалить!!
-        /// <summary>
-        /// Возвращает процент наценки. Если она задана неправильно возвращается null.
-        /// </summary>
-        /// <returns></returns> 
-        private double GetMarkupValue()
-        {
-            //узнаем процент заданной наценки.
-            double? markup = null;
-            foreach (var markType in markupTypes)
-                if (markType.Key == markupComboBox.Text) { markup = markType.Value; break; }
-            //если наценка задавалась вручную (нужна проверка корректности ввода)
-            if (markup == null)
-                markup = Convert.ToDouble(markupComboBox.Text);
-            return (double)markup;
-        }
-
-                                                                                 
-
-        
+                                                                                         
     }//PurchaseForm
 
 
