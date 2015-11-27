@@ -27,7 +27,6 @@ namespace PartsApp
 
         double inTotal;
         IList<int> sparePartsId = new List<int>();   //коллекция для хранения Id того товара, что уже есть в таблице.
-        //List<KeyValuePair<string, double>> markupTypes; //убрать.
 
 
         public PurchaseForm()
@@ -38,7 +37,7 @@ namespace PartsApp
         private void PurchaseForm_Load(object sender, EventArgs e)
         {
             storageComboBox.SelectedItem = PartsApp.SparePart.MainStorage;
-            //currencyComboBox.SelectedItem = "руб";
+
             supplierTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllSuppliersName());
 
             purchaseDateTimePicker.MaxDate = DateTime.Now.Date;
