@@ -12,6 +12,10 @@ namespace PartsApp
 {
     public partial class AddEmployeeForm : Form
     {
+        string beginFilePath = null;        //переменные не будут равны null если требуется скопировать файл в нужную папку.
+        string endFilePath = null;
+
+
         public AddEmployeeForm()
         {
             InitializeComponent();
@@ -34,6 +38,63 @@ namespace PartsApp
             else
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y + contactInfoPanel.Size.Height);
         }
+
+        /// <summary>
+        /// Метод выдачи визуального сообщения о том что введены некорректные данные.
+        /// </summary>
+        /// <param name="inputControl">Контрол ввода инф-ции</param>
+        /// <param name="backControl">Контрол исп-мый как рамка</param>
+        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
+        /// <param name="toolTipMessage">Всплывающее сообщение.</param>
+        /// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param>
+        private void WrongValueInput(Control inputControl, Control backControl, Control starControl, string toolTipMessage, int toolTipShowTime)
+        {
+            starControl.ForeColor = backControl.BackColor = Color.Red;
+            toolTip.SetToolTip(inputControl, toolTipMessage);
+            toolTip.Show(toolTipMessage, this, backControl.Location, toolTipShowTime);
+        }//wrongValueInput
+        /// <summary>
+        ///  Метод выдачи визуального сообщения о том что введены некорректные данные.
+        /// </summary>
+        /// <param name="inputControl">Контрол ввода инф-ции</param>
+        /// <param name="backControl">Контрол исп-мый как рамка</param>
+        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
+        /// <param name="toolTipLocation">Позиция где будет показано всплывающее сообщение</param>
+        /// <param name="toolTipMessage">Всплывающее сообщение.</param>
+        /// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param
+        private void WrongValueInput(Control inputControl, Control backControl, Control starControl, Point toolTipLocation, string toolTipMessage, int toolTipShowTime)
+        {
+            starControl.ForeColor = backControl.BackColor = Color.Red;
+            toolTip.SetToolTip(inputControl, toolTipMessage);
+            toolTip.Show(toolTipMessage, this, toolTipLocation, toolTipShowTime);
+        }//wrongValueInput
+        /// <summary>
+        /// Метод выдачи визуального сообщения о том что введены корректные данные.
+        /// </summary>
+        /// <param name="inputControl">Контрол ввода инф-ции</param>
+        /// <param name="backControl">Контрол исп-мый как рамка</param>
+        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
+        private void CorrectValueInput(Control inputControl, Control backControl, Control starControl)
+        {
+            starControl.ForeColor = Color.Black;
+            backControl.BackColor = SystemColors.Control;
+            toolTip.SetToolTip(inputControl, String.Empty);
+        }//CorrectValueInput
+        /// <summary>
+        /// Метод выдачи визуального сообщения о том что введены корректные данные.
+        /// </summary>
+        /// <param name="inputControl">Контрол ввода инф-ции</param>
+        /// <param name="backControl">Контрол исп-мый как рамка</param>
+        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
+        /// <param name="toolTipMessage">Всплывающее сообщение.</param>
+        /// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param>
+        private void CorrectValueInput(Control inputControl, Control backControl, Control starControl, string toolTipMessage, int toolTipShowTime)
+        {
+            starControl.ForeColor = Color.Black;
+            backControl.BackColor = SystemColors.Control;
+            toolTip.SetToolTip(inputControl, toolTipMessage);
+            toolTip.Show(toolTipMessage, this, backControl.Location, toolTipShowTime);
+        }//CorrectValueInput
 
         /// <summary>
         /// Возвращает Id контактной информации если она введена, иначе возвращает null.
@@ -85,24 +146,146 @@ namespace PartsApp
                 }//if
             }//foreach
             return false;
-        }
+        }//isThereContactInfo
 
         private void lastNameTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(lastNameTextBox.Text))
             {
-                lastNameStarLabel.ForeColor = lastNameBackPanel.BackColor = Color.Red;
-
-                toolTip.SetToolTip(lastNameTextBox, "Введите название компании или ФИО поставщика");
-                toolTip.Show("Введите название компании или ФИО поставщика", this, lastNameBackPanel.Location, 5000);
+                WrongValueInput(lastNameTextBox, lastNameBackPanel, lastNameStarLabel, "Введите фамилию.", 3000);
             }
-            else //если название введено правильно
+            else //если фамилия введена правильно
             {
-                lastNameStarLabel.ForeColor = Color.Black;
-                lastNameBackPanel.BackColor = SystemColors.Control;
-                toolTip.SetToolTip(lastNameTextBox, String.Empty);
+                CorrectValueInput(lastNameTextBox, lastNameBackPanel, lastNameStarLabel);
             }//else
-        }//isThereContactInfo
+        }//lastNameTextBox_Leave
 
-    }
-}
+        private void firstNameTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(firstNameTextBox.Text))
+            {
+                WrongValueInput(firstNameTextBox, firstNameBackPanel, firstNameStarLabel, "Введите имя.", 3000);
+            }
+            else //если фамилия введена правильно
+            {
+                CorrectValueInput(firstNameTextBox, firstNameBackPanel, firstNameStarLabel);
+            }//else
+        }//firstNameTextBox_Leave
+        
+        private void passportNumTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(passportNumTextBox.Text))
+            {
+                WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel, "Введите серию и номер паспорта.", 3000);
+            }
+            else //если фамилия введена правильно
+            {
+                CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel);
+            }//else
+        }//passportNumTextBox_Leave
+
+        private void passwordTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(passwordTextBox.Text))
+            {
+                Point location = new Point(bottomPanel.Location.X + passwordBackPanel.Location.X, bottomPanel.Location.Y + passwordBackPanel.Location.Y);
+                WrongValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel, location, "Введите пароль", 3000);
+                passwordAgainTextBox.Enabled = false;
+            }//if
+            else //если фамилия введена правильно
+            {
+                CorrectValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel);
+                passwordAgainTextBox.Enabled = true;
+            }//else
+        }//passwordTextBox_Leave
+
+        private void passwordAgainTextBox_Leave(object sender, EventArgs e)
+        {
+            Point location = new Point(bottomPanel.Location.X + passwordAgainBackPanel.Location.X, bottomPanel.Location.Y + passwordAgainBackPanel.Location.Y);
+            //Проверяем повторный ввод пароля на корректность.
+            if (String.IsNullOrWhiteSpace(passwordAgainTextBox.Text))
+            {                
+                WrongValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel, location, "Повторите пароль", 3000);
+            }//if
+            else if (passwordAgainTextBox.Text != passwordTextBox.Text)
+            {
+                WrongValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel, location, "Пароли не совпадают", 3000);
+            }
+            else
+            {
+                CorrectValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel);
+            }//else
+        }
+
+        private void accessLayerComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (accessLayerComboBox.SelectedIndex == -1)
+            {
+                Point location = new Point(bottomPanel.Location.X + accessLayerBackPanel.Location.X, bottomPanel.Location.Y + accessLayerBackPanel.Location.Y);
+                WrongValueInput(accessLayerComboBox, accessLayerBackPanel, accessLayerStarLabel, location, "Выберите уровень доступа данного сотрудника.", 3000);
+            }
+            else //если фамилия введена правильно
+            {
+                CorrectValueInput(accessLayerComboBox, accessLayerComboBox, accessLayerComboBox);
+            }//else
+        }// accessLayerComboBox_SelectedIndexChanged
+
+
+        private void addEmployeePhotoButton_Click(object sender, EventArgs e)
+        {
+            if (photoOpenFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = System.IO.Path.GetFileName(photoOpenFileDialog.FileName);
+
+                toolTip.SetToolTip(photoPictureBox, fileName);
+                //Проверяем находится ли фото в нужной папке. 
+                string path = @"Сотрудники\" + toolTip.GetToolTip(photoPictureBox);
+
+                if (System.IO.Path.GetFullPath(path) == photoOpenFileDialog.FileName)
+                {
+                    //Если фото выбрано, то подгоняем его размер под PictureBox и добавляем всплывающую подсказку.
+                    photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
+                    toolTip.SetToolTip(photoPictureBox, fileName);
+                }//if
+                //если выбранное фото не находится в нужной папке. 
+                else
+                    if (System.IO.File.Exists(System.IO.Path.GetFullPath(path))) //проверяем есть ли фото с таким именем в нужной папке. 
+                    {
+                        photoPictureBox.Image = new Bitmap(Image.FromFile(System.IO.Path.GetFullPath(path)), photoPictureBox.Size);
+                        //Если файл в нужной папке не является подходящим, то очищаем pictureBox.
+                        if (DialogResult.Cancel == MessageBox.Show("Этот файл или файл с таким именем уже существует в папке \"Сотрудники\".\nЕсли данное фото, является правильным, нажмите \"Ok\".\nИначе нажмите \"Отмена\" измените имя выбираемого файла и попробуйте ещё раз.", "Совпадение имен файлов", MessageBoxButtons.OKCancel))
+                            deselectToolStripMenuItem_Click(sender, e);
+                    }//if
+                    //Если файл не находится в нужной папке, и при этом нет совпадения имен, копируем его.
+                    else
+                    {
+                        photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
+                        beginFilePath = photoOpenFileDialog.FileName;
+                        endFilePath = System.IO.Path.GetFullPath(path);
+                    }//else
+
+            }//if
+        }//addEmployeePhotoButton_Click
+
+        //Событие для отмены выбора фотографии.
+        private void deselectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            photoPictureBox.Image = null;
+            photoOpenFileDialog.FileName = String.Empty;
+            toolTip.SetToolTip(photoPictureBox, String.Empty);
+        }
+
+        
+
+        
+        
+
+        
+
+        
+
+
+
+
+    }//AddEmployeeForm
+}//namespace

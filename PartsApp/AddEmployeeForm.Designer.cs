@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.addEmployeePhotoButton = new System.Windows.Forms.Button();
-            this.employeePhotoPictureBox = new System.Windows.Forms.PictureBox();
+            this.photoPictureBox = new System.Windows.Forms.PictureBox();
             this.middleNameTextBox = new System.Windows.Forms.TextBox();
             this.lastNameLabel = new System.Windows.Forms.Label();
             this.middleNameLabel = new System.Windows.Forms.Label();
@@ -76,11 +76,12 @@
             this.countryLabel = new System.Windows.Forms.Label();
             this.addContactInfoButton = new System.Windows.Forms.Button();
             this.bottomPanel = new System.Windows.Forms.Panel();
+            this.accessLayerBackPanel = new System.Windows.Forms.Panel();
+            this.accessLayerComboBox = new System.Windows.Forms.ComboBox();
             this.passwordAgainBackPanel = new System.Windows.Forms.Panel();
             this.passwordAgainTextBox = new System.Windows.Forms.TextBox();
             this.passwordBackPanel = new System.Windows.Forms.Panel();
             this.passwordTextBox = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.accessLayerLabel = new System.Windows.Forms.Label();
             this.passwordAgainLabel = new System.Windows.Forms.Label();
             this.passwordLabel = new System.Windows.Forms.Label();
@@ -92,16 +93,19 @@
             this.passwordAgainStarLabel = new System.Windows.Forms.Label();
             this.accessLayerStarLabel = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.panel1 = new System.Windows.Forms.Panel();
-            ((System.ComponentModel.ISupportInitialize)(this.employeePhotoPictureBox)).BeginInit();
+            this.photoOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.photoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).BeginInit();
             this.lastNameBackPanel.SuspendLayout();
             this.firstNameBackPanel.SuspendLayout();
             this.passportNumBackPanel.SuspendLayout();
             this.contactInfoPanel.SuspendLayout();
             this.bottomPanel.SuspendLayout();
+            this.accessLayerBackPanel.SuspendLayout();
             this.passwordAgainBackPanel.SuspendLayout();
             this.passwordBackPanel.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.photoContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // addEmployeePhotoButton
@@ -112,15 +116,16 @@
             this.addEmployeePhotoButton.TabIndex = 51;
             this.addEmployeePhotoButton.Text = "Добавить фото";
             this.addEmployeePhotoButton.UseVisualStyleBackColor = true;
+            this.addEmployeePhotoButton.Click += new System.EventHandler(this.addEmployeePhotoButton_Click);
             // 
-            // employeePhotoPictureBox
+            // photoPictureBox
             // 
-            this.employeePhotoPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.employeePhotoPictureBox.Location = new System.Drawing.Point(324, 12);
-            this.employeePhotoPictureBox.Name = "employeePhotoPictureBox";
-            this.employeePhotoPictureBox.Size = new System.Drawing.Size(276, 224);
-            this.employeePhotoPictureBox.TabIndex = 50;
-            this.employeePhotoPictureBox.TabStop = false;
+            this.photoPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.photoPictureBox.Location = new System.Drawing.Point(324, 12);
+            this.photoPictureBox.Name = "photoPictureBox";
+            this.photoPictureBox.Size = new System.Drawing.Size(276, 224);
+            this.photoPictureBox.TabIndex = 50;
+            this.photoPictureBox.TabStop = false;
             // 
             // middleNameTextBox
             // 
@@ -196,6 +201,7 @@
             this.firstNameTextBox.Name = "firstNameTextBox";
             this.firstNameTextBox.Size = new System.Drawing.Size(192, 20);
             this.firstNameTextBox.TabIndex = 24;
+            this.firstNameTextBox.Leave += new System.EventHandler(this.firstNameTextBox_Leave);
             // 
             // firstNameStarLabel
             // 
@@ -230,6 +236,7 @@
             this.passportNumTextBox.Name = "passportNumTextBox";
             this.passportNumTextBox.Size = new System.Drawing.Size(120, 20);
             this.passportNumTextBox.TabIndex = 24;
+            this.passportNumTextBox.Leave += new System.EventHandler(this.passportNumTextBox_Leave);
             // 
             // passportNumStarLabel
             // 
@@ -510,7 +517,7 @@
             // 
             // bottomPanel
             // 
-            this.bottomPanel.Controls.Add(this.panel1);
+            this.bottomPanel.Controls.Add(this.accessLayerBackPanel);
             this.bottomPanel.Controls.Add(this.passwordAgainBackPanel);
             this.bottomPanel.Controls.Add(this.passwordBackPanel);
             this.bottomPanel.Controls.Add(this.accessLayerLabel);
@@ -525,29 +532,52 @@
             this.bottomPanel.Controls.Add(this.accessLayerStarLabel);
             this.bottomPanel.Location = new System.Drawing.Point(5, 608);
             this.bottomPanel.Name = "bottomPanel";
-            this.bottomPanel.Size = new System.Drawing.Size(595, 151);
+            this.bottomPanel.Size = new System.Drawing.Size(595, 187);
             this.bottomPanel.TabIndex = 83;
+            // 
+            // accessLayerBackPanel
+            // 
+            this.accessLayerBackPanel.Controls.Add(this.accessLayerComboBox);
+            this.accessLayerBackPanel.Location = new System.Drawing.Point(237, 115);
+            this.accessLayerBackPanel.Name = "accessLayerBackPanel";
+            this.accessLayerBackPanel.Size = new System.Drawing.Size(125, 25);
+            this.accessLayerBackPanel.TabIndex = 79;
+            // 
+            // accessLayerComboBox
+            // 
+            this.accessLayerComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.accessLayerComboBox.FormattingEnabled = true;
+            this.accessLayerComboBox.Items.AddRange(new object[] {
+            "Обычный",
+            "Администратор"});
+            this.accessLayerComboBox.Location = new System.Drawing.Point(2, 2);
+            this.accessLayerComboBox.Name = "accessLayerComboBox";
+            this.accessLayerComboBox.Size = new System.Drawing.Size(121, 21);
+            this.accessLayerComboBox.TabIndex = 73;
+            this.accessLayerComboBox.SelectedIndexChanged += new System.EventHandler(this.accessLayerComboBox_SelectedIndexChanged);
             // 
             // passwordAgainBackPanel
             // 
             this.passwordAgainBackPanel.Controls.Add(this.passwordAgainTextBox);
-            this.passwordAgainBackPanel.Location = new System.Drawing.Point(265, 70);
+            this.passwordAgainBackPanel.Location = new System.Drawing.Point(440, 73);
             this.passwordAgainBackPanel.Name = "passwordAgainBackPanel";
             this.passwordAgainBackPanel.Size = new System.Drawing.Size(79, 24);
             this.passwordAgainBackPanel.TabIndex = 78;
             // 
             // passwordAgainTextBox
             // 
+            this.passwordAgainTextBox.Enabled = false;
             this.passwordAgainTextBox.Location = new System.Drawing.Point(2, 2);
             this.passwordAgainTextBox.Name = "passwordAgainTextBox";
             this.passwordAgainTextBox.PasswordChar = '*';
             this.passwordAgainTextBox.Size = new System.Drawing.Size(75, 20);
             this.passwordAgainTextBox.TabIndex = 69;
+            this.passwordAgainTextBox.Leave += new System.EventHandler(this.passwordAgainTextBox_Leave);
             // 
             // passwordBackPanel
             // 
             this.passwordBackPanel.Controls.Add(this.passwordTextBox);
-            this.passwordBackPanel.Location = new System.Drawing.Point(112, 70);
+            this.passwordBackPanel.Location = new System.Drawing.Point(158, 73);
             this.passwordBackPanel.Name = "passwordBackPanel";
             this.passwordBackPanel.Size = new System.Drawing.Size(79, 24);
             this.passwordBackPanel.TabIndex = 77;
@@ -559,23 +589,12 @@
             this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Size = new System.Drawing.Size(75, 20);
             this.passwordTextBox.TabIndex = 69;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Обычный",
-            "Администратор"});
-            this.comboBox1.Location = new System.Drawing.Point(2, 2);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 73;
+            this.passwordTextBox.Leave += new System.EventHandler(this.passwordTextBox_Leave);
             // 
             // accessLayerLabel
             // 
             this.accessLayerLabel.AutoSize = true;
-            this.accessLayerLabel.Location = new System.Drawing.Point(365, 80);
+            this.accessLayerLabel.Location = new System.Drawing.Point(135, 125);
             this.accessLayerLabel.Name = "accessLayerLabel";
             this.accessLayerLabel.Size = new System.Drawing.Size(100, 13);
             this.accessLayerLabel.TabIndex = 72;
@@ -584,11 +603,11 @@
             // passwordAgainLabel
             // 
             this.passwordAgainLabel.AutoSize = true;
-            this.passwordAgainLabel.Location = new System.Drawing.Point(203, 76);
+            this.passwordAgainLabel.Location = new System.Drawing.Point(297, 76);
             this.passwordAgainLabel.Name = "passwordAgainLabel";
-            this.passwordAgainLabel.Size = new System.Drawing.Size(56, 13);
+            this.passwordAgainLabel.Size = new System.Drawing.Size(139, 13);
             this.passwordAgainLabel.TabIndex = 70;
-            this.passwordAgainLabel.Text = "Ещё раз :";
+            this.passwordAgainLabel.Text = "Введите пароль ещё раз :";
             this.toolTip.SetToolTip(this.passwordAgainLabel, "Повторный ввод пароля учетной записи");
             // 
             // passwordLabel
@@ -596,9 +615,9 @@
             this.passwordLabel.AutoSize = true;
             this.passwordLabel.Location = new System.Drawing.Point(20, 76);
             this.passwordLabel.Name = "passwordLabel";
-            this.passwordLabel.Size = new System.Drawing.Size(91, 13);
+            this.passwordLabel.Size = new System.Drawing.Size(132, 13);
             this.passwordLabel.TabIndex = 68;
-            this.passwordLabel.Text = "Пароль уч. зап. :";
+            this.passwordLabel.Text = "Пароль учетной записи :";
             this.toolTip.SetToolTip(this.passwordLabel, "Пароль учетной записи");
             // 
             // descrLabel
@@ -612,7 +631,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(373, 116);
+            this.cancelButton.Location = new System.Drawing.Point(373, 161);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 67;
@@ -629,7 +648,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(115, 116);
+            this.okButton.Location = new System.Drawing.Point(115, 161);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 66;
@@ -650,7 +669,7 @@
             // 
             this.passwordAgainStarLabel.AutoSize = true;
             this.passwordAgainStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.passwordAgainStarLabel.Location = new System.Drawing.Point(192, 64);
+            this.passwordAgainStarLabel.Location = new System.Drawing.Point(286, 64);
             this.passwordAgainStarLabel.Name = "passwordAgainStarLabel";
             this.passwordAgainStarLabel.Size = new System.Drawing.Size(20, 25);
             this.passwordAgainStarLabel.TabIndex = 75;
@@ -660,19 +679,29 @@
             // 
             this.accessLayerStarLabel.AutoSize = true;
             this.accessLayerStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.accessLayerStarLabel.Location = new System.Drawing.Point(355, 67);
+            this.accessLayerStarLabel.Location = new System.Drawing.Point(125, 112);
             this.accessLayerStarLabel.Name = "accessLayerStarLabel";
             this.accessLayerStarLabel.Size = new System.Drawing.Size(20, 25);
             this.accessLayerStarLabel.TabIndex = 76;
             this.accessLayerStarLabel.Text = "*";
             // 
-            // panel1
+            // photoOpenFileDialog
             // 
-            this.panel1.Controls.Add(this.comboBox1);
-            this.panel1.Location = new System.Drawing.Point(467, 70);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(125, 25);
-            this.panel1.TabIndex = 79;
+            this.photoOpenFileDialog.Filter = "Image files (*.png;*.jpg;*jpeg)|*.png;*.jpg;*jpeg";
+            // 
+            // photoContextMenuStrip
+            // 
+            this.photoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deselectToolStripMenuItem});
+            this.photoContextMenuStrip.Name = "photoContextMenuStrip";
+            this.photoContextMenuStrip.Size = new System.Drawing.Size(188, 26);
+            // 
+            // deselectToolStripMenuItem
+            // 
+            this.deselectToolStripMenuItem.Name = "deselectToolStripMenuItem";
+            this.deselectToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.deselectToolStripMenuItem.Text = "Убрать фотографию";
+            this.deselectToolStripMenuItem.Click += new System.EventHandler(this.deselectToolStripMenuItem_Click);
             // 
             // AddEmployeeForm
             // 
@@ -680,7 +709,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(636, 771);
+            this.ClientSize = new System.Drawing.Size(636, 807);
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.contactInfoPanel);
             this.Controls.Add(this.addContactInfoButton);
@@ -702,10 +731,10 @@
             this.Controls.Add(this.middleNameLabel);
             this.Controls.Add(this.middleNameTextBox);
             this.Controls.Add(this.addEmployeePhotoButton);
-            this.Controls.Add(this.employeePhotoPictureBox);
+            this.Controls.Add(this.photoPictureBox);
             this.Name = "AddEmployeeForm";
             this.Load += new System.EventHandler(this.AddEmployeeForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.employeePhotoPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).EndInit();
             this.lastNameBackPanel.ResumeLayout(false);
             this.lastNameBackPanel.PerformLayout();
             this.firstNameBackPanel.ResumeLayout(false);
@@ -716,11 +745,12 @@
             this.contactInfoPanel.PerformLayout();
             this.bottomPanel.ResumeLayout(false);
             this.bottomPanel.PerformLayout();
+            this.accessLayerBackPanel.ResumeLayout(false);
             this.passwordAgainBackPanel.ResumeLayout(false);
             this.passwordAgainBackPanel.PerformLayout();
             this.passwordBackPanel.ResumeLayout(false);
             this.passwordBackPanel.PerformLayout();
-            this.panel1.ResumeLayout(false);
+            this.photoContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -729,7 +759,7 @@
         #endregion
 
         private System.Windows.Forms.Button addEmployeePhotoButton;
-        private System.Windows.Forms.PictureBox employeePhotoPictureBox;
+        private System.Windows.Forms.PictureBox photoPictureBox;
         private System.Windows.Forms.TextBox middleNameTextBox;
         private System.Windows.Forms.Label lastNameLabel;
         private System.Windows.Forms.Label middleNameLabel;
@@ -779,7 +809,7 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.RichTextBox descrRichTextBox;
         private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox accessLayerComboBox;
         private System.Windows.Forms.Label accessLayerLabel;
         private System.Windows.Forms.Label passwordAgainLabel;
         private System.Windows.Forms.ToolTip toolTip;
@@ -791,6 +821,9 @@
         private System.Windows.Forms.Panel passwordAgainBackPanel;
         private System.Windows.Forms.TextBox passwordAgainTextBox;
         private System.Windows.Forms.Panel passwordBackPanel;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel accessLayerBackPanel;
+        private System.Windows.Forms.OpenFileDialog photoOpenFileDialog;
+        private System.Windows.Forms.ContextMenuStrip photoContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem deselectToolStripMenuItem;
     }
 }
