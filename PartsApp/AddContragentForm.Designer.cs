@@ -227,9 +227,9 @@
             this.roomLabel.AutoSize = true;
             this.roomLabel.Location = new System.Drawing.Point(307, 60);
             this.roomLabel.Name = "roomLabel";
-            this.roomLabel.Size = new System.Drawing.Size(57, 13);
+            this.roomLabel.Size = new System.Drawing.Size(61, 13);
             this.roomLabel.TabIndex = 22;
-            this.roomLabel.Text = "Комната :";
+            this.roomLabel.Text = "Квартира :";
             // 
             // roomTextBox
             // 
@@ -349,9 +349,9 @@
             this.websiteLabel.AutoSize = true;
             this.websiteLabel.Location = new System.Drawing.Point(17, 208);
             this.websiteLabel.Name = "websiteLabel";
-            this.websiteLabel.Size = new System.Drawing.Size(90, 13);
+            this.websiteLabel.Size = new System.Drawing.Size(40, 13);
             this.websiteLabel.TabIndex = 6;
-            this.websiteLabel.Text = "Сайт компании :";
+            this.websiteLabel.Text = "Сайт  :";
             // 
             // phoneLabel
             // 

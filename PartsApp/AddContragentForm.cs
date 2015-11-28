@@ -42,7 +42,7 @@ namespace PartsApp
 
         private void contragentNameTextBox_Leave(object sender, EventArgs e)
         {
-            if (contragentNameTextBox.Text == String.Empty)
+            if (String.IsNullOrWhiteSpace(contragentNameTextBox.Text))
             {
                 contragentNameStarLabel.ForeColor = contragentNameBackPanel.BackColor = Color.Red;
 
@@ -143,6 +143,7 @@ namespace PartsApp
                     if (contragentType == "клиент")
                         PartsDAL.AddCustomer(contragent);
 
+                    this.DialogResult = DialogResult.OK;
                     this.Close();
                 }//if
             }//if
@@ -154,6 +155,7 @@ namespace PartsApp
             {
                 if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    this.DialogResult = DialogResult.Cancel;
                     this.Close();
                 }
             }//if
