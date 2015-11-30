@@ -654,6 +654,7 @@
             this.okButton.TabIndex = 66;
             this.okButton.Text = "Ok";
             this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.okButton_MouseClick);
             // 
             // passwordStarLabel
             // 

@@ -363,6 +363,7 @@ namespace PartsApp
             {
                 if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    this.DialogResult = DialogResult.Cancel;
                     this.Close();
                 }
             }//if
@@ -423,6 +424,7 @@ namespace PartsApp
                         sparePart.SparePartId = editSparePart.SparePartId;
                         PartsDAL.UpdateSparePart(sparePart);
                     }
+                    this.DialogResult = DialogResult.OK;
                     this.Close();
                 }//if
             }//if

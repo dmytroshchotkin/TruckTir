@@ -19,6 +19,13 @@ namespace PartsApp
         public AddEmployeeForm()
         {
             InitializeComponent();
+            //Устанавливаем значения для дат.
+            int maxAge = 80, minAge = 16;
+            birthDateTimePicker.MinDate = new DateTime(DateTime.Today.Year - maxAge, 1, 1);
+            birthDateTimePicker.MaxDate = new DateTime(DateTime.Today.Year - minAge, 12, 31);
+
+            hireDateTimePicker.MinDate = new DateTime(2000, 1, 1);
+            hireDateTimePicker.MaxDate = DateTime.Today;
         }
 
         private void AddEmployeeForm_Load(object sender, EventArgs e)
@@ -38,6 +45,11 @@ namespace PartsApp
             else
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y + contactInfoPanel.Size.Height);
         }
+
+        #region Методы проверки корректности ввода.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены некорректные данные.
@@ -148,6 +160,7 @@ namespace PartsApp
             return false;
         }//isThereContactInfo
 
+
         private void lastNameTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(lastNameTextBox.Text))
@@ -231,6 +244,18 @@ namespace PartsApp
         }// accessLayerComboBox_SelectedIndexChanged
 
 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        /// <summary>
+        /// Событие нажатия на кнопку для выбора фото сотрудника.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void addEmployeePhotoButton_Click(object sender, EventArgs e)
         {
             if (photoOpenFileDialog.ShowDialog() == DialogResult.OK)
@@ -266,13 +291,79 @@ namespace PartsApp
 
             }//if
         }//addEmployeePhotoButton_Click
-
-        //Событие для отмены выбора фотографии.
+        /// <summary>
+        /// Событие для отмены выбора фотографии.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void deselectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             photoPictureBox.Image = null;
             photoOpenFileDialog.FileName = String.Empty;
             toolTip.SetToolTip(photoPictureBox, String.Empty);
+        }
+
+
+        private void okButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                //Проверяем корректность ввода необходимых данных.
+                lastNameTextBox_Leave(sender, e);                
+                firstNameTextBox_Leave(sender, e);
+                passwordTextBox_Leave(sender, e);
+                passwordAgainTextBox_Leave(sender, e);
+                accessLayerComboBox_SelectedIndexChanged(sender, e);
+                //Если все корректно.
+                if (articulTextBoxBackPanel.BackColor != Color.Red && titleTextBoxBackPanel.BackColor != Color.Red
+                    && unitComboBoxBackPanel.BackColor != Color.Red)
+                {
+                    SparePart sparePart = new SparePart();
+                    //Проверяем наличие фото.
+                    if (photoPictureBox.Image == null)
+                        sparePart.Photo = null;
+                    else
+                    {
+                        if (beginFilePath != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе вначале копируем файл.  
+                        {
+                            System.IO.File.Copy(beginFilePath, endFilePath);
+                        }
+                        sparePart.Photo = @"Товар\" + toolTip.GetToolTip(photoPictureBox);
+                    }//else
+
+                    sparePart.Articul = articulTextBox.Text.Trim();
+                    sparePart.Title = titleTextBox.Text.Trim();
+                    if (String.IsNullOrWhiteSpace(descrRichTextBox.Text) == false)
+                        sparePart.Description = descrRichTextBox.Text.Trim();
+                    else sparePart.Description = null;
+                    sparePart.ExtInfoId = null;
+                    //добаляем manufacturer
+                    if (String.IsNullOrWhiteSpace(manufacturerTextBox.Text))
+                        sparePart.ManufacturerId = null;
+                    else //Если такого ManufacturerName нет в базе, значит добавить.
+                    {
+                        if (PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim()).Count == 0)
+                            sparePart.ManufacturerId = PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
+                        else
+                            sparePart.ManufacturerId = PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim())[0]; //!!! Кроется опасность путаницы в случае одинакового имени производителей, необходимо будет внести добавление в базу для избежания потенциальной угрозы!
+                    }//else
+                    //Вставляем ед. изм. 
+                    //if (unitComboBox.DropDownStyle == ComboBoxStyle.DropDown) //если вставляется новое значение в бд.
+                    //PartsDAL.AddUnitOfMeasure();
+                    sparePart.Unit = unitComboBox.SelectedValue.ToString();
+
+                    //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.
+                    if (editSparePart == null)
+                        PartsDAL.AddSparePart(sparePart);
+                    else
+                    {
+                        sparePart.SparePartId = editSparePart.SparePartId;
+                        PartsDAL.UpdateSparePart(sparePart);
+                    }
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }//if
+            }//if
         }
 
         
