@@ -12,10 +12,12 @@ namespace PartsApp
 {
     public partial class AddSparePartForm : Form
     {
-        string beginFilePath = null;        //переменные не будут равны null если требуется скопировать файл в нужную папку.
-        string endFilePath = null;
+        //string beginFilePath = null;        //переменные не будут равны null если требуется скопировать файл в нужную папку.
+        //string endFilePath = null;
 
         SparePart editSparePart = null;                  //Переменная требуемая для модификации данных уже сущ-щего товара.
+        const string sparePartPhotoFolder = @"Товар\";
+
 
         public AddSparePartForm()
         {
@@ -229,7 +231,7 @@ namespace PartsApp
 
                 toolTip.SetToolTip(photoPictureBox, fileName);
                 //Проверяем находится ли фото в нужной папке. 
-                string path = @"Товар\" + toolTip.GetToolTip(photoPictureBox);
+                string path = sparePartPhotoFolder + toolTip.GetToolTip(photoPictureBox);
 
                 if (System.IO.Path.GetFullPath(path) == photoOpenFileDialog.FileName)
                 {
@@ -250,8 +252,8 @@ namespace PartsApp
                     else
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
-                        beginFilePath = photoOpenFileDialog.FileName;
-                        endFilePath = System.IO.Path.GetFullPath(path);
+                        //записываем конечный путь файла всв-во tag.
+                        photoPictureBox.Tag = System.IO.Path.GetFullPath(path);
                     }//else
 
             }//if
@@ -384,28 +386,25 @@ namespace PartsApp
                 {
                     SparePart sparePart = new SparePart();
                     //Проверяем наличие фото.
-                    if (photoPictureBox.Image == null)
-                        sparePart.Photo = null;
-                    else
+                    if (photoPictureBox.Image != null)
                     {
-                        if (beginFilePath != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе вначале копируем файл.  
+                        if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
                         {
-                            System.IO.File.Copy(beginFilePath, endFilePath);
+                            string destFilePath = photoPictureBox.Tag as string;
+                            System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
                         }
-                        sparePart.Photo = @"Товар\" + toolTip.GetToolTip(photoPictureBox);
+                        sparePart.Photo = sparePartPhotoFolder + toolTip.GetToolTip(photoPictureBox);
                     }//else
 
                     sparePart.Articul = articulTextBox.Text.Trim();
                     sparePart.Title = titleTextBox.Text.Trim();
                     if (String.IsNullOrWhiteSpace(descrRichTextBox.Text) == false)
-                        sparePart.Description = descrRichTextBox.Text.Trim();
-                    else sparePart.Description = null;
+                        sparePart.Description = descrRichTextBox.Text.Trim();                    
                     sparePart.ExtInfoId = null;
                     //добаляем manufacturer
-                    if (String.IsNullOrWhiteSpace(manufacturerTextBox.Text))
-                        sparePart.ManufacturerId = null;
-                    else //Если такого ManufacturerName нет в базе, значит добавить.
+                    if (String.IsNullOrWhiteSpace(manufacturerTextBox.Text) == false)
                     {
+                        //Если такого ManufacturerName нет в базе, значит добавить.
                         if (PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim()).Count == 0)
                             sparePart.ManufacturerId = PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
                         else
@@ -424,6 +423,7 @@ namespace PartsApp
                         sparePart.SparePartId = editSparePart.SparePartId;
                         PartsDAL.UpdateSparePart(sparePart);
                     }
+
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }//if
@@ -436,7 +436,7 @@ namespace PartsApp
 
 
     }//AddSparePartForm
-}
+}//namespace
 
 /*Задачи*/
 //!!! Решить проблему с "попытка записи в защищенную область памяти" или сделать listbox выпадающим списком.

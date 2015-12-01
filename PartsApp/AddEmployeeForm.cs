@@ -12,9 +12,10 @@ using System.Security.Cryptography;
 namespace PartsApp
 {
     public partial class AddEmployeeForm : Form
-    {
-        string beginFilePath = null;        //переменные не будут равны null если требуется скопировать файл в нужную папку.
-        string endFilePath = null;
+    {        
+        const string employeePhotoFolder = @"Сотрудники\";
+
+
 
 
         public AddEmployeeForm()
@@ -198,18 +199,24 @@ namespace PartsApp
             }//else
         }//passportNumTextBox_Leave
 
+        private void passwordTextBox_TextChanged(object sender, EventArgs e)
+        {
+            passwordAgainTextBox.Enabled = true;
+
+        }//passwordTextBox_TextChanged
+
         private void passwordTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(passwordTextBox.Text))
             {
                 Point location = new Point(bottomPanel.Location.X + passwordBackPanel.Location.X, bottomPanel.Location.Y + passwordBackPanel.Location.Y);
                 WrongValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel, location, "Введите пароль", 3000);
+                passwordAgainTextBox.Clear();
                 passwordAgainTextBox.Enabled = false;
             }//if
             else //если фамилия введена правильно
             {
                 CorrectValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel);
-                passwordAgainTextBox.Enabled = true;
             }//else
         }//passwordTextBox_Leave
 
@@ -265,7 +272,7 @@ namespace PartsApp
 
                 toolTip.SetToolTip(photoPictureBox, fileName);
                 //Проверяем находится ли фото в нужной папке. 
-                string path = @"Сотрудники\" + toolTip.GetToolTip(photoPictureBox);
+                string path = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
 
                 if (System.IO.Path.GetFullPath(path) == photoOpenFileDialog.FileName)
                 {
@@ -286,8 +293,8 @@ namespace PartsApp
                     else
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
-                        beginFilePath = photoOpenFileDialog.FileName;
-                        endFilePath = System.IO.Path.GetFullPath(path);
+                        //записываем конечный путь файла всв-во tag.
+                        photoPictureBox.Tag = System.IO.Path.GetFullPath(path);
                     }//else
 
             }//if
@@ -358,6 +365,18 @@ namespace PartsApp
             }//else
         }
 
+        private void cancelButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    this.DialogResult = DialogResult.Cancel;
+                    this.Close();
+                }
+            }//if
+        }//cancelButton_MouseClick
+
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -368,24 +387,25 @@ namespace PartsApp
                     //Проверяем наличие фото.
                     if (photoPictureBox.Image != null)
                     {
-                        if (beginFilePath != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе вначале копируем файл.  
+                        if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
                         {
-                            System.IO.File.Copy(beginFilePath, endFilePath);
+                            string destFilePath = photoPictureBox.Tag as string;
+                            System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
                         }
-                        employee.Photo = @"Сотрудники\" + toolTip.GetToolTip(photoPictureBox);
+                        employee.Photo = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
                     }//else
 
-                    employee.LastName = lastNameTextBox.Text.Trim();
-                    employee.FirstName = firstNameTextBox.Text.Trim();
-                    employee.MiddleName = middleNameTextBox.Text.Trim();
-                    employee.BirthDate = birthDateTimePicker.Value;
-                    employee.HireDate = hireDateTimePicker.Value;
-                    employee.Note = descrRichTextBox.Text.Trim();
-                    employee.PassportNum = passportNumTextBox.Text.Trim();
-                    employee.Title = titleTextBox.Text.Trim();
-                    employee.AccessLayer = accessLayerComboBox.SelectedItem as string;
-                    employee.Password = GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
-                    employee.ContactInfoId = GetContactInfoId();
+                    employee.LastName       = lastNameTextBox.Text.Trim();
+                    employee.FirstName      = firstNameTextBox.Text.Trim();
+                    employee.MiddleName     = middleNameTextBox.Text.Trim();
+                    employee.BirthDate      = birthDateTimePicker.Value;
+                    employee.HireDate       = hireDateTimePicker.Value;
+                    employee.Note           = descrRichTextBox.Text.Trim();
+                    employee.PassportNum    = passportNumTextBox.Text.Trim();
+                    employee.Title          = titleTextBox.Text.Trim();
+                    employee.AccessLayer    = accessLayerComboBox.SelectedItem as string;
+                    employee.Password       = GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
+                    employee.ContactInfoId  = GetContactInfoId();
 
                     //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.
                     PartsDAL.AddEmployee(employee);
@@ -402,6 +422,10 @@ namespace PartsApp
             }//if
 
         }
+
+        
+
+        
 
         
 
