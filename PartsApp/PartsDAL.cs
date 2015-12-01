@@ -750,6 +750,48 @@ namespace PartsApp
             cmd.ExecuteNonQuery();
         }//AddSaleDetail
 
+        //Модификация таблицы Employees.
+        public static void AddEmployee(Employee employee)
+        {
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "INSERT INTO Employees (LastName, FirstName, MiddleName, BirthDate, HireDate, "
+                                   +         "ContactInfoId, Photo, Note, PassportNum, Title, AccessLayer, Password) "
+                                   + "VALUES (@LastName, @FirstName, @MiddleName, @BirthDate, @HireDate, "
+                                   +         "@ContactInfoId, @Photo, @Note, @PassportNum, @Title, @AccessLayer, @Password);";
+
+                var cmd = new SQLiteCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("@LastName",        employee.LastName);
+                cmd.Parameters.AddWithValue("@FirstName",       employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName",      employee.MiddleName);
+                cmd.Parameters.AddWithValue("@BirthDate",       employee.BirthDate);
+                cmd.Parameters.AddWithValue("@HireDate",        employee.HireDate);
+                cmd.Parameters.AddWithValue("@ContactInfoId",   employee.ContactInfoId);
+                cmd.Parameters.AddWithValue("@Photo",           employee.Photo);
+                cmd.Parameters.AddWithValue("@Note",            employee.Note);
+                cmd.Parameters.AddWithValue("@PassportNum",     employee.PassportNum);
+                cmd.Parameters.AddWithValue("@Title",           employee.Title);
+                cmd.Parameters.AddWithValue("@AccessLayer",     employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Password",        employee.Password);
+                    
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }//using 
+
+
+
+        }//AddEmployee
+
+
+
+
+
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4031,7 +4073,7 @@ namespace PartsApp
                     Photo, Articul, Title, Description, Manufacturer, Unit);
 
         }
-    }//Parts
+    }//SparePart
 
     class Contragent
     {
@@ -4061,7 +4103,7 @@ namespace PartsApp
             ContactInfoId = contactInfoId;
             Description = description;
         }
-    }//Supplier
+    }//Contragent
 
 }//namespace
 

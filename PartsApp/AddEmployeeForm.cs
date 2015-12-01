@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Security.Cryptography;  
 
 namespace PartsApp
 {
@@ -239,7 +240,7 @@ namespace PartsApp
             }
             else //если фамилия введена правильно
             {
-                CorrectValueInput(accessLayerComboBox, accessLayerComboBox, accessLayerComboBox);
+                CorrectValueInput(accessLayerComboBox, accessLayerBackPanel, accessLayerStarLabel);
             }//else
         }// accessLayerComboBox_SelectedIndexChanged
 
@@ -304,66 +305,102 @@ namespace PartsApp
         }
 
 
+        /// <summary>
+        /// Возвращает hash введенной строки.
+        /// </summary>
+        /// <param name="password">Строка которую необх-мо зашифровать.</param>
+        /// <returns></returns>  
+        private string GetHashString(string password)  
+        {  
+            //переводим строку в байт-массим  
+             byte[] bytes = Encoding.Unicode.GetBytes(password);  
+  
+              //создаем объект для получения средст шифрования  
+              MD5CryptoServiceProvider CSP =  
+                  new MD5CryptoServiceProvider();  
+          
+              //вычисляем хеш-представление в байтах  
+              byte[] byteHash = CSP.ComputeHash(bytes);  
+  
+              string hash = string.Empty;  
+  
+              //формируем одну цельную строку из массива  
+              foreach (byte b in byteHash)  
+                  hash += String.Format("{0:x2}", b);  
+  
+              return hash;       
+        }//GetHashString
+
+        /// <summary>
+        /// Возвращает true если все необходимые данные введены корректно, иначе false.
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckAllConditionForWrightValues()
+        {
+            //Проверяем корректность ввода необходимых данных.
+            lastNameTextBox_Leave     (null, null);
+            firstNameTextBox_Leave    (null, null);
+            passportNumTextBox_Leave  (null, null);
+            passwordTextBox_Leave     (null, null);
+            passwordAgainTextBox_Leave(null, null);
+            accessLayerComboBox_SelectedIndexChanged(null, null);
+
+            //Проверяем удовлетворяют ли они всем условиям.
+            if (lastNameBackPanel.BackColor != Color.Red && firstNameBackPanel.BackColor != Color.Red
+                && passwordBackPanel.BackColor != Color.Red && passwordAgainBackPanel.BackColor != Color.Red
+                && accessLayerBackPanel.BackColor != Color.Red && passportNumBackPanel.BackColor != Color.Red)
+            {
+                return true;
+            }//if
+            else
+            {
+                return false;
+            }//else
+        }
+
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                //Проверяем корректность ввода необходимых данных.
-                lastNameTextBox_Leave(sender, e);                
-                firstNameTextBox_Leave(sender, e);
-                passwordTextBox_Leave(sender, e);
-                passwordAgainTextBox_Leave(sender, e);
-                accessLayerComboBox_SelectedIndexChanged(sender, e);
-                //Если все корректно.
-                if (articulTextBoxBackPanel.BackColor != Color.Red && titleTextBoxBackPanel.BackColor != Color.Red
-                    && unitComboBoxBackPanel.BackColor != Color.Red)
+                if (CheckAllConditionForWrightValues() == true)
                 {
-                    SparePart sparePart = new SparePart();
+                    Employee employee = new Employee();
                     //Проверяем наличие фото.
-                    if (photoPictureBox.Image == null)
-                        sparePart.Photo = null;
-                    else
+                    if (photoPictureBox.Image != null)
                     {
                         if (beginFilePath != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе вначале копируем файл.  
                         {
                             System.IO.File.Copy(beginFilePath, endFilePath);
                         }
-                        sparePart.Photo = @"Товар\" + toolTip.GetToolTip(photoPictureBox);
+                        employee.Photo = @"Сотрудники\" + toolTip.GetToolTip(photoPictureBox);
                     }//else
 
-                    sparePart.Articul = articulTextBox.Text.Trim();
-                    sparePart.Title = titleTextBox.Text.Trim();
-                    if (String.IsNullOrWhiteSpace(descrRichTextBox.Text) == false)
-                        sparePart.Description = descrRichTextBox.Text.Trim();
-                    else sparePart.Description = null;
-                    sparePart.ExtInfoId = null;
-                    //добаляем manufacturer
-                    if (String.IsNullOrWhiteSpace(manufacturerTextBox.Text))
-                        sparePart.ManufacturerId = null;
-                    else //Если такого ManufacturerName нет в базе, значит добавить.
-                    {
-                        if (PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim()).Count == 0)
-                            sparePart.ManufacturerId = PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
-                        else
-                            sparePart.ManufacturerId = PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim())[0]; //!!! Кроется опасность путаницы в случае одинакового имени производителей, необходимо будет внести добавление в базу для избежания потенциальной угрозы!
-                    }//else
-                    //Вставляем ед. изм. 
-                    //if (unitComboBox.DropDownStyle == ComboBoxStyle.DropDown) //если вставляется новое значение в бд.
-                    //PartsDAL.AddUnitOfMeasure();
-                    sparePart.Unit = unitComboBox.SelectedValue.ToString();
+                    employee.LastName = lastNameTextBox.Text.Trim();
+                    employee.FirstName = firstNameTextBox.Text.Trim();
+                    employee.MiddleName = middleNameTextBox.Text.Trim();
+                    employee.BirthDate = birthDateTimePicker.Value;
+                    employee.HireDate = hireDateTimePicker.Value;
+                    employee.Note = descrRichTextBox.Text.Trim();
+                    employee.PassportNum = passportNumTextBox.Text.Trim();
+                    employee.Title = titleTextBox.Text.Trim();
+                    employee.AccessLayer = accessLayerComboBox.SelectedItem as string;
+                    employee.Password = GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
+                    employee.ContactInfoId = GetContactInfoId();
 
                     //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.
-                    if (editSparePart == null)
-                        PartsDAL.AddSparePart(sparePart);
-                    else
-                    {
-                        sparePart.SparePartId = editSparePart.SparePartId;
-                        PartsDAL.UpdateSparePart(sparePart);
-                    }
+                    PartsDAL.AddEmployee(employee);
+                    //if (editSparePart == null)
+                    //    PartsDAL.AddSparePart(sparePart);
+                    //else
+                    //{
+                    //    sparePart.SparePartId = editSparePart.SparePartId;
+                    //    PartsDAL.UpdateSparePart(sparePart);
+                    //}
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }//if
             }//if
+
         }
 
         
@@ -380,3 +417,5 @@ namespace PartsApp
 
     }//AddEmployeeForm
 }//namespace
+
+/*http://www.internet-technologies.ru/articles/article_1807.html -- шифрование.*/
