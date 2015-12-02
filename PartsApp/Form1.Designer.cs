@@ -76,6 +76,7 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.partsDGVContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editSparePartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.userNameLabel = new System.Windows.Forms.Label();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -145,7 +146,7 @@
             this.rowsCountLabel});
             this.partsStatusStrip.Location = new System.Drawing.Point(0, 1);
             this.partsStatusStrip.Name = "partsStatusStrip";
-            this.partsStatusStrip.Size = new System.Drawing.Size(967, 22);
+            this.partsStatusStrip.Size = new System.Drawing.Size(971, 22);
             this.partsStatusStrip.TabIndex = 0;
             this.partsStatusStrip.Text = "statusStrip1";
             this.partsStatusStrip.Click += new System.EventHandler(this.partsStatusStrip_Click);
@@ -173,7 +174,7 @@
             this.saleToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(967, 24);
+            this.menuStrip.Size = new System.Drawing.Size(971, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip";
             this.menuStrip.Click += new System.EventHandler(this.menuStrip_Click);
@@ -290,7 +291,7 @@
             this.componentPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.componentPanel.Location = new System.Drawing.Point(0, 24);
             this.componentPanel.Name = "componentPanel";
-            this.componentPanel.Size = new System.Drawing.Size(967, 30);
+            this.componentPanel.Size = new System.Drawing.Size(971, 30);
             this.componentPanel.TabIndex = 5;
             this.componentPanel.Click += new System.EventHandler(this.componentPanel_Click);
             // 
@@ -425,7 +426,7 @@
             this.partsDataGridView.Location = new System.Drawing.Point(0, 0);
             this.partsDataGridView.Name = "partsDataGridView";
             this.partsDataGridView.ReadOnly = true;
-            this.partsDataGridView.Size = new System.Drawing.Size(967, 461);
+            this.partsDataGridView.Size = new System.Drawing.Size(971, 461);
             this.partsDataGridView.TabIndex = 0;
             this.partsDataGridView.DataSourceChanged += new System.EventHandler(this.partsDataGridView_DataSourceChanged);
             this.partsDataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.partsDataGridView_CellMouseClick);
@@ -461,7 +462,7 @@
             this.dataSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.dataSplitContainer.Panel2.Controls.Add(this.extPartsGroupBox);
             this.dataSplitContainer.Panel2.Controls.Add(this.extPartsStatusStrip);
-            this.dataSplitContainer.Size = new System.Drawing.Size(967, 679);
+            this.dataSplitContainer.Size = new System.Drawing.Size(971, 679);
             this.dataSplitContainer.SplitterDistance = 484;
             this.dataSplitContainer.SplitterWidth = 5;
             this.dataSplitContainer.TabIndex = 6;
@@ -473,7 +474,7 @@
             this.partsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.partsPanel.Location = new System.Drawing.Point(0, 0);
             this.partsPanel.Name = "partsPanel";
-            this.partsPanel.Size = new System.Drawing.Size(967, 461);
+            this.partsPanel.Size = new System.Drawing.Size(971, 461);
             this.partsPanel.TabIndex = 3;
             // 
             // partsStatusStripPanel
@@ -482,7 +483,7 @@
             this.partsStatusStripPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.partsStatusStripPanel.Location = new System.Drawing.Point(0, 461);
             this.partsStatusStripPanel.Name = "partsStatusStripPanel";
-            this.partsStatusStripPanel.Size = new System.Drawing.Size(967, 23);
+            this.partsStatusStripPanel.Size = new System.Drawing.Size(971, 23);
             this.partsStatusStripPanel.TabIndex = 2;
             // 
             // extPartsGroupBox
@@ -492,7 +493,7 @@
             this.extPartsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extPartsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.extPartsGroupBox.Name = "extPartsGroupBox";
-            this.extPartsGroupBox.Size = new System.Drawing.Size(967, 168);
+            this.extPartsGroupBox.Size = new System.Drawing.Size(971, 168);
             this.extPartsGroupBox.TabIndex = 1;
             this.extPartsGroupBox.TabStop = false;
             this.extPartsGroupBox.Text = "Доп. информ.";
@@ -507,7 +508,7 @@
             this.extPartsDataGridView.Location = new System.Drawing.Point(3, 16);
             this.extPartsDataGridView.Name = "extPartsDataGridView";
             this.extPartsDataGridView.ReadOnly = true;
-            this.extPartsDataGridView.Size = new System.Drawing.Size(961, 149);
+            this.extPartsDataGridView.Size = new System.Drawing.Size(965, 149);
             this.extPartsDataGridView.TabIndex = 0;
             this.extPartsDataGridView.DataSourceChanged += new System.EventHandler(this.extPartsDataGridView_DataSourceChanged);
             this.extPartsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.partsDataGridView_RowPrePaint);
@@ -518,7 +519,7 @@
             this.progressBar});
             this.extPartsStatusStrip.Location = new System.Drawing.Point(0, 168);
             this.extPartsStatusStrip.Name = "extPartsStatusStrip";
-            this.extPartsStatusStrip.Size = new System.Drawing.Size(967, 22);
+            this.extPartsStatusStrip.Size = new System.Drawing.Size(971, 22);
             this.extPartsStatusStrip.TabIndex = 0;
             this.extPartsStatusStrip.Text = "statusStrip1";
             this.extPartsStatusStrip.Click += new System.EventHandler(this.extPartsStatusStrip_Click);
@@ -548,7 +549,7 @@
             this.partsDGVContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editSparePartToolStripMenuItem});
             this.partsDGVContextMenuStrip.Name = "partsDGVContextMenuStrip";
-            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(158, 48);
+            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(158, 26);
             // 
             // editSparePartToolStripMenuItem
             // 
@@ -557,12 +558,23 @@
             this.editSparePartToolStripMenuItem.Text = "Редактировать ";
             this.editSparePartToolStripMenuItem.Click += new System.EventHandler(this.editSparePartToolStripMenuItem_Click);
             // 
+            // userNameLabel
+            // 
+            this.userNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.userNameLabel.AutoSize = true;
+            this.userNameLabel.Location = new System.Drawing.Point(724, 0);
+            this.userNameLabel.Name = "userNameLabel";
+            this.userNameLabel.Size = new System.Drawing.Size(96, 13);
+            this.userNameLabel.TabIndex = 12;
+            this.userNameLabel.Text = "Виктор Михайлов";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(967, 733);
+            this.ClientSize = new System.Drawing.Size(971, 733);
+            this.Controls.Add(this.userNameLabel);
             this.Controls.Add(this.dataSplitContainer);
             this.Controls.Add(this.componentPanel);
             this.Controls.Add(this.menuStrip);
@@ -650,6 +662,7 @@
         private System.Windows.Forms.CheckBox onlyAvaliabilityCheckBox;
         private System.Windows.Forms.ContextMenuStrip partsDGVContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem editSparePartToolStripMenuItem;
+        private System.Windows.Forms.Label userNameLabel;
 
     }
 }

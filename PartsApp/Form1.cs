@@ -19,6 +19,8 @@ namespace PartsApp
         IList<SparePart> ExtSpList, origExtSpList;                          //для вывода в extPartsDataGridView.  
         bool textChangeEvent;                                               //есть ли подписчик на searchTextBox_TextChanged
 
+        public static Employee CurEmployee { get; set; }
+
         public Form1()
         {
             InitializeComponent();

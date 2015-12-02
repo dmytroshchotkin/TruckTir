@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PartsApp
 {
-    class Employee
+    public class Employee
     {
         public int EmployeeId           { get; set; }
         public string LastName          { get; set; }

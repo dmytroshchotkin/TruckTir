@@ -6,8 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Security.Cryptography;  
+using System.Windows.Forms;  
 
 namespace PartsApp
 {
@@ -312,37 +311,37 @@ namespace PartsApp
         }
 
 
-        /// <summary>
-        /// Возвращает hash введенной строки.
-        /// </summary>
-        /// <param name="password">Строка которую необх-мо зашифровать.</param>
-        /// <returns></returns>  
-        private string GetHashString(string password)  
-        {  
-            //переводим строку в байт-массим  
-             byte[] bytes = Encoding.Unicode.GetBytes(password);  
+        ///// <summary>
+        ///// Возвращает hash введенной строки.
+        ///// </summary>
+        ///// <param name="password">Строка которую необх-мо зашифровать.</param>
+        ///// <returns></returns>  
+        //private string GetHashString(string password)  
+        //{  
+        //    //переводим строку в байт-массим  
+        //     byte[] bytes = Encoding.Unicode.GetBytes(password);  
   
-              //создаем объект для получения средст шифрования  
-              MD5CryptoServiceProvider CSP =  
-                  new MD5CryptoServiceProvider();  
+        //      //создаем объект для получения средст шифрования  
+        //      MD5CryptoServiceProvider CSP =  
+        //          new MD5CryptoServiceProvider();  
           
-              //вычисляем хеш-представление в байтах  
-              byte[] byteHash = CSP.ComputeHash(bytes);  
+        //      //вычисляем хеш-представление в байтах  
+        //      byte[] byteHash = CSP.ComputeHash(bytes);  
   
-              string hash = string.Empty;  
+        //      string hash = string.Empty;  
   
-              //формируем одну цельную строку из массива  
-              foreach (byte b in byteHash)  
-                  hash += String.Format("{0:x2}", b);  
+        //      //формируем одну цельную строку из массива  
+        //      foreach (byte b in byteHash)  
+        //          hash += String.Format("{0:x2}", b);  
   
-              return hash;       
-        }//GetHashString
+        //      return hash;       
+        //}//GetHashString
 
         /// <summary>
         /// Возвращает true если все необходимые данные введены корректно, иначе false.
         /// </summary>
         /// <returns></returns>
-        private bool CheckAllConditionForWrightValues()
+        private bool CheckAllConditionsForWrightValues()
         {
             //Проверяем корректность ввода необходимых данных.
             lastNameTextBox_Leave     (null, null);
@@ -381,7 +380,7 @@ namespace PartsApp
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (CheckAllConditionForWrightValues() == true)
+                if (CheckAllConditionsForWrightValues() == true)
                 {
                     Employee employee = new Employee();
                     //Проверяем наличие фото.
@@ -404,9 +403,8 @@ namespace PartsApp
                     employee.PassportNum    = passportNumTextBox.Text.Trim();
                     employee.Title          = titleTextBox.Text.Trim();
                     employee.AccessLayer    = accessLayerComboBox.SelectedItem as string;
-                    employee.Password       = GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
+                    employee.Password       = PasswordClass.GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
                     employee.ContactInfoId  = GetContactInfoId();
-
                     //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.
                     PartsDAL.AddEmployee(employee);
                     //if (editSparePart == null)

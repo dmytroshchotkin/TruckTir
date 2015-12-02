@@ -16,7 +16,7 @@ namespace PartsApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AddEmployeeForm());
+            Application.Run(new Form1());
         }
     }
 }
