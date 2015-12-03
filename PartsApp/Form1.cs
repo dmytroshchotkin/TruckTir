@@ -52,6 +52,11 @@ namespace PartsApp
             //Вносим все типы наценок в markupComboBox             
             markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().Select(markup => markup.Value).ToArray<string>());
 
+            //Выводим окно авторизации.
+            CurEmployee = new Employee(2, "Петров", "Пётр", "Петрович", new DateTime(1980, 03, 08), new DateTime(2008, 07, 18),
+                null, null, null, null, "ВК12212332", "Продавец", "Обычный", "qwerty");
+            //new AuthorizationForm().ShowDialog(this);
+            userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
             /////////////////////////////////////////////////////////////////////////////
             /* Пробная зона */
 
@@ -976,6 +981,11 @@ namespace PartsApp
         private void editSparePartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AddSparePartForm(Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value)).Show();
+        }//editSparePartToolStripMenuItem_Click
+
+        private void addNewEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AddEmployeeForm().Show();
         }
 
 

@@ -44,6 +44,8 @@
             this.saveInExcelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.productToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewSpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.employeesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addNewEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supplierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewSupplierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -168,6 +170,7 @@
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileToolStripMenuItem,
             this.productToolStripMenuItem,
+            this.employeesToolStripMenuItem,
             this.supplierToolStripMenuItem,
             this.customerToolStripMenuItem,
             this.purchaseToolStripMenuItem,
@@ -190,15 +193,17 @@
             // 
             // addToDbFromExcelToolStripMenuItem
             // 
+            this.addToDbFromExcelToolStripMenuItem.Enabled = false;
             this.addToDbFromExcelToolStripMenuItem.Name = "addToDbFromExcelToolStripMenuItem";
-            this.addToDbFromExcelToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.addToDbFromExcelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.addToDbFromExcelToolStripMenuItem.Text = "Добавить";
             this.addToDbFromExcelToolStripMenuItem.Click += new System.EventHandler(this.addToDbFromExcelToolStripMenuItem_Click);
             // 
             // saveInExcelToolStripMenuItem
             // 
+            this.saveInExcelToolStripMenuItem.Enabled = false;
             this.saveInExcelToolStripMenuItem.Name = "saveInExcelToolStripMenuItem";
-            this.saveInExcelToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.saveInExcelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveInExcelToolStripMenuItem.Text = "Сохранить";
             this.saveInExcelToolStripMenuItem.Click += new System.EventHandler(this.saveInExcelToolStripMenuItem_Click);
             // 
@@ -216,6 +221,21 @@
             this.addNewSpToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.addNewSpToolStripMenuItem.Text = "Добавить новую единицу товара";
             this.addNewSpToolStripMenuItem.Click += new System.EventHandler(this.addNewSpToolStripMenuItem_Click);
+            // 
+            // employeesToolStripMenuItem
+            // 
+            this.employeesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addNewEmployeeToolStripMenuItem});
+            this.employeesToolStripMenuItem.Name = "employeesToolStripMenuItem";
+            this.employeesToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
+            this.employeesToolStripMenuItem.Text = "Сотрудники";
+            // 
+            // addNewEmployeeToolStripMenuItem
+            // 
+            this.addNewEmployeeToolStripMenuItem.Name = "addNewEmployeeToolStripMenuItem";
+            this.addNewEmployeeToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.addNewEmployeeToolStripMenuItem.Text = "Добавить нового сотрудника";
+            this.addNewEmployeeToolStripMenuItem.Click += new System.EventHandler(this.addNewEmployeeToolStripMenuItem_Click);
             // 
             // supplierToolStripMenuItem
             // 
@@ -564,9 +584,9 @@
             this.userNameLabel.AutoSize = true;
             this.userNameLabel.Location = new System.Drawing.Point(724, 0);
             this.userNameLabel.Name = "userNameLabel";
-            this.userNameLabel.Size = new System.Drawing.Size(96, 13);
+            this.userNameLabel.Size = new System.Drawing.Size(87, 13);
             this.userNameLabel.TabIndex = 12;
-            this.userNameLabel.Text = "Виктор Михайлов";
+            this.userNameLabel.Text = "ФИ сотрудника";
             // 
             // Form1
             // 
@@ -663,6 +683,8 @@
         private System.Windows.Forms.ContextMenuStrip partsDGVContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem editSparePartToolStripMenuItem;
         private System.Windows.Forms.Label userNameLabel;
+        private System.Windows.Forms.ToolStripMenuItem employeesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addNewEmployeeToolStripMenuItem;
 
     }
 }

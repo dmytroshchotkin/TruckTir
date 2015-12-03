@@ -275,6 +275,7 @@
             // 
             // hireDateTimePicker
             // 
+            this.hireDateTimePicker.Enabled = false;
             this.hireDateTimePicker.Location = new System.Drawing.Point(440, 278);
             this.hireDateTimePicker.Name = "hireDateTimePicker";
             this.hireDateTimePicker.Size = new System.Drawing.Size(160, 20);
@@ -735,6 +736,8 @@
             this.Controls.Add(this.middleNameTextBox);
             this.Controls.Add(this.addEmployeePhotoButton);
             this.Controls.Add(this.photoPictureBox);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AddEmployeeForm";
             this.Load += new System.EventHandler(this.AddEmployeeForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).EndInit();

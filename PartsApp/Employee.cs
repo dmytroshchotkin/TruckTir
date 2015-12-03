@@ -45,5 +45,9 @@ namespace PartsApp
             Password        =  password;
         }
 
+        public string GetFullName()
+        {
+            return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
+        }//GetFullName
     }//Employee
 }//namespace

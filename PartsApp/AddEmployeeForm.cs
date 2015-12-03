@@ -13,20 +13,18 @@ namespace PartsApp
     public partial class AddEmployeeForm : Form
     {        
         const string employeePhotoFolder = @"Сотрудники\";
-
-
+        DateTime companyFoundingDate = new DateTime(2000, 1, 1);
+        const int minAge = 16, maxAge = 80;
 
 
         public AddEmployeeForm()
         {
             InitializeComponent();
-            //Устанавливаем значения для дат.
-            int maxAge = 80, minAge = 16;
+            //Устанавливаем значения для дат.            
             birthDateTimePicker.MinDate = new DateTime(DateTime.Today.Year - maxAge, 1, 1);
             birthDateTimePicker.MaxDate = new DateTime(DateTime.Today.Year - minAge, 12, 31);
-
-            hireDateTimePicker.MinDate = new DateTime(2000, 1, 1);
-            hireDateTimePicker.MaxDate = DateTime.Today;
+            birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
+            
         }
 
         private void AddEmployeeForm_Load(object sender, EventArgs e)
@@ -49,6 +47,116 @@ namespace PartsApp
 
         #region Методы проверки корректности ввода.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+     
+        private void lastNameTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(lastNameTextBox.Text))
+            {
+                WrongValueInput(lastNameTextBox, lastNameBackPanel, lastNameStarLabel, "Введите фамилию.", 3000);
+            }
+            else //если фамилия введена правильно
+            {
+                CorrectValueInput(lastNameTextBox, lastNameBackPanel, lastNameStarLabel);
+            }//else
+        }//lastNameTextBox_Leave
+
+        private void firstNameTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(firstNameTextBox.Text))
+            {
+                WrongValueInput(firstNameTextBox, firstNameBackPanel, firstNameStarLabel, "Введите имя.", 3000);
+            }
+            else //если фамилия введена правильно
+            {
+                CorrectValueInput(firstNameTextBox, firstNameBackPanel, firstNameStarLabel);
+            }//else
+        }//firstNameTextBox_Leave
+        
+        private void passportNumTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(passportNumTextBox.Text))
+            {
+                WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel, "Введите серию и номер паспорта.", 3000);
+            }//if
+            else if (PartsDAL.FindAllEmployees().Where(empl => empl.PassportNum == passportNumTextBox.Text).Count() > 0) //Если такой номер паспорта уже имеется в базе.
+            {
+                WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel, "Такие паспортные данные уже имеются в базе.", 3000);
+            }//if
+            else//если фамилия введена правильно
+            {
+                CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel);
+            }//else
+        }//passportNumTextBox_Leave
+
+        private void passwordTextBox_TextChanged(object sender, EventArgs e)
+        {
+            passwordAgainTextBox.Enabled = true;
+
+        }//passwordTextBox_TextChanged
+
+        private void passwordTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(passwordTextBox.Text))
+            {
+                Point location = new Point(bottomPanel.Location.X + passwordBackPanel.Location.X, bottomPanel.Location.Y + passwordBackPanel.Location.Y);
+                WrongValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel, location, "Введите пароль", 3000);
+                passwordAgainTextBox.Clear();
+                passwordAgainTextBox.Enabled = false;
+            }//if
+            else //если фамилия введена правильно
+            {
+                CorrectValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel);
+            }//else
+        }//passwordTextBox_Leave
+
+        private void passwordAgainTextBox_Leave(object sender, EventArgs e)
+        {
+            Point location = new Point(bottomPanel.Location.X + passwordAgainBackPanel.Location.X, bottomPanel.Location.Y + passwordAgainBackPanel.Location.Y);
+            //Проверяем повторный ввод пароля на корректность.
+            if (String.IsNullOrWhiteSpace(passwordAgainTextBox.Text))
+            {                
+                WrongValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel, location, "Повторите пароль", 3000);
+            }//if
+            else if (passwordAgainTextBox.Text != passwordTextBox.Text)
+            {
+                WrongValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel, location, "Пароли не совпадают", 3000);
+            }
+            else
+            {
+                CorrectValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel);
+            }//else
+        }
+
+        private void accessLayerComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (accessLayerComboBox.SelectedIndex == -1)
+            {
+                Point location = new Point(bottomPanel.Location.X + accessLayerBackPanel.Location.X, bottomPanel.Location.Y + accessLayerBackPanel.Location.Y);
+                WrongValueInput(accessLayerComboBox, accessLayerBackPanel, accessLayerStarLabel, location, "Выберите уровень доступа данного сотрудника.", 3000);
+            }
+            else //если фамилия введена правильно
+            {
+                CorrectValueInput(accessLayerComboBox, accessLayerBackPanel, accessLayerStarLabel);
+            }//else
+        }// accessLayerComboBox_SelectedIndexChanged//birthDateTimePicker_ValueChanged
+
+        private void birthDateTimePicker_ValueChanged(object sender, EventArgs e)
+        {
+            hireDateTimePicker.Enabled = true;
+
+            //Возраст сотрудника принимаемого на работу должен быть не меньше minAge, поэтому ставим ограничения на возм-ть выбора даты. 
+            if (companyFoundingDate.Year  - birthDateTimePicker.Value.Year  < minAge)
+            {
+                hireDateTimePicker.MinDate = new DateTime(birthDateTimePicker.Value.Year + minAge, 1, 1);
+            }//if
+            else
+            {
+                hireDateTimePicker.MinDate = companyFoundingDate;
+            }//else
+
+            hireDateTimePicker.MaxDate = DateTime.Today;
+        }
 
 
 
@@ -160,97 +268,6 @@ namespace PartsApp
             }//foreach
             return false;
         }//isThereContactInfo
-
-
-        private void lastNameTextBox_Leave(object sender, EventArgs e)
-        {
-            if (String.IsNullOrWhiteSpace(lastNameTextBox.Text))
-            {
-                WrongValueInput(lastNameTextBox, lastNameBackPanel, lastNameStarLabel, "Введите фамилию.", 3000);
-            }
-            else //если фамилия введена правильно
-            {
-                CorrectValueInput(lastNameTextBox, lastNameBackPanel, lastNameStarLabel);
-            }//else
-        }//lastNameTextBox_Leave
-
-        private void firstNameTextBox_Leave(object sender, EventArgs e)
-        {
-            if (String.IsNullOrWhiteSpace(firstNameTextBox.Text))
-            {
-                WrongValueInput(firstNameTextBox, firstNameBackPanel, firstNameStarLabel, "Введите имя.", 3000);
-            }
-            else //если фамилия введена правильно
-            {
-                CorrectValueInput(firstNameTextBox, firstNameBackPanel, firstNameStarLabel);
-            }//else
-        }//firstNameTextBox_Leave
-        
-        private void passportNumTextBox_Leave(object sender, EventArgs e)
-        {
-            if (String.IsNullOrWhiteSpace(passportNumTextBox.Text))
-            {
-                WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel, "Введите серию и номер паспорта.", 3000);
-            }
-            else //если фамилия введена правильно
-            {
-                CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel);
-            }//else
-        }//passportNumTextBox_Leave
-
-        private void passwordTextBox_TextChanged(object sender, EventArgs e)
-        {
-            passwordAgainTextBox.Enabled = true;
-
-        }//passwordTextBox_TextChanged
-
-        private void passwordTextBox_Leave(object sender, EventArgs e)
-        {
-            if (String.IsNullOrWhiteSpace(passwordTextBox.Text))
-            {
-                Point location = new Point(bottomPanel.Location.X + passwordBackPanel.Location.X, bottomPanel.Location.Y + passwordBackPanel.Location.Y);
-                WrongValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel, location, "Введите пароль", 3000);
-                passwordAgainTextBox.Clear();
-                passwordAgainTextBox.Enabled = false;
-            }//if
-            else //если фамилия введена правильно
-            {
-                CorrectValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel);
-            }//else
-        }//passwordTextBox_Leave
-
-        private void passwordAgainTextBox_Leave(object sender, EventArgs e)
-        {
-            Point location = new Point(bottomPanel.Location.X + passwordAgainBackPanel.Location.X, bottomPanel.Location.Y + passwordAgainBackPanel.Location.Y);
-            //Проверяем повторный ввод пароля на корректность.
-            if (String.IsNullOrWhiteSpace(passwordAgainTextBox.Text))
-            {                
-                WrongValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel, location, "Повторите пароль", 3000);
-            }//if
-            else if (passwordAgainTextBox.Text != passwordTextBox.Text)
-            {
-                WrongValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel, location, "Пароли не совпадают", 3000);
-            }
-            else
-            {
-                CorrectValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel);
-            }//else
-        }
-
-        private void accessLayerComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (accessLayerComboBox.SelectedIndex == -1)
-            {
-                Point location = new Point(bottomPanel.Location.X + accessLayerBackPanel.Location.X, bottomPanel.Location.Y + accessLayerBackPanel.Location.Y);
-                WrongValueInput(accessLayerComboBox, accessLayerBackPanel, accessLayerStarLabel, location, "Выберите уровень доступа данного сотрудника.", 3000);
-            }
-            else //если фамилия введена правильно
-            {
-                CorrectValueInput(accessLayerComboBox, accessLayerBackPanel, accessLayerStarLabel);
-            }//else
-        }// accessLayerComboBox_SelectedIndexChanged
-
-
 
 
 
@@ -420,6 +437,8 @@ namespace PartsApp
             }//if
 
         }
+
+        
 
         
 
