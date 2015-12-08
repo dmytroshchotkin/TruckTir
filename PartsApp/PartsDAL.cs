@@ -762,13 +762,12 @@ namespace PartsApp
                                    + "VALUES (@LastName, @FirstName, @MiddleName, @BirthDate, @HireDate, "
                                    +         "@ContactInfoId, @Photo, @Note, @PassportNum, @Title, @AccessLayer, @Password);";
 
-                var cmd = new SQLiteCommand(query, connection);
+                var cmd = new SQLiteCommand(query, connection);                
 
                 cmd.Parameters.AddWithValue("@LastName",        employee.LastName);
                 cmd.Parameters.AddWithValue("@FirstName",       employee.FirstName);
                 cmd.Parameters.AddWithValue("@MiddleName",      employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate",       employee.BirthDate);
-                cmd.Parameters.AddWithValue("@HireDate",        employee.HireDate);
+                cmd.Parameters.AddWithValue("@BirthDate",       (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);                
                 cmd.Parameters.AddWithValue("@ContactInfoId",   employee.ContactInfoId);
                 cmd.Parameters.AddWithValue("@Photo",           employee.Photo);
                 cmd.Parameters.AddWithValue("@Note",            employee.Note);
@@ -776,17 +775,107 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@Title",           employee.Title);
                 cmd.Parameters.AddWithValue("@AccessLayer",     employee.AccessLayer);
                 cmd.Parameters.AddWithValue("@Password",        employee.Password);
-                    
-                cmd.ExecuteNonQuery();
 
+                if (employee.HireDate != null)
+                {
+                    Int32 unixTimestamp = (Int32)(((DateTime)employee.HireDate).Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                    cmd.Parameters.AddWithValue("@HireDate", unixTimestamp);
+                }
+                else cmd.Parameters.AddWithValue("@HireDate", null);
+
+                cmd.ExecuteNonQuery();
+                
                 connection.Close();
             }//using 
 
 
 
         }//AddEmployee
+        /// <summary>
+        /// Метод обновляющий значения заданного сотрудника.
+        /// </summary>
+        /// <param name="employee">Сотрудник, значения которого необходимо обновить в базе.</param>
+        public static void UpdateEmployee(Employee employee)
+        {
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                
+                const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
+                                   + "BirthDate = @BirthDate, ContactInfoId = @ContactInfoId, Photo = @Photo, Note = @Note, "
+                                   + "PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, Password = @Password "
+                                   + "WHERE EmployeeId = @EmployeeId;";
 
 
+                var cmd = new SQLiteCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
+                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
+                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
+                cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
+                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
+                cmd.Parameters.AddWithValue("@Note", employee.Note);
+                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
+                cmd.Parameters.AddWithValue("@Title", employee.Title);
+                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Password", employee.Password);
+
+                if (employee.HireDate != null)
+                {
+                    Int32 unixTimestamp = (Int32)(((DateTime)employee.HireDate).Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                    cmd.Parameters.AddWithValue("@HireDate", unixTimestamp);
+                }
+                else cmd.Parameters.AddWithValue("@HireDate", null);
+
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }//using
+        }//UpdateEmployee
+        /// <summary>
+        /// Метод обновляющий значения заданного сотрудника, без обновления его пароля.
+        /// </summary>
+        /// <param name="employee">Сотрудник, значения которого необходимо обновить в базе.</param>
+        public static void UpdateEmployeeWithoutPassword(Employee employee)
+        {
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
+                                   + "BirthDate = @BirthDate, ContactInfoId = @ContactInfoId, Photo = @Photo, Note = @Note, "
+                                   + "PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer "
+                                   + "WHERE EmployeeId = @EmployeeId;";
+
+
+                var cmd = new SQLiteCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
+                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
+                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
+                cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
+                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
+                cmd.Parameters.AddWithValue("@Note", employee.Note);
+                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
+                cmd.Parameters.AddWithValue("@Title", employee.Title);
+                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
+
+                if (employee.HireDate != null)
+                {
+                    Int32 unixTimestamp = (Int32)(((DateTime)employee.HireDate).Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                    cmd.Parameters.AddWithValue("@HireDate", unixTimestamp);
+                }
+                else cmd.Parameters.AddWithValue("@HireDate", null);
+
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }//using
+        }//UpdateEmployeeWithoutPassword
 
 
 
@@ -2809,6 +2898,47 @@ namespace PartsApp
 
             return employees;
         }//FindAllEmployees
+
+        //Поиск по ContactInfo
+        /// <summary>
+        /// Возвращает объект типа ContactInfo заполненный по заданному Id.
+        /// </summary>
+        /// <param name="contactInfoId">Id по которому находится информация.</param>
+        /// <returns></returns>
+        public static ContactInfo FindContactInfoById(int contactInfoId)
+        {
+            ContactInfo contactInfo = new ContactInfo();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT * FROM ContactInfo WHERE ContactInfoId = @ContactInfoId;";
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ContactInfoId", contactInfoId);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    contactInfo.Country     = dataReader["Country"] as string;
+                    contactInfo.Region      = dataReader["Region"] as string;
+                    contactInfo.City        = dataReader["City"] as string;
+                    contactInfo.Street      = dataReader["Street"] as string;
+                    contactInfo.House       = dataReader["House"] as string;
+                    contactInfo.Room        = dataReader["Room"] as string;
+                    contactInfo.Phone       = dataReader["Phone"] as string;
+                    contactInfo.ExtPhone1   = dataReader["ExtPhone1"] as string;
+                    contactInfo.ExtPhone2   = dataReader["ExtPhone2"] as string;
+                    contactInfo.Email       = dataReader["Email"] as string;
+                    contactInfo.Website     = dataReader["Website"] as string;
+                }//while 
+
+                connection.Close();
+            }//using
+
+            return contactInfo;        
+        }//FindContactInfoById
+
 
 
 

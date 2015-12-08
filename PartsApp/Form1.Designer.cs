@@ -79,6 +79,8 @@
             this.partsDGVContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editSparePartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userNameLabel = new System.Windows.Forms.Label();
+            this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -96,6 +98,7 @@
             this.extPartsStatusStrip.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.partsDGVContextMenuStrip.SuspendLayout();
+            this.userContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // BottomToolStripPanel
@@ -582,11 +585,26 @@
             // 
             this.userNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.userNameLabel.AutoSize = true;
+            this.userNameLabel.ContextMenuStrip = this.userContextMenuStrip;
             this.userNameLabel.Location = new System.Drawing.Point(724, 0);
             this.userNameLabel.Name = "userNameLabel";
             this.userNameLabel.Size = new System.Drawing.Size(87, 13);
             this.userNameLabel.TabIndex = 12;
             this.userNameLabel.Text = "ФИ сотрудника";
+            // 
+            // userContextMenuStrip
+            // 
+            this.userContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editEmployeeToolStripMenuItem});
+            this.userContextMenuStrip.Name = "userContextMenuStrip";
+            this.userContextMenuStrip.Size = new System.Drawing.Size(173, 48);
+            // 
+            // editEmployeeToolStripMenuItem
+            // 
+            this.editEmployeeToolStripMenuItem.Name = "editEmployeeToolStripMenuItem";
+            this.editEmployeeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
+            this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -628,6 +646,7 @@
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
             this.partsDGVContextMenuStrip.ResumeLayout(false);
+            this.userContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -685,6 +704,8 @@
         private System.Windows.Forms.Label userNameLabel;
         private System.Windows.Forms.ToolStripMenuItem employeesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addNewEmployeeToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip userContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem editEmployeeToolStripMenuItem;
 
     }
 }

@@ -11,7 +11,8 @@ using System.Windows.Forms;
 namespace PartsApp
 {
     public partial class AddEmployeeForm : Form
-    {        
+    {
+        Employee _editEmployee = null;
         const string employeePhotoFolder = @"Сотрудники\";
         DateTime companyFoundingDate = new DateTime(2000, 1, 1);
         const int minAge = 16, maxAge = 80;
@@ -25,6 +26,16 @@ namespace PartsApp
             birthDateTimePicker.MaxDate = new DateTime(DateTime.Today.Year - minAge, 12, 31);
             birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
             
+        }
+
+        public AddEmployeeForm(Employee editEmployee)
+        {
+            InitializeComponent();
+
+            _editEmployee = editEmployee;
+            FillTheForm(_editEmployee);
+            
+            birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
         }
 
         private void AddEmployeeForm_Load(object sender, EventArgs e)
@@ -79,13 +90,22 @@ namespace PartsApp
             {
                 WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel, "Введите серию и номер паспорта.", 3000);
             }//if
-            else if (PartsDAL.FindAllEmployees().Where(empl => empl.PassportNum == passportNumTextBox.Text).Count() > 0) //Если такой номер паспорта уже имеется в базе.
+            else
             {
-                WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel, "Такие паспортные данные уже имеются в базе.", 3000);
-            }//if
-            else//если фамилия введена правильно
-            {
-                CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel);
+                if (PartsDAL.FindAllEmployees().Where(empl => empl.PassportNum == passportNumTextBox.Text.Trim()).Count() > 0) //Если такой номер паспорта уже имеется в базе.
+                {
+                    //Если редактируется существующий сотрудник, и паспортные данные не изменены, то всё корректно. Иначе проверяем на совпадение с другими паспортными данными.
+                    if (_editEmployee != null && _editEmployee.PassportNum == passportNumTextBox.Text.Trim())
+                        CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel);
+                    else
+                        WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel, "Такие паспортные данные уже имеются в базе.", 3000);
+                }//if
+                else//если фамилия введена правильно
+                {
+                    CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel);
+                }//else
+
+                
             }//else
         }//passportNumTextBox_Leave
 
@@ -327,32 +347,168 @@ namespace PartsApp
             toolTip.SetToolTip(photoPictureBox, String.Empty);
         }
 
+        #region Методы связанные с модификацией и просмотром инф-ции о сотруднике.
 
-        ///// <summary>
-        ///// Возвращает hash введенной строки.
-        ///// </summary>
-        ///// <param name="password">Строка которую необх-мо зашифровать.</param>
-        ///// <returns></returns>  
-        //private string GetHashString(string password)  
-        //{  
-        //    //переводим строку в байт-массим  
-        //     byte[] bytes = Encoding.Unicode.GetBytes(password);  
-  
-        //      //создаем объект для получения средст шифрования  
-        //      MD5CryptoServiceProvider CSP =  
-        //          new MD5CryptoServiceProvider();  
-          
-        //      //вычисляем хеш-представление в байтах  
-        //      byte[] byteHash = CSP.ComputeHash(bytes);  
-  
-        //      string hash = string.Empty;  
-  
-        //      //формируем одну цельную строку из массива  
-        //      foreach (byte b in byteHash)  
-        //          hash += String.Format("{0:x2}", b);  
-  
-        //      return hash;       
-        //}//GetHashString
+        /// <summary>
+        /// Заполняет форму информацией о заданном сотруднике.
+        /// </summary>
+        /// <param name="employee">Сотрудник чьей информацией заполняется форма.</param>
+        private void FillTheForm(Employee employee)
+        {
+            lastNameTextBox.Text        = employee.LastName;
+            firstNameTextBox.Text       = employee.FirstName;
+            middleNameTextBox.Text      = employee.MiddleName;
+            birthDateTimePicker.Value   = (DateTime)employee.BirthDate;
+            hireDateTimePicker.Value    = (DateTime)employee.HireDate;            
+            descrRichTextBox.Text       = employee.Note;
+            passportNumTextBox.Text     = employee.PassportNum;
+            titleTextBox.Text           = employee.Title;
+            accessLayerComboBox.SelectedItem = employee.AccessLayer;
+            if (employee.ContactInfoId != null)
+                FillTheContactInfoPanel(PartsDAL.FindContactInfoById((int)employee.ContactInfoId));
+            //Проверяем наличие фото.
+            //photoPictureBox.Image = (employee.Photo != null) ? new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size) : null;
+            if (employee.Photo != null)
+            {
+                if (System.IO.File.Exists(System.IO.Path.GetFullPath(employee.Photo)))
+                {
+                    photoPictureBox.Image = new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size);
+                    toolTip.SetToolTip(photoPictureBox, System.IO.Path.GetFileName(employee.Photo));
+                }//if
+                //else //если путь фото указан, но такого фото уже нет в папке.
+                //{
+                 //   employee.Photo = null; 
+                //}//else
+            }//if
+
+            SetTheAccessLayerConstraints(employee);
+        }//FillTheForm
+        /// <summary>
+        /// Метод заполнения ContactInfoPanel информацией из заданного ContactInfo.
+        /// </summary>
+        /// <param name="contactInfo">Oбъект по которому заполняются поля в ContactInfoPanel.</param>
+        private void FillTheContactInfoPanel(ContactInfo contactInfo)
+        {
+            countryTextBox.Text     = contactInfo.Country;
+            regionTextBox.Text      = contactInfo.Region;
+            cityTextBox.Text        = contactInfo.City;
+            streetTextBox.Text      = contactInfo.Street;
+            houseTextBox.Text       = contactInfo.House;
+            roomTextBox.Text        = contactInfo.Room;
+            phoneTextBox.Text       = contactInfo.Phone;
+            extPhone1TextBox.Text   = contactInfo.ExtPhone1;
+            extPhone2TextBox.Text   = contactInfo.ExtPhone2;
+            emailTextBox.Text       = contactInfo.Email; ;
+            websiteTextBox.Text     = contactInfo.Website; 
+        }//FillTheContactInfoPanel        
+        /// <summary>
+        /// Задаёт ограничения модификации формы исходя из уровня доступа переданного сотрудника.
+        /// </summary>
+        /// <param name="employee">Сотрудник, исходя из уровня доступа которого задаются ограничения.</param>
+        private void SetTheAccessLayerConstraints(Employee employee)
+        {
+            //Если редактируемый юзер это и есть тот кто сейчас авторизован
+            if (employee == Form1.CurEmployee)
+            {
+                //Если права "Обычные" -- может редактировать только пароль
+                if (employee.AccessLayer == EmployeeAccessLayers.Usual)
+                {
+                    foreach (Control control in this.Controls)
+                        control.Enabled = false;
+
+                    bottomPanel.Enabled = true;
+                    accessLayerComboBox.Enabled = descrRichTextBox.Visible = descrLabel.Visible = false;
+                }//if
+                else //если права "Админ" -- может редактировать всё.
+                {
+                    passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
+                }//else
+            }//if
+            else //Если редактируемый юзер не является авторизованным юзером
+            {
+                //если права "Админ" -- может редактировать всё, кроме пароля.
+                if (employee.AccessLayer == EmployeeAccessLayers.Admin)
+                {
+                    passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
+                    passwordTextBox.Visible = passwordAgainTextBox.Visible = false;
+                    passwordAgainLabel.Visible = passwordLabel.Visible = false;
+                    passwordAgainStarLabel.Visible = passwordStarLabel.Visible = false;
+                }//if
+                else //если права "Обычный" -- запрещено всё.
+                {
+                    foreach (Control control in this.Controls)
+                        control.Enabled = false;
+
+                    descrRichTextBox.Visible = descrLabel.Visible = false;
+                }//else
+            }//else
+        }//SetTheAccessLayerConstraints
+        /// <summary>
+        /// Заполняет объект типа Employee информацией из формы. 
+        /// </summary>
+        /// <param name="employee">Сотрудник, который будет заполнен инф-цией из формы.</param>
+        private void FillTheEmployeeFromForm(Employee employee)
+        {
+            //Проверяем наличие фото.
+            if (photoPictureBox.Image != null)
+            {
+                if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
+                {
+                    string destFilePath = photoPictureBox.Tag as string;
+                    System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
+                }
+                employee.Photo = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
+            }//else
+
+            employee.LastName = lastNameTextBox.Text.Trim();
+            employee.FirstName = firstNameTextBox.Text.Trim();
+            employee.MiddleName = middleNameTextBox.Text.Trim();
+            employee.BirthDate = birthDateTimePicker.Value;
+            employee.HireDate = hireDateTimePicker.Value;
+            employee.Note = descrRichTextBox.Text.Trim();
+            employee.PassportNum = passportNumTextBox.Text.Trim();
+            employee.Title = titleTextBox.Text.Trim();
+            employee.AccessLayer = accessLayerComboBox.SelectedItem as string;
+            employee.ContactInfoId = GetContactInfoId();
+            employee.Password = PasswordClass.GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
+        }//FillTheEmployeeFromForm
+        /// <summary>
+        /// Метод обновляющий данные переданного сотрудника в базе.
+        /// </summary>
+        /// <param name="employee">Сотрудник чьи данные обновляются.</param>
+        private void UpdateEmployee(Employee employee)
+        {
+            //Если редактируемый юзер это и есть тот кто сейчас авторизован
+            if (employee.EmployeeId == Form1.CurEmployee.EmployeeId)
+            {
+                //Если права "Админ"  
+                if (employee.AccessLayer == EmployeeAccessLayers.Admin)
+                {
+                    //Если пароль не менялся, обновляем без пароля, иначе обновляем полностью.
+                    if (passwordTextBox.Text.Trim() == Form1.CurEmployee.Password)                    
+                        PartsDAL.UpdateEmployeeWithoutPassword(employee);                    
+                    else                                           
+                        PartsDAL.UpdateEmployee(employee);                                                                                                      
+                }//if
+                //если права "Обычные"
+                else 
+                {
+                    //Если введен новый пароль, то обновляем его в базе, иначе ничего не делаем.
+                    if (passwordTextBox.Text.Trim() != Form1.CurEmployee.Password)                                           
+                        PartsDAL.UpdateEmployee(employee);                            
+                }//else
+
+                Form1.CurEmployee = employee;                
+            }//if
+            else //Если редактируемый юзер не является авторизованным юзером
+            {
+                //если права "Админ" 
+                if (employee.AccessLayer == EmployeeAccessLayers.Admin)                
+                    PartsDAL.UpdateEmployeeWithoutPassword(employee);                
+            }//else    
+        }//UpdateEmployee
+
+        #endregion
 
         /// <summary>
         /// Возвращает true если все необходимые данные введены корректно, иначе false.
@@ -379,7 +535,7 @@ namespace PartsApp
             {
                 return false;
             }//else
-        }
+        }//CheckAllConditionsForWrightValues
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
@@ -399,38 +555,29 @@ namespace PartsApp
             {
                 if (CheckAllConditionsForWrightValues() == true)
                 {
+                    this.Cursor = Cursors.WaitCursor;
                     Employee employee = new Employee();
-                    //Проверяем наличие фото.
-                    if (photoPictureBox.Image != null)
+                    FillTheEmployeeFromForm(employee);
+                    try
                     {
-                        if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
+                        //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.                    
+                        if (_editEmployee == null)
                         {
-                            string destFilePath = photoPictureBox.Tag as string;
-                            System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
-                        }
-                        employee.Photo = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
-                    }//else
+                            PartsDAL.AddEmployee(employee);
+                        }//if
+                        else
+                        {
+                            employee.EmployeeId = _editEmployee.EmployeeId;
+                            UpdateEmployee(employee);
+                        }//else
+                    }//try
+                    catch
+                    {
+                        MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                        this.Cursor = Cursors.Default;
+                        return;
+                    }//catch
 
-                    employee.LastName       = lastNameTextBox.Text.Trim();
-                    employee.FirstName      = firstNameTextBox.Text.Trim();
-                    employee.MiddleName     = middleNameTextBox.Text.Trim();
-                    employee.BirthDate      = birthDateTimePicker.Value;
-                    employee.HireDate       = hireDateTimePicker.Value;
-                    employee.Note           = descrRichTextBox.Text.Trim();
-                    employee.PassportNum    = passportNumTextBox.Text.Trim();
-                    employee.Title          = titleTextBox.Text.Trim();
-                    employee.AccessLayer    = accessLayerComboBox.SelectedItem as string;
-                    employee.Password       = PasswordClass.GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
-                    employee.ContactInfoId  = GetContactInfoId();
-                    //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.
-                    PartsDAL.AddEmployee(employee);
-                    //if (editSparePart == null)
-                    //    PartsDAL.AddSparePart(sparePart);
-                    //else
-                    //{
-                    //    sparePart.SparePartId = editSparePart.SparePartId;
-                    //    PartsDAL.UpdateSparePart(sparePart);
-                    //}
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }//if

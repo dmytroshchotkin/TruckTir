@@ -50,4 +50,14 @@ namespace PartsApp
             return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
         }//GetFullName
     }//Employee
+
+    /*!!!!*/
+    /// <summary>
+    /// Корявая реализация типов уровней доступа. Лучше сделать Enum в самом классе Employee!
+    /// </summary>
+    public static class EmployeeAccessLayers
+    { 
+        public static string Admin {get { return "Администратор"; } } 
+        public static string Usual {get { return "Обычный"; } } 
+    }
 }//namespace

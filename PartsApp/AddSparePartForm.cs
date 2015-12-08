@@ -33,7 +33,7 @@ namespace PartsApp
             titleTextBox.Text = editSparePart.Title;
             manufacturerTextBox.Text = editSparePart.Manufacturer;
             unitComboBox.SelectedItem = editSparePart.Unit;
-            if (String.IsNullOrWhiteSpace(editSparePart.Photo) == false)
+            if (editSparePart.Photo != null)
             {
                 if (System.IO.File.Exists(System.IO.Path.GetFullPath(editSparePart.Photo)))
                 {
@@ -415,14 +415,23 @@ namespace PartsApp
                     //PartsDAL.AddUnitOfMeasure();
                     sparePart.Unit = unitComboBox.SelectedValue.ToString();
 
-                    //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.
-                    if (editSparePart == null)
-                        PartsDAL.AddSparePart(sparePart);
-                    else 
+                    try
                     {
-                        sparePart.SparePartId = editSparePart.SparePartId;
-                        PartsDAL.UpdateSparePart(sparePart);
-                    }
+                        //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.
+                        if (editSparePart == null)
+                            PartsDAL.AddSparePart(sparePart);
+                        else
+                        {
+                            sparePart.SparePartId = editSparePart.SparePartId;
+                            PartsDAL.UpdateSparePart(sparePart);
+                        }//else
+                    }//try
+                    catch
+                    {
+                        MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                        this.Cursor = Cursors.Default;
+                        return;
+                    }//catch
 
                     this.DialogResult = DialogResult.OK;
                     this.Close();

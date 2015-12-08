@@ -50,11 +50,10 @@ namespace PartsApp
             photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDataGridView.Location.Y);
 
             //Вносим все типы наценок в markupComboBox             
-            markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().Select(markup => markup.Value).ToArray<string>());
+            markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().OrderByDescending(mark => mark.Key).Select(markup => markup.Value).ToArray<string>());
 
             //Выводим окно авторизации.
-            CurEmployee = new Employee(2, "Петров", "Пётр", "Петрович", new DateTime(1980, 03, 08), new DateTime(2008, 07, 18),
-                null, null, null, null, "ВК12212332", "Продавец", "Обычный", "qwerty");
+            CurEmployee = PartsDAL.FindAllEmployees().First();
             //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
             /////////////////////////////////////////////////////////////////////////////
@@ -985,7 +984,12 @@ namespace PartsApp
 
         private void addNewEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddEmployeeForm().Show();
+            new AddEmployeeForm().ShowDialog();
+        }//addNewEmployeeToolStripMenuItem_Click
+
+        private void editEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AddEmployeeForm(CurEmployee).ShowDialog();            
         }
 
 
