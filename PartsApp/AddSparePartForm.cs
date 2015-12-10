@@ -12,9 +12,6 @@ namespace PartsApp
 {
     public partial class AddSparePartForm : Form
     {
-        //string beginFilePath = null;        //переменные не будут равны null если требуется скопировать файл в нужную папку.
-        //string endFilePath = null;
-
         SparePart editSparePart = null;                  //Переменная требуемая для модификации данных уже сущ-щего товара.
         const string sparePartPhotoFolder = @"Товар\";
 
@@ -44,6 +41,8 @@ namespace PartsApp
 
             descrRichTextBox.Text = editSparePart.Description;
         }//AddSparePartForm
+
+        #region Методы проверки корректности ввода.
 
         private void AddSparePartForm_Load(object sender, EventArgs e)
         {
@@ -157,9 +156,11 @@ namespace PartsApp
                 if (String.IsNullOrWhiteSpace(unitComboBox.Text))
                     WrongValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel, "Выберите ед. изм.", 2000);
                 else
-                    CorrectValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel);            
+                    CorrectValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel);
             }//else
         }//unitComboBox_Leave
+
+
 
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены некорректные данные.
@@ -203,6 +204,14 @@ namespace PartsApp
             toolTip.Show(toolTipMessage, this, backControl.Location, toolTipShowTime);
         }//CorrectValueInput
 
+
+
+
+
+
+        #endregion
+        
+        
         //Событие для добавления новой единицы измерения в БД.
         private void addUnitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -359,6 +368,43 @@ namespace PartsApp
          
         }//manufacturerTextBox_PreviewKeyDown
 
+        /// <summary>
+        /// Заполняет объект типа SparePart информацией из формы. 
+        /// </summary>
+        /// <param name="employee">Товар, который будет заполнен инф-цией из формы.</param>
+        private void FillTheSparePartFromForm(SparePart sparePart)
+        {
+            //Проверяем наличие фото.
+            if (photoPictureBox.Image != null)
+            {
+                if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
+                {
+                    string destFilePath = photoPictureBox.Tag as string;
+                    System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
+                }
+                sparePart.Photo = sparePartPhotoFolder + toolTip.GetToolTip(photoPictureBox);
+            }//else
+
+            sparePart.Articul = articulTextBox.Text.Trim();
+            sparePart.Title = titleTextBox.Text.Trim();
+            sparePart.Description = (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null;
+            sparePart.ExtInfoId = null;
+            //добаляем manufacturer
+            if (String.IsNullOrWhiteSpace(manufacturerTextBox.Text) == false)
+            {
+                //Если такого ManufacturerName нет в базе, значит добавить.
+                if (PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim()).Count == 0)
+                    sparePart.ManufacturerId = PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
+                else
+                    sparePart.ManufacturerId = PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim())[0]; //!!! Кроется опасность путаницы в случае одинакового имени производителей, необходимо будет внести добавление в базу для избежания потенциальной угрозы!
+            }//else
+
+            //Вставляем ед. изм. 
+            //if (unitComboBox.DropDownStyle == ComboBoxStyle.DropDown) //если вставляется новое значение в бд.
+            //PartsDAL.AddUnitOfMeasure();
+            sparePart.Unit = unitComboBox.SelectedValue.ToString();
+        }//FillTheSparePartFromForm
+
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -384,36 +430,10 @@ namespace PartsApp
                 if (articulTextBoxBackPanel.BackColor != Color.Red && titleTextBoxBackPanel.BackColor != Color.Red
                     && unitComboBoxBackPanel.BackColor != Color.Red)
                 {
-                    SparePart sparePart = new SparePart();
-                    //Проверяем наличие фото.
-                    if (photoPictureBox.Image != null)
-                    {
-                        if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
-                        {
-                            string destFilePath = photoPictureBox.Tag as string;
-                            System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
-                        }
-                        sparePart.Photo = sparePartPhotoFolder + toolTip.GetToolTip(photoPictureBox);
-                    }//else
+                    this.Cursor = Cursors.WaitCursor;
 
-                    sparePart.Articul = articulTextBox.Text.Trim();
-                    sparePart.Title = titleTextBox.Text.Trim();
-                    if (String.IsNullOrWhiteSpace(descrRichTextBox.Text) == false)
-                        sparePart.Description = descrRichTextBox.Text.Trim();                    
-                    sparePart.ExtInfoId = null;
-                    //добаляем manufacturer
-                    if (String.IsNullOrWhiteSpace(manufacturerTextBox.Text) == false)
-                    {
-                        //Если такого ManufacturerName нет в базе, значит добавить.
-                        if (PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim()).Count == 0)
-                            sparePart.ManufacturerId = PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
-                        else
-                            sparePart.ManufacturerId = PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim())[0]; //!!! Кроется опасность путаницы в случае одинакового имени производителей, необходимо будет внести добавление в базу для избежания потенциальной угрозы!
-                    }//else
-                    //Вставляем ед. изм. 
-                    //if (unitComboBox.DropDownStyle == ComboBoxStyle.DropDown) //если вставляется новое значение в бд.
-                    //PartsDAL.AddUnitOfMeasure();
-                    sparePart.Unit = unitComboBox.SelectedValue.ToString();
+                    SparePart sparePart = new SparePart();
+                    FillTheSparePartFromForm(sparePart);
 
                     try
                     {

@@ -442,36 +442,7 @@ namespace PartsApp
                     descrRichTextBox.Visible = descrLabel.Visible = false;
                 }//else
             }//else
-        }//SetTheAccessLayerConstraints
-        /// <summary>
-        /// Заполняет объект типа Employee информацией из формы. 
-        /// </summary>
-        /// <param name="employee">Сотрудник, который будет заполнен инф-цией из формы.</param>
-        private void FillTheEmployeeFromForm(Employee employee)
-        {
-            //Проверяем наличие фото.
-            if (photoPictureBox.Image != null)
-            {
-                if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
-                {
-                    string destFilePath = photoPictureBox.Tag as string;
-                    System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
-                }
-                employee.Photo = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
-            }//else
-
-            employee.LastName = lastNameTextBox.Text.Trim();
-            employee.FirstName = firstNameTextBox.Text.Trim();
-            employee.MiddleName = middleNameTextBox.Text.Trim();
-            employee.BirthDate = birthDateTimePicker.Value;
-            employee.HireDate = hireDateTimePicker.Value;
-            employee.Note = descrRichTextBox.Text.Trim();
-            employee.PassportNum = passportNumTextBox.Text.Trim();
-            employee.Title = titleTextBox.Text.Trim();
-            employee.AccessLayer = accessLayerComboBox.SelectedItem as string;
-            employee.ContactInfoId = GetContactInfoId();
-            employee.Password = PasswordClass.GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
-        }//FillTheEmployeeFromForm
+        }//SetTheAccessLayerConstraints        
         /// <summary>
         /// Метод обновляющий данные переданного сотрудника в базе.
         /// </summary>
@@ -510,6 +481,35 @@ namespace PartsApp
 
         #endregion
 
+        /// <summary>
+        /// Заполняет объект типа Employee информацией из формы. 
+        /// </summary>
+        /// <param name="employee">Сотрудник, который будет заполнен инф-цией из формы.</param>
+        private void FillTheEmployeeFromForm(Employee employee)
+        {
+            //Проверяем наличие фото.
+            if (photoPictureBox.Image != null)
+            {
+                if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
+                {
+                    string destFilePath = photoPictureBox.Tag as string;
+                    System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
+                }
+                employee.Photo = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
+            }//else
+
+            employee.LastName = lastNameTextBox.Text.Trim();
+            employee.FirstName = firstNameTextBox.Text.Trim();
+            employee.MiddleName = middleNameTextBox.Text.Trim();
+            employee.BirthDate = birthDateTimePicker.Value;
+            employee.HireDate = hireDateTimePicker.Value;
+            employee.Note = descrRichTextBox.Text.Trim();
+            employee.PassportNum = passportNumTextBox.Text.Trim();
+            employee.Title = titleTextBox.Text.Trim();
+            employee.AccessLayer = accessLayerComboBox.SelectedItem as string;
+            employee.ContactInfoId = GetContactInfoId();
+            employee.Password = PasswordClass.GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
+        }//FillTheEmployeeFromForm
         /// <summary>
         /// Возвращает true если все необходимые данные введены корректно, иначе false.
         /// </summary>
