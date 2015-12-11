@@ -20,7 +20,7 @@ namespace PartsApp
             //Заполняем выпадающий список контрола для ввода ФИО.
             IList<Employee> employees = PartsDAL.FindAllEmployees();
             foreach (Employee employee in employees)
-                fullNameTextBox.AutoCompleteCustomSource.Add(employee.GetFullName());
+                loginTextBox.AutoCompleteCustomSource.Add(employee.Login);
 
         }
 
@@ -50,7 +50,7 @@ namespace PartsApp
                 string inputPasswordHash = PasswordClass.GetHashString(passwordTextBox.Text.Trim());
                 try
                 {
-                    var employees = PartsDAL.FindAllEmployees().Where(empl => empl.GetFullName() == fullNameTextBox.Text.Trim());
+                    var employees = PartsDAL.FindAllEmployees().Where(empl => empl.Login == loginTextBox.Text.Trim());
                     Employee employee = employees.Where(empl => empl.Password == inputPasswordHash).First();
 
                     Form1.CurEmployee = employee;
@@ -62,8 +62,6 @@ namespace PartsApp
                     toolTip.Show("Введены неверные данные.", this, okButton.Location, 3000); 
                 }
                 //var employees = PartsDAL.FindAllEmployees().Where(empl => empl.GetFullName() == fullNameTextBox.Text.Trim() && empl.Password == inputPasswordHash).First();
-
-/*!!!*/  //Необходимо добавить какое-то различие для сотрудников с одинаковыми именами.
                 
             }//if
         }

@@ -637,7 +637,7 @@
             // 
             this.descriptionRichTextBox.Location = new System.Drawing.Point(10, 639);
             this.descriptionRichTextBox.Name = "descriptionRichTextBox";
-            this.descriptionRichTextBox.Size = new System.Drawing.Size(848, 26);
+            this.descriptionRichTextBox.Size = new System.Drawing.Size(848, 30);
             this.descriptionRichTextBox.TabIndex = 93;
             this.descriptionRichTextBox.Text = "";
             // 
@@ -647,13 +647,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(869, 749);
             this.ControlBox = false;
+            this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.descriptionRichTextBox);
             this.Controls.Add(this.markupLabel);
             this.Controls.Add(this.markupComboBox);
             this.Controls.Add(this.excRateNumericUpDown);
             this.Controls.Add(this.currencyBackPanel);
-            this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.inTotalNumberLabel);
             this.Controls.Add(this.customerBackPanel);
             this.Controls.Add(this.sellerBackPanel);

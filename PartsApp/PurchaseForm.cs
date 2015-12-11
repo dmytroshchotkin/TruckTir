@@ -736,6 +736,326 @@ namespace PartsApp
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
+        #region Методы вывода инф-ции в Excel.
+
+        private void BeginLoadPurchaseToExcelFile(object purchase)
+        {
+            if (purchase is Purchase)
+                LoadPurchaseToExcelFile(purchase as Purchase, spareParts);
+        }//BeginLoadPurchaseToExcelFile
+        ///// <summary>
+        ///// Метод вывода приходной информации в Excel-файл.
+        ///// </summary>
+        ///// <param name="purchase">Информация о приходе.</param>
+        ///// <param name="spareParts">Список оприходованных товаров.</param>
+        //private void LoadPurchaseToExcelFile(Purchase purchase, IList<SparePart> spareParts)
+        //{
+        //    Excel.Application ExcelApp = new Excel.Application();
+        //    Excel.Workbook ExcelWorkBook;
+        //    Excel.Worksheet ExcelWorkSheet;
+        //    //Книга.
+        //    ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
+        //    //Таблица.
+        //    ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
+
+        //    int row = 1, column = 1;
+
+        //    //Выводим Id и Дату. 
+        //    ExcelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", purchase.PurchaseId, purchase.PurchaseDate.ToString("dd/MM/yyyy"));
+        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
+        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
+        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
+
+        //    //Выводим поставщика.
+        //    row += 2;
+        //    ExcelApp.Cells[row, column] = String.Format("Поставщик:   \t{0}", supplierTextBox.Text);//PartsDAL.FindSupplierNameById(purchase.SupplierId));
+        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
+
+        //    //Выводим покупателя.
+        //    row += 2;
+        //    ExcelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", buyerTextBox.Text);
+        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
+
+        //    //Выводим таблицу товаров.
+        //    //Выводим заголовок.
+        //    row += 2;
+        //    ExcelApp.Cells[row, column] = "Название";
+        //    ExcelApp.Cells[row, column+1] = "Ед. изм.";
+        //    ExcelApp.Cells[row, column+2] = "Кол-во";
+        //    ExcelApp.Cells[row, column+3] = "Цена";
+        //    ExcelApp.Cells[row, column+4] = "Сумма";
+
+        //    Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "E" + row.ToString());
+        //    excelCells.Font.Bold = true;
+        //    excelCells.Font.Size = 12;
+        //    //Обводим заголовки таблицы рамкой. 
+        //    excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+        //    //Устанавливаем стиль и толщину линии
+        //    //excelCells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+        //    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+
+        //    //Устанавливаем ширину первой Колонки для Title.
+        //    double width = 45; //45 -- Взято методом тыка.           
+        //    (ExcelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = width;
+        //    //Выводим список товаров.
+        //    for (int i = 0; i < spareParts.Count; ++i)
+        //    {
+        //        ++row;                
+        //        ExcelApp.Cells[row, column] = spareParts[i].Title;
+        //        //Если Title не влазиет в одну строку, увеличиваем высоту.
+        //        if (spareParts[i].Title.Length > width)
+        //        {
+        //            (ExcelApp.Cells[row, column] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+        //            ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
+        //        }
+        //        ExcelApp.Cells[row, column + 1] = spareParts[i].Unit;
+        //        ExcelApp.Cells[row, column + 2] = spareParts[i].Count;
+        //        ExcelApp.Cells[row, column + 3] = spareParts[i].Price;
+        //        ExcelApp.Cells[row, column + 4] = spareParts[i].Price * spareParts[i].Count;
+        //        //Выравнивание диапазона строк.
+        //        ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft; 
+        //    }//for
+
+        //    //Обводим талицу рамкой. 
+        //    excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "E" + row.ToString());
+        //    excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+
+        //    //Выводим "Итого".
+        //    ++row;            
+        //    //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
+        //    int indent = 0; //отступ
+        //    if (inTotalNumberLabel.Text.Length <= 9)
+        //        indent = 1;
+
+        //    ExcelApp.Cells[row, column + 2 + indent] = inTotalLabel.Text;
+        //    ExcelApp.Cells[row, column + 3 + indent] = inTotalNumberLabel.Text; //inTotal;// 
+        //    (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Underline = true;
+        //    (ExcelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
+        //    (ExcelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
+
+        //    //Выводим имена агентов.
+        //    row += 2;
+        //    ExcelApp.Cells[row, column]     = String.Format("\t{0} {1} ", supplierAgentLabel.Text, supplierAgentTextBox.Text);
+        //    ExcelApp.Cells[row, column + 1] = String.Format("{0} {1}",  buyerAgentLabel.Text, buyerAgentTextBox.Text);
+
+        //    //Вызываем нашу созданную эксельку.
+        //    ExcelApp.Visible = true;
+        //    ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
+        //    ExcelApp.UserControl = true;
+
+        //    this.Close();
+        //}//LoadPurchaseToExcelFile        
+        /// <summary>
+        /// Метод вывода приходной информации в Excel-файл.
+        /// </summary>
+        /// <param name="purchase">Информация о приходе.</param>
+        /// <param name="spareParts">Список оприходованных товаров.</param>
+        private void LoadPurchaseToExcelFile(Purchase purchase, IList<SparePart> spareParts)
+        {
+            Excel.Application ExcelApp = new Excel.Application();
+            Excel.Workbook ExcelWorkBook;
+            Excel.Worksheet ExcelWorkSheet;
+            //Книга.
+            ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
+            //Таблица.
+            ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
+
+            //Настраиваем горизонтальные границы области печати.
+            ExcelWorkSheet.PageSetup.LeftMargin = 10;
+            ExcelWorkSheet.PageSetup.RightMargin = 10;
+
+            int row = 1, column = 1;
+
+            //Выводим Id и Дату. 
+            ExcelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", purchase.PurchaseId, purchase.PurchaseDate.ToString("dd/MM/yyyy"));
+            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
+            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
+            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
+
+            //Выводим поставщика.
+            row += 2;
+            ExcelApp.Cells[row, column] = String.Format("Поставщик:   \t{0}", supplierTextBox.Text);//PartsDAL.FindSupplierNameById(purchase.SupplierId));
+            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
+
+            //Выводим покупателя.
+            row += 2;
+            ExcelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", buyerTextBox.Text);
+            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
+
+            //Выводим таблицу товаров.
+            //Выводим заголовок.
+            row += 2;
+            ExcelApp.Cells[row, column] = "Произв.";
+            ExcelApp.Cells[row, column + 1] = "Название";
+            ExcelApp.Cells[row, column + 2] = "Ед. изм.";
+            ExcelApp.Cells[row, column + 3] = "Кол-во";
+            ExcelApp.Cells[row, column + 4] = "Цена";
+            ExcelApp.Cells[row, column + 5] = "Сумма";
+
+            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
+            excelCells.Font.Bold = true;
+            excelCells.Font.Size = 12;
+            //Обводим заголовки таблицы рамкой. 
+            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+            //Устанавливаем стиль и толщину линии
+            //excelCells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+
+            //Устанавливаем ширину первой Колонки для Title.
+            double titleColWidth = 50; //50 -- Взято методом тыка.         
+            int manufColWidth = 15; //  15 -- Взято методом тыка.
+            (ExcelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = manufColWidth; //titleColWidth;
+            (ExcelApp.Cells[row, column + 1] as Excel.Range).Columns.ColumnWidth = titleColWidth; //manufColWidth;
+            //Выводим список товаров.
+            for (int i = 0; i < spareParts.Count; ++i)
+            {
+                ++row;
+                ExcelApp.Cells[row, column + 1] = spareParts[i].Title;
+                //Если Title не влазиет в одну строку, увеличиваем высоту.
+                if (spareParts[i].Title.Length > titleColWidth)
+                {
+                    (ExcelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+                    ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
+                }
+                ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
+                ExcelApp.Cells[row, column + 2] = spareParts[i].Unit;
+                ExcelApp.Cells[row, column + 3] = spareParts[i].Count;
+                ExcelApp.Cells[row, column + 4] = spareParts[i].Price;
+                ExcelApp.Cells[row, column + 5] = spareParts[i].Price * spareParts[i].Count;
+                //Выравнивание диапазона строк.
+                ExcelWorkSheet.get_Range("C" + row.ToString(), "F" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }//for
+
+            //Обводим талицу рамкой. 
+            excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "F" + row.ToString());
+            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+
+            //Выводим "Итого".
+            ++row;
+            //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
+            int indent = 0; //отступ
+            if (inTotalNumberLabel.Text.Length <= 9)
+                indent = 1;
+
+            ExcelApp.Cells[row, column + 3 + indent] = inTotalLabel.Text;
+            ExcelApp.Cells[row, column + 4 + indent] = inTotalNumberLabel.Text;
+            (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Underline = true;
+            (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
+            (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
+
+            //Выводим имена агентов.
+            row += 2;
+            ExcelApp.Cells[row, column] = String.Format("\t\t{0} {1}\t\t\t\t\t\t\t\t{2} {3}", 
+                                                                                supplierAgentLabel.Text, supplierAgentTextBox.Text,
+                                                                                buyerAgentLabel.Text, buyerAgentTextBox.Text);
+
+            //ExcelApp.Cells[row, column + 2] = String.Format("{0} {1}", buyerAgentLabel.Text, buyerAgentTextBox.Text);
+
+            //Делаем визуальное отделение информации от заметки, с помощью линии.
+            row += 2;
+
+            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                                                         ";//longEmptyString.ToString();
+            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
+            //Выводим заметку
+            row++;
+            // объединим область ячеек  строки "вместе"
+            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
+            excelCells.Merge(true);
+            excelCells.WrapText = true;
+            excelCells.Value = purchase.Description;//descriptionRichTextBox.Text;
+            AutoFitMergedCellRowHeight((ExcelApp.Cells[row, column] as Excel.Range));
+
+            //Вызываем нашу созданную эксельку.
+            ExcelApp.Visible = true;
+            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
+            ExcelApp.UserControl = true;
+
+            this.Close();
+        }//LoadPurchaseToExcelFile  
+
+        private void AutoFitMergedCellRowHeight(Excel.Range rng)
+        {
+            double mergedCellRgWidth = 0;
+            double rngWidth, possNewRowHeight;
+
+            if (rng.MergeCells)
+            {
+                // здесь использована самописная функция перевода стиля R1C1 в A1                
+                if (xlRCtoA1(rng.Row, rng.Column) == xlRCtoA1(rng.Range["A1"].Row, rng.Range["A1"].Column))
+                {
+                    rng = rng.MergeArea;
+                    if (rng.Rows.Count == 1 && rng.WrapText == true)
+                    {
+                        (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = false;
+                        rngWidth = rng.Cells.Item[1, 1].ColumnWidth;
+                        mergedCellRgWidth = GetRangeWidth(rng);
+                        rng.MergeCells = false;
+                        rng.Cells.Item[1, 1].ColumnWidth = mergedCellRgWidth;
+                        rng.EntireRow.AutoFit();
+                        possNewRowHeight = rng.RowHeight;
+                        rng.Cells.Item[1, 1].ColumnWidth = rngWidth;
+                        rng.MergeCells = true;
+                        rng.RowHeight = possNewRowHeight;
+                        (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = true;
+                    }//if
+                }//if                
+            }//if
+        }//AutoFitMergedCellRowHeight
+
+
+        /// <summary>
+        /// Возвращает ширину заданной области.
+        /// </summary>
+        /// <param name="rng">Область ширина которой считается.</param>
+        /// <returns></returns>
+        private double GetRangeWidth(Excel.Range rng)
+        {
+            double rngWidth = 0;
+            for (int i = 1; i <= rng.Columns.Count; ++i)
+            {
+                rngWidth += rng.Cells.Item[1, i].ColumnWidth;
+            }//for
+            return rngWidth;
+        }//GetRangeWidth
+
+        private string xlRCtoA1(int ARow, int ACol, bool RowAbsolute = false, bool ColAbsolute = false)
+        {
+            int A1 = 'A' - 1;  // номер "A" минус 1 (65 - 1 = 64)
+            int AZ = 'Z' - A1; // кол-во букв в англ. алфавите (90 - 64 = 26)
+
+            int t, m;
+            string S;
+
+            t = ACol / AZ; // целая часть
+            m = (ACol % AZ); // остаток?
+            if (m == 0)
+                t--;
+            if (t > 0)
+                S = Convert.ToString((char)(A1 + t));
+            else S = String.Empty;
+
+            if (m == 0)
+                t = AZ;
+            else t = m;
+
+            S = S + (char)(A1 + t);
+
+            //весь адрес.
+            if (ColAbsolute) S = '$' + S;
+            if (RowAbsolute) S = S + '$';
+
+            S = S + ARow.ToString();
+            return S;
+        }//xlRCtoA1
+
+
+
+
+
+
+
+
+        #endregion
 
         private void currencyComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -981,316 +1301,9 @@ namespace PartsApp
             }//if
         }
 
-        private void BeginLoadPurchaseToExcelFile(object purchase)
-        { 
-            if (purchase is Purchase)
-                LoadPurchaseToExcelFile(purchase as Purchase, spareParts);
-        }//BeginLoadPurchaseToExcelFile
-
-        ///// <summary>
-        ///// Метод вывода приходной информации в Excel-файл.
-        ///// </summary>
-        ///// <param name="purchase">Информация о приходе.</param>
-        ///// <param name="spareParts">Список оприходованных товаров.</param>
-        //private void LoadPurchaseToExcelFile(Purchase purchase, IList<SparePart> spareParts)
-        //{
-        //    Excel.Application ExcelApp = new Excel.Application();
-        //    Excel.Workbook ExcelWorkBook;
-        //    Excel.Worksheet ExcelWorkSheet;
-        //    //Книга.
-        //    ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
-        //    //Таблица.
-        //    ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
-
-        //    int row = 1, column = 1;
-
-        //    //Выводим Id и Дату. 
-        //    ExcelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", purchase.PurchaseId, purchase.PurchaseDate.ToString("dd/MM/yyyy"));
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
-
-        //    //Выводим поставщика.
-        //    row += 2;
-        //    ExcelApp.Cells[row, column] = String.Format("Поставщик:   \t{0}", supplierTextBox.Text);//PartsDAL.FindSupplierNameById(purchase.SupplierId));
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-        //    //Выводим покупателя.
-        //    row += 2;
-        //    ExcelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", buyerTextBox.Text);
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-        //    //Выводим таблицу товаров.
-        //    //Выводим заголовок.
-        //    row += 2;
-        //    ExcelApp.Cells[row, column] = "Название";
-        //    ExcelApp.Cells[row, column+1] = "Ед. изм.";
-        //    ExcelApp.Cells[row, column+2] = "Кол-во";
-        //    ExcelApp.Cells[row, column+3] = "Цена";
-        //    ExcelApp.Cells[row, column+4] = "Сумма";
-
-        //    Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "E" + row.ToString());
-        //    excelCells.Font.Bold = true;
-        //    excelCells.Font.Size = 12;
-        //    //Обводим заголовки таблицы рамкой. 
-        //    excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-        //    //Устанавливаем стиль и толщину линии
-        //    //excelCells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-        //    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-            
-        //    //Устанавливаем ширину первой Колонки для Title.
-        //    double width = 45; //45 -- Взято методом тыка.           
-        //    (ExcelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = width;
-        //    //Выводим список товаров.
-        //    for (int i = 0; i < spareParts.Count; ++i)
-        //    {
-        //        ++row;                
-        //        ExcelApp.Cells[row, column] = spareParts[i].Title;
-        //        //Если Title не влазиет в одну строку, увеличиваем высоту.
-        //        if (spareParts[i].Title.Length > width)
-        //        {
-        //            (ExcelApp.Cells[row, column] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
-        //            ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
-        //        }
-        //        ExcelApp.Cells[row, column + 1] = spareParts[i].Unit;
-        //        ExcelApp.Cells[row, column + 2] = spareParts[i].Count;
-        //        ExcelApp.Cells[row, column + 3] = spareParts[i].Price;
-        //        ExcelApp.Cells[row, column + 4] = spareParts[i].Price * spareParts[i].Count;
-        //        //Выравнивание диапазона строк.
-        //        ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft; 
-        //    }//for
-
-        //    //Обводим талицу рамкой. 
-        //    excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "E" + row.ToString());
-        //    excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-
-        //    //Выводим "Итого".
-        //    ++row;            
-        //    //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
-        //    int indent = 0; //отступ
-        //    if (inTotalNumberLabel.Text.Length <= 9)
-        //        indent = 1;
-  
-        //    ExcelApp.Cells[row, column + 2 + indent] = inTotalLabel.Text;
-        //    ExcelApp.Cells[row, column + 3 + indent] = inTotalNumberLabel.Text; //inTotal;// 
-        //    (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Underline = true;
-        //    (ExcelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
-        //    (ExcelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
-
-        //    //Выводим имена агентов.
-        //    row += 2;
-        //    ExcelApp.Cells[row, column]     = String.Format("\t{0} {1} ", supplierAgentLabel.Text, supplierAgentTextBox.Text);
-        //    ExcelApp.Cells[row, column + 1] = String.Format("{0} {1}",  buyerAgentLabel.Text, buyerAgentTextBox.Text);
-
-        //    //Вызываем нашу созданную эксельку.
-        //    ExcelApp.Visible = true;
-        //    ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-        //    ExcelApp.UserControl = true;
-
-        //    this.Close();
-        //}//LoadPurchaseToExcelFile        
-        /// <summary>
-        /// Метод вывода приходной информации в Excel-файл.
-        /// </summary>
-        /// <param name="purchase">Информация о приходе.</param>
-        /// <param name="spareParts">Список оприходованных товаров.</param>
-        private void LoadPurchaseToExcelFile(Purchase purchase, IList<SparePart> spareParts)
-        {
-            Excel.Application ExcelApp = new Excel.Application();
-            Excel.Workbook ExcelWorkBook;
-            Excel.Worksheet ExcelWorkSheet;
-            //Книга.
-            ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
-            //Таблица.
-            ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);            
-
-            //Настраиваем горизонтальные границы области печати.
-            ExcelWorkSheet.PageSetup.LeftMargin  = 10;
-            ExcelWorkSheet.PageSetup.RightMargin = 10;
-
-            int row = 1, column = 1;
-
-            //Выводим Id и Дату. 
-            ExcelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", purchase.PurchaseId, purchase.PurchaseDate.ToString("dd/MM/yyyy"));
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
-
-            //Выводим поставщика.
-            row += 2;
-            ExcelApp.Cells[row, column] = String.Format("Поставщик:   \t{0}", supplierTextBox.Text);//PartsDAL.FindSupplierNameById(purchase.SupplierId));
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-            //Выводим покупателя.
-            row += 2;
-            ExcelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", buyerTextBox.Text);
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-            //Выводим таблицу товаров.
-            //Выводим заголовок.
-            row += 2;
-            ExcelApp.Cells[row, column] = "Произв.";
-            ExcelApp.Cells[row, column + 1] = "Название";
-            ExcelApp.Cells[row, column + 2] = "Ед. изм.";
-            ExcelApp.Cells[row, column + 3] = "Кол-во";
-            ExcelApp.Cells[row, column + 4] = "Цена";
-            ExcelApp.Cells[row, column + 5] = "Сумма";
-
-            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
-            excelCells.Font.Bold = true;
-            excelCells.Font.Size = 12;
-            //Обводим заголовки таблицы рамкой. 
-            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-            //Устанавливаем стиль и толщину линии
-            //excelCells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-
-            //Устанавливаем ширину первой Колонки для Title.
-            double titleColWidth = 50; //50 -- Взято методом тыка.         
-            int manufColWidth = 15; //  15 -- Взято методом тыка.
-            (ExcelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = manufColWidth; //titleColWidth;
-            (ExcelApp.Cells[row, column + 1] as Excel.Range).Columns.ColumnWidth = titleColWidth; //manufColWidth;
-            //Выводим список товаров.
-            for (int i = 0; i < spareParts.Count; ++i)
-            {
-                ++row;
-                ExcelApp.Cells[row, column+1] = spareParts[i].Title;
-                //Если Title не влазиет в одну строку, увеличиваем высоту.
-                if (spareParts[i].Title.Length > titleColWidth)
-                {
-                    (ExcelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
-                    ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
-                }
-                ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
-                ExcelApp.Cells[row, column + 2] = spareParts[i].Unit;
-                ExcelApp.Cells[row, column + 3] = spareParts[i].Count;
-                ExcelApp.Cells[row, column + 4] = spareParts[i].Price;
-                ExcelApp.Cells[row, column + 5] = spareParts[i].Price * spareParts[i].Count;
-                //Выравнивание диапазона строк.
-                ExcelWorkSheet.get_Range("C" + row.ToString(), "F" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-            }//for
-
-            //Обводим талицу рамкой. 
-            excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "F" + row.ToString());
-            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-
-            //Выводим "Итого".
-            ++row;
-            //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
-            int indent = 0; //отступ
-            if (inTotalNumberLabel.Text.Length <= 9)
-                indent = 1;
-
-            ExcelApp.Cells[row, column + 3 + indent] = inTotalLabel.Text;
-            ExcelApp.Cells[row, column + 4 + indent] = inTotalNumberLabel.Text; 
-            (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Underline = true;
-            (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
-            (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
-
-            //Выводим имена агентов.
-            row += 2;
-            ExcelApp.Cells[row, column] = String.Format("\t{0} {1} ", supplierAgentLabel.Text, supplierAgentTextBox.Text);
-            ExcelApp.Cells[row, column + 1] = String.Format("{0} {1}", buyerAgentLabel.Text, buyerAgentTextBox.Text);
-
-            //Делаем визуальное отделение информации от заметки, с помощью линии.
-            row += 2;
-            //StringBuilder longEmptyString = new StringBuilder();
-            //for (int i=0; i<(int)GetRangeWidth(ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString())); ++i)
-                //longEmptyString.Append(" ");
-            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                                                         ";//longEmptyString.ToString();
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
-            //Выводим заметку
-            row++;            
-            // объединим область ячеек  строки "вместе"
-            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
-            excelCells.Merge(true);
-            excelCells.WrapText = true;
-            excelCells.Value = purchase.Description;//descriptionRichTextBox.Text;
-            AutoFitMergedCellRowHeight((ExcelApp.Cells[row, column] as Excel.Range));
-            
-            //Вызываем нашу созданную эксельку.
-            ExcelApp.Visible = true;
-            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-            ExcelApp.UserControl = true;
-
-            this.Close();
-        }//LoadPurchaseToExcelFile  
-             
-         private void AutoFitMergedCellRowHeight(Excel.Range rng)
-         {
-            double mergedCellRgWidth = 0;
-            double rngWidth, possNewRowHeight;
-
-            if (rng.MergeCells)
-            {
-                // здесь использована самописная функция перевода стиля R1C1 в A1                
-                if (xlRCtoA1(rng.Row, rng.Column) == xlRCtoA1(rng.Range["A1"].Row, rng.Range["A1"].Column)) 
-                {
-                    rng = rng.MergeArea;
-                    if (rng.Rows.Count == 1 && rng.WrapText == true)
-                    {
-                        (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = false;
-                        rngWidth = rng.Cells.Item[1, 1].ColumnWidth;
-                        mergedCellRgWidth = GetRangeWidth(rng);                            
-                        rng.MergeCells = false;
-                        rng.Cells.Item[1, 1].ColumnWidth = mergedCellRgWidth;
-                        rng.EntireRow.AutoFit();
-                        possNewRowHeight = rng.RowHeight;
-                        rng.Cells.Item[1, 1].ColumnWidth = rngWidth;
-                        rng.MergeCells = true;
-                        rng.RowHeight = possNewRowHeight;
-                        (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = true;
-                    }//if
-                }//if                
-            }//if
-         }//AutoFitMergedCellRowHeight
+        
 
 
-        /// <summary>
-        /// Возвращает ширину заданной области.
-        /// </summary>
-        /// <param name="rng">Область ширина которой считается.</param>
-        /// <returns></returns>
-        private double GetRangeWidth(Excel.Range rng)
-        {
-            double rngWidth = 0;
-            for (int i = 1; i <= rng.Columns.Count; ++i)
-            {
-                rngWidth += rng.Cells.Item[1, i].ColumnWidth;
-            }//for
-            return rngWidth;
-        }//GetRangeWidth
-
-        private string xlRCtoA1 (int ARow, int ACol, bool RowAbsolute = false, bool ColAbsolute = false)
-        {
-            int A1 = 'A' - 1;  // номер "A" минус 1 (65 - 1 = 64)
-            int AZ = 'Z' - A1; // кол-во букв в англ. алфавите (90 - 64 = 26)
-
-            int t, m;
-            string S; 
-
-            t = ACol / AZ; // целая часть
-            m = (ACol % AZ); // остаток?
-            if (m == 0) 
-                t--;
-            if (t > 0)
-                S = Convert.ToString((char)(A1 + t));
-            else S = String.Empty;
-
-            if (m == 0)
-                t = AZ;
-            else t = m;
-
-            S = S + (char)(A1 + t);
-
-            //весь адрес.
-            if (ColAbsolute)  S = '$' + S;
-            if (RowAbsolute)  S = S + '$';
-
-            S = S + ARow.ToString();
-            return S;
-        }//xlRCtoA1
-                                                  
     }//PurchaseForm
     
 

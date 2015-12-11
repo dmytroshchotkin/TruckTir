@@ -87,25 +87,21 @@ namespace PartsApp
         private void passportNumTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(passportNumTextBox.Text))
-            {
-                WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel, "Введите серию и номер паспорта.", 3000);
-            }//if
+                CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel);
             else
             {
                 if (PartsDAL.FindAllEmployees().Where(empl => empl.PassportNum == passportNumTextBox.Text.Trim()).Count() > 0) //Если такой номер паспорта уже имеется в базе.
                 {
                     //Если редактируется существующий сотрудник, и паспортные данные не изменены, то всё корректно. Иначе проверяем на совпадение с другими паспортными данными.
                     if (_editEmployee != null && _editEmployee.PassportNum == passportNumTextBox.Text.Trim())
-                        CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel);
+                        CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel);
                     else
-                        WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel, "Такие паспортные данные уже имеются в базе.", 3000);
+                        WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel, "Такие паспортные данные уже имеются в базе.", 3000);
                 }//if
                 else//если фамилия введена правильно
                 {
-                    CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumStarLabel);
-                }//else
-
-                
+                    CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel);
+                }//else                
             }//else
         }//passportNumTextBox_Leave
 
@@ -146,7 +142,32 @@ namespace PartsApp
             {
                 CorrectValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel);
             }//else
-        }
+        }//passwordAgainTextBox_Leave
+
+        private void loginTextBox_Leave(object sender, EventArgs e)
+        {
+            Point location = new Point(bottomPanel.Location.X + loginBackPanel.Location.X, bottomPanel.Location.Y + loginBackPanel.Location.Y);
+            if (String.IsNullOrWhiteSpace(loginTextBox.Text))
+            {
+                WrongValueInput(loginTextBox, loginBackPanel, loginStarLabel, location, "Введите имя (логин) учетной записи.", 3000);
+            }//if
+            else
+            {
+                if (PartsDAL.FindAllEmployees().Where(empl => empl.Login == loginTextBox.Text.Trim()).Count() > 0) //Если такой логин уже имеется в базе.
+                {
+                    //Если редактируется существующий сотрудник, и логин не изменен, то всё корректно. Иначе проверяем на совпадение с другими логинами в базе.
+                    if (_editEmployee != null && _editEmployee.Login == loginTextBox.Text.Trim())
+                        CorrectValueInput(loginTextBox, loginBackPanel, loginStarLabel);
+                    else
+                        WrongValueInput(loginTextBox, loginBackPanel, loginStarLabel, location, "Такой логин уже существует, введите другой.", 3000);
+                }//if
+                else//если фамилия введена правильно
+                {
+                    CorrectValueInput(loginTextBox, loginBackPanel, loginStarLabel);
+                }//else
+            }//else
+
+        }//loginTextBox_Leave
 
         private void accessLayerComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -176,7 +197,8 @@ namespace PartsApp
             }//else
 
             hireDateTimePicker.MaxDate = DateTime.Today;
-        }
+        }//birthDateTimePicker_ValueChanged
+
 
 
 
@@ -363,7 +385,9 @@ namespace PartsApp
             descrRichTextBox.Text       = employee.Note;
             passportNumTextBox.Text     = employee.PassportNum;
             titleTextBox.Text           = employee.Title;
+            loginTextBox.Text           = employee.Login;
             accessLayerComboBox.SelectedItem = employee.AccessLayer;
+
             if (employee.ContactInfoId != null)
                 FillTheContactInfoPanel(PartsDAL.FindContactInfoById((int)employee.ContactInfoId));
             //Проверяем наличие фото.
@@ -410,7 +434,7 @@ namespace PartsApp
             //Если редактируемый юзер это и есть тот кто сейчас авторизован
             if (employee == Form1.CurEmployee)
             {
-                //Если права "Обычные" -- может редактировать только пароль
+                //Если права "Обычные" -- может редактировать только пароль и логин.
                 if (employee.AccessLayer == EmployeeAccessLayers.Usual)
                 {
                     foreach (Control control in this.Controls)
@@ -426,10 +450,11 @@ namespace PartsApp
             }//if
             else //Если редактируемый юзер не является авторизованным юзером
             {
-                //если права "Админ" -- может редактировать всё, кроме пароля.
+                //если права "Админ" -- может редактировать всё, кроме пароля и логина.
                 if (employee.AccessLayer == EmployeeAccessLayers.Admin)
                 {
                     passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
+                    loginTextBox.Visible = false;
                     passwordTextBox.Visible = passwordAgainTextBox.Visible = false;
                     passwordAgainLabel.Visible = passwordLabel.Visible = false;
                     passwordAgainStarLabel.Visible = passwordStarLabel.Visible = false;
@@ -498,17 +523,18 @@ namespace PartsApp
                 employee.Photo = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
             }//else
 
-            employee.LastName = lastNameTextBox.Text.Trim();
-            employee.FirstName = firstNameTextBox.Text.Trim();
-            employee.MiddleName = middleNameTextBox.Text.Trim();
-            employee.BirthDate = birthDateTimePicker.Value;
-            employee.HireDate = hireDateTimePicker.Value;
-            employee.Note = descrRichTextBox.Text.Trim();
-            employee.PassportNum = passportNumTextBox.Text.Trim();
-            employee.Title = titleTextBox.Text.Trim();
-            employee.AccessLayer = accessLayerComboBox.SelectedItem as string;
-            employee.ContactInfoId = GetContactInfoId();
-            employee.Password = PasswordClass.GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
+            employee.LastName       = lastNameTextBox.Text.Trim();
+            employee.FirstName      = firstNameTextBox.Text.Trim();
+            employee.MiddleName     = middleNameTextBox.Text.Trim();
+            employee.BirthDate      = birthDateTimePicker.Value;
+            employee.HireDate       = hireDateTimePicker.Value;
+            employee.Note           = descrRichTextBox.Text.Trim();
+            employee.PassportNum    = passportNumTextBox.Text.Trim();
+            employee.Title          = titleTextBox.Text.Trim();
+            employee.AccessLayer    = accessLayerComboBox.SelectedItem as string;
+            employee.ContactInfoId  = GetContactInfoId();
+            employee.Login          = loginTextBox.Text.Trim();
+            employee.Password       = PasswordClass.GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
         }//FillTheEmployeeFromForm
         /// <summary>
         /// Возвращает true если все необходимые данные введены корректно, иначе false.
@@ -519,7 +545,8 @@ namespace PartsApp
             //Проверяем корректность ввода необходимых данных.
             lastNameTextBox_Leave     (null, null);
             firstNameTextBox_Leave    (null, null);
-            passportNumTextBox_Leave  (null, null);
+            //passportNumTextBox_Leave  (null, null);
+            loginTextBox_Leave        (null, null);
             passwordTextBox_Leave     (null, null);
             passwordAgainTextBox_Leave(null, null);
             accessLayerComboBox_SelectedIndexChanged(null, null);
@@ -527,7 +554,8 @@ namespace PartsApp
             //Проверяем удовлетворяют ли они всем условиям.
             if (lastNameBackPanel.BackColor != Color.Red && firstNameBackPanel.BackColor != Color.Red
                 && passwordBackPanel.BackColor != Color.Red && passwordAgainBackPanel.BackColor != Color.Red
-                && accessLayerBackPanel.BackColor != Color.Red && passportNumBackPanel.BackColor != Color.Red)
+                && accessLayerBackPanel.BackColor != Color.Red && passportNumBackPanel.BackColor != Color.Red
+                && loginBackPanel.BackColor != Color.Red)
             {
                 return true;
             }//if
@@ -584,6 +612,9 @@ namespace PartsApp
             }//if
 
         }
+
+        
+
 
         
 

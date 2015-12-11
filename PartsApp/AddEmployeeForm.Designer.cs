@@ -44,7 +44,6 @@
             this.passportNumLabel = new System.Windows.Forms.Label();
             this.passportNumBackPanel = new System.Windows.Forms.Panel();
             this.passportNumTextBox = new System.Windows.Forms.TextBox();
-            this.passportNumStarLabel = new System.Windows.Forms.Label();
             this.birthDateLabel = new System.Windows.Forms.Label();
             this.birthDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.hireDateLabel = new System.Windows.Forms.Label();
@@ -90,12 +89,16 @@
             this.descrRichTextBox = new System.Windows.Forms.RichTextBox();
             this.okButton = new System.Windows.Forms.Button();
             this.passwordStarLabel = new System.Windows.Forms.Label();
-            this.passwordAgainStarLabel = new System.Windows.Forms.Label();
             this.accessLayerStarLabel = new System.Windows.Forms.Label();
+            this.passwordAgainStarLabel = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.photoOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.photoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loginBackPanel = new System.Windows.Forms.Panel();
+            this.loginTextBox = new System.Windows.Forms.TextBox();
+            this.loginLabel = new System.Windows.Forms.Label();
+            this.loginStarLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).BeginInit();
             this.lastNameBackPanel.SuspendLayout();
             this.firstNameBackPanel.SuspendLayout();
@@ -106,6 +109,7 @@
             this.passwordAgainBackPanel.SuspendLayout();
             this.passwordBackPanel.SuspendLayout();
             this.photoContextMenuStrip.SuspendLayout();
+            this.loginBackPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // addEmployeePhotoButton
@@ -237,16 +241,6 @@
             this.passportNumTextBox.Size = new System.Drawing.Size(120, 20);
             this.passportNumTextBox.TabIndex = 24;
             this.passportNumTextBox.Leave += new System.EventHandler(this.passportNumTextBox_Leave);
-            // 
-            // passportNumStarLabel
-            // 
-            this.passportNumStarLabel.AutoSize = true;
-            this.passportNumStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.passportNumStarLabel.Location = new System.Drawing.Point(10, 167);
-            this.passportNumStarLabel.Name = "passportNumStarLabel";
-            this.passportNumStarLabel.Size = new System.Drawing.Size(20, 25);
-            this.passportNumStarLabel.TabIndex = 73;
-            this.passportNumStarLabel.Text = "*";
             // 
             // birthDateLabel
             // 
@@ -518,6 +512,9 @@
             // 
             // bottomPanel
             // 
+            this.bottomPanel.Controls.Add(this.loginBackPanel);
+            this.bottomPanel.Controls.Add(this.loginLabel);
+            this.bottomPanel.Controls.Add(this.loginStarLabel);
             this.bottomPanel.Controls.Add(this.accessLayerBackPanel);
             this.bottomPanel.Controls.Add(this.passwordAgainBackPanel);
             this.bottomPanel.Controls.Add(this.passwordBackPanel);
@@ -529,8 +526,8 @@
             this.bottomPanel.Controls.Add(this.descrRichTextBox);
             this.bottomPanel.Controls.Add(this.okButton);
             this.bottomPanel.Controls.Add(this.passwordStarLabel);
-            this.bottomPanel.Controls.Add(this.passwordAgainStarLabel);
             this.bottomPanel.Controls.Add(this.accessLayerStarLabel);
+            this.bottomPanel.Controls.Add(this.passwordAgainStarLabel);
             this.bottomPanel.Location = new System.Drawing.Point(5, 608);
             this.bottomPanel.Name = "bottomPanel";
             this.bottomPanel.Size = new System.Drawing.Size(595, 187);
@@ -539,7 +536,7 @@
             // accessLayerBackPanel
             // 
             this.accessLayerBackPanel.Controls.Add(this.accessLayerComboBox);
-            this.accessLayerBackPanel.Location = new System.Drawing.Point(237, 115);
+            this.accessLayerBackPanel.Location = new System.Drawing.Point(427, 62);
             this.accessLayerBackPanel.Name = "accessLayerBackPanel";
             this.accessLayerBackPanel.Size = new System.Drawing.Size(125, 25);
             this.accessLayerBackPanel.TabIndex = 79;
@@ -560,7 +557,7 @@
             // passwordAgainBackPanel
             // 
             this.passwordAgainBackPanel.Controls.Add(this.passwordAgainTextBox);
-            this.passwordAgainBackPanel.Location = new System.Drawing.Point(440, 73);
+            this.passwordAgainBackPanel.Location = new System.Drawing.Point(464, 117);
             this.passwordAgainBackPanel.Name = "passwordAgainBackPanel";
             this.passwordAgainBackPanel.Size = new System.Drawing.Size(79, 24);
             this.passwordAgainBackPanel.TabIndex = 78;
@@ -578,7 +575,7 @@
             // passwordBackPanel
             // 
             this.passwordBackPanel.Controls.Add(this.passwordTextBox);
-            this.passwordBackPanel.Location = new System.Drawing.Point(158, 73);
+            this.passwordBackPanel.Location = new System.Drawing.Point(182, 117);
             this.passwordBackPanel.Name = "passwordBackPanel";
             this.passwordBackPanel.Size = new System.Drawing.Size(79, 24);
             this.passwordBackPanel.TabIndex = 77;
@@ -596,7 +593,7 @@
             // accessLayerLabel
             // 
             this.accessLayerLabel.AutoSize = true;
-            this.accessLayerLabel.Location = new System.Drawing.Point(135, 125);
+            this.accessLayerLabel.Location = new System.Drawing.Point(321, 72);
             this.accessLayerLabel.Name = "accessLayerLabel";
             this.accessLayerLabel.Size = new System.Drawing.Size(100, 13);
             this.accessLayerLabel.TabIndex = 72;
@@ -605,7 +602,7 @@
             // passwordAgainLabel
             // 
             this.passwordAgainLabel.AutoSize = true;
-            this.passwordAgainLabel.Location = new System.Drawing.Point(297, 76);
+            this.passwordAgainLabel.Location = new System.Drawing.Point(321, 120);
             this.passwordAgainLabel.Name = "passwordAgainLabel";
             this.passwordAgainLabel.Size = new System.Drawing.Size(139, 13);
             this.passwordAgainLabel.TabIndex = 70;
@@ -615,7 +612,7 @@
             // passwordLabel
             // 
             this.passwordLabel.AutoSize = true;
-            this.passwordLabel.Location = new System.Drawing.Point(20, 76);
+            this.passwordLabel.Location = new System.Drawing.Point(44, 120);
             this.passwordLabel.Name = "passwordLabel";
             this.passwordLabel.Size = new System.Drawing.Size(132, 13);
             this.passwordLabel.TabIndex = 68;
@@ -663,31 +660,31 @@
             // 
             this.passwordStarLabel.AutoSize = true;
             this.passwordStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.passwordStarLabel.Location = new System.Drawing.Point(10, 64);
+            this.passwordStarLabel.Location = new System.Drawing.Point(34, 108);
             this.passwordStarLabel.Name = "passwordStarLabel";
             this.passwordStarLabel.Size = new System.Drawing.Size(20, 25);
             this.passwordStarLabel.TabIndex = 74;
             this.passwordStarLabel.Text = "*";
             // 
-            // passwordAgainStarLabel
-            // 
-            this.passwordAgainStarLabel.AutoSize = true;
-            this.passwordAgainStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.passwordAgainStarLabel.Location = new System.Drawing.Point(286, 64);
-            this.passwordAgainStarLabel.Name = "passwordAgainStarLabel";
-            this.passwordAgainStarLabel.Size = new System.Drawing.Size(20, 25);
-            this.passwordAgainStarLabel.TabIndex = 75;
-            this.passwordAgainStarLabel.Text = "*";
-            // 
             // accessLayerStarLabel
             // 
             this.accessLayerStarLabel.AutoSize = true;
             this.accessLayerStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.accessLayerStarLabel.Location = new System.Drawing.Point(125, 112);
+            this.accessLayerStarLabel.Location = new System.Drawing.Point(311, 60);
             this.accessLayerStarLabel.Name = "accessLayerStarLabel";
             this.accessLayerStarLabel.Size = new System.Drawing.Size(20, 25);
             this.accessLayerStarLabel.TabIndex = 76;
             this.accessLayerStarLabel.Text = "*";
+            // 
+            // passwordAgainStarLabel
+            // 
+            this.passwordAgainStarLabel.AutoSize = true;
+            this.passwordAgainStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.passwordAgainStarLabel.Location = new System.Drawing.Point(310, 108);
+            this.passwordAgainStarLabel.Name = "passwordAgainStarLabel";
+            this.passwordAgainStarLabel.Size = new System.Drawing.Size(20, 25);
+            this.passwordAgainStarLabel.TabIndex = 75;
+            this.passwordAgainStarLabel.Text = "*";
             // 
             // photoOpenFileDialog
             // 
@@ -707,6 +704,43 @@
             this.deselectToolStripMenuItem.Text = "Убрать фотографию";
             this.deselectToolStripMenuItem.Click += new System.EventHandler(this.deselectToolStripMenuItem_Click);
             // 
+            // loginBackPanel
+            // 
+            this.loginBackPanel.Controls.Add(this.loginTextBox);
+            this.loginBackPanel.Location = new System.Drawing.Point(137, 64);
+            this.loginBackPanel.Name = "loginBackPanel";
+            this.loginBackPanel.Size = new System.Drawing.Size(124, 24);
+            this.loginBackPanel.TabIndex = 82;
+            // 
+            // loginTextBox
+            // 
+            this.loginTextBox.Location = new System.Drawing.Point(2, 2);
+            this.loginTextBox.Name = "loginTextBox";
+            this.loginTextBox.Size = new System.Drawing.Size(120, 20);
+            this.loginTextBox.TabIndex = 69;
+            this.toolTip.SetToolTip(this.loginTextBox, "Имя вашей учетной записи, по которому будет осуществляться авторизация.");
+            this.loginTextBox.Leave += new System.EventHandler(this.loginTextBox_Leave);
+            // 
+            // loginLabel
+            // 
+            this.loginLabel.AutoSize = true;
+            this.loginLabel.Location = new System.Drawing.Point(87, 69);
+            this.loginLabel.Name = "loginLabel";
+            this.loginLabel.Size = new System.Drawing.Size(44, 13);
+            this.loginLabel.TabIndex = 80;
+            this.loginLabel.Text = "Логин :";
+            this.toolTip.SetToolTip(this.loginLabel, "Пароль учетной записи");
+            // 
+            // loginStarLabel
+            // 
+            this.loginStarLabel.AutoSize = true;
+            this.loginStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.loginStarLabel.Location = new System.Drawing.Point(77, 57);
+            this.loginStarLabel.Name = "loginStarLabel";
+            this.loginStarLabel.Size = new System.Drawing.Size(20, 25);
+            this.loginStarLabel.TabIndex = 81;
+            this.loginStarLabel.Text = "*";
+            // 
             // AddEmployeeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -725,7 +759,6 @@
             this.Controls.Add(this.birthDateLabel);
             this.Controls.Add(this.passportNumLabel);
             this.Controls.Add(this.passportNumBackPanel);
-            this.Controls.Add(this.passportNumStarLabel);
             this.Controls.Add(this.firstNameLabel);
             this.Controls.Add(this.firstNameBackPanel);
             this.Controls.Add(this.firstNameStarLabel);
@@ -757,6 +790,8 @@
             this.passwordBackPanel.ResumeLayout(false);
             this.passwordBackPanel.PerformLayout();
             this.photoContextMenuStrip.ResumeLayout(false);
+            this.loginBackPanel.ResumeLayout(false);
+            this.loginBackPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -779,7 +814,6 @@
         private System.Windows.Forms.Label passportNumLabel;
         private System.Windows.Forms.Panel passportNumBackPanel;
         private System.Windows.Forms.TextBox passportNumTextBox;
-        private System.Windows.Forms.Label passportNumStarLabel;
         private System.Windows.Forms.Label birthDateLabel;
         private System.Windows.Forms.DateTimePicker birthDateTimePicker;
         private System.Windows.Forms.Label hireDateLabel;
@@ -831,5 +865,9 @@
         private System.Windows.Forms.OpenFileDialog photoOpenFileDialog;
         private System.Windows.Forms.ContextMenuStrip photoContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem deselectToolStripMenuItem;
+        private System.Windows.Forms.Panel loginBackPanel;
+        private System.Windows.Forms.TextBox loginTextBox;
+        private System.Windows.Forms.Label loginLabel;
+        private System.Windows.Forms.Label loginStarLabel;
     }
 }

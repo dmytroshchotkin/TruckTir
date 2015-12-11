@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.fullNameTextBox = new System.Windows.Forms.TextBox();
-            this.fullNameLabel = new System.Windows.Forms.Label();
+            this.loginTextBox = new System.Windows.Forms.TextBox();
+            this.loginLabel = new System.Windows.Forms.Label();
             this.passwordLabel = new System.Windows.Forms.Label();
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.okButton = new System.Windows.Forms.Button();
@@ -38,23 +38,23 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
-            // fullNameTextBox
+            // loginTextBox
             // 
-            this.fullNameTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.fullNameTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.fullNameTextBox.Location = new System.Drawing.Point(67, 16);
-            this.fullNameTextBox.Name = "fullNameTextBox";
-            this.fullNameTextBox.Size = new System.Drawing.Size(214, 20);
-            this.fullNameTextBox.TabIndex = 0;
+            this.loginTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.loginTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.loginTextBox.Location = new System.Drawing.Point(67, 16);
+            this.loginTextBox.Name = "loginTextBox";
+            this.loginTextBox.Size = new System.Drawing.Size(214, 20);
+            this.loginTextBox.TabIndex = 0;
             // 
-            // fullNameLabel
+            // loginLabel
             // 
-            this.fullNameLabel.AutoSize = true;
-            this.fullNameLabel.Location = new System.Drawing.Point(12, 19);
-            this.fullNameLabel.Name = "fullNameLabel";
-            this.fullNameLabel.Size = new System.Drawing.Size(40, 13);
-            this.fullNameLabel.TabIndex = 1;
-            this.fullNameLabel.Text = "ФИО :";
+            this.loginLabel.AutoSize = true;
+            this.loginLabel.Location = new System.Drawing.Point(12, 19);
+            this.loginLabel.Name = "loginLabel";
+            this.loginLabel.Size = new System.Drawing.Size(44, 13);
+            this.loginLabel.TabIndex = 1;
+            this.loginLabel.Text = "Логин :";
             // 
             // passwordLabel
             // 
@@ -103,8 +103,8 @@
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.passwordLabel);
-            this.Controls.Add(this.fullNameLabel);
-            this.Controls.Add(this.fullNameTextBox);
+            this.Controls.Add(this.loginLabel);
+            this.Controls.Add(this.loginTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -118,8 +118,8 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox fullNameTextBox;
-        private System.Windows.Forms.Label fullNameLabel;
+        private System.Windows.Forms.TextBox loginTextBox;
+        private System.Windows.Forms.Label loginLabel;
         private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Button okButton;

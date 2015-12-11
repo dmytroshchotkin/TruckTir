@@ -758,22 +758,23 @@ namespace PartsApp
                 connection.Open();
 
                 const string query = "INSERT INTO Employees (LastName, FirstName, MiddleName, BirthDate, HireDate, "
-                                   +         "ContactInfoId, Photo, Note, PassportNum, Title, AccessLayer, Password) "
-                                   + "VALUES (@LastName, @FirstName, @MiddleName, @BirthDate, @HireDate, "
-                                   +         "@ContactInfoId, @Photo, @Note, @PassportNum, @Title, @AccessLayer, @Password);";
+                                   +         "ContactInfoId, Photo, Note, PassportNum, Title, AccessLayer, Login, Password) "
+                                   + "VALUES (@LastName, @FirstName, @MiddleName, @BirthDate, @HireDate, @ContactInfoId, "
+                                   +         "@Photo, @Note, @PassportNum, @Title, @AccessLayer, @Login, @Password);";
 
                 var cmd = new SQLiteCommand(query, connection);                
 
                 cmd.Parameters.AddWithValue("@LastName",        employee.LastName);
                 cmd.Parameters.AddWithValue("@FirstName",       employee.FirstName);
                 cmd.Parameters.AddWithValue("@MiddleName",      employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate",       (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);                
+                cmd.Parameters.AddWithValue("@BirthDate",      (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);                
                 cmd.Parameters.AddWithValue("@ContactInfoId",   employee.ContactInfoId);
                 cmd.Parameters.AddWithValue("@Photo",           employee.Photo);
                 cmd.Parameters.AddWithValue("@Note",            employee.Note);
                 cmd.Parameters.AddWithValue("@PassportNum",     employee.PassportNum);
                 cmd.Parameters.AddWithValue("@Title",           employee.Title);
                 cmd.Parameters.AddWithValue("@AccessLayer",     employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Login",           employee.Login);
                 cmd.Parameters.AddWithValue("@Password",        employee.Password);
 
                 if (employee.HireDate != null)
@@ -803,24 +804,26 @@ namespace PartsApp
                 
                 const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
                                    + "BirthDate = @BirthDate, ContactInfoId = @ContactInfoId, Photo = @Photo, Note = @Note, "
-                                   + "PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, Password = @Password "
+                                   + "PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, Login = @Login, "
+                                   + "Password = @Password "
                                    + "WHERE EmployeeId = @EmployeeId;";
 
 
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
-                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+                cmd.Parameters.AddWithValue("@EmployeeId",    employee.EmployeeId);
+                cmd.Parameters.AddWithValue("@LastName",      employee.LastName);
+                cmd.Parameters.AddWithValue("@FirstName",     employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName",    employee.MiddleName);
                 cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
                 cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
-                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
-                cmd.Parameters.AddWithValue("@Note", employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title", employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Password", employee.Password);
+                cmd.Parameters.AddWithValue("@Photo",         employee.Photo);
+                cmd.Parameters.AddWithValue("@Note",          employee.Note);
+                cmd.Parameters.AddWithValue("@PassportNum",   employee.PassportNum);
+                cmd.Parameters.AddWithValue("@Title",         employee.Title);
+                cmd.Parameters.AddWithValue("@AccessLayer",   employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Login",         employee.Login);
+                cmd.Parameters.AddWithValue("@Password",      employee.Password);
 
                 if (employee.HireDate != null)
                 {
@@ -846,23 +849,24 @@ namespace PartsApp
 
                 const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
                                    + "BirthDate = @BirthDate, ContactInfoId = @ContactInfoId, Photo = @Photo, Note = @Note, "
-                                   + "PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer "
+                                   + "PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, Login = @Login "
                                    + "WHERE EmployeeId = @EmployeeId;";
 
 
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
-                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
+                cmd.Parameters.AddWithValue("@EmployeeId",    employee.EmployeeId);
+                cmd.Parameters.AddWithValue("@LastName",      employee.LastName);
+                cmd.Parameters.AddWithValue("@FirstName",     employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName",    employee.MiddleName);
+                cmd.Parameters.AddWithValue("@BirthDate",  (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
                 cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
-                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
-                cmd.Parameters.AddWithValue("@Note", employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title", employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Photo",         employee.Photo);
+                cmd.Parameters.AddWithValue("@Note",          employee.Note);
+                cmd.Parameters.AddWithValue("@PassportNum",   employee.PassportNum);
+                cmd.Parameters.AddWithValue("@Title",         employee.Title);
+                cmd.Parameters.AddWithValue("@AccessLayer",   employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Login",         employee.Login);
 
                 if (employee.HireDate != null)
                 {
@@ -2887,7 +2891,8 @@ namespace PartsApp
                     employee.Note           = dataReader["Note"] as string;
                     employee.PassportNum    = dataReader["PassportNum"] as string;
                     employee.Title          = dataReader["Title"] as string;
-                    employee.AccessLayer    = dataReader["AccessLayer"] as string;;
+                    employee.AccessLayer    = dataReader["AccessLayer"] as string;
+                    employee.Login          = dataReader["Login"] as string;
                     employee.Password       = dataReader["Password"] as string;;
 
                     employees.Add(employee);

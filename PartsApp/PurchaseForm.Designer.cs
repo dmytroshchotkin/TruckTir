@@ -587,13 +587,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 630);
             this.ControlBox = false;
+            this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.descriptionRichTextBox);
             this.Controls.Add(this.markupComboBox);
             this.Controls.Add(this.helpLabel);
             this.Controls.Add(this.excRateNumericUpDown);
             this.Controls.Add(this.currencyBackPanel);
-            this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.markupCheckBox);
             this.Controls.Add(this.storageAdressBackPanel);
             this.Controls.Add(this.cancelButton);

@@ -21,13 +21,14 @@ namespace PartsApp
         public string PassportNum       { get; set; }
         public string Title             { get; set; }
         public string AccessLayer       { get; set; }
+        public string Login             { get; set; }
         public string Password          { get; set; }
          
 
         public Employee() {}
         public Employee(int employeeId, string lastName, string firstName, string middleName, DateTime? birthDate, 
                         DateTime? hireDate, DateTime? dismissalDate, int? contactInfoId, string photo, string note, 
-                        string passportNum, string title, string accessLayer, string password)
+                        string passportNum, string title, string accessLayer, string login, string password)
         {      
             EmployeeId      =  employeeId;
             LastName        =  lastName;
@@ -42,6 +43,7 @@ namespace PartsApp
             PassportNum     =  passportNum;
             Title           =  title;
             AccessLayer     =  accessLayer;
+            Login           =  login;
             Password        =  password;
         }
 
