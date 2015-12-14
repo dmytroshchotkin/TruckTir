@@ -53,8 +53,8 @@ namespace PartsApp
             markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().OrderByDescending(mark => mark.Key).Select(markup => markup.Value).ToArray<string>());
 
             //Выводим окно авторизации.
-            //CurEmployee = PartsDAL.FindAllEmployees().First();
-            new AuthorizationForm().ShowDialog(this);
+            CurEmployee = PartsDAL.FindAllEmployees().First();
+            //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
             /////////////////////////////////////////////////////////////////////////////
             /* Пробная зона */

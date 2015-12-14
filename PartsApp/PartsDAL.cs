@@ -4062,7 +4062,7 @@ namespace PartsApp
             SparePart sparePart = new SparePart
             (
                 sparePartId    : Convert.ToInt32(dataReader["SparePartId"]),
-                photo          : (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
+                photo          : dataReader["Photo"] as string,
                 articul        : dataReader["Articul"] as string,
                 title          : dataReader["Title"] as string,
                 description    : (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,

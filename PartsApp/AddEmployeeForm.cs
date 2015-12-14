@@ -525,12 +525,12 @@ namespace PartsApp
 
             employee.LastName       = lastNameTextBox.Text.Trim();
             employee.FirstName      = firstNameTextBox.Text.Trim();
-            employee.MiddleName     = middleNameTextBox.Text.Trim();
+            employee.MiddleName     = (!String.IsNullOrWhiteSpace(middleNameTextBox.Text)) ? middleNameTextBox.Text.Trim() : null;
             employee.BirthDate      = birthDateTimePicker.Value;
             employee.HireDate       = hireDateTimePicker.Value;
-            employee.Note           = descrRichTextBox.Text.Trim();
-            employee.PassportNum    = passportNumTextBox.Text.Trim();
-            employee.Title          = titleTextBox.Text.Trim();
+            employee.Note           = (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null;
+            employee.PassportNum    = (!String.IsNullOrWhiteSpace(passportNumTextBox.Text)) ? passportNumTextBox.Text.Trim() : null;
+            employee.Title          = (!String.IsNullOrWhiteSpace(titleTextBox.Text)) ? titleTextBox.Text.Trim() : null;
             employee.AccessLayer    = accessLayerComboBox.SelectedItem as string;
             employee.ContactInfoId  = GetContactInfoId();
             employee.Login          = loginTextBox.Text.Trim();

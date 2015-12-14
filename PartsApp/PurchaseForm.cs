@@ -1274,7 +1274,7 @@ namespace PartsApp
                     }//foreach
                     
                     Purchase purchase = new Purchase();
-                    purchase.EmployeeId = null; //GetEmployeeIdByName(receiverAgentTextBox);
+                    purchase.EmployeeId = Form1.CurEmployee.EmployeeId;
                     purchase.SupplierId = PartsDAL.FindSupplierIdByName(supplierTextBox.Text);
                     purchase.SupplierEmployee = (String.IsNullOrWhiteSpace(supplierAgentTextBox.Text) == false) ? supplierAgentTextBox.Text.Trim() : null;
                     purchase.PurchaseDate = purchaseDateTimePicker.Value;

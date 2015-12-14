@@ -1383,7 +1383,7 @@ namespace PartsApp
                     }//foreach
                     
                     Sale sale = new Sale();
-                    sale.EmployeeId = null; //GetEmployeeIdByName(receiverAgentTextBox);
+                    sale.EmployeeId = Form1.CurEmployee.EmployeeId;
                     sale.CustomerId = PartsDAL.FindCustomerIdByName(customerTextBox.Text);
                     sale.CustomerEmployee = (String.IsNullOrWhiteSpace(customerAgentTextBox.Text) == false) ? customerAgentTextBox.Text.Trim() : null;
                     sale.SaleDate = saleDateTimePicker.Value;
