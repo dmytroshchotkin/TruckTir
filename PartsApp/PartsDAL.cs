@@ -2334,6 +2334,42 @@ namespace PartsApp
 
             return suppliersName;
         }//FindAllSuppliersName
+        /// <summary>
+        /// Возвращает объект типа Contragent по заданному Id.
+        /// </summary>
+        /// <param name="supplierId">Id поставщика, которого надо найти.</param>
+        /// <returns></returns>
+        public static Contragent FindSupplierById(int supplierId)
+        {
+            Contragent supplier = null;
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT * FROM  Suppliers WHERE SupplierId = @SupplierId;";
+                var cmd = new SQLiteCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("@SupplierId", supplierId);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    supplier = new Contragent
+                    (
+                        dataReader["SupplierName"] as string,
+                        dataReader["Code"] as string,
+                        dataReader["Entity"] as string,
+                        dataReader["ContactInfoId"] == DBNull.Value ? (int?)null : Convert.ToInt32(dataReader["ContactInfoId"]),
+                        dataReader["Description"] as string
+                    );
+                }//while
+
+                connection.Close();
+            }//using
+
+            return supplier;
+        }//FindSupplierById
         public static string FindSupplierNameById(int supplierId)
         {
             string supplier = null;
@@ -2404,8 +2440,8 @@ namespace PartsApp
 
                 const string query = "SELECT * FROM Purchases AS p JOIN Suppliers AS s ON p.SupplierId = s.SupplierId "
                                    + "WHERE p.PurchaseId = @PurchaseId;";
-
                 var cmd = new SQLiteCommand(query, connection);
+
                 cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
 
                 var dataReader = cmd.ExecuteReader();
@@ -2680,11 +2716,6 @@ namespace PartsApp
                 connection.Close();
             }//using
 
-            //создаём массив string.
-            //string[] unit = new string[units.Count];
-            //for (int i = 0; i < unit.Length; ++i)
-            //    unit[i] = units[i];
-
             return units;
         }//FindAllUnitsOfMeasure
         /// <summary>
@@ -2710,7 +2741,45 @@ namespace PartsApp
             return minUnitSale;
         }//FindMinUnitSaleOfUnit
 
+
         //Поиск по полям таблицы Purchases.
+        /// <summary>
+        /// Возвращает список из всех приходов в базе.
+        /// </summary>
+        /// <returns></returns>
+        public static IList<Purchase> FindAllPurchases()
+        {
+            IList<Purchase> purchases = new List<Purchase>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Purchases;", connection);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Purchase purchase = new Purchase();
+
+                    purchase.PurchaseId = Convert.ToInt32(dataReader["PurchaseId"]);
+                    purchase.EmployeeId = (dataReader["EmployeeId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["EmployeeId"]);
+                    purchase.SupplierId = Convert.ToInt32(dataReader["SupplierId"]);
+                    purchase.SupplierEmployee = dataReader["SupplierEmployee"] as string;
+                    //Переводим кол-во секунд Utc в DateTime.
+                    TimeSpan ts = TimeSpan.FromSeconds(Convert.ToInt32(dataReader["PurchaseDate"]));
+                    DateTime purchaseDate = new DateTime(1970, 1, 1);
+                    purchaseDate += ts;
+                    purchase.PurchaseDate = purchaseDate;
+                    purchase.Currency = dataReader["Currency"] as string;
+                    purchase.ExcRate = Convert.ToDouble(dataReader["ExcRate"]);
+
+                    purchases.Add(purchase);
+                }//while
+                connection.Close();
+            }//using
+
+            return purchases;
+        }//FindAllPurchases
         /// <summary>
         /// Возвращает объект класса Purchase, найденный по заданному Id. 
         /// </summary>
@@ -2748,6 +2817,29 @@ namespace PartsApp
 
             return purchase;
         }//FindPurchaseById
+        /// <summary>
+        /// Возвращает общую сумму прихода, по указанному Id. 
+        /// </summary>
+        /// <param name="purchaseId">Id прихода, сумму которого надо найти.</param>
+        /// <returns></returns>
+        public static double FindTotalSumOfPurchase(int purchaseId)
+        {
+            double totalSum = 0;
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                var cmd = new SQLiteCommand("SELECT SUM(Price) FROM PurchaseDetails WHERE PurchaseId = @PurchaseId;", connection);
+
+                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+
+                totalSum = Convert.ToDouble(cmd.ExecuteScalar());
+
+                connection.Close();
+            }//using
+
+            return totalSum;
+        }//FindTotalSumOfPurchase
 
         #region Поиск по полям Markups.
 

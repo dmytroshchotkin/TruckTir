@@ -51,6 +51,11 @@ namespace PartsApp
         {
             return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
         }//GetFullName
+        public string GetShortFullName()
+        {
+            string shortMiddleName = (MiddleName != null) ? MiddleName.ToUpper()[0] + "." : "";            
+            return String.Format("{0} {1}. {2}", LastName, FirstName.ToUpper()[0], shortMiddleName);
+        }//GetShortFullName
     }//Employee
 
     /*!!!!*/

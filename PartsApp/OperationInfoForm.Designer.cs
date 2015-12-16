@@ -40,14 +40,14 @@
             this.employeeFilterTextBox = new System.Windows.Forms.TextBox();
             this.contragentFilterTextBox = new System.Windows.Forms.TextBox();
             this.operationDataGridView = new System.Windows.Forms.DataGridView();
-            this.operationDetailsDataGridView = new System.Windows.Forms.DataGridView();
+            this.operationDetailsDGV = new System.Windows.Forms.DataGridView();
             this.Manufacturer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Articul = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.Contragent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Employee = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,10 +55,10 @@
             this.InTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Currency = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ExcRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ContragentEmployee = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Storage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PurchaseId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OperationId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
@@ -72,7 +72,7 @@
             this.operationSplitContainer.Panel2.SuspendLayout();
             this.operationSplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.operationDataGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.operationDetailsDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.operationDetailsDGV)).BeginInit();
             this.SuspendLayout();
             // 
             // mainSplitContainer
@@ -90,7 +90,7 @@
             // mainSplitContainer.Panel2
             // 
             this.mainSplitContainer.Panel2.Controls.Add(this.tablesSplitContainer);
-            this.mainSplitContainer.Size = new System.Drawing.Size(780, 742);
+            this.mainSplitContainer.Size = new System.Drawing.Size(838, 742);
             this.mainSplitContainer.SplitterDistance = 286;
             this.mainSplitContainer.TabIndex = 0;
             // 
@@ -124,8 +124,8 @@
             // 
             // tablesSplitContainer.Panel2
             // 
-            this.tablesSplitContainer.Panel2.Controls.Add(this.operationDetailsDataGridView);
-            this.tablesSplitContainer.Size = new System.Drawing.Size(780, 452);
+            this.tablesSplitContainer.Panel2.Controls.Add(this.operationDetailsDGV);
+            this.tablesSplitContainer.Size = new System.Drawing.Size(838, 452);
             this.tablesSplitContainer.SplitterDistance = 243;
             this.tablesSplitContainer.TabIndex = 0;
             // 
@@ -149,7 +149,7 @@
             // operationSplitContainer.Panel2
             // 
             this.operationSplitContainer.Panel2.Controls.Add(this.operationDataGridView);
-            this.operationSplitContainer.Size = new System.Drawing.Size(780, 243);
+            this.operationSplitContainer.Size = new System.Drawing.Size(838, 243);
             this.operationSplitContainer.SplitterDistance = 25;
             this.operationSplitContainer.SplitterWidth = 1;
             this.operationSplitContainer.TabIndex = 0;
@@ -177,13 +177,13 @@
             this.operationDateFilterTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.operationDateFilterTimePicker.Location = new System.Drawing.Point(248, 2);
             this.operationDateFilterTimePicker.Name = "operationDateFilterTimePicker";
-            this.operationDateFilterTimePicker.Size = new System.Drawing.Size(97, 20);
+            this.operationDateFilterTimePicker.Size = new System.Drawing.Size(80, 20);
             this.operationDateFilterTimePicker.TabIndex = 2;
             this.toolTip.SetToolTip(this.operationDateFilterTimePicker, "Выберите дату операции");
             // 
             // employeeFilterTextBox
             // 
-            this.employeeFilterTextBox.Location = new System.Drawing.Point(142, 2);
+            this.employeeFilterTextBox.Location = new System.Drawing.Point(142, 5);
             this.employeeFilterTextBox.Name = "employeeFilterTextBox";
             this.employeeFilterTextBox.Size = new System.Drawing.Size(100, 20);
             this.employeeFilterTextBox.TabIndex = 1;
@@ -199,6 +199,8 @@
             // 
             // operationDataGridView
             // 
+            this.operationDataGridView.AllowUserToAddRows = false;
+            this.operationDataGridView.AllowUserToDeleteRows = false;
             this.operationDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.operationDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Contragent,
@@ -207,33 +209,35 @@
             this.InTotal,
             this.Currency,
             this.ExcRate,
-            this.Description,
             this.ContragentEmployee,
             this.Storage,
-            this.PurchaseId});
+            this.OperationId,
+            this.Description});
             this.operationDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.operationDataGridView.Location = new System.Drawing.Point(0, 0);
             this.operationDataGridView.Name = "operationDataGridView";
-            this.operationDataGridView.Size = new System.Drawing.Size(780, 217);
+            this.operationDataGridView.Size = new System.Drawing.Size(838, 217);
             this.operationDataGridView.TabIndex = 0;
             this.operationDataGridView.Resize += new System.EventHandler(this.operationDataGridView_Resize);
             // 
-            // operationDetailsDataGridView
+            // operationDetailsDGV
             // 
-            this.operationDetailsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.operationDetailsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.operationDetailsDGV.AllowUserToAddRows = false;
+            this.operationDetailsDGV.AllowUserToDeleteRows = false;
+            this.operationDetailsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.operationDetailsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Manufacturer,
             this.Articul,
             this.Title,
             this.Unit,
             this.Count,
             this.Price,
-            this.dataGridViewTextBoxColumn1});
-            this.operationDetailsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.operationDetailsDataGridView.Location = new System.Drawing.Point(0, 0);
-            this.operationDetailsDataGridView.Name = "operationDetailsDataGridView";
-            this.operationDetailsDataGridView.Size = new System.Drawing.Size(780, 205);
-            this.operationDetailsDataGridView.TabIndex = 1;
+            this.Sum});
+            this.operationDetailsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.operationDetailsDGV.Location = new System.Drawing.Point(0, 0);
+            this.operationDetailsDGV.Name = "operationDetailsDGV";
+            this.operationDetailsDGV.Size = new System.Drawing.Size(838, 205);
+            this.operationDetailsDGV.TabIndex = 1;
             // 
             // Manufacturer
             // 
@@ -271,16 +275,16 @@
             this.Price.Name = "Price";
             this.Price.Width = 58;
             // 
-            // dataGridViewTextBoxColumn1
+            // Sum
             // 
-            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.dataGridViewTextBoxColumn1.HeaderText = "Сумма";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.Width = 66;
+            this.Sum.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Sum.HeaderText = "Сумма";
+            this.Sum.Name = "Sum";
+            this.Sum.Width = 66;
             // 
             // Contragent
             // 
-            this.Contragent.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Contragent.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Contragent.HeaderText = "Контрагент";
             this.Contragent.Name = "Contragent";
             this.Contragent.Width = 90;
@@ -292,8 +296,11 @@
             // 
             // Date
             // 
+            this.Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.Date.HeaderText = "Дата";
+            this.Date.MinimumWidth = 80;
             this.Date.Name = "Date";
+            this.Date.Width = 80;
             // 
             // InTotal
             // 
@@ -316,13 +323,6 @@
             this.ExcRate.Name = "ExcRate";
             this.ExcRate.Width = 56;
             // 
-            // Description
-            // 
-            this.Description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Description.HeaderText = "Описание";
-            this.Description.Name = "Description";
-            this.Description.Width = 82;
-            // 
             // ContragentEmployee
             // 
             this.ContragentEmployee.HeaderText = "Представитель контрагента";
@@ -335,18 +335,25 @@
             this.Storage.Name = "Storage";
             this.Storage.Width = 63;
             // 
-            // PurchaseId
+            // OperationId
             // 
-            this.PurchaseId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.PurchaseId.HeaderText = "№ операции";
-            this.PurchaseId.Name = "PurchaseId";
-            this.PurchaseId.Width = 87;
+            this.OperationId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.OperationId.HeaderText = "№ операции";
+            this.OperationId.Name = "OperationId";
+            this.OperationId.Width = 87;
+            // 
+            // Description
+            // 
+            this.Description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Description.HeaderText = "Описание";
+            this.Description.Name = "Description";
+            this.Description.Width = 82;
             // 
             // OperationInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(780, 742);
+            this.ClientSize = new System.Drawing.Size(838, 742);
             this.Controls.Add(this.mainSplitContainer);
             this.Name = "OperationInfoForm";
             this.Text = "OperationInfoForm";
@@ -366,7 +373,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.operationSplitContainer)).EndInit();
             this.operationSplitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.operationDataGridView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.operationDetailsDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.operationDetailsDGV)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -376,14 +383,7 @@
         private System.Windows.Forms.SplitContainer mainSplitContainer;
         private System.Windows.Forms.SplitContainer tablesSplitContainer;
         private System.Windows.Forms.DataGridView operationDataGridView;
-        private System.Windows.Forms.DataGridView operationDetailsDataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Manufacturer;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Articul;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Title;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Unit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Count;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Price;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridView operationDetailsDGV;
         private System.Windows.Forms.TextBox operationIdTextBox;
         private System.Windows.Forms.Label operationIdLabel;
         private System.Windows.Forms.SplitContainer operationSplitContainer;
@@ -393,15 +393,22 @@
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.ComboBox currencyFilterComboBox;
         private System.Windows.Forms.DateTimePicker operationDateFilterTimePicker;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Manufacturer;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Articul;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Title;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Unit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Count;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Price;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Sum;
         private System.Windows.Forms.DataGridViewTextBoxColumn Contragent;
         private System.Windows.Forms.DataGridViewTextBoxColumn Employee;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn InTotal;
         private System.Windows.Forms.DataGridViewTextBoxColumn Currency;
         private System.Windows.Forms.DataGridViewTextBoxColumn ExcRate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Description;
         private System.Windows.Forms.DataGridViewTextBoxColumn ContragentEmployee;
         private System.Windows.Forms.DataGridViewTextBoxColumn Storage;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PurchaseId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OperationId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Description;
     }
 }

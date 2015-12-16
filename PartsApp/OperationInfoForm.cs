@@ -19,7 +19,9 @@ namespace PartsApp
 
         private void OperationInfoForm_Load(object sender, EventArgs e)
         {
-            operationDateFilterTimePicker.Value = DateTime.Now;
+            operationDateFilterTimePicker.Value = DateTime.Now;            
+            FillTheOperationDGV(PartsDAL.FindAllPurchases());
+            FillTheOperationDetailsDGV(PartsDAL.FindAllSparePartsAvaliableToDisplay());
             SetFiltersPosition();
 
         }//OperationInfoForm_Load
@@ -34,32 +36,7 @@ namespace PartsApp
             SetFilterPosition(Date,       operationDateFilterTimePicker);
             SetFilterPosition(Currency,   currencyFilterComboBox);
             SetFilterPosition(Storage,    storageFilterComboBox);
-
-            //int x, y;
-            //x = operationDataGridView.GetCellDisplayRectangle(Contragent.Index, 0, false).Location.X;
-            //y = operationSplitContainer.Panel1.Height - contragentFilterTextBox.Height;
-            //contragentFilterTextBox.Location = new Point(x, y);
-            //contragentFilterTextBox.Width = Contragent.Width;
-
-            //x = operationDataGridView.GetCellDisplayRectangle(Employee.Index, 0, false).Location.X;
-            //y = operationSplitContainer.Panel1.Height - employeeFilterTextBox.Height;
-            //employeeFilterTextBox.Location = new Point(x, y);
-            //employeeFilterTextBox.Width = Employee.Width;
-
-            //x = operationDataGridView.GetCellDisplayRectangle(Date.Index, 0, false).Location.X;
-            //y = operationSplitContainer.Panel1.Height - operationDateFilterTimePicker.Height;
-            //operationDateFilterTimePicker.Location = new Point(x, y);
-            //operationDateFilterTimePicker.Width = Date.Width;
-
-            //x = operationDataGridView.GetCellDisplayRectangle(Currency.Index, 0, false).Location.X;
-            //y = operationSplitContainer.Panel1.Height - currencyFilterComboBox.Height;
-            //currencyFilterComboBox.Location = new Point(x, y);
-            //currencyFilterComboBox.Width = Currency.Width;
-
-            //x = operationDataGridView.GetCellDisplayRectangle(Storage.Index, 0, false).Location.X;
-            //y = operationSplitContainer.Panel1.Height - storageFilterComboBox.Height;
-            //storageFilterComboBox.Location = new Point(x, y);
-            //storageFilterComboBox.Width = Storage.Width;
+            
         }//SetFiltersPosition
         /// <summary>
         /// Устанавливает размер и позицию заданного фильтующего контрола.
@@ -69,24 +46,68 @@ namespace PartsApp
         private void SetFilterPosition(DataGridViewTextBoxColumn column, Control filterControl)
         {
             int x, y;
-            x = operationDataGridView.GetCellDisplayRectangle(column.Index, 0, false).Location.X;
+            x = operationDataGridView.GetCellDisplayRectangle(column.Index, -1, false).Location.X;
             y = operationSplitContainer.Panel1.Height - filterControl.Height;
             filterControl.Location = new Point(x, y);
             filterControl.Width = column.Width;
         }//SetFilterPosition
-
+        /// <summary>
+        /// Заполняет таблицу коллекцией переданных эл-тов.
+        /// </summary>
+        /// <param name="purchases">Коллекция, эл-тами которой заполняется таблица.</param>
         private void FillTheOperationDGV(IList<Purchase> purchases)
         {            
             operationDataGridView.Rows.Add(purchases.Count);
 
-            for (int i = 0; i < purchases.Count; ++i )
+            for (int i = 0; i < purchases.Count; ++i)
             {
-                operationDataGridView.Rows[i].Cells[Contragent.Name].Value = PartsDAL.FindSupplierByPurchaseId(purchases[i].SupplierId).ContragentName;
+                Purchase purchase = purchases[i];
+                DataGridViewRow row = operationDataGridView.Rows[i];
+
+                row.Cells[Contragent.Name].Value = PartsDAL.FindSupplierById(purchase.SupplierId).ContragentName;
+
+                if (purchase.EmployeeId != null)
+                {
+                    Employee employee = PartsDAL.FindEmployeeById((int)purchase.EmployeeId);
+                    row.Cells[Employee.Name].Value = employee.GetShortFullName();
+                    row.Cells[Employee.Name].ToolTipText = employee.GetFullName();
+                    row.Cells[Employee.Name].Tag = employee.EmployeeId;
+                }//if
+                
+                row.Cells[Date.Name].Value = purchase.PurchaseDate.ToShortDateString();
+                row.Cells[InTotal.Name].Value = PartsDAL.FindTotalSumOfPurchase(purchase.PurchaseId);
+                row.Cells[Currency.Name].Value = purchase.Currency;
+                row.Cells[ExcRate.Name].Value = purchase.ExcRate;
+                row.Cells[Description.Name].Value = purchase.Description;
+                row.Cells[ContragentEmployee.Name].Value = purchase.SupplierEmployee;
+                //row.Cells[Storage.Name].Value = purchase.;
+                row.Cells[OperationId.Name].Value = purchase.PurchaseId;
             }//for
 
 
-
         }//FillTheOperationDGV
+        /// <summary>
+        /// Заполняет operationDetailsDGV коллекцией переданных эл-тов.
+        /// </summary>
+        /// <param name="spareParts">Коллекция, эл-тами которой заполняется таблица.</param>
+        private void FillTheOperationDetailsDGV(IList<SparePart> spareParts)
+        {
+            operationDetailsDGV.Rows.Add(spareParts.Count);
+
+            for (int i = 0; i < spareParts.Count; ++i)
+            {
+                SparePart sparePart = spareParts[i];
+                DataGridViewRow row = operationDetailsDGV.Rows[i];
+
+                row.Cells[Manufacturer.Name].Value = sparePart.Manufacturer;
+                row.Cells[Articul.Name].Value = sparePart.Articul;
+                row.Cells[Title.Name].Value = sparePart.Title;
+                row.Cells[Unit.Name].Value = sparePart.Unit;
+                row.Cells[Count.Name].Value = sparePart.Count;
+                row.Cells[Price.Name].Value = sparePart.Price;
+     /*!!!*/    row.Cells[Sum.Name].Value = sparePart.Price * sparePart.Count;
+            }//for
+        }//FillTheOperationDetailsDGV
 
         private void operationDataGridView_Resize(object sender, EventArgs e)
         {

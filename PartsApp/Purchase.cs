@@ -29,7 +29,7 @@ namespace PartsApp
             Currency          = currency;
             ExcRate           = excRate;         
         }
-        public Purchase(int? employeeid, int supplierid, string supplierEmployee, DateTime purchaseDate, string currency, double excRate)
+        public Purchase(int ?employeeid, int supplierid, string supplierEmployee, DateTime purchaseDate, string currency, double excRate)
         {
             EmployeeId = employeeid;
             SupplierId = supplierid;
