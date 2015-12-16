@@ -2893,7 +2893,7 @@ namespace PartsApp
                     employee.Title          = dataReader["Title"] as string;
                     employee.AccessLayer    = dataReader["AccessLayer"] as string;
                     employee.Login          = dataReader["Login"] as string;
-                    employee.Password       = dataReader["Password"] as string;;
+                    employee.Password       = dataReader["Password"] as string;
 
                     employees.Add(employee);
                 }//while 
@@ -2903,6 +2903,50 @@ namespace PartsApp
 
             return employees;
         }//FindAllEmployees
+        /// <summary>
+        /// Возвращает объект типа Employee, найденный по заданному Id.
+        /// </summary>
+        /// <param name="employeeId">Ид сотрудника, которого надо найти.</param>
+        /// <returns></returns>
+        public static Employee FindEmployeeById(int employeeId)
+        {
+            Employee employee = new Employee();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                const string query = "SELECT date(HireDate, \"Unixepoch\") AS 'HD', date(DismissalDate, \"Unixepoch\") AS 'DD', * "
+                                   + "FROM Employees WHERE EmployeeId = @EmployeeId;";
+
+                var cmd = new SQLiteCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("@EmployeeId", employeeId);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    
+                    employee.EmployeeId = Convert.ToInt32(dataReader["EmployeeId"]);
+                    employee.LastName = dataReader["LastName"] as string;
+                    employee.FirstName = dataReader["FirstName"] as string;
+                    employee.MiddleName = dataReader["MiddleName"] as string;
+                    employee.BirthDate = (dataReader["BirthDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["BirthDate"]) : (DateTime?)null;
+                    employee.HireDate = (dataReader["HireDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["HD"]) : (DateTime?)null;
+                    employee.DismissalDate = (dataReader["DismissalDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["DD"]) : (DateTime?)null;
+                    employee.ContactInfoId = (dataReader["ContactInfoId"] != DBNull.Value) ? Convert.ToInt32(dataReader["ContactInfoId"]) : (int?)null;
+                    employee.Photo = dataReader["Photo"] as string;
+                    employee.Note = dataReader["Note"] as string;
+                    employee.PassportNum = dataReader["PassportNum"] as string;
+                    employee.Title = dataReader["Title"] as string;
+                    employee.AccessLayer = dataReader["AccessLayer"] as string;
+                    employee.Login = dataReader["Login"] as string;
+                    employee.Password = dataReader["Password"] as string;
+                }//while
+                connection.Close();
+            }//using
+
+            return employee;
+        }//FindEmployeeById
 
         //Поиск по ContactInfo
         /// <summary>
