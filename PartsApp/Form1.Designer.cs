@@ -204,7 +204,6 @@
             // 
             // saveInExcelToolStripMenuItem
             // 
-            this.saveInExcelToolStripMenuItem.Enabled = false;
             this.saveInExcelToolStripMenuItem.Name = "saveInExcelToolStripMenuItem";
             this.saveInExcelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveInExcelToolStripMenuItem.Text = "Сохранить";
@@ -597,7 +596,7 @@
             this.userContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editEmployeeToolStripMenuItem});
             this.userContextMenuStrip.Name = "userContextMenuStrip";
-            this.userContextMenuStrip.Size = new System.Drawing.Size(173, 48);
+            this.userContextMenuStrip.Size = new System.Drawing.Size(173, 26);
             // 
             // editEmployeeToolStripMenuItem
             // 

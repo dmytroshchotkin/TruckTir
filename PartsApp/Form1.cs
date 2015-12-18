@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace PartsApp
 {
@@ -37,7 +37,7 @@ namespace PartsApp
         {
             /*Создаём коллекцию SparePart присваиваем её DataGridView и работаем с ней для инициализации 
               нашей коллекции для поиска по базе данных*/
-            partsDataGridView.DataSource = SpList = PartsDAL.FindAllSparePartsAvaliableToDisplay();
+            partsDataGridView.DataSource = SpList = PartsDAL.FindAllSparePartsAvaliableToDisplay().OrderBy(sp => sp.Title).ToList();
             origSpList = PartsDAL.FindAllSparePartsAvaliableToDisplay();
 
             ExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
@@ -155,7 +155,8 @@ namespace PartsApp
             searchTextBox_TextChanged(sender, e);
         }//onlyAvaliabilityCheckBox_CheckedChanged
 
-        //Работа с Excel.
+        #region Работа с Excel.
+
         private void addToDbFromExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //if (openExcelFileDialog.ShowDialog() == DialogResult.OK)
@@ -176,166 +177,168 @@ namespace PartsApp
             //    partsDataGridView.Cursor = Cursors.Default;
             //}
         }//addToDbFromExcelToolStripMenuItem_Click
-        //private void saveInExcelToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    partsDataGridView.Cursor = Cursors.WaitCursor;
-        //    progressBar.Value += progressBar.Step;
-
-        //    Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
-        //    Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook;
-        //    Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet;
-        //    //Книга.
-        //    ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
-        //    //Таблица.
-        //    ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
-
-        //    for (int i = 0; i < partsDataGridView.Rows.Count; i++)
-        //    {
-        //        if (i > partsDataGridView.Rows.Count / 2) progressBar.Value = progressBar.Maximum/2; //увеличиваем ProgressBar
-
-        //        for (int j = 0; j < partsDataGridView.ColumnCount; j++)
-        //        {
-        //            if (i == 0) //если заголовок
-        //            {                                                   
-        //                ExcelApp.Cells[i + 1, j + 1] = partsDataGridView.Columns[j].HeaderText;
-        //                //делаем шрифт заголовка жирным
-        //                (ExcelWorkSheet.Cells[i + 1, j + 1] as Microsoft.Office.Interop.Excel.Range).Font.Bold = true; 
-        //            }//if
-
-        //            ExcelApp.Cells[i + 2, j + 1] = partsDataGridView.Rows[i].Cells[j].Value;
-        //        }//for
-        //    }//for
-
-        //    //Визуальное отображение работы.
-        //    progressBar.Value = progressBar.Maximum;
-        //    System.Threading.Thread t = new System.Threading.Thread(() =>
-        //    {
-        //        System.Threading.Thread.Sleep(1000);
-        //        progressBar.Value = 0;
-        //    });
-        //    t.Start();
-        //    partsDataGridView.Cursor = Cursors.Default;
-        //    //Вызываем нашу созданную эксельку.
-        //    ExcelApp.Visible = true;
-        //    ExcelApp.UserControl = true;
-        //}//saveInExcelToolStripMenuItem_Click
-
-        //private void saveInExcelToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    partsDataGridView.Cursor = Cursors.WaitCursor;
-        //    progressBar.Value += progressBar.Step;
-
-        //    Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
-        //    Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook;
-        //    Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet;
-        //    //Книга.
-        //    ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
-        //    //Таблица.
-        //    ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
-
-        //    bool isCol = false;
-        //    //Поля которые не требуется распечатать. 
-        //    string[] fields = new string[] { "Photo", "Id", "Price", "SellingPrice" };
-        //    for (int i = 0; i < partsDataGridView.Rows.Count; i++)
-        //    {
-        //        if (i > partsDataGridView.Rows.Count / 2) progressBar.Value = progressBar.Maximum / 2; //увеличиваем ProgressBar
-
-        //        for (int j = 0; j < partsDataGridView.ColumnCount; j++)
-        //        {
-        //            //Проверка нужный ли это столбец.
-        //            foreach (var field in fields)                        
-        //                if (partsDataGridView.Columns[j].Name == field) { isCol = true; break; }
-        //            if (isCol == true) { isCol = false; continue; }
-
-        //            if (i == 0) //если заголовок
-        //            {
-        //                ExcelApp.Cells[i + 1, j + 1] = partsDataGridView.Columns[j].HeaderText;
-        //                //делаем шрифт заголовка жирным
-        //                (ExcelWorkSheet.Cells[i + 1, j + 1] as Microsoft.Office.Interop.Excel.Range).Font.Bold = true;
-        //            }//if
-
-        //            ExcelApp.Cells[i + 2, j + 1] = partsDataGridView.Rows[i].Cells[j].Value;                    
-        //        }//for
-        //    }//for
-
-        //    //Визуальное отображение работы.
-        //    progressBar.Value = progressBar.Maximum;
-        //    System.Threading.Thread t = new System.Threading.Thread(() =>
-        //    {
-        //        System.Threading.Thread.Sleep(1000);
-        //        progressBar.Value = 0;
-        //    });
-        //    t.Start();
-        //    partsDataGridView.Cursor = Cursors.Default;
-        //    //Вызываем нашу созданную эксельку.
-        //    ExcelApp.Visible = true;
-        //    ExcelApp.UserControl = true;
-        //}//saveInExcelToolStripMenuItem_Click
 
         private void saveInExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ////Визуальное отображение работы.
-            //partsDataGridView.Cursor = Cursors.WaitCursor;
-            //progressBar.Value += progressBar.Step;
-
-            //Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
-            //Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook;
-            //Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet;
-            ////Книга.
-            //ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
-            ////Таблица.
-            //ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
-
-            ////Microsoft.Office.Interop.Excel.Range rg = null;
-            ////rg = ObjWorkSheet.get_Range("A1", "A1"); //Можно выбрать диапазон, например ("A1", "C1"), т.е. первый 3 столбца
-            ////rg.ColumnWidth = yourWidth;
-
-            ////_workSheet.get_Range(FirstRange, LastRange).EntireColumn.AutoFit(); //для столбца
-            ////_workSheet.get_Range(FirstRange, LastRange).EntireRow.AutoFit();//для строки
-
-            //bool isCol = false;
-            ////Поля которые не требуется распечатать. 
-            //string[] fields = new string[] { "Photo", "Id", "Price", "SellingPrice" };
-            //for (int i = 0; i < partsDataGridView.Rows.Count; i++)
-            //{
-            //    if (i > partsDataGridView.Rows.Count / 2) progressBar.Value = progressBar.Maximum / 2; //увеличиваем ProgressBar
-
-            //    for (int j = 0; j < partsDataGridView.ColumnCount; j++)
-            //    {
-            //        //Проверка нужный ли это столбец.
-            //        foreach (var field in fields)
-            //            if (partsDataGridView.Columns[j].Name == field) { isCol = true; break; }
-            //        if (isCol == true)
-            //        {
-            //            isCol = false;
-            //            (ExcelWorkSheet.Cells[i + 1, j + 1] as Microsoft.Office.Interop.Excel.Range).ColumnWidth = 0; //Убираем ненужные ячейки, задавая нулевую ширину.                      
-            //            continue;
-            //        }//if
-            //        //если заголовок
-            //        if (i == 0) 
-            //        {
-            //            ExcelApp.Cells[i + 1, j + 1] = partsDataGridView.Columns[j].HeaderText;
-            //            (ExcelWorkSheet.Cells[i + 1, j + 1] as Microsoft.Office.Interop.Excel.Range).Font.Bold = true; //делаем шрифт заголовка жирным                    
-            //        }//if                    
-            //        (ExcelWorkSheet.Cells[i + 1, j + 1] as Microsoft.Office.Interop.Excel.Range).EntireColumn.AutoFit(); //Ширина колонки
-            //        ExcelApp.Cells[i + 2, j + 1] = partsDataGridView.Rows[i].Cells[j].Value;
-            //    }//for
-            //}//for
-
-            ////Визуальное отображение работы.
-            //progressBar.Value = progressBar.Maximum;
-            //System.Threading.Thread t = new System.Threading.Thread(() =>
-            //{
-            //    System.Threading.Thread.Sleep(1000);
-            //    progressBar.Value = 0;
-            //});
-            //t.Start();
-            //partsDataGridView.Cursor = Cursors.Default;
-            ////Вызываем нашу созданную эксельку.
-            //ExcelApp.Visible = true;
-            //ExcelApp.UserControl = true;
+            //Визуальное отображение работы.
+            //progressBar.Value = progressBar.Maximum / 2;
+            new System.Threading.Thread(beginSaveInExcel).Start(SpList); //Сделать по нормальному вызов с потоком.
+            
         }//saveInExcelToolStripMenuItem_Click
 
+        private void beginSaveInExcel(object spareParts)
+        {            
+            if (spareParts is IList<SparePart>)
+                saveInExcel(spareParts as IList<SparePart>);
+        }//beginSaveInExcel
+
+        private void saveInExcel(IList<SparePart> spareParts)
+        {            
+            Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
+            Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook;
+            Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet;
+            //Книга.
+            ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
+            //Таблица.
+            ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
+
+            //Настраиваем горизонтальные границы области печати.
+            ExcelWorkSheet.PageSetup.LeftMargin = 10;
+            ExcelWorkSheet.PageSetup.RightMargin = 10;
+
+            //Выводим таблицу товаров.
+            //Выводим заголовок.
+            int row = 1, column = 1;
+            ExcelApp.Cells[row, column] = "Произв.";
+            ExcelApp.Cells[row, column + 1] = "Артикул";
+            ExcelApp.Cells[row, column + 2] = "Название";
+            ExcelApp.Cells[row, column + 3] = "Ед. изм.";
+            ExcelApp.Cells[row, column + 4] = "Кол-во";
+            ExcelApp.Cells[row, column + 5] = "Цена";
+            //ExcelApp.Cells[row, column + 5] = "Сумма";
+
+            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
+            excelCells.Font.Bold = true;
+            excelCells.Font.Size = 12;
+            //Обводим заголовки таблицы рамкой. 
+            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+            //Устанавливаем стиль и толщину линии
+            //excelCells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+
+            //Устанавливаем ширину первой Колонок
+            double titleColWidth = 35; //50 -- Взято методом тыка.  
+            int articulColWidth = 20;            
+            //int manufColWidth = 15, minManufColWidth = 8; //  15 -- Взято методом тыка.
+
+            SetColumnsWidth(spareParts, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
+            //Выводим список товаров.
+            for (int i = 0; i < spareParts.Count; ++i)
+            {
+                ++row;
+                ExcelApp.Cells[row, column + 2] = spareParts[i].Title;
+                ExcelApp.Cells[row, column + 1] = spareParts[i].Articul;
+                //Выравнивание диапазона строк.
+                ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
+                ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+
+                //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
+                if (spareParts[i].Articul.Length > articulColWidth || spareParts[i].Title.Length > titleColWidth)
+                {
+                    ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;                    
+                    //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
+                    if (spareParts[i].Articul.Length > articulColWidth && spareParts[i].Title.Length <= titleColWidth)
+                        (ExcelApp.Cells[row, column + 2] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                    if (spareParts[i].Articul.Length <= articulColWidth && spareParts[i].Title.Length > titleColWidth)
+                        (ExcelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                }//if
+                
+                ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
+                
+                ExcelApp.Cells[row, column + 3] = spareParts[i].Unit;                
+                ExcelApp.Cells[row, column + 4] = spareParts[i].Count;
+                //ExcelApp.Cells[row, column + 5] = spareParts[i].Price;                
+                //ExcelApp.Cells[row, column + 5] = spareParts[i].Price * spareParts[i].Count;
+                ExcelApp.Cells[row, column + 5] = spareParts[i].SellingPrice;                
+            }//for
+
+            //Обводим талицу рамкой. 
+            excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "F" + row.ToString());
+            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+
+            //Визуальное отображение работы.
+            //progressBar.Value = progressBar.Maximum;
+
+            //Вызываем нашу созданную эксельку.
+            ExcelApp.Visible = true;
+            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
+            ExcelApp.UserControl = true;
+        
+        }//saveInExcel
+
+        /// <summary>
+        /// Возвращает ширину заданной области.
+        /// </summary>
+        /// <param name="rng">Область ширина которой считается.</param>
+        /// <returns></returns>
+        private double GetRangeWidth(Excel.Range rng)
+        {
+            double rngWidth = 0;
+            for (int i = 1; i <= rng.Columns.Count; ++i)
+            {
+                rngWidth += rng.Cells.Item[1, i].ColumnWidth;
+            }//for
+            return rngWidth;
+        }//GetRangeWidth
+        /// <summary>
+        /// Устанавливает ширину столбцов.
+        /// </summary>
+        /// <param name="spareParts">Коллекция эл-тов заполняюхий таблицу</param>
+        /// <param name="titleCol">Столбец "Название".</param>
+        /// <param name="articulCol">Столбец "Артикул".</param>
+        /// <param name="manufCol">Столбец "Производитель".</param>
+        private void SetColumnsWidth(IList<SparePart> spareParts, Excel.Range titleCol, Excel.Range articulCol, Excel.Range manufCol)
+        {
+            //Устанавливаем ширину первой Колонок
+            double titleColWidth = 35; //50 -- Взято методом тыка.  
+            int articulColWidth = 20;
+            int manufColWidth = 15, minManufColWidth = 8; //  15 -- Взято методом тыка.
+
+            //Проверяем по факту максимальную длину колонки Manufacturer и если она меньше заявленной длины, дополняем лишнее в Title
+            int maxManufLenght = 0;
+            var sparePartsManufacturers = spareParts.Select(sp => sp.Manufacturer).Where(man => man != null);
+            if (sparePartsManufacturers.Count() > 0)
+                maxManufLenght = sparePartsManufacturers.Max(man => man.Length);
+
+            if (maxManufLenght < manufColWidth)
+            {
+                int different = manufColWidth - maxManufLenght; //разница между дефолтной шириной столбца и фактической.
+                titleColWidth += (manufColWidth - different < minManufColWidth) ? minManufColWidth : different;
+                manufColWidth = (manufColWidth - different < minManufColWidth) ? minManufColWidth : manufColWidth - different;
+            }//if
+
+            manufCol.Columns.ColumnWidth = manufColWidth;
+            articulCol.Columns.ColumnWidth = articulColWidth;
+            titleCol.Columns.ColumnWidth = titleColWidth;
+        }//SetColumnsWidth
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
         /*Нумерация строк partsDataGridView*/
         private void partsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
@@ -355,10 +358,6 @@ namespace PartsApp
 
             //Обновляем rowsCountLabel по количеству строк. 
             rowsCountLabel.Text = partsDataGridView.Rows.Count.ToString();
-            ////обнуление значения наценки, без вызова ValueChanged.
-            //markupNumericUpDown.ValueChanged -= markupNumericUpDown_ValueChanged;
-            //markupNumericUpDown.Value = 0;
-            //markupNumericUpDown.ValueChanged += markupNumericUpDown_ValueChanged;
 
             //обработка размера RowHeaders.
             int i, count = partsDataGridView.Rows.Count;
@@ -808,7 +807,7 @@ namespace PartsApp
         /// <param name="spareParts">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
-            partsDataGridView.DataSource = SpList = Cloner.Clone(spareParts);
+            partsDataGridView.DataSource = SpList = Cloner.Clone(spareParts).OrderBy(sp => sp.Title).ToList();;
             origSpList = Cloner.Clone(spareParts);
 
             ExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
