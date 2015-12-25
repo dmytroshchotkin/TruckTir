@@ -1298,7 +1298,8 @@ namespace PartsApp
         {
             IList<SparePart> spareParts = new List<SparePart>();
 
-            SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND av.SparePartId = @SparePartId;", openConnection);
+            const string query = "SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND av.SparePartId = @SparePartId;";
+            SQLiteCommand cmd = new SQLiteCommand(query, openConnection);
             cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
 
             var dataReader = cmd.ExecuteReader();
@@ -1943,6 +1944,35 @@ namespace PartsApp
                     if (isSamePrice == false && isSameMarkup == false) break;
                 }//for i                             
                 sparePart = FindUniqueSparePartsAvaliabilityCount(spareParts[0], openConnection);
+
+                //if (isSamePrice == true)
+                //{
+                //    sparePart.Price = spareParts[0].Price;
+                //    if (isSameMarkup == true)
+                //    {
+                //        sparePart.Markup = spareParts[0].Markup;
+                //    }//if
+                //    else
+                //    {
+                //        if (spareParts.Max(sp => sp.Markup) != 0)
+                //            sparePart.Markup = spareParts.Max(sp => sp.Markup);
+                //        else sparePart.Markup = null;
+                //    }//else
+                //}//if
+                //else
+                //{
+                //    if (isSameMarkup == true)
+                //    {
+                //        sparePart.Price = spareParts.Max(sp => sp.Price);
+                //        sparePart.Markup = spareParts[0].Markup;
+                //    }//if
+                //    else
+                //    {
+                //        SparePart maxSellPriceSP = spareParts.Where(sp => sp.SellingPrice == spareParts.Max(sp2 => sp2.SellingPrice)).First();
+                //        sparePart.Price = maxSellPriceSP.Price;
+                //        sparePart.Markup = maxSellPriceSP.Markup;
+                //    }//else
+                //}//else
                 //Если цена у всех вхождений одинаковая присваиваем её в обобщенный SparePart.
                 if (isSamePrice == true)
                     sparePart.Price = spareParts[0].Price;
@@ -1950,6 +1980,7 @@ namespace PartsApp
                 if (isSameMarkup == true)
                     sparePart.Markup = spareParts[0].Markup;
                 else sparePart.Markup = null;
+
                 sparePart.PurchaseId = -1; //Помечаем что у данной строки имеется подтаблица(т.е. болеее одного поставщика).
             }//if    
 
@@ -4310,7 +4341,7 @@ namespace PartsApp
             get 
             {
                 //return (Price == null || Markup == null) ? (double?)null : Math.Round(((double)(Price + (Price * Markup / 100)) * ExcRate), 2, MidpointRounding.AwayFromZero);
-                if (Price == null || Markup == null)
+                if (Price == null || Markup == null )//|| Markup == 0)
                     return null;
                 else 
                 {

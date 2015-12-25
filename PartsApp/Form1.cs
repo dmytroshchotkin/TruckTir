@@ -368,6 +368,7 @@ namespace PartsApp
             partsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
 
             changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
+            saveChangesButton.Enabled = cancelChangesButton.Enabled = false; 
             Deselection();
         }//partsDataGridView_DataSourceChanged
         //событие изменения DataSource в таблице доп. информации.
