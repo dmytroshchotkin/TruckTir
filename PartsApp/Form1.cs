@@ -320,22 +320,22 @@ namespace PartsApp
 
             //В зависимости от значения checkBox, выводим либо товар только в наличии, либо весь товар в базе.
             if (onlyAvaliabilityCheckBox.CheckState == CheckState.Unchecked)
-                searchSpList = PartsDAL.SearchSpByTitleOrArticulToDisplay(searchTextBox.Text, 10);
-            else searchSpList = PartsDAL.SearchSpAvaliabilityByTitleOrArticulToDisplay(searchTextBox.Text, 10);
+                searchSpList = PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
+            else searchSpList = PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
 
             ///*Выпадающий список в searchTextBox*/
-            string articul, title;//, manuf;
-            //var strCol = new AutoCompleteStringCollection();  
+            string articul;//, title;//, manuf; 
             if (searchSpList.Count > 0)
             {
                 autoCompleteListBox.Items.Clear();
                 for (int i = 0; i < searchSpList.Count; ++i)
                 {
-                    title = String.Format(searchSpList[i].Title.Trim() + "   " + searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Manufacturer);
+                    //title = String.Format(searchSpList[i].Title.Trim() + "   " + searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Manufacturer);
                     articul = String.Format(searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Title.Trim() + "   " + searchSpList[i].Manufacturer);
                     //manuf = String.Format(searchSpList[i].Manufacturer + " " + searchSpList[i].Title + " " + searchSpList[i].Articul);
-                    //strCol.AddRange(new string[] { title, articul });
-                    autoCompleteListBox.Items.AddRange(new string[] { title, articul }); 
+
+                    autoCompleteListBox.Items.Add(articul);
+                    //autoCompleteListBox.Items.AddRange(new string[] { title, articul }); 
                 }//for
                 autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
                 autoCompleteListBox.Visible = true;
@@ -344,96 +344,6 @@ namespace PartsApp
             //searchTextBox.AutoCompleteCustomSource = strCol;
             
         }//searchTextBox_TextChanged
-
-        private void searchTextBox_PreviewKeyDown2(object sender, PreviewKeyDownEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-
-            if (e.KeyCode == Keys.Down)
-            {
-                if (searchSpList.Count == 0) return;//может не надо это действие.
-                if (autoCompleteListBox.Items.Count == 0) return; //может не надо это действие.
-                if (autoCompleteListBox.Visible == false) return;
-                //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
-                if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
-                {
-                    textBox.Text = customerText;
-                    autoCompleteListBox.ClearSelected();
-                    return;
-                }
-                //Если выбирается первый эл-нт выпадающего списка, запоминаем введенную ранее пользователем строку.
-                if (autoCompleteListBox.SelectedIndex == -1)
-                    customerText = textBox.Text;
-
-                autoCompleteListBox.SelectedIndex += 1;
-                return;
-            }//if
-
-            if (e.KeyCode == Keys.Up)
-            {
-                if (searchSpList.Count == 0) return;//может не надо это действие.
-                if (autoCompleteListBox.Items.Count == 0) return;//может не надо это действие.
-                if (autoCompleteListBox.Visible == false) return;
-                //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
-                if (autoCompleteListBox.SelectedIndex == -1)
-                {
-                    customerText = textBox.Text;
-                    autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
-                }
-                //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
-                else if (autoCompleteListBox.SelectedIndex == 0)
-                {
-                    textBox.Text = customerText;
-                    autoCompleteListBox.ClearSelected();
-                }//if
-                else autoCompleteListBox.SelectedIndex -= 1;
-                return;
-            }//if 
-
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (searchSpList.Count == 0) return;
-
-                searchTextBox.TextChanged -= searchTextBox_TextChanged;
-                textChangeEvent = false;
-                string[] titleOrArticul = searchTextBox.Text.Split(new string[] { "   " }, StringSplitOptions.None);
-                //если выбор не из вып. списка.
-                if (titleOrArticul.Length == 1)
-                {
-                    if (onlyAvaliabilityCheckBox.Checked == false)
-                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulToDisplay(titleOrArticul[0]));
-                    else ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulToDisplay(titleOrArticul[0]));
-                    return;
-                }
-                //Если имеются точное совпадение в введенном тексте и коллекции эл-тов вып. списка.
-                //if (searchTextBox.Text == searchTextBox.Text.TrimStart()) //возможная модификация.
-                foreach (var sparePart in searchSpList)
-                {
-                    if ((sparePart.Articul.Trim() == titleOrArticul[0].Trim() && sparePart.Title.Trim() == titleOrArticul[1].Trim())
-                        || (sparePart.Articul.Trim() == titleOrArticul[1].Trim() && sparePart.Title.Trim() == titleOrArticul[0].Trim()))
-                    {
-                        //если точное совпадение найдено.
-                        ChangeDataSource(new List<SparePart>() { sparePart });
-                        return;
-                    }//if 
-                }//foreach
-                //В зависимости от checkBox поиск ведется либо только по товару в наличии, либо по всему товару в базе.
-                var spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]);
-                if (spareParts.Count == 0)
-                    spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]);
-                ChangeDataSource(spareParts);
-
-                autoCompleteListBox.Visible = false;
-                return;
-            }//if
-            //Продолжается ввод.
-            if (textChangeEvent == false)
-            {
-                searchTextBox.TextChanged += searchTextBox_TextChanged;
-                textChangeEvent = true;
-            }
-            //searchTextBox.Text.TrimStart();
-        }//searchTextBox_PreviewKeyDown
 
         private void searchTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
@@ -508,8 +418,8 @@ namespace PartsApp
                 if (titleOrArticul.Length == 1)
                 {
                     if (onlyAvaliabilityCheckBox.Checked == false)
-                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulToDisplay(titleOrArticul[0]));
-                    else ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulToDisplay(titleOrArticul[0]));
+                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArticul[0]));
+                    else ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(titleOrArticul[0]));
                     autoCompleteListBox.Visible = false;
                     return;
                 }
@@ -517,8 +427,8 @@ namespace PartsApp
                 //if (searchTextBox.Text == searchTextBox.Text.TrimStart()) //возможная модификация.
                 foreach (var sparePart in searchSpList)
                 {
-                    if ((sparePart.Articul.Trim() == titleOrArticul[0].Trim() && sparePart.Title.Trim() == titleOrArticul[1].Trim())
-                        || (sparePart.Articul.Trim() == titleOrArticul[1].Trim() && sparePart.Title.Trim() == titleOrArticul[0].Trim()))
+                    if ((sparePart.Articul.Trim() == titleOrArticul[0].Trim() && sparePart.Title.Trim() == titleOrArticul[1].Trim()))
+                        //|| (sparePart.Articul.Trim() == titleOrArticul[1].Trim() && sparePart.Title.Trim() == titleOrArticul[0].Trim()))
                     {
                         //если точное совпадение найдено.
                         ChangeDataSource(new List<SparePart>() { sparePart });
@@ -526,11 +436,11 @@ namespace PartsApp
                         return;
                     }//if 
                 }//foreach
-                //В зависимости от checkBox поиск ведется либо только по товару в наличии, либо по всему товару в базе.
-                var spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]);
-                if (spareParts.Count == 0)
-                    spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]);
-                ChangeDataSource(spareParts);
+                ////В зависимости от checkBox поиск ведется либо только по товару в наличии, либо по всему товару в базе.
+                //var spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]);
+                //if (spareParts.Count == 0)
+                //    spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]);
+                //ChangeDataSource(spareParts);
 
                 autoCompleteListBox.Visible = false;
                 return;
