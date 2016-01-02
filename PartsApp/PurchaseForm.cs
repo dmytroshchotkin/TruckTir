@@ -148,17 +148,7 @@ namespace PartsApp
             if (cell.OwningColumn.Name == "Title" || cell.OwningColumn.Name == "Articul")
             {
                 autoCompleteListBox.Location = GetCellBelowLocation(cell);               
-            }
-            //else if (cell.OwningColumn.Name == "Count" || cell.OwningColumn.Name == "Price")
-            //{
-            //    if (cell.OwningRow.Cells["SparePartId"].Value == null)
-            //    {
-            //        cell.OwningRow.Cells["Count"].ReadOnly = cell.OwningRow.Cells["Price"].ReadOnly = true;
-            //        cell.OwningRow.Cells["Count"].Value = cell.OwningRow.Cells["Price"].Value = null;
-            //    }
-            //}
-
-                    
+            }                    
         }//purchaseDataGridView_CellBeginEdit
 
         //Событие для добавления обработчиков на ввод текста в клетку. //

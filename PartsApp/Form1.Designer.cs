@@ -69,6 +69,7 @@
             this.photoPictureBox = new System.Windows.Forms.PictureBox();
             this.dataSplitContainer = new System.Windows.Forms.SplitContainer();
             this.partsPanel = new System.Windows.Forms.Panel();
+            this.autoCompleteListBox = new System.Windows.Forms.ListBox();
             this.partsStatusStripPanel = new System.Windows.Forms.Panel();
             this.extPartsGroupBox = new System.Windows.Forms.GroupBox();
             this.extPartsDataGridView = new System.Windows.Forms.DataGridView();
@@ -198,14 +199,14 @@
             // 
             this.addToDbFromExcelToolStripMenuItem.Enabled = false;
             this.addToDbFromExcelToolStripMenuItem.Name = "addToDbFromExcelToolStripMenuItem";
-            this.addToDbFromExcelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.addToDbFromExcelToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.addToDbFromExcelToolStripMenuItem.Text = "Добавить";
             this.addToDbFromExcelToolStripMenuItem.Click += new System.EventHandler(this.addToDbFromExcelToolStripMenuItem_Click);
             // 
             // saveInExcelToolStripMenuItem
             // 
             this.saveInExcelToolStripMenuItem.Name = "saveInExcelToolStripMenuItem";
-            this.saveInExcelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveInExcelToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.saveInExcelToolStripMenuItem.Text = "Сохранить";
             this.saveInExcelToolStripMenuItem.Click += new System.EventHandler(this.saveInExcelToolStripMenuItem_Click);
             // 
@@ -320,7 +321,7 @@
             // onlyAvaliabilityCheckBox
             // 
             this.onlyAvaliabilityCheckBox.AutoSize = true;
-            this.onlyAvaliabilityCheckBox.Location = new System.Drawing.Point(383, 5);
+            this.onlyAvaliabilityCheckBox.Location = new System.Drawing.Point(383, 7);
             this.onlyAvaliabilityCheckBox.Name = "onlyAvaliabilityCheckBox";
             this.onlyAvaliabilityCheckBox.Size = new System.Drawing.Size(114, 17);
             this.onlyAvaliabilityCheckBox.TabIndex = 11;
@@ -399,7 +400,7 @@
             // 
             this.searchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.searchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.searchTextBox.Location = new System.Drawing.Point(165, 5);
+            this.searchTextBox.Location = new System.Drawing.Point(165, 7);
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(212, 20);
             this.searchTextBox.TabIndex = 0;
@@ -420,7 +421,7 @@
             this.searchLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.searchLabel.AutoSize = true;
-            this.searchLabel.Location = new System.Drawing.Point(126, 5);
+            this.searchLabel.Location = new System.Drawing.Point(126, 7);
             this.searchLabel.Name = "searchLabel";
             this.searchLabel.Size = new System.Drawing.Size(42, 13);
             this.searchLabel.TabIndex = 3;
@@ -491,6 +492,7 @@
             // 
             // partsPanel
             // 
+            this.partsPanel.Controls.Add(this.autoCompleteListBox);
             this.partsPanel.Controls.Add(this.photoPictureBox);
             this.partsPanel.Controls.Add(this.partsDataGridView);
             this.partsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -498,6 +500,15 @@
             this.partsPanel.Name = "partsPanel";
             this.partsPanel.Size = new System.Drawing.Size(971, 461);
             this.partsPanel.TabIndex = 3;
+            // 
+            // autoCompleteListBox
+            // 
+            this.autoCompleteListBox.FormattingEnabled = true;
+            this.autoCompleteListBox.Location = new System.Drawing.Point(165, 0);
+            this.autoCompleteListBox.Name = "autoCompleteListBox";
+            this.autoCompleteListBox.Size = new System.Drawing.Size(212, 30);
+            this.autoCompleteListBox.TabIndex = 12;
+            this.autoCompleteListBox.Visible = false;
             // 
             // partsStatusStripPanel
             // 
@@ -705,6 +716,7 @@
         private System.Windows.Forms.ToolStripMenuItem addNewEmployeeToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip userContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem editEmployeeToolStripMenuItem;
+        private System.Windows.Forms.ListBox autoCompleteListBox;
 
     }
 }
