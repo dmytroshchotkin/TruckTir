@@ -509,6 +509,7 @@
             this.autoCompleteListBox.Size = new System.Drawing.Size(212, 30);
             this.autoCompleteListBox.TabIndex = 12;
             this.autoCompleteListBox.Visible = false;
+            this.autoCompleteListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.autoCompleteListBox_MouseDown);
             // 
             // partsStatusStripPanel
             // 

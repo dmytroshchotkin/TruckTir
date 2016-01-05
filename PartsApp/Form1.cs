@@ -17,11 +17,12 @@ namespace PartsApp
         IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;  //для изменения наценки.  
         IList<SparePart> SpList, origSpList;                                //для вывода в partsDataGridView.  
         IList<SparePart> ExtSpList, origExtSpList;                          //для вывода в extPartsDataGridView.  
-        bool textChangeEvent;                                               //есть ли подписчик на searchTextBox_TextChanged
 
-        ///////////////
+        /// <summary>
+        /// Переменная запоминающая введенный поль-лем текст в searchTextBox.
+        /// </summary>
         string customerText;
-        ////////////// 
+
         public static Employee CurEmployee { get; set; }
 
 
@@ -34,7 +35,7 @@ namespace PartsApp
             SpList = origSpList = new List<SparePart>();
             ExtSpList = origExtSpList = new List<SparePart>();
 
-            textChangeEvent = true;
+            //textChangeEvent = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -57,12 +58,12 @@ namespace PartsApp
             markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().OrderByDescending(mark => mark.Key).Select(markup => markup.Value).ToArray<string>());
 
             //Выводим окно авторизации.
-            CurEmployee = PartsDAL.FindAllEmployees().First();
-            //new AuthorizationForm().ShowDialog(this);
+            //CurEmployee = PartsDAL.FindAllEmployees().First();
+            new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
             /////////////////////////////////////////////////////////////////////////////
             /* Пробная зона */
-
+            PartsDAL.RegistrateUDFs();
           
 
             //////////////////////////////////////////////////////////////////////////////
@@ -306,7 +307,9 @@ namespace PartsApp
         //События обработки изменения markupNumericUpDown     
 
 
-        #region Методы связанные с поиском товара.
+        #region Методы связанные с поиском товара.       
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -324,51 +327,43 @@ namespace PartsApp
             else searchSpList = PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
 
             ///*Выпадающий список в searchTextBox*/
-            string articul;//, title;//, manuf; 
+            string articul;
             if (searchSpList.Count > 0)
             {
                 autoCompleteListBox.Items.Clear();
                 for (int i = 0; i < searchSpList.Count; ++i)
-                {
-                    //title = String.Format(searchSpList[i].Title.Trim() + "   " + searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Manufacturer);
-                    articul = String.Format(searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Title.Trim() + "   " + searchSpList[i].Manufacturer);
-                    //manuf = String.Format(searchSpList[i].Manufacturer + " " + searchSpList[i].Title + " " + searchSpList[i].Articul);
-
+                {                    
+                    articul = String.Format(searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Title.Trim() + "   " + searchSpList[i].Manufacturer);                    
                     autoCompleteListBox.Items.Add(articul);
-                    //autoCompleteListBox.Items.AddRange(new string[] { title, articul }); 
                 }//for
                 autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
                 autoCompleteListBox.Visible = true;
             }//if
             else autoCompleteListBox.Visible = false; //Если ничего не найдено, убрать вып. список.
-            //searchTextBox.AutoCompleteCustomSource = strCol;
-            
-        }//searchTextBox_TextChanged
 
+            //Запоминаем введенный текст.
+            customerText = searchTextBox.Text;
+        }//searchTextBox_TextChanged
+       
         private void searchTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             #region Нажатие клавиши "Вниз".
 
             if (e.KeyCode == Keys.Down)
             {
-                //if (searchSpList.Count == 0) return;//может не надо это действие.
-                //if (autoCompleteListBox.Items.Count == 0) return; //может не надо это действие.
                 if (autoCompleteListBox.Visible == false) return;
+
                 //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
                 if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
                 {
                     searchTextBox.Text = customerText;
                     autoCompleteListBox.ClearSelected();
+                    searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
                     return;
-                }
-                //Если выбирается первый эл-нт выпадающего списка, запоминаем введенную ранее пользователем строку.
-                if (autoCompleteListBox.SelectedIndex == -1)
-                    customerText = searchTextBox.Text;
+                }//if
                 
                 autoCompleteListBox.SelectedIndex += 1;
-                searchTextBox.TextChanged -= searchTextBox_TextChanged;
-                searchTextBox.Text = autoCompleteListBox.SelectedItem.ToString();
-                searchTextBox.TextChanged += searchTextBox_TextChanged;
+                ChangeSearchTextBoxTextWithoutTextChangedEvent();
                 return;
             }//if
 
@@ -377,29 +372,28 @@ namespace PartsApp
 
             if (e.KeyCode == Keys.Up)
             {
-                //if (searchSpList.Count == 0) return;//может не надо это действие.
-                //if (autoCompleteListBox.Items.Count == 0) return;//может не надо это действие.
                 if (autoCompleteListBox.Visible == false) return;
+
                 //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
                 if (autoCompleteListBox.SelectedIndex == -1)
                 {
-                    customerText = searchTextBox.Text;
                     autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
+                    ChangeSearchTextBoxTextWithoutTextChangedEvent(); 
                     return;
                 }
                 //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
                 if (autoCompleteListBox.SelectedIndex == 0)
                 {
+                    //searchTextBox.Text = customerText;
                     searchTextBox.Text = customerText;
                     autoCompleteListBox.ClearSelected();
+                    searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
                 }//if
                 else
                 {
                     autoCompleteListBox.SelectedIndex -= 1;
-                    searchTextBox.TextChanged -= searchTextBox_TextChanged;
-                    searchTextBox.Text = autoCompleteListBox.SelectedItem.ToString();
-                    searchTextBox.TextChanged += searchTextBox_TextChanged;                    
-                }
+                    ChangeSearchTextBoxTextWithoutTextChangedEvent();                    
+                }//else
                 return;
             }//if 
 
@@ -424,11 +418,9 @@ namespace PartsApp
                     return;
                 }
                 //Если имеются точное совпадение в введенном тексте и коллекции эл-тов вып. списка.
-                //if (searchTextBox.Text == searchTextBox.Text.TrimStart()) //возможная модификация.
                 foreach (var sparePart in searchSpList)
                 {
-                    if ((sparePart.Articul.Trim() == titleOrArticul[0].Trim() && sparePart.Title.Trim() == titleOrArticul[1].Trim()))
-                        //|| (sparePart.Articul.Trim() == titleOrArticul[1].Trim() && sparePart.Title.Trim() == titleOrArticul[0].Trim()))
+/*!!!*/             if ((sparePart.Articul == titleOrArticul[0].Trim() && sparePart.Title == titleOrArticul[1].Trim()))                        
                     {
                         //если точное совпадение найдено.
                         ChangeDataSource(new List<SparePart>() { sparePart });
@@ -442,6 +434,7 @@ namespace PartsApp
                 //    spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]);
                 //ChangeDataSource(spareParts);
 
+                customerText = null;
                 autoCompleteListBox.Visible = false;
                 return;
             }//if
@@ -456,8 +449,66 @@ namespace PartsApp
             searchTextBox_TextChanged(sender, e);
         }//onlyAvaliabilityCheckBox_CheckedChanged
 
-       
+        private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks == 1)
+            {
+                if (String.IsNullOrEmpty(customerText))
+                    customerText = searchTextBox.Text;
 
+                ChangeSearchTextBoxTextWithoutTextChangedEvent();
+                searchTextBox.Focus();
+
+            }//if
+            else
+            {
+                searchTextBox_PreviewKeyDown(searchTextBox, new PreviewKeyDownEventArgs(Keys.Enter));
+            }//else
+        }//autoCompleteListBox_MouseDown
+
+        /// <summary>
+        /// Присваиваем searchTextBox текст выбранный из выпадающего списка, без вызова события TextChanged.
+        /// </summary>
+        private void ChangeSearchTextBoxTextWithoutTextChangedEvent()
+        {
+            searchTextBox.TextChanged -= searchTextBox_TextChanged;
+            searchTextBox.Text = autoCompleteListBox.SelectedItem.ToString();
+            searchTextBox.TextChanged += searchTextBox_TextChanged;
+        }//ChangeSearchTextBoxTextWithoutTextChangedEvent
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
         #region Методы связанные с изменением Наценки.
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

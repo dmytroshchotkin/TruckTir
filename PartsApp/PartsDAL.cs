@@ -3641,13 +3641,13 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                const string query = "SELECT SparePartId FROM SpareParts AS sp JOIN Manufacturers AS m "
+                const string query = "SELECT SparePartId FROM SpareParts AS sp LEFT JOIN Manufacturers AS m "
                                    + "ON sp.ManufacturerId = m.ManufacturerId "
-                                   + "WHERE sp.Articul LIKE @TitleOrArticul "
-                                   + "OR sp.Title LIKE @TitleOrArticul OR m.ManufacturerName LIKE @TitleOrArticul";
+                                   + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul "
+                                   + "OR ToLower(sp.Title) LIKE @TitleOrArticul OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@TitleOrArticul", titleOrArticulOrManuf + "%");
+                cmd.Parameters.AddWithValue("@TitleOrArticul", "%" + titleOrArticulOrManuf.ToLower() + "%");
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
@@ -3672,13 +3672,13 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                const string query = "SELECT SparePartId FROM SpareParts AS sp JOIN Manufacturers AS m "
+                const string query = "SELECT SparePartId FROM SpareParts AS sp LEFT JOIN Manufacturers AS m "
                                    + "ON sp.ManufacturerId = m.ManufacturerId "                                    
-                                   + "WHERE sp.Articul LIKE @TitleOrArticul "
-                                   + "OR sp.Title LIKE @TitleOrArticul OR m.ManufacturerName LIKE @TitleOrArticul LIMIT @limit;";
+                                   + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
+                                   + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul LIMIT @limit;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@TitleOrArticul", titleOrArticulOrManuf + "%");
+                cmd.Parameters.AddWithValue("@TitleOrArticul", "%" + titleOrArticulOrManuf.ToLower() + "%");
                 cmd.Parameters.AddWithValue("@limit", limit);
 
 
@@ -3707,13 +3707,13 @@ namespace PartsApp
 
                 const string query =
                    "SELECT DISTINCT sp.SparePartId FROM SpareParts AS sp JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId "
-                 + "JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
-                 + "WHERE sp.Articul LIKE @TitleOrArticul OR sp.Title LIKE @TitleOrArticul "
-                 + "OR m.ManufacturerName LIKE @TitleOrArticul";
+                 + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
+                 + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
+                 + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul;";
 
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@TitleOrArticul", titleOrArticulOrManuf + "%");
+                cmd.Parameters.AddWithValue("@TitleOrArticul", "%" + titleOrArticulOrManuf.ToLower() + "%");
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
@@ -3742,13 +3742,13 @@ namespace PartsApp
 
                 const string query =
                    "SELECT DISTINCT sp.SparePartId FROM SpareParts AS sp JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId "
-                 + "JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
-                 + "WHERE sp.Articul LIKE @TitleOrArticul OR sp.Title LIKE @TitleOrArticul "
-                 + "OR m.ManufacturerName LIKE @TitleOrArticul LIMIT @Limit;";
+                 + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
+                 + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
+                 + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul LIMIT @Limit;";
 
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@TitleOrArticul", titleOrArticulOrManuf + "%");
+                cmd.Parameters.AddWithValue("@TitleOrArticul", "%" + titleOrArticulOrManuf.ToLower() + "%");
                 cmd.Parameters.AddWithValue("@Limit", limit);
 
 
@@ -4358,7 +4358,32 @@ namespace PartsApp
 
 
 
+        #region Вспомогательные методы.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+        /// <summary>
+        /// Метод регистрирующий в базе User-Defined Functions.
+        /// </summary>
+        public static void RegistrateUDFs()
+        {
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                //SQLiteCommand cmd = new SQLiteCommand("PRAGMA integrity_check", connection);
+                //cmd.ExecuteNonQuery();  
+
+                SQLiteFunction.RegisterFunction(typeof(LowerRegisterConverter));
+
+                connection.Close();
+            }//using
+        }//RegistrateUDFs
+        /// <summary>
+        /// Возвращает объект SparePart созданный из переданного dataReader.
+        /// </summary>
+        /// <param name="dataReader"></param>
+        /// <returns></returns>
         private static SparePart CreateSparePart(SQLiteDataReader dataReader)
         {
             SparePart sparePart = new SparePart
@@ -4375,6 +4400,11 @@ namespace PartsApp
 
             return sparePart;        
         }//CreateSparePart
+        /// <summary>
+        /// /// Возвращает полный объект SparePart созданный из переданного dataReader.
+        /// </summary>
+        /// <param name="dataReader"></param>
+        /// <returns></returns>
         private static SparePart CreateFullSparePart(SQLiteDataReader dataReader)
         {
             SparePart sparePart = new SparePart
@@ -4409,7 +4439,45 @@ namespace PartsApp
             return conn;
         }//GetDatabaseConnection
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
     }//PartsDAL
+
+    [SQLiteFunction(Arguments = 1, FuncType = FunctionType.Scalar, Name = "ToLower")]
+    class LowerRegisterConverter : SQLiteFunction
+    {
+        public override object Invoke(object[] args)
+        {
+            string str = (args[0] as string).ToLower();
+            return str;
+        }//Invoke
+    }//LowerRegisterConverter
 
     public class SparePart
     {
