@@ -58,8 +58,8 @@ namespace PartsApp
             markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().OrderByDescending(mark => mark.Key).Select(markup => markup.Value).ToArray<string>());
 
             //Выводим окно авторизации.
-            //CurEmployee = PartsDAL.FindAllEmployees().First();
-            new AuthorizationForm().ShowDialog(this);
+            CurEmployee = PartsDAL.FindAllEmployees().First();
+            //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
             /////////////////////////////////////////////////////////////////////////////
             /* Пробная зона */
@@ -344,8 +344,8 @@ namespace PartsApp
             //Запоминаем введенный текст.
             customerText = searchTextBox.Text;
         }//searchTextBox_TextChanged
-       
-        private void searchTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+
+        private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             #region Нажатие клавиши "Вниз".
 
@@ -361,7 +361,7 @@ namespace PartsApp
                     searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
                     return;
                 }//if
-                
+
                 autoCompleteListBox.SelectedIndex += 1;
                 ChangeSearchTextBoxTextWithoutTextChangedEvent();
                 return;
@@ -378,7 +378,7 @@ namespace PartsApp
                 if (autoCompleteListBox.SelectedIndex == -1)
                 {
                     autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
-                    ChangeSearchTextBoxTextWithoutTextChangedEvent(); 
+                    ChangeSearchTextBoxTextWithoutTextChangedEvent();
                     return;
                 }
                 //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
@@ -388,11 +388,12 @@ namespace PartsApp
                     searchTextBox.Text = customerText;
                     autoCompleteListBox.ClearSelected();
                     searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
+                    e.Handled = true;
                 }//if
                 else
                 {
                     autoCompleteListBox.SelectedIndex -= 1;
-                    ChangeSearchTextBoxTextWithoutTextChangedEvent();                    
+                    ChangeSearchTextBoxTextWithoutTextChangedEvent();
                 }//else
                 return;
             }//if 
@@ -420,7 +421,8 @@ namespace PartsApp
                 //Если имеются точное совпадение в введенном тексте и коллекции эл-тов вып. списка.
                 foreach (var sparePart in searchSpList)
                 {
-/*!!!*/             if ((sparePart.Articul == titleOrArticul[0].Trim() && sparePart.Title == titleOrArticul[1].Trim()))                        
+                    /*!!!*/
+                    if ((sparePart.Articul == titleOrArticul[0].Trim() && sparePart.Title == titleOrArticul[1].Trim()))
                     {
                         //если точное совпадение найдено.
                         ChangeDataSource(new List<SparePart>() { sparePart });
@@ -440,6 +442,104 @@ namespace PartsApp
             }//if
 
             #endregion
+        }//searchTextBox_KeyDown
+
+
+        private void searchTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+//            #region Нажатие клавиши "Вниз".
+
+//            if (e.KeyCode == Keys.Down)
+//            {
+//                if (autoCompleteListBox.Visible == false) return;
+
+//                //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
+//                if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
+//                {
+//                    searchTextBox.Text = customerText;
+//                    autoCompleteListBox.ClearSelected();
+//                    searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
+//                    return;
+//                }//if
+                
+//                autoCompleteListBox.SelectedIndex += 1;
+//                ChangeSearchTextBoxTextWithoutTextChangedEvent();
+//                return;
+//            }//if
+
+//            #endregion
+//            #region Нажатие клавиши "Вверх".
+
+//            if (e.KeyCode == Keys.Up)
+//            {
+//                if (autoCompleteListBox.Visible == false) return;
+
+//                //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
+//                if (autoCompleteListBox.SelectedIndex == -1)
+//                {
+//                    autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
+//                    ChangeSearchTextBoxTextWithoutTextChangedEvent(); 
+//                    return;
+//                }
+//                //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
+//                if (autoCompleteListBox.SelectedIndex == 0)
+//                {
+//                    //searchTextBox.Text = customerText;
+//                    searchTextBox.Text = customerText;
+//                    autoCompleteListBox.ClearSelected();
+//                    searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
+//                }//if
+//                else
+//                {
+//                    autoCompleteListBox.SelectedIndex -= 1;
+//                    ChangeSearchTextBoxTextWithoutTextChangedEvent();                    
+//                }//else
+//                return;
+//            }//if 
+
+
+//            #endregion
+//            #region Нажатие клавиши "Enter".
+
+//            if (e.KeyCode == Keys.Enter)
+//            {
+//                if (searchSpList.Count == 0) return;
+
+//                //searchTextBox.TextChanged -= searchTextBox_TextChanged;
+//                //textChangeEvent = false;
+//                string[] titleOrArticul = searchTextBox.Text.Split(new string[] { "   " }, StringSplitOptions.None);
+//                //если выбор не из вып. списка.
+//                if (titleOrArticul.Length == 1)
+//                {
+//                    if (onlyAvaliabilityCheckBox.Checked == false)
+//                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArticul[0]));
+//                    else ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(titleOrArticul[0]));
+//                    autoCompleteListBox.Visible = false;
+//                    return;
+//                }
+//                //Если имеются точное совпадение в введенном тексте и коллекции эл-тов вып. списка.
+//                foreach (var sparePart in searchSpList)
+//                {
+///*!!!*/             if ((sparePart.Articul == titleOrArticul[0].Trim() && sparePart.Title == titleOrArticul[1].Trim()))                        
+//                    {
+//                        //если точное совпадение найдено.
+//                        ChangeDataSource(new List<SparePart>() { sparePart });
+//                        autoCompleteListBox.Visible = false;
+//                        return;
+//                    }//if 
+//                }//foreach
+//                ////В зависимости от checkBox поиск ведется либо только по товару в наличии, либо по всему товару в базе.
+//                //var spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]);
+//                //if (spareParts.Count == 0)
+//                //    spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]);
+//                //ChangeDataSource(spareParts);
+
+//                customerText = null;
+//                autoCompleteListBox.Visible = false;
+//                return;
+//            }//if
+
+//            #endregion
 
 
         }//searchTextBox_PreviewKeyDown
@@ -1109,6 +1209,7 @@ namespace PartsApp
             new AddEmployeeForm(CurEmployee).ShowDialog();            
         }
 
+       
 
 
 

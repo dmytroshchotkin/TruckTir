@@ -405,7 +405,7 @@
             this.searchTextBox.Size = new System.Drawing.Size(212, 20);
             this.searchTextBox.TabIndex = 0;
             this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
-            this.searchTextBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.searchTextBox_PreviewKeyDown);
+            this.searchTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyDown);
             // 
             // excRateLabel
             // 
