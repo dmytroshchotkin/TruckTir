@@ -17,12 +17,13 @@ namespace PartsApp
         IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;  //для изменения наценки.  
         IList<SparePart> SpList, origSpList;                                //для вывода в partsDataGridView.  
         IList<SparePart> ExtSpList, origExtSpList;                          //для вывода в extPartsDataGridView.  
-
         /// <summary>
-        /// Переменная запоминающая введенный поль-лем текст в searchTextBox.
+        /// Переменная для запоминания введенного поль-лем текста в searchTextBox.
         /// </summary>
         string customerText;
-
+        /// <summary>
+        /// Авторизованный пользователь.
+        /// </summary>
         public static Employee CurEmployee { get; set; }
 
 
@@ -70,6 +71,7 @@ namespace PartsApp
         }//Form1_Load
 
         #region Работа с Excel.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private void addToDbFromExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -214,9 +216,9 @@ namespace PartsApp
         private void SetColumnsWidth(IList<SparePart> spareParts, Excel.Range titleCol, Excel.Range articulCol, Excel.Range manufCol)
         {
             //Устанавливаем ширину первой Колонок
-            double titleColWidth = 35; //50 -- Взято методом тыка.  
+            double titleColWidth = 35; // -- Взято методом тыка.  
             int articulColWidth = 20;
-            int manufColWidth = 15, minManufColWidth = 8; //  15 -- Взято методом тыка.
+            int manufColWidth = 15, minManufColWidth = 8; //  -- Взято методом тыка.
 
             //Проверяем по факту максимальную длину колонки Manufacturer и если она меньше заявленной длины, дополняем лишнее в Title
             int maxManufLenght = 0;
@@ -252,6 +254,9 @@ namespace PartsApp
 
 
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         /*Нумерация строк partsDataGridView*/
@@ -308,13 +313,11 @@ namespace PartsApp
 
 
         #region Методы связанные с поиском товара.       
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
-            //searchTextBox.AutoCompleteCustomSource.Clear();
-
             if (String.IsNullOrWhiteSpace(searchTextBox.Text))
             {   
                 autoCompleteListBox.Visible = false;
@@ -327,24 +330,17 @@ namespace PartsApp
             else searchSpList = PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
 
             ///*Выпадающий список в searchTextBox*/
-            string articul;
+            
             if (searchSpList.Count > 0)
             {
-                autoCompleteListBox.Items.Clear();
-                for (int i = 0; i < searchSpList.Count; ++i)
-                {                    
-                    articul = String.Format(searchSpList[i].Articul.Trim() + "   " + searchSpList[i].Title.Trim() + "   " + searchSpList[i].Manufacturer);                    
-                    autoCompleteListBox.Items.Add(articul);
-                }//for
-                autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
-                autoCompleteListBox.Visible = true;
+                OutputFormattedDropDownList(searchSpList);
             }//if
             else autoCompleteListBox.Visible = false; //Если ничего не найдено, убрать вып. список.
 
             //Запоминаем введенный текст.
             customerText = searchTextBox.Text;
         }//searchTextBox_TextChanged
-
+        
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             #region Нажатие клавиши "Вниз".
@@ -363,7 +359,7 @@ namespace PartsApp
                 }//if
 
                 autoCompleteListBox.SelectedIndex += 1;
-                ChangeSearchTextBoxTextWithoutTextChangedEvent();
+                ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
                 return;
             }//if
 
@@ -378,7 +374,7 @@ namespace PartsApp
                 if (autoCompleteListBox.SelectedIndex == -1)
                 {
                     autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
-                    ChangeSearchTextBoxTextWithoutTextChangedEvent();
+                    ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
                     return;
                 }
                 //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
@@ -393,7 +389,7 @@ namespace PartsApp
                 else
                 {
                     autoCompleteListBox.SelectedIndex -= 1;
-                    ChangeSearchTextBoxTextWithoutTextChangedEvent();
+                    ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
                 }//else
                 return;
             }//if 
@@ -406,23 +402,26 @@ namespace PartsApp
             {
                 if (searchSpList.Count == 0) return;
 
-                //searchTextBox.TextChanged -= searchTextBox_TextChanged;
-                //textChangeEvent = false;
-                string[] titleOrArticul = searchTextBox.Text.Split(new string[] { "   " }, StringSplitOptions.None);
+                string[] titleOrArtOrManuf = searchTextBox.Text.Split(new string[] { "   " }, StringSplitOptions.RemoveEmptyEntries);
+                
                 //если выбор не из вып. списка.
-                if (titleOrArticul.Length == 1)
+                if (titleOrArtOrManuf.Length == 1)
                 {
                     if (onlyAvaliabilityCheckBox.Checked == false)
-                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArticul[0]));
-                    else ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(titleOrArticul[0]));
+                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArtOrManuf[0]));
+                    else 
+                        ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(titleOrArtOrManuf[0]));
+
                     autoCompleteListBox.Visible = false;
                     return;
-                }
+                }//if
+
+                ChangeSearchTextBoxTextWithoutTextChangedEvent(titleOrArtOrManuf[0]); //вводим более корректное значение для отображение.
                 //Если имеются точное совпадение в введенном тексте и коллекции эл-тов вып. списка.
                 foreach (var sparePart in searchSpList)
                 {
                     /*!!!*/
-                    if ((sparePart.Articul == titleOrArticul[0].Trim() && sparePart.Title == titleOrArticul[1].Trim()))
+                    if ((sparePart.Articul == titleOrArtOrManuf[0].Trim() && sparePart.Title == titleOrArtOrManuf[1].Trim()))
                     {
                         //если точное совпадение найдено.
                         ChangeDataSource(new List<SparePart>() { sparePart });
@@ -430,11 +429,6 @@ namespace PartsApp
                         return;
                     }//if 
                 }//foreach
-                ////В зависимости от checkBox поиск ведется либо только по товару в наличии, либо по всему товару в базе.
-                //var spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]);
-                //if (spareParts.Count == 0)
-                //    spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]);
-                //ChangeDataSource(spareParts);
 
                 customerText = null;
                 autoCompleteListBox.Visible = false;
@@ -443,106 +437,6 @@ namespace PartsApp
 
             #endregion
         }//searchTextBox_KeyDown
-
-
-        private void searchTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-//            #region Нажатие клавиши "Вниз".
-
-//            if (e.KeyCode == Keys.Down)
-//            {
-//                if (autoCompleteListBox.Visible == false) return;
-
-//                //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
-//                if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
-//                {
-//                    searchTextBox.Text = customerText;
-//                    autoCompleteListBox.ClearSelected();
-//                    searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
-//                    return;
-//                }//if
-                
-//                autoCompleteListBox.SelectedIndex += 1;
-//                ChangeSearchTextBoxTextWithoutTextChangedEvent();
-//                return;
-//            }//if
-
-//            #endregion
-//            #region Нажатие клавиши "Вверх".
-
-//            if (e.KeyCode == Keys.Up)
-//            {
-//                if (autoCompleteListBox.Visible == false) return;
-
-//                //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
-//                if (autoCompleteListBox.SelectedIndex == -1)
-//                {
-//                    autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
-//                    ChangeSearchTextBoxTextWithoutTextChangedEvent(); 
-//                    return;
-//                }
-//                //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
-//                if (autoCompleteListBox.SelectedIndex == 0)
-//                {
-//                    //searchTextBox.Text = customerText;
-//                    searchTextBox.Text = customerText;
-//                    autoCompleteListBox.ClearSelected();
-//                    searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
-//                }//if
-//                else
-//                {
-//                    autoCompleteListBox.SelectedIndex -= 1;
-//                    ChangeSearchTextBoxTextWithoutTextChangedEvent();                    
-//                }//else
-//                return;
-//            }//if 
-
-
-//            #endregion
-//            #region Нажатие клавиши "Enter".
-
-//            if (e.KeyCode == Keys.Enter)
-//            {
-//                if (searchSpList.Count == 0) return;
-
-//                //searchTextBox.TextChanged -= searchTextBox_TextChanged;
-//                //textChangeEvent = false;
-//                string[] titleOrArticul = searchTextBox.Text.Split(new string[] { "   " }, StringSplitOptions.None);
-//                //если выбор не из вып. списка.
-//                if (titleOrArticul.Length == 1)
-//                {
-//                    if (onlyAvaliabilityCheckBox.Checked == false)
-//                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArticul[0]));
-//                    else ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(titleOrArticul[0]));
-//                    autoCompleteListBox.Visible = false;
-//                    return;
-//                }
-//                //Если имеются точное совпадение в введенном тексте и коллекции эл-тов вып. списка.
-//                foreach (var sparePart in searchSpList)
-//                {
-///*!!!*/             if ((sparePart.Articul == titleOrArticul[0].Trim() && sparePart.Title == titleOrArticul[1].Trim()))                        
-//                    {
-//                        //если точное совпадение найдено.
-//                        ChangeDataSource(new List<SparePart>() { sparePart });
-//                        autoCompleteListBox.Visible = false;
-//                        return;
-//                    }//if 
-//                }//foreach
-//                ////В зависимости от checkBox поиск ведется либо только по товару в наличии, либо по всему товару в базе.
-//                //var spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[0], titleOrArticul[1]);
-//                //if (spareParts.Count == 0)
-//                //    spareParts = onlyAvaliabilityCheckBox.Checked ? PartsDAL.SearchSpByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]) : PartsDAL.SearchSpAvaliabilityByTitleAndArticulToDisplay(titleOrArticul[1], titleOrArticul[0]);
-//                //ChangeDataSource(spareParts);
-
-//                customerText = null;
-//                autoCompleteListBox.Visible = false;
-//                return;
-//            }//if
-
-//            #endregion
-
-
-        }//searchTextBox_PreviewKeyDown
 
         private void onlyAvaliabilityCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -556,26 +450,57 @@ namespace PartsApp
                 if (String.IsNullOrEmpty(customerText))
                     customerText = searchTextBox.Text;
 
-                ChangeSearchTextBoxTextWithoutTextChangedEvent();
+                ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
                 searchTextBox.Focus();
 
             }//if
             else
             {
-                searchTextBox_PreviewKeyDown(searchTextBox, new PreviewKeyDownEventArgs(Keys.Enter));
+                searchTextBox_KeyDown(searchTextBox, new KeyEventArgs(Keys.Enter));
             }//else
         }//autoCompleteListBox_MouseDown
 
         /// <summary>
         /// Присваиваем searchTextBox текст выбранный из выпадающего списка, без вызова события TextChanged.
         /// </summary>
-        private void ChangeSearchTextBoxTextWithoutTextChangedEvent()
+        /// <param name="text">Текст который будет вставлен в searchTextBox.</param>
+        private void ChangeSearchTextBoxTextWithoutTextChangedEvent(string text)
         {
             searchTextBox.TextChanged -= searchTextBox_TextChanged;
-            searchTextBox.Text = autoCompleteListBox.SelectedItem.ToString();
+            searchTextBox.Text = text; 
             searchTextBox.TextChanged += searchTextBox_TextChanged;
         }//ChangeSearchTextBoxTextWithoutTextChangedEvent
 
+        /// <summary>
+        /// Выводит на экран фоматированный выпадающий список из переданной коллекции SparePart.
+        /// </summary>
+        /// <param name="spList">Коллекция которая будет выведена в выпадающем списке.</param>
+        private void OutputFormattedDropDownList(IList<SparePart> spList)
+        {
+            autoCompleteListBox.Items.Clear();
+            //Форматируем вывод.
+            //Находим максимальную ширину каждого параметра.
+            int articulMaxLenght = spList.Select(sp => sp.Articul).Max(art => art.Length);
+            int titlelMaxLenght = spList.Select(sp => sp.Title).Max(title => title.Length);
+            int manufMaxLenght = 0;
+            var sparePartsManufacturers = spList.Select(sp => sp.Manufacturer).Where(manuf => manuf != null);
+            if (sparePartsManufacturers.Count() > 0)
+                manufMaxLenght = sparePartsManufacturers.Max(man => man.Length);
+            //Задаём нужный формат для выводимых строк.
+            string artCol = String.Format("{{0, {0}}}", -articulMaxLenght);
+            string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
+            string manufCol = String.Format("{{2, {0}}}", -manufMaxLenght);
+
+            string searchSparePart;
+            for (int i = 0; i < spList.Count; ++i)
+            {
+                searchSparePart = String.Format(artCol + "   " + titleCol + "   " + manufCol, spList[i].Articul, spList[i].Title, spList[i].Manufacturer);
+                autoCompleteListBox.Items.Add(searchSparePart);
+            }//for
+            autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
+            autoCompleteListBox.Visible = true;
+
+        }//OutputFormattedDropDownList
 
 
 
@@ -608,12 +533,10 @@ namespace PartsApp
 
 
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
         #region Методы связанные с изменением Наценки.
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -870,6 +793,14 @@ namespace PartsApp
 
             return isSameMarkup;
         }//IsSamePriceAndMarkup
+
+
+
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion

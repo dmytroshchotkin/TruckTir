@@ -503,6 +503,8 @@
             // 
             // autoCompleteListBox
             // 
+            this.autoCompleteListBox.BackColor = System.Drawing.SystemColors.Menu;
+            this.autoCompleteListBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.autoCompleteListBox.FormattingEnabled = true;
             this.autoCompleteListBox.Location = new System.Drawing.Point(165, 0);
             this.autoCompleteListBox.Name = "autoCompleteListBox";
