@@ -36,6 +36,7 @@ namespace PartsApp
             SetFilterPosition(Date,       operationDateFilterTimePicker);
             SetFilterPosition(Currency,   currencyFilterComboBox);
             SetFilterPosition(Storage,    storageFilterComboBox);
+            SetFilterPosition(OperationId, operationIdTextBox);
             
         }//SetFiltersPosition
         /// <summary>
@@ -113,6 +114,8 @@ namespace PartsApp
         {
             SetFiltersPosition();
         }
+
+
 
 
 
