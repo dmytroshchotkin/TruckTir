@@ -322,7 +322,7 @@ namespace PartsApp
             {   
                 autoCompleteListBox.Visible = false;
                 return;
-            } 
+            }//if 
 
             //В зависимости от значения checkBox, выводим либо товар только в наличии, либо весь товар в базе.
             if (onlyAvaliabilityCheckBox.CheckState == CheckState.Unchecked)
@@ -400,8 +400,23 @@ namespace PartsApp
 
             if (e.KeyCode == Keys.Enter)
             {
-                if (searchSpList.Count == 0) return;
+                //Если ничего не введено, то находим весь товар из базы.
+                if (String.IsNullOrWhiteSpace(searchTextBox.Text))
+                {
+                    if (onlyAvaliabilityCheckBox.Checked)
+                        ChangeDataSource(PartsDAL.FindAllSparePartsAvaliableToDisplay());
+                    else ChangeDataSource(PartsDAL.FindAllSparePartsToDisplay());
 
+                    return;
+                }//if
+                //Если нет элементов удовлетворяющих поиску, выводим сообщение об этом.
+                if (searchSpList.Count == 0)
+                {
+                    toolTip.Show("Нет элементов удовлетворяющих поиску.", this, new Point(searchTextBox.Location.X, componentPanel.Location.Y), 2000);
+                    return;
+                }//if
+
+                //распапсиваем введённую или выбранную строку.
                 string[] titleOrArtOrManuf = searchTextBox.Text.Split(new string[] { "   " }, StringSplitOptions.RemoveEmptyEntries);
                 
                 //если выбор не из вып. списка.
@@ -415,12 +430,11 @@ namespace PartsApp
                     autoCompleteListBox.Visible = false;
                     return;
                 }//if
-
-                ChangeSearchTextBoxTextWithoutTextChangedEvent(titleOrArtOrManuf[0]); //вводим более корректное значение для отображение.
+                //вводим более корректное значение для отображение.
+                ChangeSearchTextBoxTextWithoutTextChangedEvent(titleOrArtOrManuf[0]); 
                 //Если имеются точное совпадение в введенном тексте и коллекции эл-тов вып. списка.
                 foreach (var sparePart in searchSpList)
                 {
-                    /*!!!*/
                     if ((sparePart.Articul == titleOrArtOrManuf[0].Trim() && sparePart.Title == titleOrArtOrManuf[1].Trim()))
                     {
                         //если точное совпадение найдено.
@@ -956,11 +970,15 @@ namespace PartsApp
         /// <param name="spareParts">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
-            partsDataGridView.DataSource = SpList = Cloner.Clone(spareParts).OrderBy(sp => sp.Title).ToList();;
+            partsDataGridView.Cursor = Cursors.WaitCursor;
+            //progressBar.Value = progressBar.Maximum / 2;  //не работает
+            partsDataGridView.DataSource = SpList = Cloner.Clone(spareParts).OrderBy(sp => sp.Title).ToList();
             origSpList = Cloner.Clone(spareParts);
 
             ExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
-            origExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList); 
+            origExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
+            partsDataGridView.Cursor = Cursors.Default;
+            //progressBar.Value = 0;
         }//ChangeDataSource
         //Метод для скрытия столбцов кот. не нужно видеть поль-лю.
         /// <summary>
