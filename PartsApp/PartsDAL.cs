@@ -3170,17 +3170,7 @@ namespace PartsApp
                 while (dataReader.Read())
                 {
                     SparePart sparePart = new SparePart();
-                    //{
-                    //    Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
-                    //    SparePartId= Convert.ToInt32(dataReader["Id"]),
-                    //    Articul = dataReader["Articul"] as string,
-                    //    Title = dataReader["Title"] as string,
-                    //    Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                    //    //Price = Convert.ToDouble(dataReader["Price"]),
-                    //    //Markup = Convert.ToInt32(dataReader["Markup"]),
-                    //    //Count = Convert.ToDouble(dataReader["Count"]),
-                    //    //Unit = dataReader["Unit"] as string
-                    //};
+
                     sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
                     sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
                     sparePart.Articul = dataReader["Articul"] as string;
@@ -4442,6 +4432,33 @@ namespace PartsApp
 
 
 
+
+        public static IList<Purchase> FindPurchasesByParameters(Purchase purchase)
+        {
+            IList<Purchase> purchases = new List<Purchase>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT * FROM Purchases WHERE PurchaseId = @PurchaseId AND ";
+                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND sp.Articul LIKE @Articul", connection);
+
+                cmd.Parameters.AddWithValue("@Articul", articul + "%");
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Purchase purchase = new Purchase();
+
+
+                    purchases.Add(purchase);
+                }//while
+                connection.Close();
+            }//using
+
+            return purchases;
+        }//FindPurchasesByParameters
 
 
 

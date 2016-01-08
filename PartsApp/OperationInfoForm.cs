@@ -36,7 +36,7 @@ namespace PartsApp
             SetFilterPosition(Date,       operationDateFilterTimePicker);
             SetFilterPosition(Currency,   currencyFilterComboBox);
             SetFilterPosition(Storage,    storageFilterComboBox);
-            SetFilterPosition(OperationId, operationIdTextBox);
+            SetFilterPosition(OperationId, operationIdFilterTextBox);
             
         }//SetFiltersPosition
         /// <summary>
@@ -115,6 +115,77 @@ namespace PartsApp
             SetFiltersPosition();
         }
 
+        #region Обработка фильтров запроса.
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void FiltersRequestProcessing()
+        {
+            Purchase purchase = new Purchase();
+
+            purchase.SupplierEmployee = contragentFilterTextBox.Text.Trim();
+            purchase.EmployeeId = (!String.IsNullOrWhiteSpace(employeeFilterTextBox.Text)) ? Convert.ToInt32(employeeFilterTextBox.Text.Trim()) : (int?)null; 
+            string operationId = operationIdFilterTextBox.Text.Trim();
+
+
+            PartsDAL.FindPurchasesByParameters(operationId, employee, contragent);
+
+        }//FiltersRequestProcessing
+
+        private void contragentFilterTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (String.IsNullOrWhiteSpace((sender as TextBox).Text) == false)
+                    FiltersRequestProcessing();
+                    
+            }//if
+        }//contragentFilterTextBox_KeyDown
+
+        private void employeeFilterTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+
+            }//if
+        }//employeeFilterTextBox_KeyDown
+
+        private void operationIdTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+
+            }//if
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
 
 
 

@@ -30,10 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.operationIdTextBox = new System.Windows.Forms.TextBox();
-            this.operationIdLabel = new System.Windows.Forms.Label();
             this.tablesSplitContainer = new System.Windows.Forms.SplitContainer();
             this.operationSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.operationIdFilterTextBox = new System.Windows.Forms.TextBox();
             this.storageFilterComboBox = new System.Windows.Forms.ComboBox();
             this.currencyFilterComboBox = new System.Windows.Forms.ComboBox();
             this.operationDateFilterTimePicker = new System.Windows.Forms.DateTimePicker();
@@ -41,22 +40,6 @@
             this.contragentFilterTextBox = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.operationDataGridView = new System.Windows.Forms.DataGridView();
-            this.operationStatusStrip = new System.Windows.Forms.StatusStrip();
-            this.operationToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.operationRowsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.operationDetailsDGV = new System.Windows.Forms.DataGridView();
-            this.operationDetailsStatusStrip = new System.Windows.Forms.StatusStrip();
-            this.operationDetailsToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.operationDetailsRowsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.Manufacturer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Articul = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Contragent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Employee = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -67,8 +50,25 @@
             this.Storage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OperationId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.operationStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.operationToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.operationRowsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.operationDetailsDGV = new System.Windows.Forms.DataGridView();
+            this.Manufacturer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Articul = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.operationDetailsStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.operationDetailsToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.operationDetailsRowsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.operationPrintToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.operationDetailsPrintToolStripButton = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
-            this.mainSplitContainer.Panel1.SuspendLayout();
             this.mainSplitContainer.Panel2.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tablesSplitContainer)).BeginInit();
@@ -100,34 +100,12 @@
             this.mainSplitContainer.Name = "mainSplitContainer";
             this.mainSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // mainSplitContainer.Panel1
-            // 
-            this.mainSplitContainer.Panel1.Controls.Add(this.operationIdLabel);
-            // 
             // mainSplitContainer.Panel2
             // 
             this.mainSplitContainer.Panel2.Controls.Add(this.tablesSplitContainer);
             this.mainSplitContainer.Size = new System.Drawing.Size(839, 762);
             this.mainSplitContainer.SplitterDistance = 292;
             this.mainSplitContainer.TabIndex = 0;
-            // 
-            // operationIdTextBox
-            // 
-            this.operationIdTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.operationIdTextBox.Location = new System.Drawing.Point(563, 3);
-            this.operationIdTextBox.MinimumSize = new System.Drawing.Size(0, 21);
-            this.operationIdTextBox.Name = "operationIdTextBox";
-            this.operationIdTextBox.Size = new System.Drawing.Size(64, 20);
-            this.operationIdTextBox.TabIndex = 1;
-            // 
-            // operationIdLabel
-            // 
-            this.operationIdLabel.AutoSize = true;
-            this.operationIdLabel.Location = new System.Drawing.Point(58, 46);
-            this.operationIdLabel.Name = "operationIdLabel";
-            this.operationIdLabel.Size = new System.Drawing.Size(71, 13);
-            this.operationIdLabel.TabIndex = 0;
-            this.operationIdLabel.Text = "Операция №";
             // 
             // tablesSplitContainer
             // 
@@ -160,7 +138,7 @@
             // operationSplitContainer.Panel1
             // 
             this.operationSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.operationSplitContainer.Panel1.Controls.Add(this.operationIdTextBox);
+            this.operationSplitContainer.Panel1.Controls.Add(this.operationIdFilterTextBox);
             this.operationSplitContainer.Panel1.Controls.Add(this.storageFilterComboBox);
             this.operationSplitContainer.Panel1.Controls.Add(this.currencyFilterComboBox);
             this.operationSplitContainer.Panel1.Controls.Add(this.operationDateFilterTimePicker);
@@ -174,6 +152,17 @@
             this.operationSplitContainer.SplitterDistance = 25;
             this.operationSplitContainer.SplitterWidth = 1;
             this.operationSplitContainer.TabIndex = 0;
+            // 
+            // operationIdFilterTextBox
+            // 
+            this.operationIdFilterTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.operationIdFilterTextBox.Location = new System.Drawing.Point(563, 3);
+            this.operationIdFilterTextBox.MinimumSize = new System.Drawing.Size(4, 21);
+            this.operationIdFilterTextBox.Name = "operationIdFilterTextBox";
+            this.operationIdFilterTextBox.Size = new System.Drawing.Size(64, 20);
+            this.operationIdFilterTextBox.TabIndex = 1;
+            this.toolTip.SetToolTip(this.operationIdFilterTextBox, "Введите № операции.");
+            this.operationIdFilterTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.operationIdTextBox_KeyDown);
             // 
             // storageFilterComboBox
             // 
@@ -197,7 +186,7 @@
             // operationDateFilterTimePicker
             // 
             this.operationDateFilterTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.operationDateFilterTimePicker.Location = new System.Drawing.Point(248, 2);
+            this.operationDateFilterTimePicker.Location = new System.Drawing.Point(224, 4);
             this.operationDateFilterTimePicker.Name = "operationDateFilterTimePicker";
             this.operationDateFilterTimePicker.Size = new System.Drawing.Size(80, 20);
             this.operationDateFilterTimePicker.TabIndex = 2;
@@ -205,21 +194,23 @@
             // 
             // employeeFilterTextBox
             // 
-            this.employeeFilterTextBox.Location = new System.Drawing.Point(142, 5);
-            this.employeeFilterTextBox.MinimumSize = new System.Drawing.Size(0, 21);
+            this.employeeFilterTextBox.Location = new System.Drawing.Point(133, 2);
+            this.employeeFilterTextBox.MinimumSize = new System.Drawing.Size(4, 21);
             this.employeeFilterTextBox.Name = "employeeFilterTextBox";
-            this.employeeFilterTextBox.Size = new System.Drawing.Size(100, 20);
+            this.employeeFilterTextBox.Size = new System.Drawing.Size(76, 20);
             this.employeeFilterTextBox.TabIndex = 1;
             this.toolTip.SetToolTip(this.employeeFilterTextBox, "Введите фамилию имя сотрудника");
+            this.employeeFilterTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.employeeFilterTextBox_KeyDown);
             // 
             // contragentFilterTextBox
             // 
-            this.contragentFilterTextBox.Location = new System.Drawing.Point(36, 2);
-            this.contragentFilterTextBox.MinimumSize = new System.Drawing.Size(0, 21);
+            this.contragentFilterTextBox.Location = new System.Drawing.Point(37, 2);
+            this.contragentFilterTextBox.MinimumSize = new System.Drawing.Size(4, 21);
             this.contragentFilterTextBox.Name = "contragentFilterTextBox";
-            this.contragentFilterTextBox.Size = new System.Drawing.Size(100, 20);
+            this.contragentFilterTextBox.Size = new System.Drawing.Size(90, 20);
             this.contragentFilterTextBox.TabIndex = 0;
             this.toolTip.SetToolTip(this.contragentFilterTextBox, "Введите Имя/Название контрагента");
+            this.contragentFilterTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.contragentFilterTextBox_KeyDown);
             // 
             // splitContainer1
             // 
@@ -240,7 +231,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.operationStatusStrip);
             this.splitContainer1.Panel2MinSize = 15;
             this.splitContainer1.Size = new System.Drawing.Size(839, 224);
-            this.splitContainer1.SplitterDistance = 203;
+            this.splitContainer1.SplitterDistance = 195;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -264,32 +255,110 @@
             this.operationDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.operationDataGridView.Location = new System.Drawing.Point(0, 0);
             this.operationDataGridView.Name = "operationDataGridView";
-            this.operationDataGridView.Size = new System.Drawing.Size(839, 203);
+            this.operationDataGridView.Size = new System.Drawing.Size(839, 195);
             this.operationDataGridView.TabIndex = 0;
             this.operationDataGridView.Resize += new System.EventHandler(this.operationDataGridView_Resize);
+            // 
+            // Contragent
+            // 
+            this.Contragent.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Contragent.HeaderText = "Контрагент";
+            this.Contragent.Name = "Contragent";
+            this.Contragent.Width = 90;
+            // 
+            // Employee
+            // 
+            this.Employee.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Employee.HeaderText = "Сотрудник";
+            this.Employee.Name = "Employee";
+            this.Employee.Width = 85;
+            // 
+            // Date
+            // 
+            this.Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Date.HeaderText = "Дата";
+            this.Date.MinimumWidth = 80;
+            this.Date.Name = "Date";
+            this.Date.Width = 80;
+            // 
+            // InTotal
+            // 
+            this.InTotal.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+            this.InTotal.HeaderText = "Сумма";
+            this.InTotal.MinimumWidth = 50;
+            this.InTotal.Name = "InTotal";
+            this.InTotal.Width = 50;
+            // 
+            // Currency
+            // 
+            this.Currency.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+            this.Currency.HeaderText = "Валюта";
+            this.Currency.MinimumWidth = 50;
+            this.Currency.Name = "Currency";
+            this.Currency.Width = 50;
+            // 
+            // ExcRate
+            // 
+            this.ExcRate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+            this.ExcRate.HeaderText = "Курс";
+            this.ExcRate.MinimumWidth = 40;
+            this.ExcRate.Name = "ExcRate";
+            this.ExcRate.ToolTipText = "Курс к рос. рублю.";
+            this.ExcRate.Width = 40;
+            // 
+            // ContragentEmployee
+            // 
+            this.ContragentEmployee.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ContragentEmployee.HeaderText = "Предст-ль контр-та";
+            this.ContragentEmployee.MinimumWidth = 62;
+            this.ContragentEmployee.Name = "ContragentEmployee";
+            this.ContragentEmployee.ToolTipText = "Представитель контрагента";
+            this.ContragentEmployee.Width = 62;
+            // 
+            // Storage
+            // 
+            this.Storage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Storage.HeaderText = "Склад";
+            this.Storage.Name = "Storage";
+            this.Storage.Width = 63;
+            // 
+            // OperationId
+            // 
+            this.OperationId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+            this.OperationId.HeaderText = "№ операции";
+            this.OperationId.MinimumWidth = 60;
+            this.OperationId.Name = "OperationId";
+            this.OperationId.Width = 60;
+            // 
+            // Description
+            // 
+            this.Description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Description.HeaderText = "Описание";
+            this.Description.Name = "Description";
             // 
             // operationStatusStrip
             // 
             this.operationStatusStrip.Dock = System.Windows.Forms.DockStyle.Fill;
             this.operationStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.operationToolStripStatusLabel,
-            this.operationRowsCountLabel});
+            this.operationRowsCountLabel,
+            this.operationPrintToolStripButton});
             this.operationStatusStrip.Location = new System.Drawing.Point(0, 0);
             this.operationStatusStrip.Name = "operationStatusStrip";
-            this.operationStatusStrip.Size = new System.Drawing.Size(839, 20);
+            this.operationStatusStrip.Size = new System.Drawing.Size(839, 28);
             this.operationStatusStrip.TabIndex = 0;
             this.operationStatusStrip.Text = "statusStrip1";
             // 
             // operationToolStripStatusLabel
             // 
             this.operationToolStripStatusLabel.Name = "operationToolStripStatusLabel";
-            this.operationToolStripStatusLabel.Size = new System.Drawing.Size(91, 17);
+            this.operationToolStripStatusLabel.Size = new System.Drawing.Size(91, 23);
             this.operationToolStripStatusLabel.Text = "Всего записей :";
             // 
             // operationRowsCountLabel
             // 
             this.operationRowsCountLabel.Name = "operationRowsCountLabel";
-            this.operationRowsCountLabel.Size = new System.Drawing.Size(13, 17);
+            this.operationRowsCountLabel.Size = new System.Drawing.Size(13, 23);
             this.operationRowsCountLabel.Text = "0";
             // 
             // splitContainer2
@@ -311,7 +380,7 @@
             this.splitContainer2.Panel2.Controls.Add(this.operationDetailsStatusStrip);
             this.splitContainer2.Panel2MinSize = 15;
             this.splitContainer2.Size = new System.Drawing.Size(839, 212);
-            this.splitContainer2.SplitterDistance = 192;
+            this.splitContainer2.SplitterDistance = 183;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 2;
             // 
@@ -333,34 +402,8 @@
             this.operationDetailsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.operationDetailsDGV.Location = new System.Drawing.Point(0, 0);
             this.operationDetailsDGV.Name = "operationDetailsDGV";
-            this.operationDetailsDGV.Size = new System.Drawing.Size(839, 192);
+            this.operationDetailsDGV.Size = new System.Drawing.Size(839, 183);
             this.operationDetailsDGV.TabIndex = 1;
-            // 
-            // operationDetailsStatusStrip
-            // 
-            this.operationDetailsStatusStrip.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.operationDetailsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.operationDetailsToolStripStatusLabel,
-            this.operationDetailsRowsCountLabel});
-            this.operationDetailsStatusStrip.Location = new System.Drawing.Point(0, 0);
-            this.operationDetailsStatusStrip.Name = "operationDetailsStatusStrip";
-            this.operationDetailsStatusStrip.Size = new System.Drawing.Size(839, 19);
-            this.operationDetailsStatusStrip.TabIndex = 1;
-            this.operationDetailsStatusStrip.Text = "statusStrip1";
-            // 
-            // operationDetailsToolStripStatusLabel
-            // 
-            this.operationDetailsToolStripStatusLabel.BackColor = System.Drawing.SystemColors.Control;
-            this.operationDetailsToolStripStatusLabel.Name = "operationDetailsToolStripStatusLabel";
-            this.operationDetailsToolStripStatusLabel.Size = new System.Drawing.Size(91, 11);
-            this.operationDetailsToolStripStatusLabel.Text = "Всего записей :";
-            // 
-            // operationDetailsRowsCountLabel
-            // 
-            this.operationDetailsRowsCountLabel.BackColor = System.Drawing.SystemColors.Control;
-            this.operationDetailsRowsCountLabel.Name = "operationDetailsRowsCountLabel";
-            this.operationDetailsRowsCountLabel.Size = new System.Drawing.Size(13, 11);
-            this.operationDetailsRowsCountLabel.Text = "0";
             // 
             // Manufacturer
             // 
@@ -411,81 +454,52 @@
             this.Sum.Name = "Sum";
             this.Sum.Width = 66;
             // 
-            // Contragent
+            // operationDetailsStatusStrip
             // 
-            this.Contragent.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Contragent.HeaderText = "Контрагент";
-            this.Contragent.Name = "Contragent";
-            this.Contragent.Width = 90;
+            this.operationDetailsStatusStrip.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.operationDetailsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.operationDetailsToolStripStatusLabel,
+            this.operationDetailsRowsCountLabel,
+            this.operationDetailsPrintToolStripButton});
+            this.operationDetailsStatusStrip.Location = new System.Drawing.Point(0, 0);
+            this.operationDetailsStatusStrip.Name = "operationDetailsStatusStrip";
+            this.operationDetailsStatusStrip.Size = new System.Drawing.Size(839, 28);
+            this.operationDetailsStatusStrip.TabIndex = 1;
+            this.operationDetailsStatusStrip.Text = "statusStrip1";
             // 
-            // Employee
+            // operationDetailsToolStripStatusLabel
             // 
-            this.Employee.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Employee.HeaderText = "Сотрудник";
-            this.Employee.Name = "Employee";
-            this.Employee.Width = 85;
+            this.operationDetailsToolStripStatusLabel.BackColor = System.Drawing.SystemColors.Control;
+            this.operationDetailsToolStripStatusLabel.Name = "operationDetailsToolStripStatusLabel";
+            this.operationDetailsToolStripStatusLabel.Size = new System.Drawing.Size(91, 23);
+            this.operationDetailsToolStripStatusLabel.Text = "Всего записей :";
             // 
-            // Date
+            // operationDetailsRowsCountLabel
             // 
-            this.Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Date.HeaderText = "Дата";
-            this.Date.MinimumWidth = 80;
-            this.Date.Name = "Date";
-            this.Date.Width = 80;
+            this.operationDetailsRowsCountLabel.BackColor = System.Drawing.SystemColors.Control;
+            this.operationDetailsRowsCountLabel.Name = "operationDetailsRowsCountLabel";
+            this.operationDetailsRowsCountLabel.Size = new System.Drawing.Size(13, 23);
+            this.operationDetailsRowsCountLabel.Text = "0";
             // 
-            // InTotal
+            // operationPrintToolStripButton
             // 
-            this.InTotal.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.InTotal.HeaderText = "Сумма";
-            this.InTotal.MinimumWidth = 50;
-            this.InTotal.Name = "InTotal";
-            this.InTotal.Width = 50;
+            this.operationPrintToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.operationPrintToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.operationPrintToolStripButton.Margin = new System.Windows.Forms.Padding(450, 2, 0, 0);
+            this.operationPrintToolStripButton.Name = "operationPrintToolStripButton";
+            this.operationPrintToolStripButton.Size = new System.Drawing.Size(78, 26);
+            this.operationPrintToolStripButton.Text = "Распечатать";
+            this.operationPrintToolStripButton.ToolTipText = "Распечатать данные в Excel файл";
             // 
-            // Currency
+            // operationDetailsPrintToolStripButton
             // 
-            this.Currency.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.Currency.HeaderText = "Валюта";
-            this.Currency.MinimumWidth = 50;
-            this.Currency.Name = "Currency";
-            this.Currency.Width = 50;
-            // 
-            // ExcRate
-            // 
-            this.ExcRate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.ExcRate.HeaderText = "Курс";
-            this.ExcRate.MinimumWidth = 40;
-            this.ExcRate.Name = "ExcRate";
-            this.ExcRate.Width = 40;
-            // 
-            // ContragentEmployee
-            // 
-            this.ContragentEmployee.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ContragentEmployee.HeaderText = "Предст-ль контр-та";
-            this.ContragentEmployee.MinimumWidth = 62;
-            this.ContragentEmployee.Name = "ContragentEmployee";
-            this.ContragentEmployee.ToolTipText = "Представитель контрагента";
-            this.ContragentEmployee.Width = 62;
-            // 
-            // Storage
-            // 
-            this.Storage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Storage.HeaderText = "Склад";
-            this.Storage.Name = "Storage";
-            this.Storage.Width = 63;
-            // 
-            // OperationId
-            // 
-            this.OperationId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.OperationId.HeaderText = "№ операции";
-            this.OperationId.MinimumWidth = 60;
-            this.OperationId.Name = "OperationId";
-            this.OperationId.Width = 60;
-            // 
-            // Description
-            // 
-            this.Description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Description.HeaderText = "Описание";
-            this.Description.Name = "Description";
+            this.operationDetailsPrintToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.operationDetailsPrintToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.operationDetailsPrintToolStripButton.Margin = new System.Windows.Forms.Padding(450, 2, 0, 0);
+            this.operationDetailsPrintToolStripButton.Name = "operationDetailsPrintToolStripButton";
+            this.operationDetailsPrintToolStripButton.Size = new System.Drawing.Size(78, 26);
+            this.operationDetailsPrintToolStripButton.Text = "Распечатать";
+            this.operationDetailsPrintToolStripButton.ToolTipText = "Распечатать данные в Excel файл";
             // 
             // OperationInfoForm
             // 
@@ -497,8 +511,6 @@
             this.Name = "OperationInfoForm";
             this.Text = "OperationInfoForm";
             this.Load += new System.EventHandler(this.OperationInfoForm_Load);
-            this.mainSplitContainer.Panel1.ResumeLayout(false);
-            this.mainSplitContainer.Panel1.PerformLayout();
             this.mainSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
             this.mainSplitContainer.ResumeLayout(false);
@@ -537,8 +549,7 @@
         private System.Windows.Forms.SplitContainer tablesSplitContainer;
         private System.Windows.Forms.DataGridView operationDataGridView;
         private System.Windows.Forms.DataGridView operationDetailsDGV;
-        private System.Windows.Forms.TextBox operationIdTextBox;
-        private System.Windows.Forms.Label operationIdLabel;
+        private System.Windows.Forms.TextBox operationIdFilterTextBox;
         private System.Windows.Forms.SplitContainer operationSplitContainer;
         private System.Windows.Forms.TextBox employeeFilterTextBox;
         private System.Windows.Forms.TextBox contragentFilterTextBox;
@@ -571,5 +582,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Storage;
         private System.Windows.Forms.DataGridViewTextBoxColumn OperationId;
         private System.Windows.Forms.DataGridViewTextBoxColumn Description;
+        private System.Windows.Forms.ToolStripButton operationPrintToolStripButton;
+        private System.Windows.Forms.ToolStripButton operationDetailsPrintToolStripButton;
     }
 }
