@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PartsApp
 {
-    class Sale : IOperation
+    interface IOperation
     {
         public int OperationId { get; set; }
         public Employee Employee { get; set; }
@@ -16,11 +16,9 @@ namespace PartsApp
         public string Currency { get; set; }
         public double ExcRate { get; set; }
         public string Description { get; set; }
-        public IList<SparePart> OperationDetails { get; set; }
-          
-        public Sale() {}
-        
-    }//Sale
+        //public IList<PurchaseDetail> PurchaseDetails { get; set; }
+
+    }//IOperation
 
 
 }//namespace

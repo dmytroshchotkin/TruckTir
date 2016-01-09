@@ -94,6 +94,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="IContragent.cs" />
+    <Compile Include="IOperation.cs" />
     <Compile Include="MarkupTypes.cs" />
     <Compile Include="OperationInfoForm.cs">
       <SubType>Form</SubType>
