@@ -12,15 +12,16 @@ namespace PartsApp
 {
     public partial class AddContragentForm : Form
     {
-        private string contragentType;
+        IContragent _contragent;
 
-        public AddContragentForm(string contagent)
+        public AddContragentForm(IContragent contragent)
         {
             InitializeComponent();
-            contragentType = contagent;
-            this.Text = String.Format("Форма добавления нового {0}а", contagent);
-            //descrLabel.Text = String.Format("Форма добавления нового {0}а", header);
-            descrLabel.Text += String.Format("{0}е :", contagent);
+
+            _contragent = contragent;
+            string contragentType = (contragent is Supplier) ? "поставщик" : "клиент";
+            this.Text = String.Format("Форма добавления нового {0}а", contragentType);
+            descrLabel.Text += String.Format("{0}е :", contragentType);
         }
         private void AddcontragentForm_Load(object sender, EventArgs e)
         {
@@ -131,17 +132,17 @@ namespace PartsApp
                 if (entityBackPanel.BackColor != Color.Red && contragentNameBackPanel.BackColor != Color.Red
                     && codeBackPanel.BackColor != Color.Red)
                 {
-                    Contragent contragent = new Contragent();
-                    contragent.Entity = entityComboBox.Text;
-                    contragent.ContragentName = contragentNameTextBox.Text.Trim();
-                    contragent.Code = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
-                    contragent.Description = (String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? null : descrRichTextBox.Text.Trim();
-                    contragent.ContactInfoId = GetContactInfoId();
+                    //IContragent contragent = (_contragent is Supplier) ? (IContragent)new Supplier() : new Customer();
+                    _contragent.Entity = entityComboBox.Text;
+                    _contragent.ContragentName = contragentNameTextBox.Text.Trim();
+                    _contragent.Code = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
+                    _contragent.Description = (String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? null : descrRichTextBox.Text.Trim();
+                    _contragent.ContactInfo = GetContactInfo();
 
-                    if (contragentType == "поставщик")
-                        PartsDAL.AddSupplier(contragent);
-                    if (contragentType == "клиент")
-                        PartsDAL.AddCustomer(contragent);
+                    if (_contragent is Supplier)
+                        PartsDAL.AddSupplier(_contragent as Supplier);
+                    if (_contragent is Customer)
+                        PartsDAL.AddCustomer(_contragent as Customer);
 
                     this.DialogResult = DialogResult.OK;
                     this.Close();
@@ -167,7 +168,7 @@ namespace PartsApp
         /// Возвращает Id контактной информации если она введена, иначе возвращает null.
         /// </summary>
         /// <returns></returns>
-        private int? GetContactInfoId()
+        private ContactInfo GetContactInfo()
         {
             //Если ContactInfoPanel развернута.
             if (contactInfoPanel.Visible == true && IsThereContactInfo() == true)
@@ -191,8 +192,8 @@ namespace PartsApp
                     }//if
                 }//foreach    
                 //добавляем запись в таблицу ContactInfo.
-                int contactInfoId = PartsDAL.AddContactInfo(contactInfo);
-                return contactInfoId;
+                contactInfo.ContactInfoId = PartsDAL.AddContactInfo(contactInfo);
+                return contactInfo;
             }//if
             return null;
         }//GetContactInfoId

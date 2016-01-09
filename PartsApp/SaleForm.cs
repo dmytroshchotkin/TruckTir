@@ -82,11 +82,13 @@ namespace PartsApp
                 customerBackPanel.BackColor = customerStarLabel.ForeColor = Color.Red;
                 if (MessageBox.Show("Добавить нового клиента?", "Такого клиента нет в базе!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (new AddContragentForm(Contragent.Customer).ShowDialog() == DialogResult.OK)
+                    IContragent customer = new Customer();
+                    if (new AddContragentForm(customer).ShowDialog() == DialogResult.OK)
                     {
                         //неэкономно обновляем список клиентов.
                         customerTextBox.Leave -= customerTextBox_Leave;
-/*!!!*/                 customerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllCustomersName());
+/*!!!*/                 customerTextBox.AutoCompleteCustomSource.Add(customer.ContragentName);
+                        customerTextBox.Text = customer.ContragentName;
                         customerTextBox.Leave += customerTextBox_Leave;
                     }//if
                 }//if
@@ -850,7 +852,7 @@ namespace PartsApp
                 }//if
                 extDataGridView.Rows[i].Cells["extSellingPrice"].Value = sparePartsAvaliability[i].SellingPrice;
                 extDataGridView.Rows[i].Cells["extPurchaseId"].Value = sparePartsAvaliability[i].PurchaseId;
-                extDataGridView.Rows[i].Cells["extPurchaseDate"].Value = PartsDAL.FindPurchaseById(sparePartsAvaliability[i].PurchaseId).PurchaseDate.ToShortDateString();
+                extDataGridView.Rows[i].Cells["extPurchaseDate"].Value = PartsDAL.FindPurchaseById(sparePartsAvaliability[i].PurchaseId).OperationDate.ToShortDateString();
             }//for            
             
             //Если отпускная цена у всех приходов одинаковая, выводим её в saleDGV.
@@ -1070,7 +1072,7 @@ namespace PartsApp
             int row = 1, column = 1;
 
             //Выводим Id и Дату. 
-            ExcelApp.Cells[row, column] = String.Format("Расходная накладная №{0} от {1}г.", sale.SaleId, sale.SaleDate.ToString("dd/MM/yyyy"));
+            ExcelApp.Cells[row, column] = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
@@ -1383,17 +1385,17 @@ namespace PartsApp
                     }//foreach
                     
                     Sale sale = new Sale();
-                    sale.EmployeeId = Form1.CurEmployee.EmployeeId;
-                    sale.CustomerId = PartsDAL.FindCustomerIdByName(customerTextBox.Text);
-                    sale.CustomerEmployee = (String.IsNullOrWhiteSpace(customerAgentTextBox.Text) == false) ? customerAgentTextBox.Text.Trim() : null;
-                    sale.SaleDate = saleDateTimePicker.Value;
+                    sale.Employee = Form1.CurEmployee;
+                    sale.Contragent = PartsDAL.FindCustomerById(PartsDAL.FindCustomerIdByName(customerTextBox.Text));
+                    sale.ContragentEmployee = (String.IsNullOrWhiteSpace(customerAgentTextBox.Text) == false) ? customerAgentTextBox.Text.Trim() : null;
+                    sale.OperationDate = saleDateTimePicker.Value;
                     sale.Currency = currencyComboBox.SelectedItem.ToString();
                     sale.ExcRate = (double)excRateNumericUpDown.Value;
                     sale.Description = (String.IsNullOrWhiteSpace(descriptionRichTextBox.Text) == false) ? descriptionRichTextBox.Text.Trim() : null;
                     
                     try
                     {
-                        sale.SaleId = PartsDAL.AddSale(spareParts, extSpareParts, sale);
+                        sale.OperationId = PartsDAL.AddSale(spareParts, extSpareParts, sale);
                     }//try
                     catch(Exception)
                     {

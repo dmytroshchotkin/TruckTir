@@ -8,15 +8,15 @@ namespace PartsApp
 {
     interface IOperation
     {
-        public int OperationId { get; set; }
-        public Employee Employee { get; set; }
-        public IContragent ContragentId { get; set; }
-        public string ContragentEmployee { get; set; }
-        public DateTime OperationDate { get; set; }
-        public string Currency { get; set; }
-        public double ExcRate { get; set; }
-        public string Description { get; set; }
-        //public IList<PurchaseDetail> PurchaseDetails { get; set; }
+        int OperationId { get; set; }
+        Employee Employee { get; set; }
+        IContragent Contragent { get; set; }
+        string ContragentEmployee { get; set; }
+        DateTime OperationDate { get; set; }
+        string Currency { get; set; }
+        double ExcRate { get; set; }
+        string Description { get; set; }
+        IList<SparePart> OperationDetails { get; set; }
 
     }//IOperation
 

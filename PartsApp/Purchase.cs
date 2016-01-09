@@ -10,7 +10,7 @@ namespace PartsApp
     {
         public int OperationId { get; set; }
         public Employee Employee { get; set; }
-        public IContragent ContragentId { get; set; }
+        public IContragent Contragent { get; set; }
         public string ContragentEmployee { get; set; }
         public DateTime OperationDate { get; set; }
         public string Currency { get; set; }

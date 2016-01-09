@@ -102,11 +102,13 @@ namespace PartsApp
                 supplierBackPanel.BackColor = supplierStarLabel.ForeColor = Color.Red;
                 if (MessageBox.Show("Добавить нового поставщика?", "Такого поставщика нет в базе!", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (new AddContragentForm("поставщик").ShowDialog() == DialogResult.OK)
+                    IContragent supplier = new Supplier();
+                    if (new AddContragentForm(supplier).ShowDialog() == DialogResult.OK)
                     {
-                        //неэкономно обновляем список поставщиков.
+
                         supplierTextBox.Leave -= supplierTextBox_Leave;
-/*!!!*/                 supplierTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllSuppliersName());
+                        supplierTextBox.AutoCompleteCustomSource.Add(supplier.ContragentName);
+                        supplierTextBox.Text = supplier.ContragentName;
                         supplierTextBox.Leave += supplierTextBox_Leave;
                     }//if
                 }//if
@@ -857,7 +859,7 @@ namespace PartsApp
             int row = 1, column = 1;
 
             //Выводим Id и Дату. 
-            ExcelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", purchase.PurchaseId, purchase.PurchaseDate.ToString("dd/MM/yyyy"));
+            ExcelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", purchase.OperationId, purchase.OperationDate.ToString("dd/MM/yyyy"));
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
@@ -1264,17 +1266,18 @@ namespace PartsApp
                     }//foreach
                     
                     Purchase purchase = new Purchase();
-                    purchase.EmployeeId = Form1.CurEmployee.EmployeeId;
-                    purchase.SupplierId = PartsDAL.FindSupplierIdByName(supplierTextBox.Text);
-                    purchase.SupplierEmployee = (String.IsNullOrWhiteSpace(supplierAgentTextBox.Text) == false) ? supplierAgentTextBox.Text.Trim() : null;
-                    purchase.PurchaseDate = purchaseDateTimePicker.Value;
+                    purchase.Employee = Form1.CurEmployee;
+                    purchase.Contragent = PartsDAL.FindSupplierByName(supplierTextBox.Text);
+                    purchase.ContragentEmployee = (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null;
+                    purchase.OperationDate = purchaseDateTimePicker.Value;
                     purchase.Currency = currencyComboBox.SelectedItem.ToString();
                     purchase.ExcRate = (double)excRateNumericUpDown.Value;
-                    purchase.Description = (String.IsNullOrWhiteSpace(descriptionRichTextBox.Text) == false) ? descriptionRichTextBox.Text.Trim() : null;
-                    
+                    purchase.Description = (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null;
+                    purchase.OperationDetails = spareParts;
+
                     try
                     {
-                        purchase.PurchaseId = PartsDAL.AddPurchase(spareParts, purchase);
+                        purchase.OperationId = PartsDAL.AddPurchase(purchase);
                     }//try
                     catch(Exception)
                     {

@@ -1125,12 +1125,12 @@ namespace PartsApp
 
         private void addNewSupplierToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddContragentForm("поставщик").Show();
+            new AddContragentForm(new Supplier()).Show();
         }//addNewSupplierToolStripMenuItem_Click
 
         private void addNewCustomerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddContragentForm("клиент").Show();             
+            new AddContragentForm(new Customer()).Show();             
         }//addNewCustomerToolStripMenuItem_Click
 
         private void addNewPurchaseToolStripMenuItem_Click(object sender, EventArgs e)

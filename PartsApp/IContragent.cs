@@ -7,20 +7,20 @@ using System.ComponentModel;
 
 namespace PartsApp
 {
-    interface IContragent
+    public interface IContragent
     {
         [Browsable(false)]
-        public int ContragentId { get; set; }
+        int ContragentId { get; set; }
         [DisplayName("Название")]
-        public string ContragentName { get; set; }
+        string ContragentName { get; set; }
         [DisplayName("ИНН/ОКПО")]
-        public string Code { get; set; }
+        string Code { get; set; }
         [DisplayName("Юр./Физ. лицо")]
-        public string Entity { get; set; }
+        string Entity { get; set; }
         [Browsable(false)]
-        public ContactInfo ContactInfoId { get; set; }
+        ContactInfo ContactInfo { get; set; }
         [DisplayName("Описание")]
-        public string Description { get; set; }
+        string Description { get; set; }
     }//IContragent
 
 

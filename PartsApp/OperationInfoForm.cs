@@ -65,24 +65,24 @@ namespace PartsApp
                 Purchase purchase = purchases[i];
                 DataGridViewRow row = operationDataGridView.Rows[i];
 
-                row.Cells[Contragent.Name].Value = PartsDAL.FindSupplierById(purchase.SupplierId).ContragentName;
+                row.Cells[Contragent.Name].Value = purchase.Contragent.ContragentName;
 
-                if (purchase.EmployeeId != null)
+                if (purchase.Employee != null)
                 {
-                    Employee employee = PartsDAL.FindEmployeeById((int)purchase.EmployeeId);
+                    Employee employee = purchase.Employee;
                     row.Cells[Employee.Name].Value = employee.GetShortFullName();
                     row.Cells[Employee.Name].ToolTipText = employee.GetFullName();
                     row.Cells[Employee.Name].Tag = employee.EmployeeId;
                 }//if
                 
-                row.Cells[Date.Name].Value = purchase.PurchaseDate.ToShortDateString();
-                row.Cells[InTotal.Name].Value = PartsDAL.FindTotalSumOfPurchase(purchase.PurchaseId);
+                row.Cells[Date.Name].Value = purchase.OperationDate.ToShortDateString();
+                row.Cells[InTotal.Name].Value = PartsDAL.FindTotalSumOfPurchase(purchase.OperationId);
                 row.Cells[Currency.Name].Value = purchase.Currency;
                 row.Cells[ExcRate.Name].Value = purchase.ExcRate;
                 row.Cells[Description.Name].Value = purchase.Description;
-                row.Cells[ContragentEmployee.Name].Value = purchase.SupplierEmployee;
+                row.Cells[ContragentEmployee.Name].Value = purchase.ContragentEmployee;
                 //row.Cells[Storage.Name].Value = purchase.;
-                row.Cells[OperationId.Name].Value = purchase.PurchaseId;
+                row.Cells[OperationId.Name].Value = purchase.OperationId;
             }//for
 
 
@@ -120,14 +120,14 @@ namespace PartsApp
 
         private void FiltersRequestProcessing()
         {
-            Purchase purchase = new Purchase();
+            //Purchase purchase = new Purchase();
 
-            purchase.SupplierEmployee = contragentFilterTextBox.Text.Trim();
-            purchase.EmployeeId = (!String.IsNullOrWhiteSpace(employeeFilterTextBox.Text)) ? Convert.ToInt32(employeeFilterTextBox.Text.Trim()) : (int?)null; 
-            string operationId = operationIdFilterTextBox.Text.Trim();
+            //purchase.SupplierEmployee = contragentFilterTextBox.Text.Trim();
+            //purchase.EmployeeId = (!String.IsNullOrWhiteSpace(employeeFilterTextBox.Text)) ? Convert.ToInt32(employeeFilterTextBox.Text.Trim()) : (int?)null; 
+            //string operationId = operationIdFilterTextBox.Text.Trim();
 
 
-            PartsDAL.FindPurchasesByParameters(operationId, employee, contragent);
+            //PartsDAL.FindPurchasesByParameters(operationId, employee, contragent);
 
         }//FiltersRequestProcessing
 

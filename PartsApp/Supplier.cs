@@ -17,7 +17,7 @@ namespace PartsApp
         //[DisplayName("Юр./Физ. лицо")]
         public string Entity { get; set; }
         //[Browsable(false)]
-        public ContactInfo ContactInfoId { get; set; }
+        public ContactInfo ContactInfo { get; set; }
         //[DisplayName("Описание")]
         public string Description { get; set; }
 
