@@ -120,11 +120,11 @@ namespace PartsApp
 
         private void FiltersRequestProcessing()
         {
-            //Purchase purchase = new Purchase();
+            Purchase purchase = new Purchase();
 
-            //purchase.SupplierEmployee = contragentFilterTextBox.Text.Trim();
-            //purchase.EmployeeId = (!String.IsNullOrWhiteSpace(employeeFilterTextBox.Text)) ? Convert.ToInt32(employeeFilterTextBox.Text.Trim()) : (int?)null; 
-            //string operationId = operationIdFilterTextBox.Text.Trim();
+            purchase.ContragentEmployee = contragentFilterTextBox.Text.Trim();
+            //purchase.Employee = (!String.IsNullOrWhiteSpace(employeeFilterTextBox.Text)) ? PartsDAL.FindEmployees() :  ;
+            string operationId = operationIdFilterTextBox.Text.Trim();
 
 
             //PartsDAL.FindPurchasesByParameters(operationId, employee, contragent);
@@ -192,3 +192,10 @@ namespace PartsApp
 
     }//OperationInfoForm
 }//namespace
+
+
+
+/*
+ Добавить в employeeFilterTextBox вып. список со всеми сотрудниками. В случае если есть сотрудники 
+ с одинаковыми ФИО выводить их логины.
+ */

@@ -375,6 +375,7 @@
             this.customerTextBox.Size = new System.Drawing.Size(196, 20);
             this.customerTextBox.TabIndex = 0;
             this.customerTextBox.Leave += new System.EventHandler(this.customerTextBox_Leave);
+            this.customerTextBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.customerTextBox_PreviewKeyDown);
             // 
             // sellerBackPanel
             // 

@@ -18,7 +18,7 @@ namespace PartsApp
         {
             InitializeComponent();
             //Заполняем выпадающий список контрола для ввода ФИО.
-            IList<Employee> employees = PartsDAL.FindAllEmployees();
+            IList<Employee> employees = PartsDAL.FindEmployees();
             foreach (Employee employee in employees)
                 loginTextBox.AutoCompleteCustomSource.Add(employee.Login);
 
@@ -50,7 +50,7 @@ namespace PartsApp
                 string inputPasswordHash = PasswordClass.GetHashString(passwordTextBox.Text.Trim());
                 try
                 {
-                    var employees = PartsDAL.FindAllEmployees().Where(empl => empl.Login == loginTextBox.Text.Trim());
+                    var employees = PartsDAL.FindEmployees().Where(empl => empl.Login == loginTextBox.Text.Trim());
                     Employee employee = employees.Where(empl => empl.Password == inputPasswordHash).First();
 
                     Form1.CurEmployee = employee;

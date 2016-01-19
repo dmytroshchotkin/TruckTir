@@ -888,7 +888,7 @@ namespace PartsApp
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
         #region ************Точный поиск по БД.*********************************************************************************
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
 
         #region *****************Поиск по таблицам Avaliablility********************************************************************
 
@@ -2069,6 +2069,7 @@ namespace PartsApp
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
         #region *****************Поиск по полям остальных таблиц.*******************************************************************
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //поиск по полям таблицы Categories.
         public static string[] FindAllCategories()
@@ -2799,7 +2800,7 @@ namespace PartsApp
                     Purchase purchase = new Purchase();
 
                     purchase.OperationId = Convert.ToInt32(dataReader["PurchaseId"]);
-                    purchase.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployeeById(Convert.ToInt32(dataReader["EmployeeId"])) : null;
+                    purchase.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null;
                     purchase.Contragent = FindSupplierById(Convert.ToInt32(dataReader["SupplierId"]));
                     purchase.ContragentEmployee = dataReader["SupplierEmployee"] as string;
                     //Переводим кол-во секунд Utc в DateTime.
@@ -2837,7 +2838,7 @@ namespace PartsApp
                 while (dataReader.Read())
                 {
                     purchase.OperationId = Convert.ToInt32(dataReader["PurchaseId"]);
-                    purchase.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployeeById(Convert.ToInt32(dataReader["EmployeeId"])) : null;
+                    purchase.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null;
                     purchase.Contragent = FindSupplierById(Convert.ToInt32(dataReader["SupplierId"]));
                     purchase.ContragentEmployee = dataReader["SupplierEmployee"] as string;
                     //Переводим кол-во секунд Utc в DateTime.
@@ -2988,12 +2989,14 @@ namespace PartsApp
 
         #endregion
 
-        //Поиск по таблице Employees.
+        #region Поиск по таблице Employees.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// Возвращает список из объектов типа Employee, состоящий из всех сотрудников.
         /// </summary>
         /// <returns></returns>
-        public static IList<Employee> FindAllEmployees()
+        public static IList<Employee> FindEmployees()
         {
             IList<Employee> employees = new List<Employee>();
 
@@ -3037,7 +3040,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="employeeId">Ид сотрудника, которого надо найти.</param>
         /// <returns></returns>
-        public static Employee FindEmployeeById(int employeeId)
+        public static Employee FindEmployees(int employeeId)
         {
             Employee employee = new Employee();
 
@@ -3077,6 +3080,62 @@ namespace PartsApp
             return employee;
         }//FindEmployeeById
 
+        public static IList<Employee> FindEmployees(string lastName, string firstName = null)
+        {
+            IList<Employee> employees = new List<Employee>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT date(HireDate, \"Unixepoch\") AS 'HD', date(DismissalDate, \"Unixepoch\") AS 'DD', * "
+                                   + "FROM Employees WHERE LastName LIKE @LastName AND FirstName ;";
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("@LastName", lastName);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Employee employee = new Employee();
+                    employee.EmployeeId    = Convert.ToInt32(dataReader["EmployeeId"]);
+                    employee.LastName      = dataReader["LastName"] as string;
+                    employee.FirstName     = dataReader["FirstName"] as string;
+                    employee.MiddleName    = dataReader["MiddleName"] as string;
+                    employee.BirthDate     = (dataReader["BirthDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["BirthDate"]) : (DateTime?)null;
+                    employee.HireDate      = (dataReader["HireDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["HD"]) : (DateTime?)null;
+                    employee.DismissalDate = (dataReader["DismissalDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["DD"]) : (DateTime?)null;
+                    employee.ContactInfoId = (dataReader["ContactInfoId"] != DBNull.Value) ? Convert.ToInt32(dataReader["ContactInfoId"]) : (int?)null;
+                    employee.Photo         = dataReader["Photo"] as string;
+                    employee.Note          = dataReader["Note"] as string;
+                    employee.PassportNum   = dataReader["PassportNum"] as string;
+                    employee.Title         = dataReader["Title"] as string;
+                    employee.AccessLayer   = dataReader["AccessLayer"] as string;
+                    employee.Login         = dataReader["Login"] as string;
+                    employee.Password      = dataReader["Password"] as string;
+
+                    employees.Add(employee);
+                }//while 
+
+                connection.Close();
+            }//using
+
+            return employees;       
+        }//FindEmployees
+
+        
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
         //Поиск по ContactInfo
         /// <summary>
         /// Возвращает объект типа ContactInfo заполненный по заданному Id.
@@ -3098,28 +3157,35 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    contactInfo.Country     = dataReader["Country"] as string;
-                    contactInfo.Region      = dataReader["Region"] as string;
-                    contactInfo.City        = dataReader["City"] as string;
-                    contactInfo.Street      = dataReader["Street"] as string;
-                    contactInfo.House       = dataReader["House"] as string;
-                    contactInfo.Room        = dataReader["Room"] as string;
-                    contactInfo.Phone       = dataReader["Phone"] as string;
-                    contactInfo.ExtPhone1   = dataReader["ExtPhone1"] as string;
-                    contactInfo.ExtPhone2   = dataReader["ExtPhone2"] as string;
-                    contactInfo.Email       = dataReader["Email"] as string;
-                    contactInfo.Website     = dataReader["Website"] as string;
+                    contactInfo.Country = dataReader["Country"] as string;
+                    contactInfo.Region = dataReader["Region"] as string;
+                    contactInfo.City = dataReader["City"] as string;
+                    contactInfo.Street = dataReader["Street"] as string;
+                    contactInfo.House = dataReader["House"] as string;
+                    contactInfo.Room = dataReader["Room"] as string;
+                    contactInfo.Phone = dataReader["Phone"] as string;
+                    contactInfo.ExtPhone1 = dataReader["ExtPhone1"] as string;
+                    contactInfo.ExtPhone2 = dataReader["ExtPhone2"] as string;
+                    contactInfo.Email = dataReader["Email"] as string;
+                    contactInfo.Website = dataReader["Website"] as string;
                 }//while 
 
                 connection.Close();
             }//using
 
-            return contactInfo;        
+            return contactInfo;
         }//FindContactInfoById
 
 
 
 
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
 

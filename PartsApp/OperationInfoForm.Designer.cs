@@ -53,6 +53,7 @@
             this.operationStatusStrip = new System.Windows.Forms.StatusStrip();
             this.operationToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.operationRowsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.operationPrintToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.operationDetailsDGV = new System.Windows.Forms.DataGridView();
             this.Manufacturer = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -65,9 +66,8 @@
             this.operationDetailsStatusStrip = new System.Windows.Forms.StatusStrip();
             this.operationDetailsToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.operationDetailsRowsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.operationPrintToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.operationDetailsPrintToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel2.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
@@ -187,8 +187,9 @@
             // 
             this.operationDateFilterTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.operationDateFilterTimePicker.Location = new System.Drawing.Point(224, 4);
+            this.operationDateFilterTimePicker.MinimumSize = new System.Drawing.Size(0, 21);
             this.operationDateFilterTimePicker.Name = "operationDateFilterTimePicker";
-            this.operationDateFilterTimePicker.Size = new System.Drawing.Size(80, 20);
+            this.operationDateFilterTimePicker.Size = new System.Drawing.Size(80, 21);
             this.operationDateFilterTimePicker.TabIndex = 2;
             this.toolTip.SetToolTip(this.operationDateFilterTimePicker, "Выберите дату операции");
             // 
@@ -361,6 +362,16 @@
             this.operationRowsCountLabel.Size = new System.Drawing.Size(13, 23);
             this.operationRowsCountLabel.Text = "0";
             // 
+            // operationPrintToolStripButton
+            // 
+            this.operationPrintToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.operationPrintToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.operationPrintToolStripButton.Margin = new System.Windows.Forms.Padding(450, 2, 0, 0);
+            this.operationPrintToolStripButton.Name = "operationPrintToolStripButton";
+            this.operationPrintToolStripButton.Size = new System.Drawing.Size(78, 26);
+            this.operationPrintToolStripButton.Text = "Распечатать";
+            this.operationPrintToolStripButton.ToolTipText = "Распечатать данные в Excel файл";
+            // 
             // splitContainer2
             // 
             this.splitContainer2.BackColor = System.Drawing.SystemColors.Control;
@@ -480,16 +491,6 @@
             this.operationDetailsRowsCountLabel.Name = "operationDetailsRowsCountLabel";
             this.operationDetailsRowsCountLabel.Size = new System.Drawing.Size(13, 23);
             this.operationDetailsRowsCountLabel.Text = "0";
-            // 
-            // operationPrintToolStripButton
-            // 
-            this.operationPrintToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.operationPrintToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.operationPrintToolStripButton.Margin = new System.Windows.Forms.Padding(450, 2, 0, 0);
-            this.operationPrintToolStripButton.Name = "operationPrintToolStripButton";
-            this.operationPrintToolStripButton.Size = new System.Drawing.Size(78, 26);
-            this.operationPrintToolStripButton.Text = "Распечатать";
-            this.operationPrintToolStripButton.ToolTipText = "Распечатать данные в Excel файл";
             // 
             // operationDetailsPrintToolStripButton
             // 
