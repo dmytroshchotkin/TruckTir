@@ -52,7 +52,7 @@ namespace PartsApp
                 unitComboBox.SelectedIndex = -1;
             else unitComboBox.SelectedItem = editSparePart.Unit;
             //Добавляем в выпадающий список всех Производителей.
-            manufacturerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllManufacturersName());
+/*!!!*/     manufacturerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllManufacturersName());
 
 
         }//Form1_Load   

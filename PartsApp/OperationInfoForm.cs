@@ -20,7 +20,7 @@ namespace PartsApp
         private void OperationInfoForm_Load(object sender, EventArgs e)
         {
             operationDateFilterTimePicker.Value = DateTime.Now;            
-            FillTheOperationDGV(PartsDAL.FindAllPurchases());
+            FillTheOperationDGV(PartsDAL.FindPurchases());
             FillTheOperationDetailsDGV(PartsDAL.FindAllSparePartsAvaliableToDisplay());
             SetFiltersPosition();
 

@@ -11,30 +11,6 @@ namespace PartsApp
     /// </summary>
     class MarkupTypes
     {
-        //public static double GetMarkupValue(string markupType)
-        //{
-        //    double? markup = null;
-        //    //узнаем процент заданной наценки.
-        //    foreach (var markType in markupTypes)
-        //        if (markType.Key == markupType) { markup = markType.Value; break; }
-        //    //если наценка задавалась вручную (нужна проверка корректности ввода)
-        //    if (markup == null)
-        //        markup = Convert.ToDouble(markupType);
-
-        //    return (double)markup;
-        //}//GetMarkupValue
-        //public static string GetMarkupType(double? markupValue)
-        //{
-        //    if (markupValue == null) return null;
-        //    string markupType = null;
-        //    //узнаем процент заданной наценки.
-        //    foreach (var markType in markupTypes)
-        //        if (markType.Value == markupValue) { markupType = markType.Key; break; }
-        //    //если наценка задавалась вручную (нужна проверка корректности ввода)
-        //    if (markupType == null)
-        //        markupType = "Другая наценка";
-        //    return markupType;
-        //}//GetMarkupValue
 
         /// <summary>
         /// Возвращает выбранное поль-лем значение наценки. При вводе не числового значения выбрасывает ошибку.

@@ -1267,7 +1267,7 @@ namespace PartsApp
                     
                     Purchase purchase = new Purchase();
                     purchase.Employee = Form1.CurEmployee;
-                    purchase.Contragent = PartsDAL.FindSupplierByName(supplierTextBox.Text);
+/*!!!*/             purchase.Contragent = PartsDAL.FindSuppliers().Where(s => s.ContragentName == supplierTextBox.Text).First();
                     purchase.ContragentEmployee = (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null;
                     purchase.OperationDate = purchaseDateTimePicker.Value;
                     purchase.Currency = currencyComboBox.SelectedItem.ToString();

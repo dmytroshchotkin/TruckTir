@@ -852,7 +852,7 @@ namespace PartsApp
                 }//if
                 extDataGridView.Rows[i].Cells["extSellingPrice"].Value = sparePartsAvaliability[i].SellingPrice;
                 extDataGridView.Rows[i].Cells["extPurchaseId"].Value = sparePartsAvaliability[i].PurchaseId;
-                extDataGridView.Rows[i].Cells["extPurchaseDate"].Value = PartsDAL.FindPurchaseById(sparePartsAvaliability[i].PurchaseId).OperationDate.ToShortDateString();
+                extDataGridView.Rows[i].Cells["extPurchaseDate"].Value = PartsDAL.FindPurchases(sparePartsAvaliability[i].PurchaseId).OperationDate.ToShortDateString();
             }//for            
             
             //Если отпускная цена у всех приходов одинаковая, выводим её в saleDGV.
@@ -1386,7 +1386,7 @@ namespace PartsApp
                     
                     Sale sale = new Sale();
                     sale.Employee = Form1.CurEmployee;
-                    sale.Contragent = PartsDAL.FindCustomerById(PartsDAL.FindCustomerIdByName(customerTextBox.Text));
+/*!!!*/             sale.Contragent = PartsDAL.FindCustomers().Where(c => c.ContragentName == customerTextBox.Text).First();
                     sale.ContragentEmployee = (String.IsNullOrWhiteSpace(customerAgentTextBox.Text) == false) ? customerAgentTextBox.Text.Trim() : null;
                     sale.OperationDate = saleDateTimePicker.Value;
                     sale.Currency = currencyComboBox.SelectedItem.ToString();

@@ -495,13 +495,13 @@ namespace PartsApp
             //Форматируем вывод.
             //Находим максимальную ширину каждого параметра.
             int articulMaxLenght = spList.Select(sp => sp.Articul).Max(art => art.Length);
-            int titlelMaxLenght = spList.Select(sp => sp.Title).Max(title => title.Length);
+            int titlelMaxLenght  = spList.Select(sp => sp.Title).Max(title => title.Length);
             int manufMaxLenght = 0;
             var sparePartsManufacturers = spList.Select(sp => sp.Manufacturer).Where(manuf => manuf != null);
             if (sparePartsManufacturers.Count() > 0)
                 manufMaxLenght = sparePartsManufacturers.Max(man => man.Length);
             //Задаём нужный формат для выводимых строк.
-            string artCol = String.Format("{{0, {0}}}", -articulMaxLenght);
+            string artCol   = String.Format("{{0, {0}}}", -articulMaxLenght);
             string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
             string manufCol = String.Format("{{2, {0}}}", -manufMaxLenght);
 
