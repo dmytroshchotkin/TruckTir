@@ -20,7 +20,9 @@ namespace PartsApp
         #region ************Модификация данных в БД.****************************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /*Модификация таблицы Avaliability.*/
+        #region Модификация таблицы Avaliability.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// Добавляет запись в таблицу Avaliability.
         /// </summary>
@@ -51,28 +53,7 @@ namespace PartsApp
             }
 
             cmd.ExecuteNonQuery();    
-        }//AddSparePartAvaliability 
-        public static void AddSparePartAvaliability(SparePart sparePart, SQLiteConnection openConnection)
-        {
-            var cmd = new SQLiteCommand("INSERT INTO Avaliability VALUES (@SparePartId, @PurchaseId, @Price, @Markup, @Storage, @Count);", openConnection);
-
-            cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
-            cmd.Parameters.AddWithValue("@PurchaseId", sparePart.PurchaseId);
-            cmd.Parameters.AddWithValue("@Price", sparePart.Price);
-            cmd.Parameters.AddWithValue("@Markup", sparePart.Markup);
-            if (sparePart.Count == 0)
-            {
-                cmd.Parameters.AddWithValue("@Storage", SparePart.VirtStorage);
-                cmd.Parameters.AddWithValue("@Count", sparePart.VirtCount);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Storage", SparePart.MainStorage);
-                cmd.Parameters.AddWithValue("@Count", sparePart.Count);
-            }
-
-            cmd.ExecuteNonQuery();
-        }//AddSparePartAvaliability
+        }//AddSparePartAvaliability         
         /// <summary>
         /// Обновляет количество в заданной записи таблицы Avaliability.
         /// </summary>
@@ -98,30 +79,6 @@ namespace PartsApp
         /// <param name="sparePartId">Id запчасти с изменяемой наценкой</param>
         /// <param name="purchaseId">Id прихода с изменяемой наценкой</param>
         /// <param name="markup">Значение наценки на которое стоит поменять текущее значение.</param>
-        public static void UpdateSparePartMarkup(int sparePartId, int purchaseId, double markup)
-        {
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                var cmd = new SQLiteCommand("UPDATE Avaliability SET Markup = @Markup WHERE SparePartId = @SparePartId AND PurchaseId = @PurchaseId;", connection);
-
-                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-                cmd.Parameters.AddWithValue("@Markup", markup);
-                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
-
-                cmd.ExecuteNonQuery();
-
-                connection.Close();
-            }//using 
-        }//UpdateSparePartMarkup
-        /// <summary>
-        /// Метод обновления значения Markup у записей с заданным SparePartId и PurchaseId.
-        /// </summary>
-        /// <param name="sparePartId">Id запчасти с изменяемой наценкой</param>
-        /// <param name="purchaseId">Id прихода с изменяемой наценкой</param>
-        /// <param name="markup">Значение наценки на которое стоит поменять текущее значение.</param>
         /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
         public static void UpdateSparePartMarkup(int sparePartId, int purchaseId, double markup, SQLiteCommand cmd)
         {
@@ -136,28 +93,6 @@ namespace PartsApp
 
             cmd.ExecuteNonQuery();                                                              
         }//UpdateSparePartMarkup
-        /// <summary>
-        /// Изменяет наценку у записей с заданными SparePartId и PurchaseId на заданную Markup
-        /// </summary>
-        /// <param name="sparePartsId">Список Id запчастей изменяемых записей.</param>
-        /// <param name="purchasesId">Список Id приходов изменяемых записей</param>
-        /// <param name="markups">Значения наценки на которое стоит поменять текущие значения.</param>
-        //public static void UpdateSparePartMarkup(IList<int> sparePartsId, IList<int> purchasesId, IList<double> markups)
-        //{
-        //    //Проверяем равенство размеров всех переданных коллекций.
-        //    if (sparePartsId.Count != purchasesId.Count || purchasesId.Count != markups.Count)
-        //        throw new InvalidEnumArgumentException("Кол-во записей в передаваемых коллекциях не совпадает");
-
-        //    using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-        //    {
-        //        connection.Open();
-
-        //        for (int i = 0; i < sparePartsId.Count; ++i)
-        //            UpdateSparePartMarkup(sparePartsId[i], purchasesId[i], markups[i], connection);
-                
-        //        connection.Close();
-        //    }//using 
-        //}//UpdateSparePartMarkup
         /// <summary>
         /// Изменяет наценку у записей с заданными SparePartId и PurchaseId на заданную Markup
         /// </summary>
@@ -238,7 +173,33 @@ namespace PartsApp
 
         }//SaleSparePartAvaliability
 
-        //Модификация таблицы SpareParts.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region Модификация таблицы SpareParts.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         public static void AddSparePart(SparePart sparePart)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
@@ -296,7 +257,38 @@ namespace PartsApp
         
         }//UpdateSparePart
 
-        //Модификация таблицы Suppliers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region Модификация таблицы Suppliers.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         public static void AddSupplier(Supplier supplier)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
@@ -319,7 +311,44 @@ namespace PartsApp
 
         }//AddSupplier
 
-        //Модификация таблицы Customers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region Модификация таблицы Customers.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         public static void AddCustomer(Customer customer)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
@@ -342,90 +371,40 @@ namespace PartsApp
             }//using
 
         }//AddCustomer
-        //Модификация таблицы SpSuppliers.
-        public static void AddSparePartsSuppliers(int sparePartId, int supplierId)
-        {
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
 
-                var cmd = new SQLiteCommand("INSERT INTO SpSuppliers VALUES (@SparePartId, @SupplierId)", connection);
 
-                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-                cmd.Parameters.AddWithValue("@SupplierId", supplierId);
 
-                cmd.ExecuteNonQuery();
 
-                connection.Close();
-            }//using
-        }//AddSparePartsSuppliers
-        public static void AddSparePartsSuppliers(int sparePartId, int supplierId, SQLiteConnection openConnection)
-        {
-            var cmd = new SQLiteCommand("INSERT INTO SpSuppliers VALUES (@SparePartId, @SupplierId)", openConnection);
 
-            cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-            cmd.Parameters.AddWithValue("@SupplierId", supplierId);
 
-            cmd.ExecuteNonQuery();
-        }//AddSparePartsSuppliers
 
-        //Модификация таблицы Categories.
-        public static void AddCategory(string categoryName, string description)
-        {
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
 
-                //Вставляем запись в табл. "Category"
-                var cmd = new SQLiteCommand("INSERT INTO Categories(CategoryName, Description) VALUES(@CategoryName, @Description);", connection);
 
-                cmd.Parameters.AddWithValue("@CategoryName", categoryName);
-                cmd.Parameters.AddWithValue("@Description", description);
 
-                cmd.ExecuteNonQuery();
 
-                connection.Close();
-            }//using
-        }//AddCategory
-        public static void AddCategory(string categoryName, string description, SQLiteConnection openConnection)
-        {
-            //Вставляем запись в табл. "Categories"
-            var cmd = new SQLiteCommand("INSERT INTO Categories(CategoryName, Description) VALUES(@CategoryName, @Description);", openConnection);
 
-            cmd.Parameters.AddWithValue("@CategoryName", categoryName);
-            cmd.Parameters.AddWithValue("@Description", description);
 
-            cmd.ExecuteNonQuery();
-        }//AddCategory
 
-        //Модификация таблицы SpCategories.
-        public static void AddSparePartsCategories(int sparePartId, int categoryId)
-        {
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
 
-                var cmd = new SQLiteCommand("INSERT INTO SpCategories VALUES (@SparePartId, @CategoryId)", connection);
 
-                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
 
-                cmd.ExecuteNonQuery();
 
-                connection.Close();
-            }//using      
-        }//AddSparePartsCategories
-        public static void AddSparePartsCategories(int sparePartId, int categoryId, SQLiteConnection openConnection)
-        {
-            var cmd = new SQLiteCommand("INSERT INTO SpCategories VALUES (@SparePartId, @CategoryId)", openConnection);
 
-            cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-            cmd.Parameters.AddWithValue("@CategoryId", categoryId);
 
-            cmd.ExecuteNonQuery();
-        }//AddSparePartsCategories
 
-        //Модификация таблицы Manufacturers
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion        
+
+
+        #region Модификация таблицы Manufacturers
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// Добавляет нового производителя в БД и возвращает его Id.
         /// </summary>
@@ -456,7 +435,33 @@ namespace PartsApp
         }//AddManufacturer
 
 
-        //Модификация таблицы ContactInfo.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region Модификация таблицы ContactInfo.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// Метод добавляет новую запись в таблицу ContactInfo и возвращает Id вставленной записи.
         /// </summary>
@@ -493,36 +498,33 @@ namespace PartsApp
             }//using
             return id;
         }//AddContactInfo
-        /// <summary>
-        /// Метод добавляет новую запись в таблицу ContactInfo и возвращает Id вставленной записи.
-        /// </summary>
-        /// <param name="contactInfo">объект типа ContactInfo данные которого будут добавлены в базу</param>
-        /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
-        /// <returns></returns>
-        public static int AddContactInfo(ContactInfo contactInfo, SQLiteConnection openConnection)
-        {
-            string query = String.Format("INSERT INTO ContactInfo (Country, Region, City, Street, House, Room, Phone, ExtPhone1, ExtPhone2, Website, Email)"
-                                       + "VALUES (@Country, @Region, @City, @Street, @House, @Room, @Phone, @ExtPhone1, @ExtPhone2, @Website, @Email);"
-                                       + "SELECT ContactInfoId FROM ContactInfo WHERE rowid = last_insert_rowid();");
 
-            var cmd = new SQLiteCommand(query, openConnection);
 
-            cmd.Parameters.AddWithValue("@Country", contactInfo.Country);
-            cmd.Parameters.AddWithValue("@Region", contactInfo.Region);
-            cmd.Parameters.AddWithValue("@City", contactInfo.City);
-            cmd.Parameters.AddWithValue("@Street", contactInfo.Street);
-            cmd.Parameters.AddWithValue("@House", contactInfo.House);
-            cmd.Parameters.AddWithValue("@Room", contactInfo.Room);
-            cmd.Parameters.AddWithValue("@Phone", contactInfo.Phone);
-            cmd.Parameters.AddWithValue("@ExtPhone1", contactInfo.ExtPhone1);
-            cmd.Parameters.AddWithValue("@ExtPhone2", contactInfo.ExtPhone2);
-            cmd.Parameters.AddWithValue("@Website", contactInfo.Website);
-            cmd.Parameters.AddWithValue("@Email", contactInfo.Email);    
-              
-            return Convert.ToInt32(cmd.ExecuteScalar());
-        }//AddContactInfo
 
-        //Модификация таблиц Purchase и Avaliability.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region Модификация таблицы Purchase.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// Осуществляет полный цикл приходования товара, вставляя записи в таблицы Purchases, Avaliability и PurchaseDetails.
         /// Возвращает Id вставленной записи в табл. Purchase.
@@ -570,7 +572,6 @@ namespace PartsApp
             return purchaseId;    
         }//AddPurchase
 
-        //Модификация таблицы Purchases
         /// <summary>
         /// Возвращает Id вставленной записи в таблицу Purchases.
         /// </summary>
@@ -610,8 +611,9 @@ namespace PartsApp
             return purchaseId;
         }//AddPurchase
 
+        #region Модификация таблицы PurchaseDetails
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        //Модификация таблицы PurchaseDetails
         /// <summary>
         /// Добавляет запись в таблицу PurchaseDetails.
         /// </summary>
@@ -630,10 +632,51 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@Price", purchaseDetail.Price);
             cmd.Parameters.AddWithValue("@Quantity", purchaseDetail.Count);
 
-            cmd.ExecuteNonQuery();                
+            cmd.ExecuteNonQuery();
         }//AddPurchaseDetail
 
-        //Модификация таблицы Sales и Avaliability.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+        
+        #region Модификация таблицы Sales.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*!!! Возможно можно убрать параметр IList<SparePart> передавая его св-вом объекта класса Purchase, PurchaseDetails. Надобность класса PurchaseDetail вообще под вопросом, ведь его можно спокойно заменить объектом уже созданного класса SparePart либо же класс SparePart нужно модифицировать в сторону разбиения на большее кол-во классов!*/
         /// <summary>
         /// Осуществляет полный цикл продажи товара, вставляя записи в таблицы Sales, Avaliability и SaleDetails.
@@ -721,7 +764,9 @@ namespace PartsApp
             return saleId;
         }//AddSale
 
-        //Модификация таблицы SaleDetails
+        #region Модификация таблицы SaleDetails.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// Добавляет запись в таблицу SaleDetails.
         /// </summary>
@@ -748,7 +793,49 @@ namespace PartsApp
             cmd.ExecuteNonQuery();
         }//AddSaleDetail
 
-        //Модификация таблицы Employees.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region Модификация таблицы Employees.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Добавляет объект типа Employee в таблицу Employees.
+        /// </summary>
+        /// <param name="employee">объект типа Employee добавляемый в БД.</param>
         public static void AddEmployee(Employee employee)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
@@ -756,24 +843,24 @@ namespace PartsApp
                 connection.Open();
 
                 const string query = "INSERT INTO Employees (LastName, FirstName, MiddleName, BirthDate, HireDate, "
-                                   +         "ContactInfoId, Photo, Note, PassportNum, Title, AccessLayer, Login, Password) "
+                                   + "ContactInfoId, Photo, Note, PassportNum, Title, AccessLayer, Login, Password) "
                                    + "VALUES (@LastName, @FirstName, @MiddleName, @BirthDate, @HireDate, @ContactInfoId, "
-                                   +         "@Photo, @Note, @PassportNum, @Title, @AccessLayer, @Login, @Password);";
+                                   + "@Photo, @Note, @PassportNum, @Title, @AccessLayer, @Login, @Password);";
 
-                var cmd = new SQLiteCommand(query, connection);                
+                var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@LastName",        employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName",       employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName",      employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate",      (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);                
-                cmd.Parameters.AddWithValue("@ContactInfoId",   employee.ContactInfoId);
-                cmd.Parameters.AddWithValue("@Photo",           employee.Photo);
-                cmd.Parameters.AddWithValue("@Note",            employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum",     employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title",           employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer",     employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Login",           employee.Login);
-                cmd.Parameters.AddWithValue("@Password",        employee.Password);
+                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
+                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
+                cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
+                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
+                cmd.Parameters.AddWithValue("@Note", employee.Note);
+                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
+                cmd.Parameters.AddWithValue("@Title", employee.Title);
+                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Login", employee.Login);
+                cmd.Parameters.AddWithValue("@Password", employee.Password);
 
                 if (employee.HireDate != null)
                 {
@@ -783,7 +870,7 @@ namespace PartsApp
                 else cmd.Parameters.AddWithValue("@HireDate", null);
 
                 cmd.ExecuteNonQuery();
-                
+
                 connection.Close();
             }//using 
 
@@ -799,7 +886,7 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                
+
                 const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
                                    + "BirthDate = @BirthDate, ContactInfoId = @ContactInfoId, Photo = @Photo, Note = @Note, "
                                    + "PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, Login = @Login, "
@@ -809,19 +896,19 @@ namespace PartsApp
 
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@EmployeeId",    employee.EmployeeId);
-                cmd.Parameters.AddWithValue("@LastName",      employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName",     employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName",    employee.MiddleName);
+                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
+                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
+                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
                 cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
                 cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
-                cmd.Parameters.AddWithValue("@Photo",         employee.Photo);
-                cmd.Parameters.AddWithValue("@Note",          employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum",   employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title",         employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer",   employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Login",         employee.Login);
-                cmd.Parameters.AddWithValue("@Password",      employee.Password);
+                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
+                cmd.Parameters.AddWithValue("@Note", employee.Note);
+                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
+                cmd.Parameters.AddWithValue("@Title", employee.Title);
+                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Login", employee.Login);
+                cmd.Parameters.AddWithValue("@Password", employee.Password);
 
                 if (employee.HireDate != null)
                 {
@@ -853,18 +940,18 @@ namespace PartsApp
 
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@EmployeeId",    employee.EmployeeId);
-                cmd.Parameters.AddWithValue("@LastName",      employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName",     employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName",    employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate",  (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
+                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
+                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
+                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
                 cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
-                cmd.Parameters.AddWithValue("@Photo",         employee.Photo);
-                cmd.Parameters.AddWithValue("@Note",          employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum",   employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title",         employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer",   employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Login",         employee.Login);
+                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
+                cmd.Parameters.AddWithValue("@Note", employee.Note);
+                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
+                cmd.Parameters.AddWithValue("@Title", employee.Title);
+                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Login", employee.Login);
 
                 if (employee.HireDate != null)
                 {
@@ -878,6 +965,41 @@ namespace PartsApp
                 connection.Close();
             }//using
         }//UpdateEmployeeWithoutPassword
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+        
+
+
+
+
+
+
+
+
+
+
 
 
 
