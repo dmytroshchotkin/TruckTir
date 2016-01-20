@@ -132,7 +132,6 @@ namespace PartsApp
                 if (entityBackPanel.BackColor != Color.Red && contragentNameBackPanel.BackColor != Color.Red
                     && codeBackPanel.BackColor != Color.Red)
                 {
-                    //IContragent contragent = (_contragent is Supplier) ? (IContragent)new Supplier() : new Customer();
                     _contragent.Entity = entityComboBox.Text;
                     _contragent.ContragentName = contragentNameTextBox.Text.Trim();
                     _contragent.Code = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
