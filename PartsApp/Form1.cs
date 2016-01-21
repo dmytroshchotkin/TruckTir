@@ -20,7 +20,7 @@ namespace PartsApp
         /// <summary>
         /// Переменная для запоминания введенного поль-лем текста в searchTextBox.
         /// </summary>
-        string customerText;
+        string userText;
         /// <summary>
         /// Авторизованный пользователь.
         /// </summary>
@@ -338,7 +338,7 @@ namespace PartsApp
             else autoCompleteListBox.Visible = false; //Если ничего не найдено, убрать вып. список.
 
             //Запоминаем введенный текст.
-            customerText = searchTextBox.Text;
+            userText = searchTextBox.Text;
         }//searchTextBox_TextChanged
         
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -352,7 +352,7 @@ namespace PartsApp
                 //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
                 if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
                 {
-                    searchTextBox.Text = customerText;
+                    searchTextBox.Text = userText;
                     autoCompleteListBox.ClearSelected();
                     searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
                     return;
@@ -381,7 +381,7 @@ namespace PartsApp
                 if (autoCompleteListBox.SelectedIndex == 0)
                 {
                     //searchTextBox.Text = customerText;
-                    searchTextBox.Text = customerText;
+                    searchTextBox.Text = userText;
                     autoCompleteListBox.ClearSelected();
                     searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
                     e.Handled = true;
@@ -444,7 +444,7 @@ namespace PartsApp
                     }//if 
                 }//foreach
 
-                customerText = null;
+                userText = null;
                 autoCompleteListBox.Visible = false;
                 return;
             }//if
@@ -461,8 +461,8 @@ namespace PartsApp
         {
             if (e.Clicks == 1)
             {
-                if (String.IsNullOrEmpty(customerText))
-                    customerText = searchTextBox.Text;
+                if (String.IsNullOrEmpty(userText))
+                    userText = searchTextBox.Text;
 
                 ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
                 searchTextBox.Focus();

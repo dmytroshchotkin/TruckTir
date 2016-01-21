@@ -23,7 +23,7 @@ namespace PartsApp
         TextBox textBoxCell;
         bool textChangedEvent = false;
         bool previewKeyDownEvent = false;
-        string customerText;
+        string userText;
 
         double inTotal;
         IList<int> sparePartsId = new List<int>();   //коллекция для хранения Id того товара, что уже есть в таблице.
@@ -185,13 +185,13 @@ namespace PartsApp
                 //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
                 if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
                 {
-                    textBox.Text = customerText;
+                    textBox.Text = userText;
                     autoCompleteListBox.ClearSelected();
                     return;
                 }
                 //Если выбирается первый эл-нт выпадающего списка, запоминаем введенную ранее пользователем строку.
                 if (autoCompleteListBox.SelectedIndex == -1)
-                    customerText = textBox.Text;
+                    userText = textBox.Text;
 
                 autoCompleteListBox.SelectedIndex += 1;
                 return;
@@ -206,13 +206,13 @@ namespace PartsApp
                 //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
                 if (autoCompleteListBox.SelectedIndex == -1)
                 {
-                    customerText = textBox.Text;
+                    userText = textBox.Text;
                     autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
                 }
                 //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
                 else if (autoCompleteListBox.SelectedIndex == 0)
                 {
-                    textBox.Text = customerText;
+                    textBox.Text = userText;
                     autoCompleteListBox.ClearSelected();
                 }//if
                 else autoCompleteListBox.SelectedIndex -= 1;
@@ -284,8 +284,8 @@ namespace PartsApp
         {
             if (e.Clicks == 1)
             {
-                if (String.IsNullOrEmpty(customerText))
-                    customerText = textBoxCell.Text;
+                if (String.IsNullOrEmpty(userText))
+                    userText = textBoxCell.Text;
                 purchaseDataGridView_SelectionChanged(null, null);
                 isCellEditError = true; 
             }
@@ -366,7 +366,7 @@ namespace PartsApp
                             cell.OwningRow.Cells["Price"].ReadOnly = cell.OwningRow.Cells["Count"].ReadOnly   = false;
                             cell.OwningRow.Cells["Title"].ReadOnly = cell.OwningRow.Cells["Articul"].ReadOnly = true;
 
-                            customerText = null;
+                            userText = null;
                             #region Увеличение PurchaseGroupBox.
                             //if (purchaseDataGridView.PreferredSize.Height > purchaseDataGridView.Size.Height)
                             //{
@@ -403,7 +403,7 @@ namespace PartsApp
                                     cell.OwningRow.Cells["Price"].ReadOnly = cell.OwningRow.Cells["Count"].ReadOnly = false;
                                     cell.OwningRow.Cells["Title"].ReadOnly = cell.OwningRow.Cells["Articul"].ReadOnly = true;
 
-                                    customerText = null;
+                                    userText = null;
                                 }//if
                                 else
                                 { 

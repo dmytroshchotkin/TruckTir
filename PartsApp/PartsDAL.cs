@@ -1807,6 +1807,43 @@ namespace PartsApp
         }//FindSupplierByPurchaseId
 
         /// <summary>
+        /// Возвращает объект Supplier найденный по заданному SupplierName, или null если такого объекта не найдено.
+        /// </summary>
+        /// <param name="SupplierName">имя Supplier-а, которого надо найти.</param>
+        /// <returns></returns>
+        public static IContragent FindSuppliers(string supplierName)
+        {
+            Supplier supplier = null;
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT * FROM Suppliers WHERE SupplierName LIKE @SupplierName;";
+                var cmd = new SQLiteCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("@SupplierName", supplierName);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    supplier = new Supplier();
+                    supplier.ContragentId = Convert.ToInt32(dataReader["SupplierId"]);
+                    supplier.ContragentName = dataReader["SupplierName"] as string;
+                    supplier.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
+                    supplier.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
+                    supplier.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
+                    supplier.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
+                }//while
+
+                connection.Close();
+            }//using
+
+            return supplier;
+
+        }//FindSuppliers
+
+        /// <summary>
         /// Возвращает true если такой code уже есть в таблице Suppliers, иначе false.
         /// </summary>
         /// <param name="code">code наличие которого нужно проверить.</param>
@@ -1898,6 +1935,42 @@ namespace PartsApp
 
             return customers;        
         }//FindCustomers
+        /// <summary>
+        /// Возвращает объект Customer найденный по заданному customerName, или null если такого объекта не найдено.
+        /// </summary>
+        /// <param name="customerName">имя Customer-а, которого надо найти.</param>
+        /// <returns></returns>
+        public static Customer FindCustomers(string customerName)
+        {
+            Customer customer = null;
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT * FROM Customers WHERE CustomerName LIKE @CustomerName;";
+                var cmd = new SQLiteCommand(query, connection);
+
+                cmd.Parameters.AddWithValue("@CustomerName", customerName);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    customer = new Customer();
+                    customer.ContragentId   = Convert.ToInt32(dataReader["CustomerId"]);
+                    customer.ContragentName = dataReader["CustomerName"] as string;
+                    customer.Code        = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
+                    customer.Entity      = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
+                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
+                    customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
+                }//while
+
+                connection.Close();
+            }//using
+
+            return customer; 
+
+        }//FindCustomers
 
         /// <summary>
         /// Возвращает массив строк состоящий из всех имен клиентов. 
@@ -1932,7 +2005,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="customerId">Id клиента, которого надо найти.</param>
         /// <returns></returns>
-        public static Customer FindCustomers(int customerId)
+        public static IContragent FindCustomers(int customerId)
         {
             Customer customer = new Customer();
 
@@ -1958,8 +2031,8 @@ namespace PartsApp
 
                 connection.Close();
             }//using
-            return customer;
-        
+
+            return customer;        
         }//FindCustomerByName
 
 

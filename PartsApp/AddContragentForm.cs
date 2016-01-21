@@ -48,16 +48,28 @@ namespace PartsApp
                 contragentNameStarLabel.ForeColor = contragentNameBackPanel.BackColor = Color.Red;
 
                 toolTip.SetToolTip(contragentNameTextBox, "Введите название компании или ФИО поставщика");
-                toolTip.Show("Введите название компании или ФИО поставщика", this, contragentNameBackPanel.Location, 5000);
+                toolTip.Show("Введите название компании или ФИО поставщика", this, contragentNameBackPanel.Location, 3000);
             }
-            else //если название введено правильно
+            else //если название введено корректно
             {
-                contragentNameStarLabel.ForeColor = Color.Black;
-                contragentNameBackPanel.BackColor = SystemColors.Control;
-                toolTip.SetToolTip(contragentNameTextBox, String.Empty);
-            }//else
+                IContragent contragent = (_contragent is Customer) ? PartsDAL.FindCustomers(contragentNameTextBox.Text.Trim()) 
+                                                                   : PartsDAL.FindSuppliers(contragentNameTextBox.Text.Trim());  
+                //проверяем есть ли уже такое ContragentName в базе.
+                if (contragent != null)
+                {
+                    contragentNameStarLabel.ForeColor = contragentNameBackPanel.BackColor = Color.Red;
 
-        }
+                    toolTip.SetToolTip(contragentNameTextBox, "Введите другое название компании или ФИО поставщика");
+                    toolTip.Show("Такое имя(название) уже есть в базе.", this, contragentNameBackPanel.Location, 3000);
+                }
+                else
+                {
+                    contragentNameStarLabel.ForeColor = Color.Black;
+                    contragentNameBackPanel.BackColor = SystemColors.Control;
+                    toolTip.SetToolTip(contragentNameTextBox, String.Empty);
+                }//else
+            }//else
+        }//contragentNameTextBox_Leave
 
         //Событие для установления каретки в начало codeMaskedTextBox.
         private void codeMaskedTextBox_MouseClick(object sender, MouseEventArgs e)

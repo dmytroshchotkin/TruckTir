@@ -86,6 +86,7 @@
             this.markupLabel = new System.Windows.Forms.Label();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.autoCompleteCustomerListBox = new System.Windows.Forms.ListBox();
             this.extGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.extDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).BeginInit();
@@ -642,12 +643,22 @@
             this.descriptionRichTextBox.TabIndex = 93;
             this.descriptionRichTextBox.Text = "";
             // 
+            // autoCompleteCustomerListBox
+            // 
+            this.autoCompleteCustomerListBox.FormattingEnabled = true;
+            this.autoCompleteCustomerListBox.Location = new System.Drawing.Point(96, 116);
+            this.autoCompleteCustomerListBox.Name = "autoCompleteCustomerListBox";
+            this.autoCompleteCustomerListBox.Size = new System.Drawing.Size(198, 17);
+            this.autoCompleteCustomerListBox.TabIndex = 95;
+            this.autoCompleteCustomerListBox.Visible = false;
+            // 
             // SaleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(869, 749);
             this.ControlBox = false;
+            this.Controls.Add(this.autoCompleteCustomerListBox);
             this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.descriptionRichTextBox);
@@ -757,5 +768,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn extSellingPrice;
         private System.Windows.Forms.Label descriptionLabel;
         private System.Windows.Forms.RichTextBox descriptionRichTextBox;
+        private System.Windows.Forms.ListBox autoCompleteCustomerListBox;
     }
 }
