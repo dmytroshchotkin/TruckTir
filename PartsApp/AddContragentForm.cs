@@ -198,7 +198,7 @@ namespace PartsApp
 
                         //Присваиваем значение свойству propertyName из соответствующего textBox.
                         Type type = typeof(ContactInfo);
-                        var property = type.GetProperty(propertyName);
+                        System.Reflection.PropertyInfo property = type.GetProperty(propertyName);
                         property.SetValue(contactInfo, textBox.Text.Trim());
                     }//if
                 }//foreach    

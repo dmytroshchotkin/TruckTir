@@ -946,7 +946,7 @@ namespace PartsApp
             //Делаем визуальное отделение информации от заметки, с помощью линии.
             row += 2;
 
-            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                                                         ";//longEmptyString.ToString();
+            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                           ";//longEmptyString.ToString();
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
             //Выводим заметку
             row++;

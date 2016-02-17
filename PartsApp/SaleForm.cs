@@ -1083,8 +1083,7 @@ namespace PartsApp
             ExcelWorkSheet.PageSetup.LeftMargin = 10;
             ExcelWorkSheet.PageSetup.RightMargin = 10;
 
-            int row = 1, column = 1;
-
+            int row = 1, column = 1;            
             //Выводим Id и Дату. 
             ExcelApp.Cells[row, column] = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
@@ -1172,8 +1171,8 @@ namespace PartsApp
 
             //Делаем визуальное отделение информации от заметки, с помощью линии.
             row += 2;
-
-            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                                                         ";//longEmptyString.ToString();
+            //ширина подобрана методом тыка.
+            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                              ";//longEmptyString.ToString();
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
             //Выводим заметку
             row++;

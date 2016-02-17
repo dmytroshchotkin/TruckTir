@@ -3946,7 +3946,11 @@ namespace PartsApp
 
             return sparePart;
         }//CreateFullSparePart
-        //Коннект к базе данных.
+        /// <summary>
+        /// Коннект к базе данных.
+        /// </summary>
+        /// <param name="name">Имя подключения</param>
+        /// <returns></returns>
         static private System.Data.Common.DbConnection GetDatabaseConnection(string name)
         {
             var settings = System.Configuration.ConfigurationManager.ConnectionStrings[name];
