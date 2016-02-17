@@ -122,7 +122,8 @@ namespace PartsApp
             ExcelWorkSheet.PageSetup.LeftMargin = 10;
             ExcelWorkSheet.PageSetup.RightMargin = 10;
 
-            //Выводим таблицу товаров.
+            #region Вывод таблицы товаров.
+
             //Выводим заголовок.
             int row = 1, column = 1;
             ExcelApp.Cells[row, column] = "Произв.";
@@ -181,6 +182,8 @@ namespace PartsApp
             //Обводим талицу рамкой. 
             excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "F" + row.ToString());
             excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+
+            #endregion
 
             //Визуальное отображение работы.
             //progressBar.Value = progressBar.Maximum;
