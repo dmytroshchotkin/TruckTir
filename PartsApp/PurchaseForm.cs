@@ -869,21 +869,13 @@ namespace PartsApp
             excelCells.Font.Size = 18;
             excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
             excelCells.Value = String.Format("Приходная накладная №{0} от {1}г.", purchase.OperationId, purchase.OperationDate.ToString("dd/MM/yyyy"));
-            //ExcelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", purchase.OperationId, purchase.OperationDate.ToString("dd/MM/yyyy"));
-            //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
-            //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
-            //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
 
-            //Выводим поставщика.
+            //Выводим поставщика и покупателя.
             row += 2;
-            ExcelApp.Cells[row, column] = String.Format("Поставщик:   \t{0}", supplierTextBox.Text);//PartsDAL.FindSupplierNameById(purchase.SupplierId));
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-            //Выводим покупателя.
-            row += 2;
-            ExcelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", buyerTextBox.Text);
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
+            ExcelApp.Cells[row, column].Font.Name = "Consolas";
+            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-50}{1}", 
+                                                         supplierLabel.Text + " " + supplierTextBox.Text,
+                                                         buyerLabel.Text + " " + buyerTextBox.Text);
             //Выводим таблицу товаров.
             //Выводим заголовок.
             row += 2;
@@ -939,20 +931,18 @@ namespace PartsApp
             if (inTotalNumberLabel.Text.Length <= 9)
                 indent = 1;
 
-            ExcelApp.Cells[row, column + 3 + indent] = inTotalLabel.Text;
-            ExcelApp.Cells[row, column + 4 + indent] = inTotalNumberLabel.Text;
+            ExcelApp.Cells[row,  column + 3 + indent] = inTotalLabel.Text;
+            ExcelApp.Cells[row,  column + 4 + indent] = inTotalNumberLabel.Text;
             (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Underline = true;
             (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
             (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
 
             //Выводим имена агентов.
             row += 2;
-            ExcelApp.Cells[row, column] = String.Format("\t\t{0} {1}\t\t\t\t\t\t\t\t{2} {3}", 
-                                                                                supplierAgentLabel.Text, supplierAgentTextBox.Text,
-                                                                                buyerAgentLabel.Text, buyerAgentTextBox.Text);
-
-            //ExcelApp.Cells[row, column + 2] = String.Format("{0} {1}", buyerAgentLabel.Text, buyerAgentTextBox.Text);
-
+            ExcelApp.Cells[row, column].Font.Name = "Consolas"; //моноширинный шрифт
+            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-50}{1}", 
+                                                         supplierAgentLabel.Text + " " + supplierAgentTextBox.Text,
+                                                         buyerAgentLabel.Text + " " + buyerAgentTextBox.Text);
             //Делаем визуальное отделение информации от заметки, с помощью линии.
             row += 2;
 

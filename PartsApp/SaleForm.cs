@@ -1100,16 +1100,12 @@ namespace PartsApp
             //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
             //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
 
-            //Выводим поставщика.
+            //Выводим поставщика и покупателя.
             row += 2;
-            ExcelApp.Cells[row, column] = String.Format("Продавец:    \t{0}", sellerTextBox.Text);//PartsDAL.FindSellerNameById(sale.SellerId));
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-            //Выводим покупателя.
-            row += 2;
-            ExcelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", customerTextBox.Text);
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
+            ExcelApp.Cells[row, column].Font.Name = "Consolas";
+            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-40}{1}",
+                                                         sellerLabel.Text + " " + sellerTextBox.Text,
+                                                         customerLabel.Text + " " + customerTextBox.Text);
             //Выводим таблицу товаров.
             //Выводим заголовок.
             row += 2;
@@ -1173,9 +1169,13 @@ namespace PartsApp
 
             //Выводим имена агентов.
             row += 2;
-            ExcelApp.Cells[row, column] = String.Format("\t\t{0} {1}\t\t\t\t\t\t\t\t{2} {3}",
-                                                                                sellerAgentLabel.Text, sellerAgentTextBox.Text,
-                                                                                customerAgentLabel.Text, customerAgentTextBox.Text);
+            ExcelApp.Cells[row, column].Font.Name = "Consolas";
+            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-40}{1}",
+                                                         sellerAgentLabel.Text + " " + sellerAgentTextBox.Text,
+                                                         customerAgentLabel.Text + " " + customerAgentTextBox.Text);
+            //ExcelApp.Cells[row, column] = String.Format("\t\t{0} {1}\t\t\t\t\t\t\t\t{2} {3}",
+            //                                                                    sellerAgentLabel.Text, sellerAgentTextBox.Text,
+            //                                                                    customerAgentLabel.Text, customerAgentTextBox.Text);
 
             //ExcelApp.Cells[row, column + 2] = String.Format("{0} {1}", buyerAgentLabel.Text, buyerAgentTextBox.Text);
 
