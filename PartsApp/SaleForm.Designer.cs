@@ -388,12 +388,17 @@
             // 
             // sellerTextBox
             // 
+            this.sellerTextBox.AutoCompleteCustomSource.AddRange(new string[] {
+            "Truck Tir",
+            "ФЛП Тунеев А. С."});
+            this.sellerTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.sellerTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.sellerTextBox.Location = new System.Drawing.Point(2, 2);
             this.sellerTextBox.Name = "sellerTextBox";
-            this.sellerTextBox.ReadOnly = true;
             this.sellerTextBox.Size = new System.Drawing.Size(196, 20);
             this.sellerTextBox.TabIndex = 0;
             this.sellerTextBox.Text = "Truck Tir";
+            this.sellerTextBox.Leave += new System.EventHandler(this.sellerTextBox_Leave);
             // 
             // saleDateTimePicker
             // 

@@ -74,6 +74,9 @@ namespace PartsApp
             }
         }//storageAdressTextBox_Leave
 
+        #region Валидация вводимых данных.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         private void supplierTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -115,6 +118,27 @@ namespace PartsApp
             }//else
         }
 
+        private void buyerTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(buyerTextBox.Text))
+            {
+                buyerBackPanel.BackColor = buyerStarLabel.ForeColor = Color.Red;
+                buyerTextBox.Clear();
+                toolTip.Show("Введите имя/название покупателя", this, buyerBackPanel.Location, 2000);
+            }//if
+            else
+            {
+                buyerStarLabel.ForeColor = Color.Black;
+                buyerBackPanel.BackColor = SystemColors.Control;
+            }//else
+        }//buyerTextBox_Leave
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
         /*Нумерация строк purchaseDataGridView*/
         private void partsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
@@ -1293,6 +1317,8 @@ namespace PartsApp
                 }//if
             }//if
         }
+
+        
 
         
 

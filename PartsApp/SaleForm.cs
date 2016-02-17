@@ -53,7 +53,7 @@ namespace PartsApp
             sellerAgentTextBox.ReadOnly = true;
         }//saleForm_Load
 
-        #region Методы обработки ввода Customer-а.
+        #region Валидация вводимых данных.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private void customerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -96,9 +96,23 @@ namespace PartsApp
                     }//if
                 }//if
             }//else
-        }
+        }//customerTextBox_Leave
 
-
+        private void sellerTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(sellerTextBox.Text))
+            {
+                sellerBackPanel.BackColor = sellerStarLabel.ForeColor = Color.Red;
+                sellerTextBox.Clear();
+                toolTip.Show("Введите имя/название продавца", this, sellerBackPanel.Location, 2000);
+                return;
+            }//if
+            else
+            {
+                sellerStarLabel.ForeColor = Color.Black;
+                sellerBackPanel.BackColor = SystemColors.Control;
+            }//else
+        }//sellerTextBox_Leave
 
 
 
@@ -1095,11 +1109,6 @@ namespace PartsApp
             excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
             excelCells.Value = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
 
-            //ExcelApp.Cells[row, column] = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
-            //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
-            //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
-            //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
-
             //Выводим поставщика и покупателя.
             row += 2;
             ExcelApp.Cells[row, column].Font.Name = "Consolas";
@@ -1173,11 +1182,6 @@ namespace PartsApp
             ExcelApp.Cells[row, column] = String.Format("\t\t{0,-40}{1}",
                                                          sellerAgentLabel.Text + " " + sellerAgentTextBox.Text,
                                                          customerAgentLabel.Text + " " + customerAgentTextBox.Text);
-            //ExcelApp.Cells[row, column] = String.Format("\t\t{0} {1}\t\t\t\t\t\t\t\t{2} {3}",
-            //                                                                    sellerAgentLabel.Text, sellerAgentTextBox.Text,
-            //                                                                    customerAgentLabel.Text, customerAgentTextBox.Text);
-
-            //ExcelApp.Cells[row, column + 2] = String.Format("{0} {1}", buyerAgentLabel.Text, buyerAgentTextBox.Text);
 
             //Делаем визуальное отделение информации от заметки, с помощью линии.
             row += 2;
@@ -1434,6 +1438,8 @@ namespace PartsApp
                 }//if
             }//if
         }
+
+        
 
         
         

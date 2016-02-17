@@ -357,12 +357,16 @@
             // 
             // buyerTextBox
             // 
+            this.buyerTextBox.AutoCompleteCustomSource.AddRange(new string[] {
+            "Truck Tir",
+            "ФЛП Тунеев А. С."});
+            this.buyerTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.buyerTextBox.Location = new System.Drawing.Point(2, 2);
             this.buyerTextBox.Name = "buyerTextBox";
-            this.buyerTextBox.ReadOnly = true;
             this.buyerTextBox.Size = new System.Drawing.Size(196, 20);
             this.buyerTextBox.TabIndex = 0;
             this.buyerTextBox.Text = "Truck Tir";
+            this.buyerTextBox.Leave += new System.EventHandler(this.buyerTextBox_Leave);
             // 
             // buyerStarLabel
             // 
