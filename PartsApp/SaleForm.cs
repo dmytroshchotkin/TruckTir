@@ -1082,13 +1082,23 @@ namespace PartsApp
             //Настраиваем горизонтальные границы области печати.
             ExcelWorkSheet.PageSetup.LeftMargin = 10;
             ExcelWorkSheet.PageSetup.RightMargin = 10;
+            ExcelWorkSheet.PageSetup.TopMargin = 10;
+            ExcelWorkSheet.PageSetup.BottomMargin = 10;
 
             int row = 1, column = 1;            
             //Выводим Id и Дату. 
-            ExcelApp.Cells[row, column] = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
+            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
+            excelCells.Merge(true);
+            excelCells.Font.Bold = true;
+            excelCells.Font.Underline = true;
+            excelCells.Font.Size = 18;
+            excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            excelCells.Value = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
+
+            //ExcelApp.Cells[row, column] = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
+            //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
+            //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
+            //(ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
 
             //Выводим поставщика.
             row += 2;
@@ -1110,7 +1120,7 @@ namespace PartsApp
             ExcelApp.Cells[row, column + 4] = "Цена";
             ExcelApp.Cells[row, column + 5] = "Сумма";
 
-            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
+            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
             excelCells.Font.Bold = true;
             excelCells.Font.Size = 12;
             //Обводим заголовки таблицы рамкой. 
