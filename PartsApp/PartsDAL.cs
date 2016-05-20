@@ -3136,7 +3136,7 @@ namespace PartsApp
             {
                 connection.Open();
                 const string query = "SELECT SparePartId FROM SpareParts AS sp LEFT JOIN Manufacturers AS m "
-                                   + "ON sp.ManufacturerId = m.ManufacturerId "                                    
+                                   + "ON sp.ManufacturerId = m.ManufacturerId "                              
                                    + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
                                    + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul LIMIT @limit;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);

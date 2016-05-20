@@ -119,8 +119,8 @@ namespace PartsApp
             ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
 
             //Настраиваем горизонтальные границы области печати.
-            ExcelWorkSheet.PageSetup.LeftMargin = 10;
-            ExcelWorkSheet.PageSetup.RightMargin = 10;
+            ExcelWorkSheet.PageSetup.LeftMargin = 7;
+            ExcelWorkSheet.PageSetup.RightMargin = 7;
 
             #region Вывод таблицы товаров.
 
@@ -1151,6 +1151,94 @@ namespace PartsApp
             new AddSparePartForm(Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value)).Show();
         }//editSparePartToolStripMenuItem_Click
 
+        private void SpPriceListToExcelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value);
+            string title = partsDataGridView.SelectedCells[0].OwningRow.Cells["Title"].Value.ToString();
+            string articul = partsDataGridView.SelectedCells[0].OwningRow.Cells["Articul"].Value.ToString();
+            double price = Convert.ToDouble(partsDataGridView.SelectedCells[0].OwningRow.Cells["price"].Value);
+            double sellingPrice =  Convert.ToDouble(partsDataGridView.SelectedCells[0].OwningRow.Cells["SellingPrice"].Value);
+
+            SparePart sp = new SparePart()
+            {
+                SparePartId = sparePartId,
+                Articul = articul,
+                Title = title,
+                Price = price,
+                Markup = MarkupTypes.GetMarkupValue("Розница")              
+            };
+
+            ExcelSaveSparePartPriceList(sp);
+        }//SpPriceListToExcelToolStripMenuItem_Click
+
+        private void ExcelSaveSparePartPriceList(SparePart sparePart)
+        {
+            Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
+            Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook;
+            Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet;
+            //Книга.
+            ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
+            //Таблица.
+            ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
+
+            //Настраиваем горизонтальные границы области печати.
+            ExcelWorkSheet.PageSetup.LeftMargin = 7;
+            ExcelWorkSheet.PageSetup.RightMargin = 7;
+
+            #region Вывод таблицы товаров.
+            
+            //Выводим Артикул.
+            int row = 1, column = 1;
+            ExcelWorkSheet.get_Range("A" + row.ToString()).Columns.ColumnWidth = 50;
+
+            ExcelApp.Cells[row, column] = sparePart.Articul;
+            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString());//, "F" + row.ToString());
+            excelCells.Font.Bold = true;
+            excelCells.Font.Size = 12;
+            ExcelApp.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+
+            //Выводим Название.
+            row+=2;
+            ExcelApp.Cells[row, column] = sparePart.Title;
+            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString());//, "F" + row.ToString());
+            excelCells.Font.Bold = true;
+            excelCells.Font.Size = 12;
+            //Если не влазиет в строку, делаем перенос.
+            if (sparePart.Title.Length > 50)
+            {
+                ExcelApp.Cells[row, column].VerticalAlignment = Excel.Constants.xlTop;
+                ExcelApp.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+                //ExcelApp.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
+
+
+            //Выводим Розничную цену.
+            row+=2;
+            ExcelApp.Cells[row, column] = String.Format("{0:0.00} руб", sparePart.SellingPrice);
+            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString());//, "F" + row.ToString());
+            excelCells.Font.Bold = true;
+            excelCells.Font.Size = 24;
+            //Выравниваем по центру.
+            (ExcelApp.Cells[row, column] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+
+            //Обводим рамкой. 
+            excelCells = ExcelWorkSheet.get_Range("A" + 1, "A" + row.ToString());
+            excelCells.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic, Excel.XlRgbColor.rgbBlack);
+
+
+            
+            #endregion
+
+
+
+            //Вызываем нашу созданную эксельку.
+            ExcelApp.Visible = true;
+            //ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
+            ExcelApp.UserControl = true;    
+        }//ExcelSaveSparePartPriceList
+
+
         private void addNewEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AddEmployeeForm().ShowDialog();
@@ -1158,8 +1246,10 @@ namespace PartsApp
 
         private void editEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddEmployeeForm(CurEmployee).ShowDialog();            
+            new AddEmployeeForm(CurEmployee).ShowDialog();
         }
+
+        
 
        
 
@@ -1176,6 +1266,7 @@ namespace PartsApp
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
+
     }//Form1
 
     public static class Cloner

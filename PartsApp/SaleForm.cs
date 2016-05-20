@@ -1091,9 +1091,9 @@ namespace PartsApp
             //Таблица.
             ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
 
-            //Настраиваем горизонтальные границы области печати.
-            ExcelWorkSheet.PageSetup.LeftMargin = 10;
-            ExcelWorkSheet.PageSetup.RightMargin = 10;
+            //Настраиваем горизонтальные и вертикальные границы области печати.
+            ExcelWorkSheet.PageSetup.LeftMargin = 7;
+            ExcelWorkSheet.PageSetup.RightMargin = 7;
             ExcelWorkSheet.PageSetup.TopMargin = 10;
             ExcelWorkSheet.PageSetup.BottomMargin = 10;
 
@@ -1202,7 +1202,7 @@ namespace PartsApp
             //Делаем визуальное отделение информации от заметки, с помощью линии.
             row += 2;
             //ширина подобрана методом тыка.
-            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                              ";//longEmptyString.ToString();
+            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                    ";//longEmptyString.ToString();
             (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
             //Выводим заметку
             row++;
