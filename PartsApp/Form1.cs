@@ -41,20 +41,6 @@ namespace PartsApp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*Создаём коллекцию SparePart присваиваем её DataGridView и работаем с ней для инициализации 
-              нашей коллекции для поиска по базе данных*/
-            partsDataGridView.DataSource = SpList = PartsDAL.FindAllSparePartsAvaliableToDisplay().OrderBy(sp => sp.Title).ToList();
-            origSpList = PartsDAL.FindAllSparePartsAvaliableToDisplay();
-
-            ExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
-            origExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);            
-            
-            //Устанавливаем постоянную позицию для отображения Фото.
-            //DataGridViewCell cell2 = partsDataGridView.Rows[0].Cells["Photo"];
-            DataGridViewCell cell2 = partsDataGridView.Columns[1].HeaderCell;
-            Rectangle rect = partsDataGridView.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
-            photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDataGridView.Location.Y);
-
             //Вносим все типы наценок в markupComboBox             
             markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().OrderByDescending(mark => mark.Key).Select(markup => markup.Value).ToArray<string>());
 
@@ -293,13 +279,24 @@ namespace PartsApp
             changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false; 
             Deselection();
+
+            //Устанавливаем постоянную позицию для отображения Фото.           
+            DataGridViewCell cell2 = partsDataGridView.Columns[1].HeaderCell;
+            Rectangle rect = partsDataGridView.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
+            photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDataGridView.Location.Y);
         }//partsDataGridView_DataSourceChanged
-        //событие изменения DataSource в таблице доп. информации.
+
+        /// <summary>
+        /// Cобытие изменения DataSource в таблице доп. информации.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void extPartsDataGridView_DataSourceChanged(object sender, EventArgs e)
         {
-            if (extPartsDataGridView.DataSource == null) return;
-                HideExtPartsDataGridViewColumns(); 
+            if (extPartsDataGridView.DataSource == null) 
+                return;
 
+            HideExtPartsDataGridViewColumns(); 
             //обработка размера RowHeaders.
             int i, count = extPartsDataGridView.Rows.Count;
             for (i = 0; count != 0; ++i)
@@ -771,7 +768,7 @@ namespace PartsApp
         /// Метод сохраняющий в буфер изменения связанные с наценкой. 
         /// </summary>
         /// <param name="sparePartId">Id запчасти с изменяемой наценкой.</param>
-        /// <param name="purchaseId">Id прихода с изменяемой наценкой.</param>
+        /// <param name="saleId">Id прихода с изменяемой наценкой.</param>
         /// <param name="markup">Наценка на которую нужно изменить старое значение.</param>
         private void SaveMarkupChangeToBuffer(int sparePartId, int purchaseId, double markup)
         {
@@ -994,7 +991,7 @@ namespace PartsApp
             partsDataGridView.Columns["Count"].Visible          = false;
             partsDataGridView.Columns["virtCount"].Visible      = false;
             partsDataGridView.Columns["Price"].Visible          = false;
-            //partsDataGridView.Columns["Markup"].Visible         = false;
+            //partsDataGridView.Columns["Markup"].Visible       = false;
             partsDataGridView.Columns["MarkupType"].Visible     = false;
             partsDataGridView.Columns["PurchaseId"].Visible     = false;
             partsDataGridView.Columns["SupplierName"].Visible   = false;
@@ -1013,6 +1010,7 @@ namespace PartsApp
 
             partsDataGridView.Columns["Avaliability"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             partsDataGridView.Columns["SellingPrice"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+                                
         }//HidePartsDataGridViewColumns
         /// <summary>
         /// Скрывает заданные в методе столбцы таблицы ExtPartsDataGridView.
@@ -1247,6 +1245,12 @@ namespace PartsApp
         private void editEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AddEmployeeForm(CurEmployee).ShowDialog();
+        }
+
+        private void посмотретьПередвижениеТовараToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value);
+            new SparePartOperationsInfoForm(sparePartId).Show();
         }
 
         

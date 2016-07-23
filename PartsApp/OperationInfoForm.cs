@@ -55,7 +55,7 @@ namespace PartsApp
         /// <summary>
         /// Заполняет таблицу коллекцией переданных эл-тов.
         /// </summary>
-        /// <param name="purchases">Коллекция, эл-тами которой заполняется таблица.</param>
+        /// <param name="sparePartsList">Коллекция, эл-тами которой заполняется таблица.</param>
         private void FillTheOperationDGV(IList<Purchase> purchases)
         {            
             operationDataGridView.Rows.Add(purchases.Count);
@@ -81,7 +81,7 @@ namespace PartsApp
                 row.Cells[ExcRate.Name].Value = purchase.ExcRate;
                 row.Cells[Description.Name].Value = purchase.Description;
                 row.Cells[ContragentEmployee.Name].Value = purchase.ContragentEmployee;
-                //row.Cells[Storage.Name].Value = purchase.;
+                //row.Cells[Storage.Name].Value = sale.;
                 row.Cells[OperationId.Name].Value = purchase.OperationId;
             }//for
 
@@ -123,7 +123,7 @@ namespace PartsApp
             Purchase purchase = new Purchase();
 
             purchase.ContragentEmployee = contragentFilterTextBox.Text.Trim();
-            //purchase.Employee = (!String.IsNullOrWhiteSpace(employeeFilterTextBox.Text)) ? PartsDAL.FindEmployees() :  ;
+            //sale.Employee = (!String.IsNullOrWhiteSpace(employeeFilterTextBox.Text)) ? PartsDAL.FindEmployees() :  ;
             string operationId = operationIdFilterTextBox.Text.Trim();
 
 

@@ -23,7 +23,7 @@ namespace PartsApp
         TextBox textBoxCell;
         bool textChangedEvent = false;
         bool previewKeyDownEvent = false;
-        string userText;
+        string _userText;
 
         double inTotal;
         IList<int> sparePartsId = new List<int>();   //коллекция для хранения Id того товара, что уже есть в таблице.
@@ -209,13 +209,13 @@ namespace PartsApp
                 //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
                 if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
                 {
-                    textBox.Text = userText;
+                    textBox.Text = _userText;
                     autoCompleteListBox.ClearSelected();
                     return;
                 }
                 //Если выбирается первый эл-нт выпадающего списка, запоминаем введенную ранее пользователем строку.
                 if (autoCompleteListBox.SelectedIndex == -1)
-                    userText = textBox.Text;
+                    _userText = textBox.Text;
 
                 autoCompleteListBox.SelectedIndex += 1;
                 return;
@@ -230,13 +230,13 @@ namespace PartsApp
                 //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
                 if (autoCompleteListBox.SelectedIndex == -1)
                 {
-                    userText = textBox.Text;
+                    _userText = textBox.Text;
                     autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
                 }
                 //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
                 else if (autoCompleteListBox.SelectedIndex == 0)
                 {
-                    textBox.Text = userText;
+                    textBox.Text = _userText;
                     autoCompleteListBox.ClearSelected();
                 }//if
                 else autoCompleteListBox.SelectedIndex -= 1;
@@ -308,8 +308,8 @@ namespace PartsApp
         {
             if (e.Clicks == 1)
             {
-                if (String.IsNullOrEmpty(userText))
-                    userText = textBoxCell.Text;
+                if (String.IsNullOrEmpty(_userText))
+                    _userText = textBoxCell.Text;
                 purchaseDataGridView_SelectionChanged(null, null);
                 isCellEditError = true; 
             }
@@ -334,7 +334,8 @@ namespace PartsApp
         //Привести в порядок метод!!!!
         private void purchaseDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (isCellEditError) return;
+            if (isCellEditError) 
+                return;
 
             autoCompleteListBox.Visible = false;
             //autoCompleteListBox.Items.Clear();
@@ -390,7 +391,7 @@ namespace PartsApp
                             cell.OwningRow.Cells["Price"].ReadOnly = cell.OwningRow.Cells["Count"].ReadOnly   = false;
                             cell.OwningRow.Cells["Title"].ReadOnly = cell.OwningRow.Cells["Articul"].ReadOnly = true;
 
-                            userText = null;
+                            _userText = null;
                             #region Увеличение PurchaseGroupBox.
                             //if (purchaseDataGridView.PreferredSize.Height > purchaseDataGridView.Size.Height)
                             //{
@@ -427,7 +428,7 @@ namespace PartsApp
                                     cell.OwningRow.Cells["Price"].ReadOnly = cell.OwningRow.Cells["Count"].ReadOnly = false;
                                     cell.OwningRow.Cells["Title"].ReadOnly = cell.OwningRow.Cells["Articul"].ReadOnly = true;
 
-                                    userText = null;
+                                    _userText = null;
                                 }//if
                                 else
                                 { 
@@ -763,9 +764,9 @@ namespace PartsApp
         ///// <summary>
         ///// Метод вывода приходной информации в Excel-файл.
         ///// </summary>
-        ///// <param name="purchase">Информация о приходе.</param>
+        ///// <param name="sale">Информация о приходе.</param>
         ///// <param name="spareParts">Список оприходованных товаров.</param>
-        //private void LoadPurchaseToExcelFile(Purchase purchase, IList<SparePart> spareParts)
+        //private void LoadPurchaseToExcelFile(Purchase sale, IList<SparePart> spareParts)
         //{
         //    Excel.Application ExcelApp = new Excel.Application();
         //    Excel.Workbook ExcelWorkBook;
@@ -778,14 +779,14 @@ namespace PartsApp
         //    int row = 1, column = 1;
 
         //    //Выводим Id и Дату. 
-        //    ExcelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", purchase.PurchaseId, purchase.PurchaseDate.ToString("dd/MM/yyyy"));
+        //    ExcelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", sale.PurchaseId, sale.PurchaseDate.ToString("dd/MM/yyyy"));
         //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
         //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
         //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
 
         //    //Выводим поставщика.
         //    row += 2;
-        //    ExcelApp.Cells[row, column] = String.Format("Поставщик:   \t{0}", supplierTextBox.Text);//PartsDAL.FindSupplierNameById(purchase.SupplierId));
+        //    ExcelApp.Cells[row, column] = String.Format("Поставщик:   \t{0}", supplierTextBox.Text);//PartsDAL.FindSupplierNameById(sale.SupplierId));
         //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
 
         //    //Выводим покупателя.
@@ -865,7 +866,7 @@ namespace PartsApp
         /// <summary>
         /// Метод вывода приходной информации в Excel-файл.
         /// </summary>
-        /// <param name="purchase">Информация о приходе.</param>
+        /// <param name="sale">Информация о приходе.</param>
         /// <param name="spareParts">Список оприходованных товаров.</param>
         private void LoadPurchaseToExcelFile(Purchase purchase, IList<SparePart> spareParts)
         {
@@ -1422,7 +1423,7 @@ namespace PartsApp
                         return;
                     }//catch 
 
-                    //LoadPurchaseToExcelFile(purchase, spareParts);
+                    //LoadPurchaseToExcelFile(sale, spareParts);
 /*!!!*/             new System.Threading.Thread(BeginLoadPurchaseToExcelFile).Start(purchase); //Сделать по нормальному вызов с потоком.
 
                     this.Visible = false;

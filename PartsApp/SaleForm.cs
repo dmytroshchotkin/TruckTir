@@ -1079,7 +1079,7 @@ namespace PartsApp
         /// <summary>
         /// Метод вывода расходной информации в Excel-файл.
         /// </summary>
-        /// <param name="purchase">Информация о расходе.</param>
+        /// <param name="sale">Информация о расходе.</param>
         /// <param name="spareParts">Список проданного товара.</param>
         private void LoadSaleToExcelFile(Sale sale, IList<SparePart> spareParts)
         {

@@ -35,5 +35,6 @@ namespace PartsApp
 
             return hash;
         }//GetHashString
-    }
-}
+    }//PasswordClass
+
+}//namespace

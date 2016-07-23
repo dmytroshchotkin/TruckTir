@@ -79,10 +79,11 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.partsDGVContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editSparePartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.распечататьЦенникToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.посмотретьПередвижениеТовараToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.распечататьЦенникToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -200,14 +201,14 @@
             // 
             this.addToDbFromExcelToolStripMenuItem.Enabled = false;
             this.addToDbFromExcelToolStripMenuItem.Name = "addToDbFromExcelToolStripMenuItem";
-            this.addToDbFromExcelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.addToDbFromExcelToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.addToDbFromExcelToolStripMenuItem.Text = "Добавить";
             this.addToDbFromExcelToolStripMenuItem.Click += new System.EventHandler(this.addToDbFromExcelToolStripMenuItem_Click);
             // 
             // saveInExcelToolStripMenuItem
             // 
             this.saveInExcelToolStripMenuItem.Name = "saveInExcelToolStripMenuItem";
-            this.saveInExcelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveInExcelToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.saveInExcelToolStripMenuItem.Text = "Сохранить";
             this.saveInExcelToolStripMenuItem.Click += new System.EventHandler(this.saveInExcelToolStripMenuItem_Click);
             // 
@@ -585,16 +586,31 @@
             // 
             this.partsDGVContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editSparePartToolStripMenuItem,
-            this.распечататьЦенникToolStripMenuItem});
+            this.распечататьЦенникToolStripMenuItem,
+            this.посмотретьПередвижениеТовараToolStripMenuItem});
             this.partsDGVContextMenuStrip.Name = "partsDGVContextMenuStrip";
-            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(185, 70);
+            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(265, 70);
             // 
             // editSparePartToolStripMenuItem
             // 
             this.editSparePartToolStripMenuItem.Name = "editSparePartToolStripMenuItem";
-            this.editSparePartToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.editSparePartToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
             this.editSparePartToolStripMenuItem.Text = "Редактировать ";
             this.editSparePartToolStripMenuItem.Click += new System.EventHandler(this.editSparePartToolStripMenuItem_Click);
+            // 
+            // распечататьЦенникToolStripMenuItem
+            // 
+            this.распечататьЦенникToolStripMenuItem.Name = "распечататьЦенникToolStripMenuItem";
+            this.распечататьЦенникToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.распечататьЦенникToolStripMenuItem.Text = "Распечатать ценник";
+            this.распечататьЦенникToolStripMenuItem.Click += new System.EventHandler(this.SpPriceListToExcelToolStripMenuItem_Click);
+            // 
+            // посмотретьПередвижениеТовараToolStripMenuItem
+            // 
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Name = "посмотретьПередвижениеТовараToolStripMenuItem";
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Text = "Посмотреть передвижение товара";
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Click += new System.EventHandler(this.посмотретьПередвижениеТовараToolStripMenuItem_Click);
             // 
             // userNameLabel
             // 
@@ -621,13 +637,6 @@
             this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
             this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
-            // распечататьЦенникToolStripMenuItem
-            // 
-            this.распечататьЦенникToolStripMenuItem.Name = "распечататьЦенникToolStripMenuItem";
-            this.распечататьЦенникToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.распечататьЦенникToolStripMenuItem.Text = "Распечатать ценник";
-            this.распечататьЦенникToolStripMenuItem.Click += new System.EventHandler(this.SpPriceListToExcelToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -642,7 +651,6 @@
             this.Controls.Add(this.currencyComboBox);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "Form1";
-            this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.partsStatusStrip.ResumeLayout(false);
             this.partsStatusStrip.PerformLayout();
@@ -730,6 +738,7 @@
         private System.Windows.Forms.ToolStripMenuItem editEmployeeToolStripMenuItem;
         private System.Windows.Forms.ListBox autoCompleteListBox;
         private System.Windows.Forms.ToolStripMenuItem распечататьЦенникToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem посмотретьПередвижениеТовараToolStripMenuItem;
 
     }
 }
