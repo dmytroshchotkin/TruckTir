@@ -9,7 +9,7 @@ namespace PartsApp
 {
     public interface IContragent
     {
-        [Browsable(false)]
+        //[Browsable(false)]
         int ContragentId { get; set; }
         [DisplayName("Название")]
         string ContragentName { get; set; }

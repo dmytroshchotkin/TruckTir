@@ -2131,6 +2131,12 @@ namespace PartsApp
 
             return purchases;
         }//FindPurchases
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="cust">STUB</param>
+        /// <returns></returns>
         public static List<IOperation> FindSales(int customerId, Customer cust)
         {
             List<IOperation> salesList = new List<IOperation>();

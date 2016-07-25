@@ -28,19 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.ContragentsGroupBox = new System.Windows.Forms.GroupBox();
             this.ContragentsListBox = new System.Windows.Forms.ListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
-            this.OperationIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ContragentEmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalSumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OperationDetailsGroupBox = new System.Windows.Forms.GroupBox();
             this.OperationDetailsDGV = new System.Windows.Forms.DataGridView();
             this.ManufacturerCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -50,6 +46,11 @@
             this.CountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OperationIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ContragentEmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalSumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -127,7 +128,7 @@
             this.splitContainer2.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer2.Panel2.Controls.Add(this.OperationDetailsGroupBox);
             this.splitContainer2.Size = new System.Drawing.Size(739, 393);
-            this.splitContainer2.SplitterDistance = 195;
+            this.splitContainer2.SplitterDistance = 204;
             this.splitContainer2.SplitterWidth = 2;
             this.splitContainer2.TabIndex = 1;
             // 
@@ -138,7 +139,7 @@
             this.OperationsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.OperationsGroupBox.Name = "OperationsGroupBox";
-            this.OperationsGroupBox.Size = new System.Drawing.Size(739, 195);
+            this.OperationsGroupBox.Size = new System.Drawing.Size(739, 204);
             this.OperationsGroupBox.TabIndex = 0;
             this.OperationsGroupBox.TabStop = false;
             this.OperationsGroupBox.Text = "Операции";
@@ -160,42 +161,9 @@
             this.OperationsInfoDGV.MultiSelect = false;
             this.OperationsInfoDGV.Name = "OperationsInfoDGV";
             this.OperationsInfoDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.OperationsInfoDGV.Size = new System.Drawing.Size(733, 176);
+            this.OperationsInfoDGV.Size = new System.Drawing.Size(733, 185);
             this.OperationsInfoDGV.TabIndex = 1;
             this.OperationsInfoDGV.SelectionChanged += new System.EventHandler(this.OperationsInfoDGV_SelectionChanged);
-            // 
-            // OperationIdCol
-            // 
-            this.OperationIdCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.OperationIdCol.HeaderText = "№ операции";
-            this.OperationIdCol.Name = "OperationIdCol";
-            this.OperationIdCol.ReadOnly = true;
-            this.OperationIdCol.Width = 60;
-            // 
-            // DateCol
-            // 
-            this.DateCol.HeaderText = "Дата";
-            this.DateCol.Name = "DateCol";
-            this.DateCol.ReadOnly = true;
-            this.DateCol.Width = 75;
-            // 
-            // EmployeeCol
-            // 
-            this.EmployeeCol.HeaderText = "Сотрудник";
-            this.EmployeeCol.Name = "EmployeeCol";
-            this.EmployeeCol.ReadOnly = true;
-            // 
-            // ContragentEmployeeCol
-            // 
-            this.ContragentEmployeeCol.HeaderText = "Представитель контрагента";
-            this.ContragentEmployeeCol.Name = "ContragentEmployeeCol";
-            this.ContragentEmployeeCol.ReadOnly = true;
-            // 
-            // TotalSumCol
-            // 
-            this.TotalSumCol.HeaderText = "Сумма";
-            this.TotalSumCol.Name = "TotalSumCol";
-            this.TotalSumCol.ReadOnly = true;
             // 
             // OperationDetailsGroupBox
             // 
@@ -203,7 +171,7 @@
             this.OperationDetailsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationDetailsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.OperationDetailsGroupBox.Name = "OperationDetailsGroupBox";
-            this.OperationDetailsGroupBox.Size = new System.Drawing.Size(739, 196);
+            this.OperationDetailsGroupBox.Size = new System.Drawing.Size(739, 187);
             this.OperationDetailsGroupBox.TabIndex = 1;
             this.OperationDetailsGroupBox.TabStop = false;
             this.OperationDetailsGroupBox.Text = "Доп. инф-ция по операции.";
@@ -225,7 +193,7 @@
             this.OperationDetailsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationDetailsDGV.Location = new System.Drawing.Point(3, 16);
             this.OperationDetailsDGV.Name = "OperationDetailsDGV";
-            this.OperationDetailsDGV.Size = new System.Drawing.Size(733, 177);
+            this.OperationDetailsDGV.Size = new System.Drawing.Size(733, 168);
             this.OperationDetailsDGV.TabIndex = 0;
             // 
             // ManufacturerCol
@@ -267,9 +235,9 @@
             // PriceCol
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle16.Format = "N2";
+            dataGridViewCellStyle16.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle16;
             this.PriceCol.HeaderText = "Цена (руб.)";
             this.PriceCol.MinimumWidth = 50;
             this.PriceCol.Name = "PriceCol";
@@ -279,12 +247,48 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.Format = "C2";
-            dataGridViewCellStyle2.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle17.Format = "C2";
+            dataGridViewCellStyle17.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle17;
             this.SumCol.HeaderText = "Сумма (руб.)";
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
+            // 
+            // OperationIdCol
+            // 
+            this.OperationIdCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.OperationIdCol.HeaderText = "№ операции";
+            this.OperationIdCol.Name = "OperationIdCol";
+            this.OperationIdCol.ReadOnly = true;
+            this.OperationIdCol.Width = 60;
+            // 
+            // DateCol
+            // 
+            this.DateCol.HeaderText = "Дата";
+            this.DateCol.Name = "DateCol";
+            this.DateCol.ReadOnly = true;
+            this.DateCol.Width = 75;
+            // 
+            // EmployeeCol
+            // 
+            this.EmployeeCol.HeaderText = "Сотрудник";
+            this.EmployeeCol.Name = "EmployeeCol";
+            this.EmployeeCol.ReadOnly = true;
+            // 
+            // ContragentEmployeeCol
+            // 
+            this.ContragentEmployeeCol.HeaderText = "Представитель контрагента";
+            this.ContragentEmployeeCol.Name = "ContragentEmployeeCol";
+            this.ContragentEmployeeCol.ReadOnly = true;
+            // 
+            // TotalSumCol
+            // 
+            dataGridViewCellStyle18.Format = "C2";
+            dataGridViewCellStyle18.NullValue = null;
+            this.TotalSumCol.DefaultCellStyle = dataGridViewCellStyle18;
+            this.TotalSumCol.HeaderText = "Сумма";
+            this.TotalSumCol.Name = "TotalSumCol";
+            this.TotalSumCol.ReadOnly = true;
             // 
             // ContragentOperationsInfoForm
             // 
@@ -323,11 +327,6 @@
         private System.Windows.Forms.DataGridView OperationsInfoDGV;
         private System.Windows.Forms.DataGridView OperationDetailsDGV;
         private System.Windows.Forms.GroupBox OperationDetailsGroupBox;
-        private System.Windows.Forms.DataGridViewTextBoxColumn OperationIdCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ContragentEmployeeCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TotalSumCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ManufacturerCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ArticulCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TitleCol;
@@ -335,6 +334,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CountCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OperationIdCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ContragentEmployeeCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TotalSumCol;
 
     }
 }
