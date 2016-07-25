@@ -878,7 +878,7 @@ namespace PartsApp
                 }//if
                 extDataGridView.Rows[i].Cells["extSellingPrice"].Value = sparePartsAvaliability[i].SellingPrice;
                 extDataGridView.Rows[i].Cells["extPurchaseId"].Value = sparePartsAvaliability[i].PurchaseId;
-                extDataGridView.Rows[i].Cells["extPurchaseDate"].Value = PartsDAL.FindPurchases(sparePartsAvaliability[i].PurchaseId).OperationDate.ToShortDateString();
+                extDataGridView.Rows[i].Cells["extPurchaseDate"].Value = PartsDAL.FindPurchase(sparePartsAvaliability[i].PurchaseId).OperationDate.ToShortDateString();
             }//for            
             
             //Если отпускная цена у всех приходов одинаковая, выводим её в saleDGV.

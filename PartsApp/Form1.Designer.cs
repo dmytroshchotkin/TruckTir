@@ -84,6 +84,8 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewInfoBySuppliersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewInfoByCustomersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -245,7 +247,8 @@
             // supplierToolStripMenuItem
             // 
             this.supplierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addNewSupplierToolStripMenuItem});
+            this.addNewSupplierToolStripMenuItem,
+            this.ViewInfoBySuppliersToolStripMenuItem});
             this.supplierToolStripMenuItem.Name = "supplierToolStripMenuItem";
             this.supplierToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
             this.supplierToolStripMenuItem.Text = "Поставщики";
@@ -253,14 +256,15 @@
             // addNewSupplierToolStripMenuItem
             // 
             this.addNewSupplierToolStripMenuItem.Name = "addNewSupplierToolStripMenuItem";
-            this.addNewSupplierToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.addNewSupplierToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
             this.addNewSupplierToolStripMenuItem.Text = "Добавить нового поставщика";
             this.addNewSupplierToolStripMenuItem.Click += new System.EventHandler(this.addNewSupplierToolStripMenuItem_Click);
             // 
             // customerToolStripMenuItem
             // 
             this.customerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addNewCustomerToolStripMenuItem});
+            this.addNewCustomerToolStripMenuItem,
+            this.ViewInfoByCustomersToolStripMenuItem});
             this.customerToolStripMenuItem.Name = "customerToolStripMenuItem";
             this.customerToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.customerToolStripMenuItem.Text = "Клиенты";
@@ -268,7 +272,7 @@
             // addNewCustomerToolStripMenuItem
             // 
             this.addNewCustomerToolStripMenuItem.Name = "addNewCustomerToolStripMenuItem";
-            this.addNewCustomerToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.addNewCustomerToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
             this.addNewCustomerToolStripMenuItem.Text = "Добавить нового клиента";
             this.addNewCustomerToolStripMenuItem.Click += new System.EventHandler(this.addNewCustomerToolStripMenuItem_Click);
             // 
@@ -637,6 +641,20 @@
             this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
             this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
+            // ViewInfoBySuppliersToolStripMenuItem
+            // 
+            this.ViewInfoBySuppliersToolStripMenuItem.Name = "ViewInfoBySuppliersToolStripMenuItem";
+            this.ViewInfoBySuppliersToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this.ViewInfoBySuppliersToolStripMenuItem.Text = "Посмотреть инф-цию по поставщикам";
+            this.ViewInfoBySuppliersToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
+            // 
+            // ViewInfoByCustomersToolStripMenuItem
+            // 
+            this.ViewInfoByCustomersToolStripMenuItem.Name = "ViewInfoByCustomersToolStripMenuItem";
+            this.ViewInfoByCustomersToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.ViewInfoByCustomersToolStripMenuItem.Text = "Посмотреть инф-цию по клиентам";
+            this.ViewInfoByCustomersToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -739,6 +757,8 @@
         private System.Windows.Forms.ListBox autoCompleteListBox;
         private System.Windows.Forms.ToolStripMenuItem распечататьЦенникToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem посмотретьПередвижениеТовараToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewInfoBySuppliersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewInfoByCustomersToolStripMenuItem;
 
     }
 }

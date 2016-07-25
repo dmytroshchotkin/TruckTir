@@ -87,6 +87,12 @@
       <DependentUpon>AuthorizationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ContactInfo.cs" />
+    <Compile Include="ContragentOperationsInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContragentOperationsInfoForm.Designer.cs">
+      <DependentUpon>ContragentOperationsInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Customer.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="Form1.cs">
@@ -129,6 +135,7 @@
       <DependentUpon>SparePartOperationsInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Supplier.cs" />
+    <Compile Include="SupportClasses\ExtensionClasses.cs" />
     <EmbeddedResource Include="AddEmployeeForm.resx">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -140,6 +147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AuthorizationForm.resx">
       <DependentUpon>AuthorizationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContragentOperationsInfoForm.resx">
+      <DependentUpon>ContragentOperationsInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -210,9 +220,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SupportClasses\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.97.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.97.0\build\net45\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

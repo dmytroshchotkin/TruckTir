@@ -1251,7 +1251,17 @@ namespace PartsApp
         {
             int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value);
             new SparePartOperationsInfoForm(sparePartId).Show();
-        }
+        }//
+
+        private void ViewInfoByContragentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Открываем форму инф-ции по поставщикам или клиетам в зависимости от выбранного меню.
+            ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
+            if (menuItem == ViewInfoBySuppliersToolStripMenuItem)
+                new ContragentOperationsInfoForm(typeof(Supplier)).Show();
+            else
+                new ContragentOperationsInfoForm(typeof(Customer)).Show();
+        }//
 
         
 

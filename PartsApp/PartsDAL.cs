@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.ComponentModel;
 using Excel = Microsoft.Office.Interop.Excel;
+using PartsApp.SupportClasses;
 
 namespace PartsApp
 {
@@ -1217,21 +1218,6 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    #region //конструктор
-                    /*
-                    {
-                        Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
-                        SparePartId= Convert.ToInt32(dataReader["Id"]),
-                        Articul = dataReader["Articul"] as string,
-                        Title = dataReader["Title"] as string,
-                        Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                        //Price = Convert.ToDouble(dataReader["Price"]),
-                        //Markup = Convert.ToInt32(dataReader["Markup"]),
-                        //Count = Convert.ToDouble(dataReader["Count"]),
-                        //Unit = dataReader["Unit"] as string
-                    }; 
-                    */
-                    #endregion
                     if ((dataReader["Storage"] as string) ==SparePart.MainStorage) sparePart.Count = Convert.ToDouble(dataReader["SUM(Count)"]);
                     else sparePart.VirtCount = Convert.ToDouble(dataReader["SUM(Count)"]);
                 }//while
@@ -1466,54 +1452,10 @@ namespace PartsApp
             else if (countOfEntry > 1)
             {
                 IList<SparePart> spareParts = FindAvaliabilityBySparePartId(sparePartId, openConnection);
-                //Проверяем не имеют ли все вхождения одинаковую Наценку и Цену прихода.
-                bool isSamePrice = true, isSameMarkup = true;
-                for (int i = 0; i < spareParts.Count - 1; ++i)
-                {
-                    for (int j = i + 1; j < spareParts.Count; ++j)
-                    {
-                        if (spareParts[i].Price != spareParts[j].Price) isSamePrice = false;
-                        if (spareParts[i].Markup != spareParts[j].Markup) isSameMarkup = false;
-                    }//for j
-                    if (isSamePrice == false && isSameMarkup == false) break;
-                }//for i                             
-                sparePart = FindUniqueSparePartsAvaliabilityCount(spareParts[0], openConnection);
+                //Выводим в общ. таблицу значения товара с наибольшей ценой продажи.
+                sparePart = spareParts.OrderByDescending(sp => sp.SellingPrice).First();
 
-                //if (isSamePrice == true)
-                //{
-                //    sparePart.Price = spareParts[0].Price;
-                //    if (isSameMarkup == true)
-                //    {
-                //        sparePart.Markup = spareParts[0].Markup;
-                //    }//if
-                //    else
-                //    {
-                //        if (spareParts.Max(sp => sp.Markup) != 0)
-                //            sparePart.Markup = spareParts.Max(sp => sp.Markup);
-                //        else sparePart.Markup = null;
-                //    }//else
-                //}//if
-                //else
-                //{
-                //    if (isSameMarkup == true)
-                //    {
-                //        sparePart.Price = spareParts.Max(sp => sp.Price);
-                //        sparePart.Markup = spareParts[0].Markup;
-                //    }//if
-                //    else
-                //    {
-                //        SparePart maxSellPriceSP = spareParts.Where(sp => sp.SellingPrice == spareParts.Max(sp2 => sp2.SellingPrice)).First();
-                //        sparePart.Price = maxSellPriceSP.Price;
-                //        sparePart.Markup = maxSellPriceSP.Markup;
-                //    }//else
-                //}//else
-                //Если цена у всех вхождений одинаковая присваиваем её в обобщенный SparePart.
-                if (isSamePrice == true)
-                    sparePart.Price = spareParts[0].Price;
-                else sparePart.Price = null;
-                if (isSameMarkup == true)
-                    sparePart.Markup = spareParts[0].Markup;
-                else sparePart.Markup = null;
+                FindUniqueSparePartsAvaliabilityCount(sparePart, openConnection);
 
                 sparePart.PurchaseId = -1; //Помечаем что у данной строки имеется подтаблица(т.е. болеее одного поставщика).
             }//if    
@@ -1681,9 +1623,9 @@ namespace PartsApp
         /// Возвращает коллекцию из всех Supplier-ов.
         /// </summary>
         /// <returns></returns>
-        public static IList<Supplier> FindSuppliers()
+        public static IList<IContragent> FindSuppliers()
         {
-            IList<Supplier> suppliers = new List<Supplier>();
+            IList<IContragent> suppliers = new List<IContragent>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -1903,9 +1845,9 @@ namespace PartsApp
         /// Возвращает коллекцию из всех Customer.
         /// </summary>
         /// <returns></returns>
-        public static IList<Customer> FindCustomers()
+        public static IList<IContragent> FindCustomers()
         {
-            IList<Customer> customers = new List<Customer>();
+            IList<IContragent> customers = new List<IContragent>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -2164,13 +2106,62 @@ namespace PartsApp
             }//using
 
             return purchases;
+        }//FindPurchase
+
+        public static List<IOperation> FindPurchases(int supplierId)
+        {
+            List<IOperation> purchases = new List<IOperation>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT *, datetime(PurchaseDate, 'unixepoch') as PD "
+                                   + "FROM Purchases "
+                                   + "WHERE SupplierId = @SupplierId";
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@SupplierId", supplierId);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                    purchases.Add(CreatePurchase(dataReader));
+
+                connection.Close();
+            }//using
+
+            return purchases;
         }//FindPurchases
+        public static List<IOperation> FindSales(int customerId, Customer cust)
+        {
+            List<IOperation> salesList = new List<IOperation>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT *, datetime(SaleDate, 'unixepoch') as SD "
+                                   + "FROM Sales "
+                                   + "WHERE CustomerId = @CustomerId";
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@CustomerId", customerId);
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                    salesList.Add(CreateSale(dataReader));
+
+                connection.Close();
+            }//using
+
+            return salesList;
+        }//FindSales
+
+
         /// <summary>
         /// Возвращает объект класса Purchase, найденный по заданному Id. 
         /// </summary>
         /// <param name="saleId">Id прихода информацию о котором нужно вернуть.</param>
         /// <returns></returns>
-        public static Purchase FindPurchases(int purchaseId)
+        public static Purchase FindPurchase(int purchaseId)
         {
             Purchase purchase = new Purchase();
 
@@ -2201,7 +2192,7 @@ namespace PartsApp
             }//using
 
             return purchase;
-        }//FindPurchases
+        }//FindPurchase
         /// <summary>
         /// Возвращает общую сумму прихода, по указанному Id. 
         /// </summary>
@@ -2298,6 +2289,8 @@ namespace PartsApp
 
             return salesList;
         }//FindSales
+
+
 
         /// <summary>
         /// Возвращает объект типа IOperation созданный из переданного SQLiteDataReader.
