@@ -310,9 +310,9 @@
             // 
             // purchaseDateTimePicker
             // 
+            this.purchaseDateTimePicker.CustomFormat = "";
             this.purchaseDateTimePicker.Location = new System.Drawing.Point(465, 16);
-            this.purchaseDateTimePicker.MaxDate = new System.DateTime(2015, 10, 13, 0, 0, 0, 0);
-            this.purchaseDateTimePicker.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
+            this.purchaseDateTimePicker.MinDate = new System.DateTime(2015, 10, 10, 0, 0, 0, 0);
             this.purchaseDateTimePicker.Name = "purchaseDateTimePicker";
             this.purchaseDateTimePicker.Size = new System.Drawing.Size(200, 20);
             this.purchaseDateTimePicker.TabIndex = 13;

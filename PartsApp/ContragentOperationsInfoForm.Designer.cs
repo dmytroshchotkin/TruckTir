@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.ContragentsGroupBox = new System.Windows.Forms.GroupBox();
             this.ContragentsListBox = new System.Windows.Forms.ListBox();
@@ -235,9 +236,9 @@
             // PriceCol
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle16.Format = "N2";
-            dataGridViewCellStyle16.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle3.Format = "N2";
+            dataGridViewCellStyle3.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle3;
             this.PriceCol.HeaderText = "Цена (руб.)";
             this.PriceCol.MinimumWidth = 50;
             this.PriceCol.Name = "PriceCol";
@@ -247,9 +248,9 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle17.Format = "C2";
-            dataGridViewCellStyle17.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle4.Format = "C2";
+            dataGridViewCellStyle4.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle4;
             this.SumCol.HeaderText = "Сумма (руб.)";
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
@@ -264,10 +265,15 @@
             // 
             // DateCol
             // 
+            this.DateCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle1.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            dataGridViewCellStyle1.NullValue = null;
+            this.DateCol.DefaultCellStyle = dataGridViewCellStyle1;
             this.DateCol.HeaderText = "Дата";
+            this.DateCol.MinimumWidth = 80;
             this.DateCol.Name = "DateCol";
             this.DateCol.ReadOnly = true;
-            this.DateCol.Width = 75;
+            this.DateCol.Width = 110;
             // 
             // EmployeeCol
             // 
@@ -283,9 +289,9 @@
             // 
             // TotalSumCol
             // 
-            dataGridViewCellStyle18.Format = "C2";
-            dataGridViewCellStyle18.NullValue = null;
-            this.TotalSumCol.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle2.Format = "C2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.TotalSumCol.DefaultCellStyle = dataGridViewCellStyle2;
             this.TotalSumCol.HeaderText = "Сумма";
             this.TotalSumCol.Name = "TotalSumCol";
             this.TotalSumCol.ReadOnly = true;

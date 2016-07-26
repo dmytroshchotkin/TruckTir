@@ -402,13 +402,12 @@
             // 
             // saleDateTimePicker
             // 
+            this.saleDateTimePicker.CustomFormat = "";
             this.saleDateTimePicker.Location = new System.Drawing.Point(453, 6);
-            this.saleDateTimePicker.MaxDate = new System.DateTime(2015, 10, 13, 0, 0, 0, 0);
-            this.saleDateTimePicker.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
             this.saleDateTimePicker.Name = "saleDateTimePicker";
             this.saleDateTimePicker.Size = new System.Drawing.Size(200, 20);
             this.saleDateTimePicker.TabIndex = 78;
-            this.saleDateTimePicker.Value = new System.DateTime(2015, 10, 13, 0, 0, 0, 0);
+            this.saleDateTimePicker.Value = new System.DateTime(2016, 7, 26, 13, 49, 6, 0);
             // 
             // saleIdTextBox
             // 

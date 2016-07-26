@@ -584,7 +584,7 @@ namespace PartsApp
             int purchaseId = 0;
             
             string query = String.Format("INSERT INTO Purchases (EmployeeID, SupplierId, SupplierEmployee, PurchaseDate, Currency, ExcRate, Description)"
-                                       + "VALUES (@EmployeeID, @SupplierId, @SupplierEmployee, @PurchaseDate, @Currency, @ExcRate, @Description);"
+                                       + "VALUES (@EmployeeID, @SupplierId, @SupplierEmployee, strftime('%s', @PurchaseDate), @Currency, @ExcRate, @Description);"
                                        + "SELECT PurchaseId FROM Purchases WHERE rowid = last_insert_rowid();");
 
             cmd.CommandText = query;
@@ -598,14 +598,7 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@Currency", purchase.Currency);
             cmd.Parameters.AddWithValue("@ExcRate", purchase.ExcRate);
             cmd.Parameters.AddWithValue("@Description", purchase.Description);
-
-            //Переводим время в Utc формат.
-            //DateTime dt = TimeZoneInfo.ConvertTimeToUtc(sale.PurchaseDate);
-            DateTime dt1970 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            TimeSpan tsInterval = purchase.OperationDate.Subtract(dt1970);
-            Int32 seconds = Convert.ToInt32(tsInterval.TotalSeconds);
-
-            cmd.Parameters.AddWithValue("@PurchaseDate", seconds);
+            cmd.Parameters.AddWithValue("@PurchaseDate", purchase.OperationDate);
 
             purchaseId = Convert.ToInt32(cmd.ExecuteScalar());     
                    
@@ -738,7 +731,7 @@ namespace PartsApp
             int saleId = 0;
 
             var query = String.Format("INSERT INTO Sales (EmployeeID, CustomerId, CustomerEmployee, SaleDate, Currency, ExcRate, Description) "
-                                    + "VALUES (@EmployeeID, @CustomerId, @CustomerEmployee, @SaleDate, @Currency, @ExcRate, @Description); "
+                                    + "VALUES (@EmployeeID, @CustomerId, @CustomerEmployee, strftime('%s', @SaleDate), @Currency, @ExcRate, @Description); "
                                     + "SELECT SaleId FROM Sales WHERE rowid = last_insert_rowid();");
 
             cmd.CommandText = query;
@@ -751,14 +744,9 @@ namespace PartsApp
 
             cmd.Parameters.AddWithValue("@Currency", sale.Currency);
             cmd.Parameters.AddWithValue("@ExcRate", sale.ExcRate);
-            cmd.Parameters.AddWithValue("@Description", sale.Description);
-            
-            //DateTime dt = TimeZoneInfo.ConvertTimeToUtc(sale.SaleDate);
-            DateTime dt1970 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            TimeSpan tsInterval = sale.OperationDate.Subtract(dt1970);
-            Int32 seconds = Convert.ToInt32(tsInterval.TotalSeconds);
+            cmd.Parameters.AddWithValue("@Description", sale.Description);           
 
-            cmd.Parameters.AddWithValue("@SaleDate", seconds);
+            cmd.Parameters.AddWithValue("@SaleDate", sale.OperationDate);
 
             saleId = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -1084,21 +1072,7 @@ namespace PartsApp
             while (dataReader.Read())
             {
                 SparePart sparePart = new SparePart();
-                #region //конструктор
-                /*
-                    {
-                        Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
-                        SparePartId= Convert.ToInt32(dataReader["Id"]),
-                        Articul = dataReader["Articul"] as string,
-                        Title = dataReader["Title"] as string,
-                        Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                        //Price = Convert.ToDouble(dataReader["Price"]),
-                        //Markup = Convert.ToInt32(dataReader["Markup"]),
-                        //Count = Convert.ToDouble(dataReader["Count"]),
-                        //Unit = dataReader["Unit"] as string
-                    }; 
-                    */
-                #endregion
+
                 sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
                 sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
                 sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);

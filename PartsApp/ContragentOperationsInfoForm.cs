@@ -69,14 +69,12 @@ namespace PartsApp
             //Если инф-ции об операциях данного контрагента ещё нет в коллекции, находим её в базе и добавляем в коллекцию.
             List<IOperation> operList;
             if (_contragentsOperations.TryGetValue(contragId, out operList) == false)
-            {
-                //Заполняем таблицу Операций.
-                List<IOperation> operationsList = (_contragType == typeof(Supplier)) ? PartsDAL.FindPurchases(contragId) : PartsDAL.FindSales(contragId, null);
-                FillTheOperationsInfoDGV(operationsList);
-                _contragentsOperations.Add(contragId, operationsList);//добавляем в коллекцию.                
+            {                
+                operList = (_contragType == typeof(Supplier)) ? PartsDAL.FindPurchases(contragId) : PartsDAL.FindSales(contragId, null);
+                _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.                
             }//if
-            else
-                FillTheOperationsInfoDGV(operList);
+
+            FillTheOperationsInfoDGV(operList.OrderByDescending(op => op.OperationDate).ToList()); //Заполняем таблицу Операций.
         }//ContragentsListBox_SelectedIndexChanged
 
         /// <summary>

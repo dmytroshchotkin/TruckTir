@@ -38,10 +38,10 @@ namespace PartsApp
         }
 
         private void SaleForm_Load(object sender, EventArgs e)
-        {
-            
+        {           
+            //Устанавливаем даты для DateTimePicker.
             saleDateTimePicker.MaxDate = DateTime.Now.Date.AddDays(7);
-            saleDateTimePicker.MinDate =  saleDateTimePicker.Value = DateTime.Now.Date;
+            saleDateTimePicker.MinDate = saleDateTimePicker.Value = DateTime.Now;
 
             currencyComboBox.SelectedItem = "руб";
 /*!!!*/     customerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllCustomersName()); //находим сразу всех, вместо подгрузки по вводу.

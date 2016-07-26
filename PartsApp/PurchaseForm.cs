@@ -40,9 +40,9 @@ namespace PartsApp
 
             supplierTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllSuppliersName());
 
-            purchaseDateTimePicker.MaxDate = DateTime.Now.Date;
-            purchaseDateTimePicker.Value = DateTime.Now.Date;
-
+            //Устанавливаем параметры дат, для DateTimePicker.            
+            purchaseDateTimePicker.MaxDate = purchaseDateTimePicker.Value = DateTime.Now;
+            
             //Вносим все типы наценок в markupComboBox             
             markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().Select(markup => markup.Value).ToArray<string>());
 
