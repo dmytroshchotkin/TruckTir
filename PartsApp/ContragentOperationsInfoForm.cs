@@ -74,7 +74,7 @@ namespace PartsApp
                 _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.                
             }//if
 
-            FillTheOperationsInfoDGV(operList.OrderByDescending(op => op.OperationDate).ToList()); //Заполняем таблицу Операций.
+            FillTheOperationsInfoDGV(operList); //Заполняем таблицу Операций.
         }//ContragentsListBox_SelectedIndexChanged
 
         /// <summary>
@@ -150,3 +150,6 @@ namespace PartsApp
     }//ContragentOperationsInfoForm
 
 }//namespace
+
+/*Будущие задачи*/
+//Сделать выбор периода за кот. ищется инф-ция.

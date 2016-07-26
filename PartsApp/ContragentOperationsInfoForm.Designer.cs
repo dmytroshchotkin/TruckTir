@@ -292,7 +292,7 @@
             dataGridViewCellStyle2.Format = "C2";
             dataGridViewCellStyle2.NullValue = null;
             this.TotalSumCol.DefaultCellStyle = dataGridViewCellStyle2;
-            this.TotalSumCol.HeaderText = "Сумма";
+            this.TotalSumCol.HeaderText = "Сумма (руб.)";
             this.TotalSumCol.Name = "TotalSumCol";
             this.TotalSumCol.ReadOnly = true;
             // 

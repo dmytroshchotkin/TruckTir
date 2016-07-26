@@ -2092,7 +2092,8 @@ namespace PartsApp
 
                 const string query = "SELECT *, datetime(PurchaseDate, 'unixepoch') as PD "
                                    + "FROM Purchases "
-                                   + "WHERE SupplierId = @SupplierId";
+                                   + "WHERE SupplierId = @SupplierId "
+                                   + "ORDER BY PurchaseDate desc;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
                 cmd.Parameters.AddWithValue("@SupplierId", supplierId);
 
@@ -2121,7 +2122,8 @@ namespace PartsApp
 
                 const string query = "SELECT *, datetime(SaleDate, 'unixepoch') as SD "
                                    + "FROM Sales "
-                                   + "WHERE CustomerId = @CustomerId";
+                                   + "WHERE CustomerId = @CustomerId "
+                                   + "ORDER BY SaleDate desc;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
                 cmd.Parameters.AddWithValue("@CustomerId", customerId);
 
