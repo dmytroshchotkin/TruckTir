@@ -678,7 +678,8 @@ namespace PartsApp
             SpList = (List<SparePart>)Cloner.Clone(origSpList);
             ExtSpList = (List<SparePart>)Cloner.Clone(origExtSpList);
 
-            partsDataGridView.DataSource = SpList;
+            FillThePartsDataGridView(SpList.ToList());
+            //partsDataGridView.DataSource = SpList;
 
             changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
 
@@ -694,16 +695,17 @@ namespace PartsApp
             //Находим все SP с изменяемой наценкой. 
             foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
             {
-                if (row.Cells["Avaliability"].Value.ToString() == "0") continue;
-                int sparePartId = Convert.ToInt32(row.Cells["SparePartId"].Value);
+                if (row.Cells[AvaliabilityCol.Name].Value.ToString() == "0") continue;
+                int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
                 //Находим запись в SpList с данным SparePartId.
                 foreach (var sparePart in SpList)
                 {
                     if (sparePart.SparePartId == sparePartId)
                     {
                         sparePart.Markup = markup;
+                        row.Cells[SellingPriceCol.Name].Value = sparePart.SellingPrice; //Присваиваем новое значение столбцу 'ЦенаПродажи'.
                         break;
-                    }
+                    }//if
                 }//foreach
                 //Ищем все записи с нужным SparaPartId.
                 foreach (var sparePart in ExtSpList)
@@ -714,9 +716,8 @@ namespace PartsApp
                         sparePart.MarkupType = MarkupTypes.GetMarkupType(markup);//MarkupTypes.GetMarkupType(markup);
                         SaveMarkupChangeToBuffer(sparePart.SparePartId, sparePart.PurchaseId, markup);
                     }//if
-                }//foreach
-
-                partsDataGridView.InvalidateCell(row.Cells["SellingPrice"]);
+                }//foreach                                
+                //partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
             }//foreach   
             //Обновляем отображение столбцов в extPartsDataGridView.
             extPartsDataGridView.Invalidate();
@@ -830,7 +831,7 @@ namespace PartsApp
 
             foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
             {
-                int sparePartId = Convert.ToInt32(row.Cells["SparePartId"].Value);
+                int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
                 //Ищем все записи с нужным SparaPartId.
                 foreach (var sparePart in ExtSpList)
                 {
@@ -866,7 +867,7 @@ namespace PartsApp
                 markupComboBox.Enabled = true; //Делаем доступным функционал изменения наценки. 
 
                 //Находим список всех приходов в наличии искомой запчасти.
-                int sparePartId = Convert.ToInt32(partsDataGridView.Rows[e.RowIndex].Cells["SparePartId"].Value);
+                int sparePartId = Convert.ToInt32(partsDataGridView.Rows[e.RowIndex].Cells[SparePartIdCol.Name].Value);
                 extPartsDataGridView.DataSource = FindSparePartsFromExtSpListBySparePartId(sparePartId);
             }//if
             //Если ПКМ, выводим контекстное меню.
@@ -972,8 +973,12 @@ namespace PartsApp
         {
             partsDataGridView.Cursor = Cursors.WaitCursor;
             //progressBar.Value = progressBar.Maximum / 2;  //не работает
-            partsDataGridView.DataSource = SpList = Cloner.Clone(spareParts).OrderBy(sp => sp.Title).ToList();
-            origSpList = Cloner.Clone(spareParts);
+            //partsDataGridView.DataSource = SpList = Cloner.Clone(spareParts).OrderBy(sp => sp.Title).ToList();
+
+            IList<SparePart> orderSPList = Cloner.Clone(spareParts.OrderBy(sp => sp.Title).ToList());
+            FillThePartsDataGridView(orderSPList.ToList());
+            SpList = orderSPList;
+            origSpList = Cloner.Clone(spareParts.OrderBy(sp => sp.Title).ToList());
 
             ExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
             origExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
@@ -1046,6 +1051,47 @@ namespace PartsApp
             extPartsDataGridView.Columns["SupplierName"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             extPartsDataGridView.Columns["SellingPrice"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
         }//HideExtPartsDataGridViewColumns
+
+        private void FillThePartsDataGridView(List<SparePart> sparePartsList)
+        {
+            partsDataGridView.Rows.Clear();//Очищаем таблицу.
+            //Заполняем таблицу.
+            foreach (SparePart sparePart in sparePartsList)
+            {
+                int newRowIndx = partsDataGridView.Rows.Add();
+                DataGridViewRow row = partsDataGridView.Rows[newRowIndx];
+
+                row.Cells[SparePartIdCol.Name].Value  = sparePart.SparePartId;
+                row.Cells[PhotoCol.Name].Value        = sparePart.Photo;
+                row.Cells[ManufacturerCol.Name].Value = sparePart.Manufacturer;
+                row.Cells[ArticulCol.Name].Value      = sparePart.Articul;
+                row.Cells[TitleCol.Name].Value        = sparePart.Title;
+                row.Cells[DescriptionCol.Name].Value  = sparePart.Description;
+                row.Cells[MeasureUnitCol.Name].Value  = sparePart.Unit;
+                row.Cells[AvaliabilityCol.Name].Value = sparePart.Count;
+                row.Cells[SellingPriceCol.Name].Value = sparePart.SellingPrice;
+            }//foreach
+
+            //Другие настройки.
+            rowsCountLabel.Text = partsDataGridView.Rows.Count.ToString(); //Обновляем rowsCountLabel по количеству строк. 
+
+            //обработка размера RowHeaders.
+            int i, count = partsDataGridView.Rows.Count;
+            for (i = 0; count != 0; ++i)
+            {
+                count /= 10;
+            }//for    
+            partsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
+
+            changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
+            saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
+            Deselection();
+
+            //Устанавливаем постоянную позицию для отображения Фото.           
+            DataGridViewCell cell2 = partsDataGridView.Columns[1].HeaderCell;
+            Rectangle rect = partsDataGridView.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
+            photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDataGridView.Location.Y);
+        }//FillThePartsDataGridView
 
         //Метод для сброса выделений
         /// <summary>
@@ -1146,12 +1192,12 @@ namespace PartsApp
 
         private void editSparePartToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddSparePartForm(Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value)).Show();
+            new AddSparePartForm(Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value)).Show();
         }//editSparePartToolStripMenuItem_Click
 
         private void SpPriceListToExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value);
+            int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value);
             string title = partsDataGridView.SelectedCells[0].OwningRow.Cells["Title"].Value.ToString();
             string articul = partsDataGridView.SelectedCells[0].OwningRow.Cells["Articul"].Value.ToString();
             double price = Convert.ToDouble(partsDataGridView.SelectedCells[0].OwningRow.Cells["price"].Value);
@@ -1249,7 +1295,7 @@ namespace PartsApp
 
         private void посмотретьПередвижениеТовараToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells["SparePartId"].Value);
+            int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value);
             new SparePartOperationsInfoForm(sparePartId).Show();
         }//
 

@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -48,8 +51,10 @@
             this.addNewEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supplierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewSupplierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewInfoBySuppliersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewCustomerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewInfoByCustomersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.purchaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewPurchaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,8 +89,15 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ViewInfoBySuppliersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ViewInfoByCustomersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SparePartIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PhotoCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ManufacturerCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArticulCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TitleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DescriptionCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MeasureUnitCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AvaliabilityCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SellingPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -260,6 +272,13 @@
             this.addNewSupplierToolStripMenuItem.Text = "Добавить нового поставщика";
             this.addNewSupplierToolStripMenuItem.Click += new System.EventHandler(this.addNewSupplierToolStripMenuItem_Click);
             // 
+            // ViewInfoBySuppliersToolStripMenuItem
+            // 
+            this.ViewInfoBySuppliersToolStripMenuItem.Name = "ViewInfoBySuppliersToolStripMenuItem";
+            this.ViewInfoBySuppliersToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this.ViewInfoBySuppliersToolStripMenuItem.Text = "Посмотреть инф-цию по поставщикам";
+            this.ViewInfoBySuppliersToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
+            // 
             // customerToolStripMenuItem
             // 
             this.customerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -275,6 +294,13 @@
             this.addNewCustomerToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
             this.addNewCustomerToolStripMenuItem.Text = "Добавить нового клиента";
             this.addNewCustomerToolStripMenuItem.Click += new System.EventHandler(this.addNewCustomerToolStripMenuItem_Click);
+            // 
+            // ViewInfoByCustomersToolStripMenuItem
+            // 
+            this.ViewInfoByCustomersToolStripMenuItem.Name = "ViewInfoByCustomersToolStripMenuItem";
+            this.ViewInfoByCustomersToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.ViewInfoByCustomersToolStripMenuItem.Text = "Посмотреть инф-цию по клиентам";
+            this.ViewInfoByCustomersToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
             // 
             // purchaseToolStripMenuItem
             // 
@@ -448,9 +474,21 @@
             // 
             // partsDataGridView
             // 
+            this.partsDataGridView.AllowUserToAddRows = false;
+            this.partsDataGridView.AllowUserToDeleteRows = false;
             this.partsDataGridView.AllowUserToResizeRows = false;
             this.partsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.partsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.partsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.SparePartIdCol,
+            this.PhotoCol,
+            this.ManufacturerCol,
+            this.ArticulCol,
+            this.TitleCol,
+            this.DescriptionCol,
+            this.MeasureUnitCol,
+            this.AvaliabilityCol,
+            this.SellingPriceCol});
             this.partsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.partsDataGridView.Location = new System.Drawing.Point(0, 0);
             this.partsDataGridView.Name = "partsDataGridView";
@@ -641,19 +679,84 @@
             this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
             this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
-            // ViewInfoBySuppliersToolStripMenuItem
+            // SparePartIdCol
             // 
-            this.ViewInfoBySuppliersToolStripMenuItem.Name = "ViewInfoBySuppliersToolStripMenuItem";
-            this.ViewInfoBySuppliersToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
-            this.ViewInfoBySuppliersToolStripMenuItem.Text = "Посмотреть инф-цию по поставщикам";
-            this.ViewInfoBySuppliersToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
+            this.SparePartIdCol.HeaderText = "Ид товара";
+            this.SparePartIdCol.Name = "SparePartIdCol";
+            this.SparePartIdCol.ReadOnly = true;
+            this.SparePartIdCol.Visible = false;
             // 
-            // ViewInfoByCustomersToolStripMenuItem
+            // PhotoCol
             // 
-            this.ViewInfoByCustomersToolStripMenuItem.Name = "ViewInfoByCustomersToolStripMenuItem";
-            this.ViewInfoByCustomersToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
-            this.ViewInfoByCustomersToolStripMenuItem.Text = "Посмотреть инф-цию по клиентам";
-            this.ViewInfoByCustomersToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
+            this.PhotoCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.PhotoCol.HeaderText = "Фото";
+            this.PhotoCol.Name = "PhotoCol";
+            this.PhotoCol.ReadOnly = true;
+            this.PhotoCol.Width = 60;
+            // 
+            // ManufacturerCol
+            // 
+            this.ManufacturerCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ManufacturerCol.HeaderText = "Производитель";
+            this.ManufacturerCol.Name = "ManufacturerCol";
+            this.ManufacturerCol.ReadOnly = true;
+            this.ManufacturerCol.Width = 111;
+            // 
+            // ArticulCol
+            // 
+            this.ArticulCol.HeaderText = "Артикул";
+            this.ArticulCol.MinimumWidth = 50;
+            this.ArticulCol.Name = "ArticulCol";
+            this.ArticulCol.ReadOnly = true;
+            // 
+            // TitleCol
+            // 
+            this.TitleCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.TitleCol.HeaderText = "Название";
+            this.TitleCol.MinimumWidth = 100;
+            this.TitleCol.Name = "TitleCol";
+            this.TitleCol.ReadOnly = true;
+            // 
+            // DescriptionCol
+            // 
+            this.DescriptionCol.HeaderText = "Описание";
+            this.DescriptionCol.MinimumWidth = 100;
+            this.DescriptionCol.Name = "DescriptionCol";
+            this.DescriptionCol.ReadOnly = true;
+            // 
+            // MeasureUnitCol
+            // 
+            this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle1;
+            this.MeasureUnitCol.HeaderText = "Ед. изм.";
+            this.MeasureUnitCol.MinimumWidth = 35;
+            this.MeasureUnitCol.Name = "MeasureUnitCol";
+            this.MeasureUnitCol.ReadOnly = true;
+            this.MeasureUnitCol.Width = 35;
+            // 
+            // AvaliabilityCol
+            // 
+            this.AvaliabilityCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AvaliabilityCol.DefaultCellStyle = dataGridViewCellStyle2;
+            this.AvaliabilityCol.HeaderText = "Наличие";
+            this.AvaliabilityCol.Name = "AvaliabilityCol";
+            this.AvaliabilityCol.ReadOnly = true;
+            this.AvaliabilityCol.Width = 75;
+            // 
+            // SellingPriceCol
+            // 
+            this.SellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "C2";
+            dataGridViewCellStyle3.NullValue = null;
+            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle3;
+            this.SellingPriceCol.HeaderText = "Цена (руб.)";
+            this.SellingPriceCol.MinimumWidth = 75;
+            this.SellingPriceCol.Name = "SellingPriceCol";
+            this.SellingPriceCol.ReadOnly = true;
+            this.SellingPriceCol.Width = 80;
             // 
             // Form1
             // 
@@ -759,6 +862,15 @@
         private System.Windows.Forms.ToolStripMenuItem посмотретьПередвижениеТовараToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewInfoBySuppliersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewInfoByCustomersToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SparePartIdCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PhotoCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ManufacturerCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArticulCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TitleCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DescriptionCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MeasureUnitCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AvaliabilityCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SellingPriceCol;
 
     }
 }

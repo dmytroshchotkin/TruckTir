@@ -219,18 +219,6 @@ namespace PartsApp
             unitComboBox.Text = String.Empty;
             unitComboBox.Focus();
         }//addUnitToolStripMenuItem_Click
-        //Событие добавление запчастей в список взаимозаменяемых запчастей. 
-        private void addInterchSpButton_Click(object sender, EventArgs e)
-        {
-            //interchSpDataGridView.Rows.Add();
-            SparePart sp = new SparePart();
-            sp.Articul = interchSpDataGridView.Rows[0].Cells[0].Value.ToString();
-            sp.Title = interchSpDataGridView.Rows[0].Cells[1].Value.ToString();
-
-
-           string str = String.Format("{0} {1} ", sp.Articul, sp.Title);
-           MessageBox.Show(str);
-        }//addInterchSpButton_Click
 
         private void addPhotoButton_Click(object sender, EventArgs e)
         {
@@ -267,62 +255,7 @@ namespace PartsApp
 
             }//if
         }//addPhotoButton_Click
-
-        private void interchSpDataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
-        {          
-            //int column = interchSpDataGridView.CurrentCell.ColumnIndex;
-            //string headerText = interchSpDataGridView.Columns[column].HeaderText;
-           
-            //if (headerText.Equals("Артикул"))
-            //{
-            //    spareParts.Clear();
-            //    for (int i = 0; i <= 10; i++)
-            //    {
-            //        SparePart sp = new SparePart
-            //        {
-            //            Photo = "Photo",
-            //            Articul = "articul" + i.ToString(),
-            //            Title = "title" + i.ToString(),
-            //            Description = "title" + i.ToString(),
-            //            //Category = "title" + i.ToString(),
-            //            Manufacturer = manufacturerTextBox.Text,
-            //        };
-            //        spareParts.Add(sp);
-            //    }//for
-
-            //    TextBox tb = e.Control as TextBox;
-
-            //    AutoCompleteStringCollection str = new AutoCompleteStringCollection();
-            //    foreach(var sp in spareParts)
-            //        str.Add(sp.Articul);
-
-            //    if (tb != null)
-            //    {
-            //        tb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            //        tb.AutoCompleteCustomSource = str;
-            //        tb.AutoCompleteSource = AutoCompleteSource.CustomSource;
-            //    }
-            //}//if
-        }//interchSpDataGridView_EditingControlShowing
-
-        private void interchSpDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            //if (e.ColumnIndex == 0)
-            //{
-            //    DataGridViewCell cell = interchSpDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            //    SparePart sp = new SparePart();
-            //    foreach (var spr in spareParts)
-            //        if (spr.Articul == cell.Value.ToString())
-            //            sp = spr;
-
-            //    interchSpDataGridView.Rows[e.RowIndex].Cells[1].Value = sp.Title;
-            //    interchSpDataGridView.Rows[e.RowIndex].Cells[2].Value = sp.Description;
-            //    interchSpDataGridView.Rows[e.RowIndex].Cells[3].Value = sp.Manufacturer;
-            //    //interchSpDataGridView.Rows[e.RowIndex].Cells[4].Value = sp.Category;
-
-
-            //}//if
-        }//interchSpDataGridView_CellEndEdit
+        
         //Событие для отмены выбора фотографии.
         private void deselectToolStripMenuItem_Click(object sender, EventArgs e)
         {
