@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using PartsApp.SupportClasses;
 
 namespace PartsApp
 {
@@ -840,14 +841,16 @@ namespace PartsApp
                         sparePart.ExcRate = (double)excRateNumericUpDown.Value;
                     }//if
                 }//foreach
+
                 //Находим запись в SpList с данным SparePartId.
                 foreach (var sparePart in SpList)
                     if (sparePart.SparePartId == sparePartId)
                     {
                         sparePart.ExcRate = (double)excRateNumericUpDown.Value;
+                        row.Cells[SellingPriceCol.Name].Value = sparePart.SellingPrice;
                         break;
                     }
-                partsDataGridView.InvalidateCell(row.Cells["SellingPrice"]);
+                partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
             }//foreach   
             //Обновляем отображение столбцов в extPartsDataGridView.
             extPartsDataGridView.Invalidate();    
@@ -911,7 +914,7 @@ namespace PartsApp
             try
             {
                 //Если клетка находится в колонке Photo и при этом не является заголовком.
-                if (e.ColumnIndex == partsDataGridView.Columns["Photo"].Index && e.RowIndex != partsDataGridView.Columns["Photo"].HeaderCell.RowIndex)
+                if (e.ColumnIndex == partsDataGridView.Columns[PhotoCol.Name].Index && e.RowIndex != partsDataGridView.Columns[PhotoCol.Name].HeaderCell.RowIndex)
                 {
                     DataGridViewCell cell = partsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
                     //проверяем есть ли фото у данного эл-та.
@@ -1004,7 +1007,7 @@ namespace PartsApp
             partsDataGridView.Columns["StorageAdress"].Visible  = false;
 
             //устанавливаем размеры столбцов.
-            partsDataGridView.Columns["Photo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            partsDataGridView.Columns[PhotoCol.Name].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             partsDataGridView.Columns["Articul"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             partsDataGridView.Columns["Title"].MinimumWidth = 100;
             partsDataGridView.Columns["Description"].MinimumWidth = 100;
@@ -1014,7 +1017,7 @@ namespace PartsApp
             partsDataGridView.Columns["Unit"].Width = 35;
 
             partsDataGridView.Columns["Avaliability"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            partsDataGridView.Columns["SellingPrice"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            partsDataGridView.Columns[SellingPriceCol.Name].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
                                 
         }//HidePartsDataGridViewColumns
         /// <summary>
@@ -1198,19 +1201,7 @@ namespace PartsApp
         private void SpPriceListToExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value);
-            string title = partsDataGridView.SelectedCells[0].OwningRow.Cells["Title"].Value.ToString();
-            string articul = partsDataGridView.SelectedCells[0].OwningRow.Cells["Articul"].Value.ToString();
-            double price = Convert.ToDouble(partsDataGridView.SelectedCells[0].OwningRow.Cells["price"].Value);
-            double sellingPrice =  Convert.ToDouble(partsDataGridView.SelectedCells[0].OwningRow.Cells["SellingPrice"].Value);
-
-            SparePart sp = new SparePart()
-            {
-                SparePartId = sparePartId,
-                Articul = articul,
-                Title = title,
-                Price = price,
-                Markup = MarkupTypes.GetMarkupValue("Розница")              
-            };
+            SparePart sp = origSpList.First(s => s.SparePartId == sparePartId);
 
             ExcelSaveSparePartPriceList(sp);
         }//SpPriceListToExcelToolStripMenuItem_Click
