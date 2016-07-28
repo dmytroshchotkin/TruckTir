@@ -91,6 +91,7 @@ namespace PartsApp
 
         private void beginSaveInExcel(object spareParts)
         {            
+            /*STUB*/
             if (spareParts is IList<SparePart>)
                 saveInExcel(spareParts as IList<SparePart>);
         }//beginSaveInExcel
@@ -119,7 +120,7 @@ namespace PartsApp
             ExcelApp.Cells[row, column + 3] = "Ед. изм.";
             ExcelApp.Cells[row, column + 4] = "Кол-во";
             ExcelApp.Cells[row, column + 5] = "Цена";
-            //ExcelApp.Cells[row, column + 5] = "Сумма";
+            //excelApp.Cells[row, column + 5] = "Сумма";
 
             Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
             excelCells.Font.Bold = true;
@@ -161,8 +162,8 @@ namespace PartsApp
                 
                 ExcelApp.Cells[row, column + 3] = spareParts[i].Unit;                
                 ExcelApp.Cells[row, column + 4] = spareParts[i].Count;
-                //ExcelApp.Cells[row, column + 5] = spareParts[i].Price;                
-                //ExcelApp.Cells[row, column + 5] = spareParts[i].Price * spareParts[i].Count;
+                //excelApp.Cells[row, column + 5] = spareParts[i].Price;                
+                //excelApp.Cells[row, column + 5] = spareParts[i].Price * spareParts[i].Count;
                 ExcelApp.Cells[row, column + 5] = spareParts[i].SellingPrice;                
             }//for
 
@@ -231,13 +232,80 @@ namespace PartsApp
 
 
 
+        private void SpPriceListToExcelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+             IEnumerable<DataGridViewRow> selectedRows = partsDataGridView.SelectedCells.Cast<DataGridViewCell>()
+                                                                                        .Select(cell => cell.OwningRow).Distinct();
 
+            List<SparePart> sparePartsList = new List<SparePart>();
+            foreach (DataGridViewRow row in selectedRows)
+            {
+                int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
+                sparePartsList.Add(origSpList.First(s => s.SparePartId == sparePartId));
+            }//foreach
 
+            ExcelSaveSparePartPriceList(sparePartsList);
+        }//SpPriceListToExcelToolStripMenuItem_Click
 
+        private void ExcelSaveSparePartPriceList(IList<SparePart> sparePartsList)
+        {
+            Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
+            Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); ;
+            Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
 
+            //Настраиваем горизонтальные и вертикальные границы области печати.
+            ExcelWorkSheet.PageSetup.TopMargin = ExcelWorkSheet.PageSetup.BottomMargin = 7;
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin = 7;
+            ExcelWorkSheet.Columns["B"].ColumnWidth = 1; //задаем ширину второго столбца, для того чтобы корректно выделять рамкой ценники.
 
+            //Заполняем Excel-файл, по 2 записи на строку.
+            int row = 1;
+            for (int i = 0; i < sparePartsList.Count; ++i)
+            {
+                FillExcelSheetPriceList(sparePartsList[i], row, 1, ExcelWorkSheet);
+                if (++i < sparePartsList.Count)
+                    row = FillExcelSheetPriceList(sparePartsList[i], row, 3, ExcelWorkSheet);
 
+                row += 2;                
+            }//for
+            //Вызываем нашу созданную эксельку.
+            ExcelApp.Visible = true;
+            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
+            ExcelApp.UserControl = true;
+        }//ExcelSaveSparePartPriceList
 
+        private int FillExcelSheetPriceList(SparePart sparePart, int startRow, int column, 
+                                             Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet)
+        {
+            int row = startRow, columnWidth = 50;
+            string columnChar = (column == 1) ? "A" : "C";
+            ExcelWorkSheet.Cells[row, column].Columns.ColumnWidth = columnWidth; //задаём ширину столбца.
+                        
+            ExcelWorkSheet.Cells[row, column] = sparePart.Articul; //Выводим Артикул.
+            row += 2;
+            ExcelWorkSheet.Cells[row, column] = sparePart.Title; //Выводим Название.
+            ExcelWorkSheet.get_Range(columnChar + startRow.ToString(), columnChar + row.ToString()).Font.Size = 12;
+            ExcelWorkSheet.get_Range(columnChar + startRow.ToString(), columnChar + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            //Если не влазиет в строку, делаем перенос.
+            if (sparePart.Title.Length > columnWidth - 5)
+                ExcelWorkSheet.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+
+            //Выводим Розничную цену.
+            row += 2;
+            ExcelWorkSheet.Cells[row, column] = String.Format("{0:0.00} руб", sparePart.SellingPrice);
+            Excel.Range excelCells = ExcelWorkSheet.get_Range(columnChar + row.ToString());
+            excelCells.Font.Size = 24;
+            //Выравниваем по центру.
+            ExcelWorkSheet.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+
+            //Обводим рамкой. 
+            ExcelWorkSheet.get_Range(columnChar + startRow.ToString(), columnChar + row.ToString()).Font.Bold = true;
+            excelCells = ExcelWorkSheet.get_Range(columnChar + startRow.ToString(), columnChar + row.ToString());
+            excelCells.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic, Excel.XlRgbColor.rgbBlack);
+
+            return row;
+        }//FillExcelSheetPriceList
+        
 
 
 
@@ -876,9 +944,6 @@ namespace PartsApp
             //Если ПКМ, выводим контекстное меню.
             else
             {
-                //Очищаем все выделения в таблице, и выделяем выбранную только клетку.
-                partsDataGridView.ClearSelection();
-                partsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected = true;
                 //Находим позицию в таблице, где был сделан клик.
                 Point cellLocation = partsDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
                 Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
@@ -1198,80 +1263,7 @@ namespace PartsApp
             new AddSparePartForm(Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value)).Show();
         }//editSparePartToolStripMenuItem_Click
 
-        private void SpPriceListToExcelToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value);
-            SparePart sp = origSpList.First(s => s.SparePartId == sparePartId);
-
-            ExcelSaveSparePartPriceList(sp);
-        }//SpPriceListToExcelToolStripMenuItem_Click
-
-        private void ExcelSaveSparePartPriceList(SparePart sparePart)
-        {
-            Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
-            Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook;
-            Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet;
-            //Книга.
-            ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
-            //Таблица.
-            ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
-
-            //Настраиваем горизонтальные границы области печати.
-            ExcelWorkSheet.PageSetup.LeftMargin = 7;
-            ExcelWorkSheet.PageSetup.RightMargin = 7;
-
-            #region Вывод таблицы товаров.
-            
-            //Выводим Артикул.
-            int row = 1, column = 1;
-            ExcelWorkSheet.get_Range("A" + row.ToString()).Columns.ColumnWidth = 50;
-
-            ExcelApp.Cells[row, column] = sparePart.Articul;
-            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString());//, "F" + row.ToString());
-            excelCells.Font.Bold = true;
-            excelCells.Font.Size = 12;
-            ExcelApp.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-
-            //Выводим Название.
-            row+=2;
-            ExcelApp.Cells[row, column] = sparePart.Title;
-            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString());//, "F" + row.ToString());
-            excelCells.Font.Bold = true;
-            excelCells.Font.Size = 12;
-            //Если не влазиет в строку, делаем перенос.
-            if (sparePart.Title.Length > 50)
-            {
-                ExcelApp.Cells[row, column].VerticalAlignment = Excel.Constants.xlTop;
-                ExcelApp.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
-                //ExcelApp.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-            }
-
-
-            //Выводим Розничную цену.
-            row+=2;
-            ExcelApp.Cells[row, column] = String.Format("{0:0.00} руб", sparePart.SellingPrice);
-            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString());//, "F" + row.ToString());
-            excelCells.Font.Bold = true;
-            excelCells.Font.Size = 24;
-            //Выравниваем по центру.
-            (ExcelApp.Cells[row, column] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-
-
-            //Обводим рамкой. 
-            excelCells = ExcelWorkSheet.get_Range("A" + 1, "A" + row.ToString());
-            excelCells.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic, Excel.XlRgbColor.rgbBlack);
-
-
-            
-            #endregion
-
-
-
-            //Вызываем нашу созданную эксельку.
-            ExcelApp.Visible = true;
-            //ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-            ExcelApp.UserControl = true;    
-        }//ExcelSaveSparePartPriceList
+        
 
 
         private void addNewEmployeeToolStripMenuItem_Click(object sender, EventArgs e)

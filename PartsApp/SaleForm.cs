@@ -981,40 +981,40 @@ namespace PartsApp
         ///// <param name="spareParts">Список оприходованных товаров.</param>
         //private void LoadSaleToExcelFile(Sale sale, IList<SparePart> spareParts)
         //{
-        //    Excel.Application ExcelApp = new Excel.Application();
+        //    Excel.Application excelApp = new Excel.Application();
         //    Excel.Workbook ExcelWorkBook;
         //    Excel.Worksheet ExcelWorkSheet;
         //    //Книга.
-        //    ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
+        //    ExcelWorkBook = excelApp.Workbooks.Add(System.Reflection.Missing.Value);
         //    //Таблица.
         //    ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
 
         //    int row = 1, column = 1;
 
         //    //Выводим Id и Дату. 
-        //    ExcelApp.Cells[row, column] = String.Format("Расходная накладная №{0} от {1}г.", sale.SaleId, sale.SaleDate.ToString("dd/MM/yyyy"));
+        //    excelApp.Cells[row, column] = String.Format("Расходная накладная №{0} от {1}г.", sale.SaleId, sale.SaleDate.ToString("dd/MM/yyyy"));
         //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
         //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
         //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
 
         //    //Выводим поставщика.
         //    row += 2;
-        //    ExcelApp.Cells[row, column] = String.Format("Продавец:    \t{0}", sellerTextBox.Text);//PartsDAL.FindSellerNameById(sale.SellerId));
+        //    excelApp.Cells[row, column] = String.Format("Продавец:    \t{0}", sellerTextBox.Text);//PartsDAL.FindSellerNameById(sale.SellerId));
         //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
 
         //    //Выводим покупателя.
         //    row += 2;
-        //    ExcelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", customerTextBox.Text);
+        //    excelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", customerTextBox.Text);
         //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
 
         //    //Выводим таблицу товаров.
         //    //Выводим заголовок.
         //    row += 2;
-        //    ExcelApp.Cells[row, column] = "Название";
-        //    ExcelApp.Cells[row, column + 1] = "Ед. изм.";
-        //    ExcelApp.Cells[row, column + 2] = "Кол-во";
-        //    ExcelApp.Cells[row, column + 3] = "Цена";
-        //    ExcelApp.Cells[row, column + 4] = "Сумма";
+        //    excelApp.Cells[row, column] = "Название";
+        //    excelApp.Cells[row, column + 1] = "Ед. изм.";
+        //    excelApp.Cells[row, column + 2] = "Кол-во";
+        //    excelApp.Cells[row, column + 3] = "Цена";
+        //    excelApp.Cells[row, column + 4] = "Сумма";
 
         //    Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "E" + row.ToString());
         //    excelCells.Font.Bold = true;
@@ -1026,22 +1026,22 @@ namespace PartsApp
 
         //    //Устанавливаем ширину первой Колонки для Title.
         //    double width = 45; //45 -- Взято методом тыка.           
-        //    (ExcelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = width;
+        //    (excelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = width;
         //    //Выводим список товаров.
         //    for (int i = 0; i < spareParts.Count; ++i)
         //    {
         //        ++row;
-        //        ExcelApp.Cells[row, column] = spareParts[i].Title;
+        //        excelApp.Cells[row, column] = spareParts[i].Title;
         //        //Если Title не влазиет в одну строку, увеличиваем высоту.
         //        if (spareParts[i].Title.Length > width)
         //        {
-        //            (ExcelApp.Cells[row, column] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+        //            (excelApp.Cells[row, column] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
         //            ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
         //        }
-        //        ExcelApp.Cells[row, column + 1] = spareParts[i].Unit;
-        //        ExcelApp.Cells[row, column + 2] = spareParts[i].Count;
-        //        ExcelApp.Cells[row, column + 3] = spareParts[i].Price;
-        //        ExcelApp.Cells[row, column + 4] = spareParts[i].Price * spareParts[i].Count;
+        //        excelApp.Cells[row, column + 1] = spareParts[i].Unit;
+        //        excelApp.Cells[row, column + 2] = spareParts[i].Count;
+        //        excelApp.Cells[row, column + 3] = spareParts[i].Price;
+        //        excelApp.Cells[row, column + 4] = spareParts[i].Price * spareParts[i].Count;
         //        //Выравнивание диапазона строк.
         //        ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
         //    }//for
@@ -1057,21 +1057,21 @@ namespace PartsApp
         //    if (inTotalNumberLabel.Text.Length <= 9)
         //        indent = 1;
 
-        //    ExcelApp.Cells[row, column + 2 + indent] = inTotalLabel.Text;
-        //    ExcelApp.Cells[row, column + 3 + indent] = inTotalNumberLabel.Text;
-        //    (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Underline = true;
-        //    (ExcelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
-        //    (ExcelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
+        //    excelApp.Cells[row, column + 2 + indent] = inTotalLabel.Text;
+        //    excelApp.Cells[row, column + 3 + indent] = inTotalNumberLabel.Text;
+        //    (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Underline = true;
+        //    (excelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Size = (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
+        //    (excelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Bold = (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
 
         //    //Выводим имена агентов.
         //    row += 2;
-        //    ExcelApp.Cells[row, column] = String.Format("\t{0} {1} ", sellerAgentLabel.Text, sellerAgentTextBox.Text);
-        //    ExcelApp.Cells[row, column + 1] = String.Format("{0} {1}", customerAgentLabel.Text, customerAgentTextBox.Text);
+        //    excelApp.Cells[row, column] = String.Format("\t{0} {1} ", sellerAgentLabel.Text, sellerAgentTextBox.Text);
+        //    excelApp.Cells[row, column + 1] = String.Format("{0} {1}", customerAgentLabel.Text, customerAgentTextBox.Text);
 
         //    //Вызываем нашу созданную эксельку.
-        //    ExcelApp.Visible = true;
+        //    excelApp.Visible = true;
         //    ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-        //    ExcelApp.UserControl = true;  //что меняет эта настройка?
+        //    excelApp.UserControl = true;  //что меняет эта настройка?
 
         //    this.Close();
         //}//LoadsaleToExcelFile
