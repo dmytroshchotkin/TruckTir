@@ -42,17 +42,7 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@Price", sparePart.Price);
             cmd.Parameters.AddWithValue("@Markup", sparePart.Markup);
             cmd.Parameters.AddWithValue("@StorageAdress", sparePart.StorageAdress);
-            if (sparePart.Count == 0)
-            {
-                cmd.Parameters.AddWithValue("@Storage", SparePart.VirtStorage);
-                cmd.Parameters.AddWithValue("@Count", sparePart.VirtCount);
-            }
-            else
-            {
-                cmd.Parameters.AddWithValue("@Storage", SparePart.MainStorage);
-                cmd.Parameters.AddWithValue("@Count", sparePart.Count);
-            }
-
+            cmd.Parameters.AddWithValue("@Count", (sparePart.Count == 0) ? sparePart.VirtCount : sparePart.Count);
             cmd.ExecuteNonQuery();    
         }//AddSparePartAvaliability         
         /// <summary>
@@ -1185,21 +1175,28 @@ namespace PartsApp
             {
                 connection.Open();
 
-                SQLiteCommand cmd = new SQLiteCommand("SELECT SUM(Count), Storage FROM Avaliability WHERE SparePartId = @SparePartId GROUP BY Storage;", connection);
+                const string query = "SELECT SUM(Count), StorageAdress "
+                                   + "FROM Avaliability "
+                                   + "WHERE SparePartId = @SparePartId "
+                                   + "GROUP BY StorageAdress;";
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
 
                 cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    if ((dataReader["Storage"] as string) ==SparePart.MainStorage) sparePart.Count = Convert.ToDouble(dataReader["SUM(Count)"]);
-                    else sparePart.VirtCount = Convert.ToDouble(dataReader["SUM(Count)"]);
+                    if ((dataReader["StorageAdress"] as string) != null) 
+                        sparePart.Count = Convert.ToDouble(dataReader["SUM(Count)"]);
+                    else 
+                        sparePart.VirtCount = Convert.ToDouble(dataReader["SUM(Count)"]);
                 }//while
 
                 connection.Close();
             }//using
             return sparePart;
         }//FindAllUniqueSparePartAvaliability
+
         /// <summary>
         /// Добавляет в передаваемый SparePart общее значение Count из таблицы Avaliability.
         /// </summary>
@@ -1208,34 +1205,26 @@ namespace PartsApp
         /// <returns></returns>
         public static SparePart FindUniqueSparePartsAvaliabilityCount(SparePart sparePart, SQLiteConnection openConnection)
         {
-            SQLiteCommand cmd = new SQLiteCommand("SELECT SUM(Count), Storage FROM Avaliability WHERE SparePartId = @SparePartId GROUP BY Storage;", openConnection);
+            const string query = "SELECT SUM(Count), StorageAdress "
+                                   + "FROM Avaliability "
+                                   + "WHERE SparePartId = @SparePartId "
+                                   + "GROUP BY StorageAdress;";
+            SQLiteCommand cmd = new SQLiteCommand(query, openConnection);
 
             cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
 
             var dataReader = cmd.ExecuteReader();
             while (dataReader.Read())
-            {
-                #region //конструктор
-                /*
-                    {
-                        Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
-                        SparePartId= Convert.ToInt32(dataReader["Id"]),
-                        Articul = dataReader["Articul"] as string,
-                        Title = dataReader["Title"] as string,
-                        Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                        //Price = Convert.ToDouble(dataReader["Price"]),
-                        //Markup = Convert.ToInt32(dataReader["Markup"]),
-                        //Count = Convert.ToDouble(dataReader["Count"]),
-                        //Unit = dataReader["Unit"] as string
-                    }; 
-                    */
-                #endregion
-                if ((dataReader["Storage"] as string) ==SparePart.MainStorage) sparePart.Count = Convert.ToDouble(dataReader["SUM(Count)"]);
-                else sparePart.VirtCount = Convert.ToDouble(dataReader["SUM(Count)"]);
+            {            
+                if ((dataReader["StorageAdress"] as string) == null) 
+                    sparePart.Count = Convert.ToDouble(dataReader["SUM(Count)"]);
+                else 
+                    sparePart.VirtCount = Convert.ToDouble(dataReader["SUM(Count)"]);
             }//while    
 
             return sparePart;
         }//FindAllUniqueSparePartAvaliability
+
         /// <summary>
         /// Возвращает кол-во записей данной SparePart (со скольких приходов данная запчасть сейчас в наличии, 0 -- запчасти нет в наличии.) 
         /// </summary>
@@ -2673,8 +2662,10 @@ namespace PartsApp
                     sparePart.Price = Convert.ToDouble(dataReader["Price"]);
                     sparePart.Markup = (dataReader["Markup"] == DBNull.Value) ? (double?)null : Convert.ToDouble(dataReader["Markup"]);
                     //sparePart.Storage = dataReader["Storage"] as string;
-                    if (dataReader["Storage"] as string ==SparePart.MainStorage) sparePart.Count = Convert.ToDouble(dataReader["Count"]);
-                    else sparePart.VirtCount = Convert.ToDouble(dataReader["Count"]);
+                    if ((dataReader["StorageAdress"] as string) == null) 
+                        sparePart.Count = Convert.ToDouble(dataReader["Count"]);
+                    else 
+                        sparePart.VirtCount = Convert.ToDouble(dataReader["Count"]);
 
 
                     spareParts.Add(sparePart);
@@ -2684,44 +2675,7 @@ namespace PartsApp
 
             return spareParts;
         }//SearchSparePartsByArticul
-        public static IList<SparePart> SearchSparePartsAvaliablityByArticul(string articul, SQLiteConnection openConnection)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
 
-            SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND sp.Articul LIKE @Articul", openConnection);
-
-            cmd.Parameters.AddWithValue("@Articul", articul + "%");
-
-            var dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
-            {
-                SparePart sparePart = new SparePart();
-                sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
-                sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                sparePart.Articul = dataReader["Articul"] as string;
-                sparePart.Title = dataReader["Title"] as string;
-
-                sparePart.ExtInfoId = (dataReader["ExtInfoId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ExtInfoId"]);
-                sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
-
-                sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                //sparePart.Manufacturer = (sparePart.ManufacturerId == null) ? String.Empty : FindManufacturerNameById(sparePart.ManufacturerId, openConnection);
-                //sparePart.Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"]), connection);
-
-                sparePart.Unit = dataReader["Unit"] as string;
-                sparePart.PurchaseId = Convert.ToInt32(dataReader["PurchaseId"]);
-                sparePart.Price = Convert.ToDouble(dataReader["Price"]);
-                sparePart.Markup = (dataReader["Markup"] == DBNull.Value) ? (double?)null : Convert.ToDouble(dataReader["Markup"]);
-                //sparePart.Storage = dataReader["Storage"] as string;
-                if (dataReader["Storage"] as string ==SparePart.MainStorage) sparePart.Count = Convert.ToDouble(dataReader["Count"]);
-                else sparePart.VirtCount = Convert.ToDouble(dataReader["Count"]);
-
-
-                spareParts.Add(sparePart);
-            }//while    
-
-            return spareParts;
-        }//SearchSparePartsByArticul
         /// <summary>
         /// Возвращает список размера не более limit, состоящий из запчастей в наличии, чьи Articul имеют совпадение с параметром articul.
         /// </summary>
@@ -2771,60 +2725,7 @@ namespace PartsApp
             return spareParts;
 
         }//SearchSparePartsByArticul
-        public static IList<SparePart> SearchSparePartsAvaliablityByTitle(string title)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
 
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND sp.Title LIKE @Title", connection);
-
-                cmd.Parameters.AddWithValue("@Title", title + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    SparePart sparePart = new SparePart();
-                    //{
-                    //    Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
-                    //    SparePartId= Convert.ToInt32(dataReader["Id"]),
-                    //    Articul = dataReader["Articul"] as string,
-                    //    Title = dataReader["Title"] as string,
-                    //    Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                    //    //Price = Convert.ToDouble(dataReader["Price"]),
-                    //    //Markup = Convert.ToInt32(dataReader["Markup"]),
-                    //    //Count = Convert.ToDouble(dataReader["Count"]),
-                    //    //Unit = dataReader["Unit"] as string
-                    //};
-                    sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
-                    sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                    sparePart.Articul = dataReader["Articul"] as string;
-                    sparePart.Title = dataReader["Title"] as string;
-
-                    sparePart.ExtInfoId = (dataReader["ExtInfoId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ExtInfoId"]);
-                    sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
-
-                    sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                    //sparePart.Manufacturer = (sparePart.ManufacturerId == null) ? String.Empty : FindManufacturerNameById(sparePart.ManufacturerId, connection);
-                    //sparePart.Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"]), connection);
-
-                    sparePart.Unit = dataReader["Unit"] as string;
-                    sparePart.PurchaseId = Convert.ToInt32(dataReader["PurchaseId"]);
-                    sparePart.Price = Convert.ToDouble(dataReader["Price"]);
-                    sparePart.Markup = (dataReader["Markup"] == DBNull.Value) ? (double?)null : Convert.ToDouble(dataReader["Markup"]);
-                    //sparePart.Storage = dataReader["Storage"] as string;
-                    if (dataReader["Storage"] as string ==SparePart.MainStorage) sparePart.Count = Convert.ToDouble(dataReader["Count"]);
-                    else sparePart.VirtCount = Convert.ToDouble(dataReader["Count"]);
-
-
-                    spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-
-            return spareParts;
-        }//SearchSparePartsByTitle
         /// <summary>
         /// Возвращает список размера не более limit, состоящий из запчастей в наличии чьи Title имеют совпадение с параметром title. 
         /// </summary>
@@ -2849,26 +2750,6 @@ namespace PartsApp
                 {
                     SparePart sparePart = new SparePart();
                     sparePart = CreateFullSparePart(dataReader);
-                    //sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
-                    //sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                    //sparePart.Articul = dataReader["Articul"] as string;
-                    //sparePart.Title = dataReader["Title"] as string;
-
-                    //sparePart.ExtInfoId = (dataReader["ExtInfoId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ExtInfoId"]);
-                    //sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
-
-                    //sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                    ////sparePart.Manufacturer = (sparePart.ManufacturerId == null) ? String.Empty : FindManufacturerNameById(sparePart.ManufacturerId, connection);
-                    ////sparePart.Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"]), connection);
-
-                    //sparePart.Unit = dataReader["Unit"] as string;
-                    //sparePart.PurchaseId = Convert.ToInt32(dataReader["PurchaseId"]);
-                    //sparePart.Price = Convert.ToDouble(dataReader["Price"]);
-                    //sparePart.Markup = (dataReader["Markup"] == DBNull.Value) ? (double?)null : Convert.ToDouble(dataReader["Markup"]);
-                    ////sparePart.Storage = dataReader["Storage"] as string;
-                    //if (dataReader["Storage"] as string == SparePart.MainStorage) sparePart.Count = Convert.ToDouble(dataReader["Count"]);
-                    //else sparePart.VirtCount = Convert.ToDouble(dataReader["Count"]);
-
                     spareParts.Add(sparePart);
                 }//while
                 connection.Close();
@@ -2876,55 +2757,7 @@ namespace PartsApp
 
             return spareParts;
         }//SearchSparePartsByTitle
-        public static IList<SparePart> SearchSparePartsAvaliablityByTitle(string title, SQLiteConnection openConnection)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
 
-            SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND sp.Title LIKE @Title", openConnection);
-
-            cmd.Parameters.AddWithValue("@Title", title + "%");
-
-            var dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
-            {
-                SparePart sparePart = new SparePart();
-                //{
-                //    Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
-                //    SparePartId= Convert.ToInt32(dataReader["Id"]),
-                //    Articul = dataReader["Articul"] as string,
-                //    Title = dataReader["Title"] as string,
-                //    Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                //    //Price = Convert.ToDouble(dataReader["Price"]),
-                //    //Markup = Convert.ToInt32(dataReader["Markup"]),
-                //    //Count = Convert.ToDouble(dataReader["Count"]),
-                //    //Unit = dataReader["Unit"] as string
-                //};
-                sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
-                sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                sparePart.Articul = dataReader["Articul"] as string;
-                sparePart.Title = dataReader["Title"] as string;
-
-                sparePart.ExtInfoId = (dataReader["ExtInfoId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ExtInfoId"]);
-                sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
-
-                sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                ////sparePart.Manufacturer = (sparePart.ManufacturerId == null) ? String.Empty : FindManufacturerNameById(sparePart.ManufacturerId, openConnection);
-                //sparePart.Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"]), connection);
-
-                sparePart.Unit = dataReader["Unit"] as string;
-                sparePart.PurchaseId = Convert.ToInt32(dataReader["PurchaseId"]);
-                sparePart.Price = Convert.ToDouble(dataReader["Price"]);
-                sparePart.Markup = (dataReader["Markup"] == DBNull.Value) ? (double?)null : Convert.ToDouble(dataReader["Markup"]);
-                //sparePart.Storage = dataReader["Storage"] as string;
-                if (dataReader["Storage"] as string ==SparePart.MainStorage) sparePart.Count = Convert.ToDouble(dataReader["Count"]);
-                else sparePart.VirtCount = Convert.ToDouble(dataReader["Count"]);
-
-
-                spareParts.Add(sparePart);
-            }//while    
-
-            return spareParts;
-        }//SearchSparePartsByTitle
         /// <summary>
         /// Возвращает список размера не более limit, состоящий из запчастей в Наличии, чьи Title имеют совпадение с параметром title. 
         /// </summary>
@@ -3295,51 +3128,6 @@ namespace PartsApp
             return spareParts;
         }//SearchByTitleOrArticul
 
-        //Поиск по SpareParts.
-        public static IList<SparePart> SearchSparePartsByTitle(string title)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM SpareParts WHERE Title LIKE @Title;", connection);
-
-                cmd.Parameters.AddWithValue("@Title", title + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    SparePart sparePart = new SparePart();
-
-                    sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
-                    sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                    sparePart.Articul = dataReader["Articul"] as string;
-                    sparePart.Title = dataReader["Title"] as string;
-
-                    sparePart.ExtInfoId = (dataReader["ExtInfoId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ExtInfoId"]);
-                    sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
-
-                    sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                    //sparePart.Manufacturer = (sparePart.ManufacturerId == null) ? String.Empty : FindManufacturerNameById(sparePart.ManufacturerId, connection);
-                    //sparePart.Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"]), connection);
-
-                    sparePart.Unit = dataReader["Unit"] as string;
-                    sparePart.PurchaseId = Convert.ToInt32(dataReader["PurchaseId"]);
-                    sparePart.Price = Convert.ToDouble(dataReader["Price"]);
-                    sparePart.Markup = (dataReader["Markup"] == DBNull.Value) ? (double?)null : Convert.ToDouble(dataReader["Markup"]);
-                    //sparePart.Storage = dataReader["Storage"] as string;
-                    if (dataReader["Storage"] as string == SparePart.MainStorage) sparePart.Count = Convert.ToDouble(dataReader["Count"]);
-                    else sparePart.VirtCount = Convert.ToDouble(dataReader["Count"]);
-
-
-                    spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-
-            return spareParts;
-        }//SearchSparePartsByTitle
         /// <summary>
         /// Возвращает список размера не более limit, состоящий из запчастей чьи Title имеют совпадение с параметром title. 
         /// </summary>
@@ -3949,7 +3737,6 @@ namespace PartsApp
                 manufacturerId: (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]),                                
                 purchaseId: Convert.ToInt32(dataReader["PurchaseId"]),
                 unit: dataReader["Unit"] as string,
-                storage: dataReader["Storage"] as string,
                 storageAdress : dataReader["StorageAdress"] as string,
                 count: Convert.ToDouble(dataReader["Count"]),
                 price: Convert.ToDouble(dataReader["Price"]),
@@ -4042,12 +3829,7 @@ namespace PartsApp
     }//LowerRegisterConverter
 
     public class SparePart
-    {
-        //const string _mainStorage = "Осн. скл.";
-        //const string _virtStorage = "Вирт. скл.";
-        public static string MainStorage { get { return "Осн. скл."; } }
-        public static string VirtStorage { get { return "Вирт. скл."; } }
-        
+    {                
         #region Св-ва класса.
         public int SparePartId { get; set; }
         [DisplayName("Фото")]
@@ -4155,7 +3937,7 @@ namespace PartsApp
         }
 
         public SparePart(int sparePartId, string photo, string articul, string title, string description, int? extInfoId,
-                         int? manufacturerId, int purchaseId, string unit, string storage, string storageAdress, double count, 
+                         int? manufacturerId, int purchaseId, string unit, string storageAdress, double count, 
                          double price, double? markup)
         {          
             this.SparePartId    = sparePartId;
@@ -4169,7 +3951,7 @@ namespace PartsApp
             this.Unit           = unit;
             this.PurchaseId     = purchaseId;
             this.SupplierName   = PartsDAL.FindSupplierByPurchaseId(purchaseId).ContragentName; /*!!!*/
-            if (storage == MainStorage) this.Count = count; 
+            if (storageAdress == null) this.Count = count; 
             else this.VirtCount = count;
             this.StorageAdress  = storageAdress;
             this.Price          = price;

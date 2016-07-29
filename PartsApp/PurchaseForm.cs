@@ -37,7 +37,7 @@ namespace PartsApp
 
         private void PurchaseForm_Load(object sender, EventArgs e)
         {
-            storageComboBox.SelectedItem = PartsApp.SparePart.MainStorage;
+            storageComboBox.SelectedItem = "Осн. скл.";
 
             supplierTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllSuppliersName());
 
@@ -55,7 +55,7 @@ namespace PartsApp
 
         private void storageComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (storageComboBox.SelectedItem.ToString() == PartsApp.SparePart.VirtStorage)
+            if (storageComboBox.SelectedItem.ToString() != "Осн. скл.")
                 storageAdressStarLabel.Visible = storageAdressLabel.Visible = storageAdressBackPanel.Visible = true;
             else
             {

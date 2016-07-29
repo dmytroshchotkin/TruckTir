@@ -1063,6 +1063,7 @@ namespace PartsApp
             partsDataGridView.Cursor = Cursors.Default;
             //progressBar.Value = 0;
         }//ChangeDataSource
+
         //Метод для скрытия столбцов кот. не нужно видеть поль-лю.
         /// <summary>
         /// Скрывает заданные в методе столбцы таблицы PartsDataGridView.
