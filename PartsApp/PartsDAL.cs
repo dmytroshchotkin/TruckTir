@@ -4285,7 +4285,7 @@ namespace PartsApp
             this.StorageAdress  = storageAdress;
             this.Price          = price;
             this.Markup         = markup;
-            this.MarkupType     = (markup == null) ? null : MarkupTypes.GetMarkupType((double)markup);
+            this.MarkupType     = (markup == null) ? null : Models.Markup.GetDescription((float)markup);
         }
 
         public override string ToString()

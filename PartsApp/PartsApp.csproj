@@ -103,7 +103,6 @@
     </Compile>
     <Compile Include="IContragent.cs" />
     <Compile Include="IOperation.cs" />
-    <Compile Include="MarkupTypes.cs" />
     <Compile Include="Models\Markup.cs" />
     <Compile Include="OperationInfoForm.cs">
       <SubType>Form</SubType>
