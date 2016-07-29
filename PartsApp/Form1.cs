@@ -43,7 +43,7 @@ namespace PartsApp
         private void Form1_Load(object sender, EventArgs e)
         {
             //Вносим все типы наценок в markupComboBox             
-            markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().OrderByDescending(mark => mark.Key).Select(markup => markup.Value).ToArray<string>());
+            markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
 
             //Выводим окно авторизации.
             CurEmployee = PartsDAL.FindEmployees().First();
@@ -619,7 +619,7 @@ namespace PartsApp
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
         #region Методы связанные с изменением Наценки.
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -641,10 +641,10 @@ namespace PartsApp
             foreach (DataGridViewCell cell in partsDataGridView.SelectedCells)    cell.OwningRow.Selected = true;
             foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
             //узнаем процент заданной наценки.
-            double markup = 0;
+
             try
             {
-                markup = MarkupTypes.GetMarkupValue(markupComboBox.Text);
+                float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
                 //Если выделены только строки в partsDataGridView.
                 if (extPartsDataGridView.SelectedRows.Count == 0)
                 {
@@ -758,7 +758,7 @@ namespace PartsApp
         /// Осущ-ние действий вызванных изменением наценки.
         /// </summary>
         /// <param name="markup">Наценка на которую требуется изменить.</param>
-        private void partsDataGridViewMarkupChange(double markup)
+        private void partsDataGridViewMarkupChange(float markup)
         {
             //Модифицировать!!! Сделать изменение через DataGridView, без циклов.
             //Находим все SP с изменяемой наценкой. 
@@ -782,7 +782,7 @@ namespace PartsApp
                     if (sparePart.SparePartId == sparePartId)
                     {
                         sparePart.Markup = markup;
-                        sparePart.MarkupType = MarkupTypes.GetMarkupType(markup);//MarkupTypes.GetMarkupType(markup);
+                        sparePart.MarkupType = Models.Markup.GetDescription(markup);
                         SaveMarkupChangeToBuffer(sparePart.SparePartId, sparePart.PurchaseId, markup);
                     }//if
                 }//foreach                                
@@ -796,7 +796,7 @@ namespace PartsApp
         /// Осущ-ние действий вызванных изменением наценки.
         /// </summary>
         /// <param name="markup">Наценка на которую требуется изменить.</param>
-        private void extPartsDataGridViewMarkupChange(double markup)
+        private void extPartsDataGridViewMarkupChange(float markup)
         {
             //IList<SparePart> spareParts = new List<SparePart>(); //список для всех запчастей с изменяемой наценкой.
             //Находим Id запчастей с изменяемой наценкой, т.к. SpId у всех вхождений одинаковый, берем его у первого вхождения.
@@ -811,7 +811,7 @@ namespace PartsApp
                     if (sparePart.SparePartId == sparePartId && sparePart.PurchaseId == purchaseId)
                     {
                         sparePart.Markup = markup;
-                        sparePart.MarkupType = MarkupTypes.GetMarkupType(markup);
+                        sparePart.MarkupType = Models.Markup.GetDescription(markup);
                         SaveMarkupChangeToBuffer(sparePartId, purchaseId, markup);
                     }//if
                 }//foreach                
@@ -877,6 +877,16 @@ namespace PartsApp
 
             return isSameMarkup;
         }//IsSamePriceAndMarkup
+
+
+
+
+
+
+
+
+
+
 
 
 

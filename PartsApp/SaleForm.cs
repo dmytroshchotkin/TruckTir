@@ -859,22 +859,8 @@ namespace PartsApp
                // extDataGridView.Rows[i].Cells["extMarkup"].Value = sparePartsAvaliability[i].Markup;
                 if (sparePartsAvaliability[i].Markup != null)
                 {
-                    //foreach (var markType in PartsDAL.FindAllMarkups())
-                    //{
-                    //    if (markType.Key == sparePartsAvaliability[i].Markup)
-                    //    {
-
                     //Находим тип наценки.
-                    //string markupValue = PartsDAL.FindAllMarkups().Where(markup => markup.Key == sparePartsAvaliability[i].Markup).Select(markup => markup.Value).First();
-                    extDataGridView.Rows[i].Cells["extMarkup"].Value = MarkupTypes.GetMarkupType((double)sparePartsAvaliability[i].Markup);
-
-                            //break;
-                        //}
-
-                        
-                    //}//foreach 
-                    //if (extDataGridView.Rows[i].Cells["extMarkup"].Value == null)
-                        //extDataGridView.Rows[i].Cells["extMarkup"].Value = "Другая";
+                    extDataGridView.Rows[i].Cells["extMarkup"].Value = Models.Markup.GetDescription(Convert.ToSingle(sparePartsAvaliability[i].Markup));
                 }//if
                 extDataGridView.Rows[i].Cells["extSellingPrice"].Value = sparePartsAvaliability[i].SellingPrice;
                 extDataGridView.Rows[i].Cells["extPurchaseId"].Value = sparePartsAvaliability[i].PurchaseId;
