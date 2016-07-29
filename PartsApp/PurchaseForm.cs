@@ -1306,6 +1306,7 @@ namespace PartsApp
         {
             try
             {
+                //Находим наценку.
                 float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
 
                 row.Cells["Markup"].Value = Models.Markup.GetDescription(markup);
@@ -1321,17 +1322,9 @@ namespace PartsApp
             }//try
             catch
             {
+                //Присваиваем дефолтную наценкц - "Розница".
                 markupComboBox.SelectedItem = markupComboBox.Items.Cast<KeyValuePair<int, string>>().First(m => m.Key == (int)Models.Markup.Types.Retail);
 
-                //foreach(KeyValuePair<int, string> item in markupComboBox.Items)
-                //{
-                //    if (item.Key == (int)Models.Markup.Types.Retail)
-                //    {
-                //        markupComboBox.SelectedItem = item;
-                //        break;
-                //    }//if
-                //}//foreach                
-                //markupComboBox.SelectedIndex = indx;//Возвращаем дефолтную наценку.
                 toolTip.Show("Введено некорректное значение.", this, markupComboBox.Location, 2000);
             }//catch
         }//RowMarkupChanges

@@ -286,12 +286,14 @@
             // 
             // markupComboBox
             // 
+            this.markupComboBox.DisplayMember = "Value";
             this.markupComboBox.Enabled = false;
             this.markupComboBox.FormattingEnabled = true;
             this.markupComboBox.Location = new System.Drawing.Point(591, 433);
             this.markupComboBox.Name = "markupComboBox";
             this.markupComboBox.Size = new System.Drawing.Size(121, 21);
             this.markupComboBox.TabIndex = 91;
+            this.markupComboBox.ValueMember = "Key";
             this.markupComboBox.SelectedIndexChanged += new System.EventHandler(this.markupComboBox_SelectedIndexChanged);
             this.markupComboBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.markupComboBox_PreviewKeyDown);
             // 
@@ -661,7 +663,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(869, 749);
-            this.ControlBox = false;
             this.Controls.Add(this.autoCompleteCustomerListBox);
             this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.descriptionLabel);

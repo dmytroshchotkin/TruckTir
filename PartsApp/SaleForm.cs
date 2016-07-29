@@ -47,7 +47,7 @@ namespace PartsApp
 /*!!!*/     customerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllCustomersName()); //находим сразу всех, вместо подгрузки по вводу.
 
             //Вносим все типы наценок в markupComboBox             
-            markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().Select(markup => markup.Value).ToArray<string>());
+            markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
 
             sellerAgentTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);
             sellerAgentTextBox.ReadOnly = true;
@@ -1385,8 +1385,8 @@ namespace PartsApp
             //узнаем процент заданной наценки.
             try
             {
-                double markupValue = MarkupTypes.GetMarkupValue(markupComboBox.Text);
-                string markupType = MarkupTypes.GetMarkupType(markupValue);
+                float markupValue = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
+                string markupType = Models.Markup.GetDescription(markupValue);
 
                 foreach (DataGridViewRow row in extDataGridView.SelectedRows)
                 {
