@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using PartsApp.Models;
 
 namespace PartsApp
 {
@@ -44,7 +45,7 @@ namespace PartsApp
             purchaseDateTimePicker.MaxDate = purchaseDateTimePicker.Value = DateTime.Now;
             
             //Вносим все типы наценок в markupComboBox             
-            markupComboBox.Items.AddRange(PartsDAL.FindAllMarkups().Select(markup => markup.Value).ToArray<string>());
+            markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
 
             currencyComboBox.SelectedItem = "руб";
 
@@ -552,24 +553,20 @@ namespace PartsApp
             #endregion
             //Если редактируется цена
             #region Count Or Price.
-            if (cell.OwningColumn.Name == "Price")
+            try
             {
-                if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
+                if (cell.OwningColumn.Name == "Price")
                 {
-                    try
+                    if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
                     {
                         double price = Convert.ToDouble(cell.Value);
-                        if (price == 0) throw new Exception();            //ввод нуля также является ошибкой.
+                        if (price == 0)
+                            throw new Exception(); //ввод нуля также является ошибкой.
 
                         //Если цена вводится в той же строке.
                         int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
-                        if (sparePartId != currentSparePart.SparePartId)
-                        {
-                            currentSparePart = spareParts.Where(sparePart => sparePart.SparePartId == sparePartId).First();
-                            //foreach (var sparePart in spareParts)
-                                //if (sparePart.SparePartId == sparePartId)
-                                    //currentSparePart = sparePart;                            
-                        }
+
+                        currentSparePart = spareParts.First(sparePart => sparePart.SparePartId == sparePartId);
 
                         //Округляем Price до 2-х десятичных знаков.
                         price = Math.Round(price, 2, MidpointRounding.AwayFromZero);
@@ -579,24 +576,13 @@ namespace PartsApp
                         amountCalculation(cell.OwningRow);
 
                         //Присваиваем автоматическую наценку равную розничной цене. 
-/*!!!*/                 RowMarkupChanges(row, "Розница"); //!!!Костыль! Необх-мо пометить какую-то запись в табл. Markups как дефолтную и присваивать её здесь.
-                    }//try
-                    catch
-                    {
-                        //выводим всплывающее окно с сообщением об ошибке.
-                        toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);                        
-                        //Очищаем ввод.
-                        cell.Value = null;
-                        isCellEditError = true;
-                        lastEditCell = cell;
-                    }//catch
-                }//if                
-            }//if
-            if (cell.OwningColumn.Name == "Count")
-            {
-                if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
+                        /*!!!*/
+                        RowMarkupChanges(row);//, markup); //!!!Костыль! Необх-мо пометить какую-то запись в табл. Markups как дефолтную и присваивать её здесь.
+                    }//if                
+                }//if
+                if (cell.OwningColumn.Name == "Count")
                 {
-                    try
+                    if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
                     {
                         double count = Convert.ToDouble(cell.Value);
                         if (count == 0) throw new Exception();            //ввод нуля также является ошибкой.
@@ -604,28 +590,24 @@ namespace PartsApp
                             throw new Exception();
 
                         int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
-                        if (sparePartId != currentSparePart.SparePartId)
-                        {
-                            currentSparePart = spareParts.Where(sparePart => sparePart.SparePartId == sparePartId).First();
-                            //foreach (var sparePart in spareParts)
-                              //  if (sparePart.SparePartId == sparePartId)
-                                //    currentSparePart = sparePart;
-                        }//if
+
+                        currentSparePart = spareParts.First(sparePart => sparePart.SparePartId == sparePartId);
                         currentSparePart.Count = count;
 
                         amountCalculation(cell.OwningRow);
-                    }//try
-                    catch
-                    {
-                        //выводим всплывающее окно с сообщением об ошибке.
-                        toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
-                        //Очищаем ввод.
-                        cell.Value = null;
-                        isCellEditError = true;
-                        lastEditCell = cell;
-                    }//catch
-                }//if            
-            }//if
+                        RowMarkupChanges(row); //расчитывае ЦенуПродажи и выводим её и Наценку.                        
+                    }//if            
+                }//if
+            }//try
+            catch
+            {
+                //выводим всплывающее окно с сообщением об ошибке.
+                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
+                //Очищаем ввод.
+                cell.Value = null;
+                isCellEditError = true;
+                lastEditCell = cell;
+            }//catch
             #endregion
             //Если ред-ся цена продажи.
             #region SellingPrice.
@@ -1243,7 +1225,10 @@ namespace PartsApp
             }//if
             else toolTip.Show("Выберите курс к рос. рублю", this, excRateNumericUpDown.Location, 3000);
         }//excRateNumericUpDown_Leave       
-        //Модифицировать.
+
+        #region Методы связанные с изменением Наценки.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         private void markupCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             //if (markupCheckBox.CheckState == CheckState.Checked)
@@ -1283,12 +1268,14 @@ namespace PartsApp
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
-            if (purchaseDataGridView.SelectedCells.Count == 0) return;
+            if (purchaseDataGridView.SelectedCells.Count == 0) 
+                return;
 
             //выделяем строки всех выделенных клеток.
-            foreach (DataGridViewCell cell in purchaseDataGridView.SelectedCells) cell.OwningRow.Selected = true;
-            try
-            {
+            foreach (DataGridViewCell cell in purchaseDataGridView.SelectedCells) 
+                cell.OwningRow.Selected = true;
+
+            
                 //узнаем процент заданной наценки.
                 //double markup = MarkupTypes.GetMarkupValue(markupComboBox.Text);
 
@@ -1302,26 +1289,12 @@ namespace PartsApp
                         if (row.Cells["Price"].Value == null || row.Cells["Count"].Value == null)
                         {
                             toolTip.Show("В одной или нескольких выбранных строках не указана цена или количество", this, markupCheckBox.Location, 2000);
-                            continue;
+                            continue; /*!!!*/
                         }
 
-                        RowMarkupChanges(row, markupComboBox.Text);
-                        //row.Cells["Markup"].Value = MarkupTypes.GetMarkupType(markup);
-
-                        //foreach (SparePart sparePart in spareParts)
-                        //    if (sparePart.SparePartId == sparePartId)
-                        //    {
-                        //        sparePart.Markup = markup;
-                        //        //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
-                        //        row.Cells["SellingPrice"].Value = sparePart.SellingPrice;
-                        //    }
+                        RowMarkupChanges(row);
                     }//if
                 }//foreach
-            }//try
-            catch
-            {
-                toolTip.Show("Введено некорректное значение.", this, markupComboBox.Location, 2000);
-            }
         }//markupComboBox_SelectedIndexChanged
 
         /// <summary>
@@ -1329,22 +1302,42 @@ namespace PartsApp
         /// </summary>
         /// <param name="row">Строка в которой происходит из-ние наценки.</param>
         /// <param name="MarkupType">Тип наценки присваиваемая данной строке.</param>
-        private void RowMarkupChanges(DataGridViewRow row, string MarkupType)
+        private void RowMarkupChanges(DataGridViewRow row)
         {
-            double markup = MarkupTypes.GetMarkupValue(MarkupType);
-
-            row.Cells["Markup"].Value = MarkupTypes.GetMarkupType(markup);
-
-            foreach (SparePart sparePart in spareParts)
+            try
             {
-                if (sparePart.SparePartId == Convert.ToInt32(row.Cells["SparePartId"].Value));
+                float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
+
+                row.Cells["Markup"].Value = Models.Markup.GetDescription(markup);
+
+                foreach (SparePart sparePart in spareParts)
                 {
-                    sparePart.Markup = markup;
-                    //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
-                    row.Cells["SellingPrice"].Value = sparePart.SellingPrice;
-                }//if
-            }//foreach
+                    if (sparePart.SparePartId == Convert.ToInt32(row.Cells["SparePartId"].Value))
+                    {
+                        sparePart.Markup = markup;
+                        row.Cells["SellingPrice"].Value = sparePart.SellingPrice;
+                    }//if
+                }//foreach
+            }//try
+            catch
+            {
+                markupComboBox.SelectedItem = markupComboBox.Items.Cast<KeyValuePair<int, string>>().First(m => m.Key == (int)Models.Markup.Types.Retail);
+
+                //foreach(KeyValuePair<int, string> item in markupComboBox.Items)
+                //{
+                //    if (item.Key == (int)Models.Markup.Types.Retail)
+                //    {
+                //        markupComboBox.SelectedItem = item;
+                //        break;
+                //    }//if
+                //}//foreach                
+                //markupComboBox.SelectedIndex = indx;//Возвращаем дефолтную наценку.
+                toolTip.Show("Введено некорректное значение.", this, markupComboBox.Location, 2000);
+            }//catch
         }//RowMarkupChanges
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
 
         private void purchaseDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -1460,16 +1453,3 @@ namespace PartsApp
 //8)Улучшить вывод в Excel в частности:
      //8.1)Колонка "Сумма" при большом числе выводит что-то типо "8е+23", сделать нормально.   
 //9)Добавить возможность добавления новой валюты в базу.
-
-#region программный перевод DateTime в Utc.
-/*DateTime dt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now);
-            DateTime dt1970 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            TimeSpan tsInterval = dt.Subtract(dt1970);
-            Int32 iSeconds = Convert.ToInt32(tsInterval.TotalSeconds);
-            MessageBox.Show(iSeconds.ToString());
-
-            TimeSpan ts = TimeSpan.FromSeconds(iSeconds); //с ним все в порядке
-            DateTime dt2 = new DateTime(1970, 1, 1); //вроде с этой даты отсчет идет(?)
-            dt2 += ts; //но не прибавляется, дата той же остается
-            MessageBox.Show(dt2.ToString());*/
-#endregion

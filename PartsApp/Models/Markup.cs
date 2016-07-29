@@ -24,12 +24,12 @@ namespace PartsApp.Models
             Retail = 100
         }//Types
 
-        public static string GetDescriptions(int markup)
+        public static string GetDescription(float markup)
         {
             if (markup <= 0)
                 return "Уценка";
 
-            switch (markup)
+            switch ((int)markup)
             {
                 case (int)Types.Retail:
                     return Types.Retail.ToDescription();
@@ -42,9 +42,9 @@ namespace PartsApp.Models
                 default:
                     return "Другая наценка";
             }//switch
-        }//GetDescriptions
+        }//GetDescription
 
-        public static Dictionary<int, string> GetValues()
+        public static IEnumerable<KeyValuePair<int, string>> GetValues()
         {
             Dictionary<int, string> dict = new Dictionary<int, string>();
 
@@ -53,7 +53,7 @@ namespace PartsApp.Models
                 dict.Add((int)item, item.ToDescription());
             }//foreach
 
-            return dict;
+            return dict.Reverse();
         }//GetValues
     }//Markup
 
