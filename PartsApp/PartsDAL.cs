@@ -685,7 +685,7 @@ namespace PartsApp
                                 SaleSparePartAvaliability(sp, cmd);
                             // и модифицируем Avaliability.
                             foreach (SparePart sp in spareParts)
-                                AddSaleDetail(saleId, sp.SparePartId, (double)sp.Price, sp.Count, 0, cmd);
+                                AddSaleDetail(saleId, sp.SparePartId, (double)sp.Price, sp.Count, cmd);
 
                             trans.Commit();
                         }//try
@@ -748,11 +748,10 @@ namespace PartsApp
         /// <param name="sparePartId">Ид товара</param>
         /// <param name="sellingPrice">Отпускная цена товара</param>
         /// <param name="quantity">Кол-во товара</param>
-        /// <param name="discount">Процент скидки</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
-        private static void AddSaleDetail(int saleId, int sparePartId, double sellingPrice, double quantity, double discount, SQLiteCommand cmd)
+        private static void AddSaleDetail(int saleId, int sparePartId, double sellingPrice, double quantity, SQLiteCommand cmd)
         {
-            string query = "INSERT INTO SaleDetails VALUES (@SaleId, @SparePartId, @Quantity, @Discount, @SellingPrice);";
+            string query = "INSERT INTO SaleDetails VALUES (@SaleId, @SparePartId, @Quantity, @SellingPrice);";
 
             cmd.CommandText = query;
 
@@ -761,7 +760,6 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@SaleId", saleId);
             cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
             cmd.Parameters.AddWithValue("@Quantity", quantity);
-            cmd.Parameters.AddWithValue("@Discount", discount);
             cmd.Parameters.AddWithValue("@SellingPrice", sellingPrice);
             
             cmd.ExecuteNonQuery();
@@ -1185,7 +1183,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    if ((dataReader["StorageAdress"] as string) != null) 
+                    if ((dataReader["StorageAdress"] as string) == null) 
                         sparePart.Count = Convert.ToDouble(dataReader["SUM(Count)"]);
                     else 
                         sparePart.VirtCount = Convert.ToDouble(dataReader["SUM(Count)"]);

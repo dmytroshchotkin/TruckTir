@@ -1105,10 +1105,6 @@ namespace PartsApp
             extPartsDataGridView.Columns["Count"].Visible = false;
             extPartsDataGridView.Columns["VirtCount"].Visible = false;
             extPartsDataGridView.Columns["Price"].Visible = false;
-            //extPartsDataGridView.Columns["Markup"].Visible = false;
-            //partsDataGridView.Columns["MarkupType"].Visible = false;
-            //extPartsDataGridView.Columns["PurchaseId"].Visible = false;
-            //extPartsDataGridView.Columns["StorageAdress"].Visible = false;
             extPartsDataGridView.Columns["ManufacturerId"].Visible = false;
             extPartsDataGridView.Columns["Manufacturer"].Visible = false;
             extPartsDataGridView.Columns["Description"].Visible = false;
