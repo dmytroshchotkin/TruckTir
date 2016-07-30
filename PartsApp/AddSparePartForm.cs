@@ -321,7 +321,6 @@ namespace PartsApp
             sparePart.Articul = articulTextBox.Text.Trim();
             sparePart.Title = titleTextBox.Text.Trim();
             sparePart.Description = (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null;
-            sparePart.ExtInfoId = null;
             //добаляем manufacturer
             if (String.IsNullOrWhiteSpace(manufacturerTextBox.Text) == false)
             {

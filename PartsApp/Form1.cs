@@ -1071,7 +1071,6 @@ namespace PartsApp
         private void HidePartsDataGridViewColumns()
         {
             partsDataGridView.Columns["SparePartId"].Visible    = false;
-            partsDataGridView.Columns["ExtInfoId"].Visible      = false;
             partsDataGridView.Columns["Count"].Visible          = false;
             partsDataGridView.Columns["virtCount"].Visible      = false;
             partsDataGridView.Columns["Price"].Visible          = false;
@@ -1103,7 +1102,6 @@ namespace PartsApp
         {
             extPartsDataGridView.Columns["Photo"].Visible = false;
             extPartsDataGridView.Columns["SparePartId"].Visible = false;
-            extPartsDataGridView.Columns["ExtInfoId"].Visible = false;
             extPartsDataGridView.Columns["Count"].Visible = false;
             extPartsDataGridView.Columns["VirtCount"].Visible = false;
             extPartsDataGridView.Columns["Price"].Visible = false;
