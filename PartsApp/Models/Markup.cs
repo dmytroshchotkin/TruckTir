@@ -33,12 +33,16 @@ namespace PartsApp.Models
             {
                 case (int)Types.Retail:
                     return Types.Retail.ToDescription();
+
                 case (int)Types.SmallWholesale:
                     return Types.SmallWholesale.ToDescription();
+
                 case (int)Types.AverageWholesale:
                     return Types.AverageWholesale.ToDescription();
+
                 case (int)Types.LargeWholesale:
                     return Types.LargeWholesale.ToDescription();
+
                 default:
                     return "Другая наценка";
             }//switch

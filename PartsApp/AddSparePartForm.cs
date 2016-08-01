@@ -47,7 +47,8 @@ namespace PartsApp
         private void AddSparePartForm_Load(object sender, EventArgs e)
         {
             //добавляем все варианты выбора единицы измерения.
-            unitComboBox.DataSource = PartsDAL.FindAllUnitsOfMeasure();
+
+            unitComboBox.DataSource = Models.MeasureUnit.GetDescriptions();
             if (editSparePart == null)
                 unitComboBox.SelectedIndex = -1;
             else unitComboBox.SelectedItem = editSparePart.Unit;
@@ -332,8 +333,6 @@ namespace PartsApp
             }//else
 
             //Вставляем ед. изм. 
-            //if (unitComboBox.DropDownStyle == ComboBoxStyle.DropDown) //если вставляется новое значение в бд.
-            //PartsDAL.AddUnitOfMeasure();
             sparePart.Unit = unitComboBox.SelectedValue.ToString();
         }//FillTheSparePartFromForm
 

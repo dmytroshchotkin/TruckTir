@@ -585,8 +585,12 @@ namespace PartsApp
                     if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
                     {
                         double count = Convert.ToDouble(cell.Value);
-                        if (count == 0) throw new Exception();            //ввод нуля также является ошибкой.
-                        if (count % PartsDAL.FindMinUnitSaleOfUnit(cell.OwningRow.Cells["Unit"].Value as string) != 0)
+                        if (count == 0) 
+                            throw new Exception(); //ввод нуля также является ошибкой.
+
+                        //Проверяем что введенное число кратно минимально возможной единице.
+                        string unitOfMeasure = cell.OwningRow.Cells["Unit"].Value as string;
+                        if (count % Models.MeasureUnit.GetMinUnitSale(unitOfMeasure) != 0)
                             throw new Exception();
 
                         int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);

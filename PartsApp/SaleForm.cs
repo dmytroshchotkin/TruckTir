@@ -899,9 +899,12 @@ namespace PartsApp
 
             if (count > mainStorageCount)
                 throw new Exception(); 
+
             //Проверяем является ли введенное число корректным для продажи, т.е. соответствует ли оно минимальному 
-            if (count % PartsDAL.FindMinUnitSaleOfUnit(cell.OwningRow.Cells["Unit"].Value as string) != 0)
+            string unitOfMeasure = cell.OwningRow.Cells["Unit"].Value.ToString();
+            if (count % Models.MeasureUnit.GetMinUnitSale(unitOfMeasure) != 0)
                 throw new Exception();
+
             return count;            
         }//
 
