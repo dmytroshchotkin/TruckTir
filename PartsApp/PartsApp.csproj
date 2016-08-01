@@ -108,6 +108,7 @@
     <Compile Include="Models\Purchase.cs" />
     <Compile Include="Models\Sale.cs" />
     <Compile Include="Models\SparePart.cs" />
+    <Compile Include="Models\Supplier.cs" />
     <Compile Include="OperationInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,7 +137,6 @@
     <Compile Include="SparePartOperationsInfoForm.Designer.cs">
       <DependentUpon>SparePartOperationsInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Supplier.cs" />
     <Compile Include="SupportClasses\ExtensionClasses.cs" />
     <EmbeddedResource Include="AddEmployeeForm.resx">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>

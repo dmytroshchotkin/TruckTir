@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PartsApp
+namespace PartsApp.Models
 {
-    class Supplier : IContragent
-    {            
+    public class Supplier : IContragent
+    {
         //[Browsable(false)]
         public int ContragentId { get; set; }
         //[DisplayName("Название")]
