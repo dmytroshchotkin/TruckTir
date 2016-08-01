@@ -444,6 +444,8 @@
             this.Controls.Add(this.entityLabel);
             this.Controls.Add(this.entityStarLabel);
             this.Controls.Add(this.contragentNameStarLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "AddContragentForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Load += new System.EventHandler(this.AddcontragentForm_Load);

@@ -55,18 +55,16 @@
             this.roomTextBox = new System.Windows.Forms.TextBox();
             this.emailTextBox = new System.Windows.Forms.TextBox();
             this.websiteTextBox = new System.Windows.Forms.TextBox();
-            this.extPhone2TextBox = new System.Windows.Forms.TextBox();
-            this.extPhoneTextBox = new System.Windows.Forms.TextBox();
+            this.ExtPhoneTextBox = new System.Windows.Forms.TextBox();
             this.phoneTextBox = new System.Windows.Forms.TextBox();
             this.houseTextBox = new System.Windows.Forms.TextBox();
             this.streetTextBox = new System.Windows.Forms.TextBox();
             this.cityTextBox = new System.Windows.Forms.TextBox();
             this.regionTextBox = new System.Windows.Forms.TextBox();
             this.countryTextBox = new System.Windows.Forms.TextBox();
-            this.extPhone2Label = new System.Windows.Forms.Label();
             this.emailLabel = new System.Windows.Forms.Label();
             this.streetLabel = new System.Windows.Forms.Label();
-            this.extPhone1Label = new System.Windows.Forms.Label();
+            this.ExtPhoneLabel = new System.Windows.Forms.Label();
             this.websiteLabel = new System.Windows.Forms.Label();
             this.phoneLabel = new System.Windows.Forms.Label();
             this.houseLabel = new System.Windows.Forms.Label();
@@ -75,6 +73,10 @@
             this.countryLabel = new System.Windows.Forms.Label();
             this.addContactInfoButton = new System.Windows.Forms.Button();
             this.bottomPanel = new System.Windows.Forms.Panel();
+            this.loginBackPanel = new System.Windows.Forms.Panel();
+            this.loginTextBox = new System.Windows.Forms.TextBox();
+            this.loginLabel = new System.Windows.Forms.Label();
+            this.loginStarLabel = new System.Windows.Forms.Label();
             this.accessLayerBackPanel = new System.Windows.Forms.Panel();
             this.accessLayerComboBox = new System.Windows.Forms.ComboBox();
             this.passwordAgainBackPanel = new System.Windows.Forms.Panel();
@@ -95,21 +97,17 @@
             this.photoOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.photoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loginBackPanel = new System.Windows.Forms.Panel();
-            this.loginTextBox = new System.Windows.Forms.TextBox();
-            this.loginLabel = new System.Windows.Forms.Label();
-            this.loginStarLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).BeginInit();
             this.lastNameBackPanel.SuspendLayout();
             this.firstNameBackPanel.SuspendLayout();
             this.passportNumBackPanel.SuspendLayout();
             this.contactInfoPanel.SuspendLayout();
             this.bottomPanel.SuspendLayout();
+            this.loginBackPanel.SuspendLayout();
             this.accessLayerBackPanel.SuspendLayout();
             this.passwordAgainBackPanel.SuspendLayout();
             this.passwordBackPanel.SuspendLayout();
             this.photoContextMenuStrip.SuspendLayout();
-            this.loginBackPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // addEmployeePhotoButton
@@ -298,18 +296,16 @@
             this.contactInfoPanel.Controls.Add(this.roomTextBox);
             this.contactInfoPanel.Controls.Add(this.emailTextBox);
             this.contactInfoPanel.Controls.Add(this.websiteTextBox);
-            this.contactInfoPanel.Controls.Add(this.extPhone2TextBox);
-            this.contactInfoPanel.Controls.Add(this.extPhoneTextBox);
+            this.contactInfoPanel.Controls.Add(this.ExtPhoneTextBox);
             this.contactInfoPanel.Controls.Add(this.phoneTextBox);
             this.contactInfoPanel.Controls.Add(this.houseTextBox);
             this.contactInfoPanel.Controls.Add(this.streetTextBox);
             this.contactInfoPanel.Controls.Add(this.cityTextBox);
             this.contactInfoPanel.Controls.Add(this.regionTextBox);
             this.contactInfoPanel.Controls.Add(this.countryTextBox);
-            this.contactInfoPanel.Controls.Add(this.extPhone2Label);
             this.contactInfoPanel.Controls.Add(this.emailLabel);
             this.contactInfoPanel.Controls.Add(this.streetLabel);
-            this.contactInfoPanel.Controls.Add(this.extPhone1Label);
+            this.contactInfoPanel.Controls.Add(this.ExtPhoneLabel);
             this.contactInfoPanel.Controls.Add(this.websiteLabel);
             this.contactInfoPanel.Controls.Add(this.phoneLabel);
             this.contactInfoPanel.Controls.Add(this.houseLabel);
@@ -353,19 +349,12 @@
             this.websiteTextBox.Size = new System.Drawing.Size(192, 20);
             this.websiteTextBox.TabIndex = 19;
             // 
-            // extPhone2TextBox
+            // ExtPhoneTextBox
             // 
-            this.extPhone2TextBox.Location = new System.Drawing.Point(310, 163);
-            this.extPhone2TextBox.Name = "extPhone2TextBox";
-            this.extPhone2TextBox.Size = new System.Drawing.Size(172, 20);
-            this.extPhone2TextBox.TabIndex = 18;
-            // 
-            // extPhoneTextBox
-            // 
-            this.extPhoneTextBox.Location = new System.Drawing.Point(165, 163);
-            this.extPhoneTextBox.Name = "extPhone1TextBox";
-            this.extPhoneTextBox.Size = new System.Drawing.Size(125, 20);
-            this.extPhoneTextBox.TabIndex = 17;
+            this.ExtPhoneTextBox.Location = new System.Drawing.Point(165, 163);
+            this.ExtPhoneTextBox.Name = "ExtPhoneTextBox";
+            this.ExtPhoneTextBox.Size = new System.Drawing.Size(125, 20);
+            this.ExtPhoneTextBox.TabIndex = 17;
             // 
             // phoneTextBox
             // 
@@ -409,15 +398,6 @@
             this.countryTextBox.Size = new System.Drawing.Size(125, 20);
             this.countryTextBox.TabIndex = 11;
             // 
-            // extPhone2Label
-            // 
-            this.extPhone2Label.AutoSize = true;
-            this.extPhone2Label.Location = new System.Drawing.Point(307, 147);
-            this.extPhone2Label.Name = "extPhone2Label";
-            this.extPhone2Label.Size = new System.Drawing.Size(83, 13);
-            this.extPhone2Label.TabIndex = 10;
-            this.extPhone2Label.Text = "Доп. телефон :";
-            // 
             // emailLabel
             // 
             this.emailLabel.AutoSize = true;
@@ -436,14 +416,14 @@
             this.streetLabel.TabIndex = 8;
             this.streetLabel.Text = "Улица :";
             // 
-            // extPhone1Label
+            // ExtPhoneLabel
             // 
-            this.extPhone1Label.AutoSize = true;
-            this.extPhone1Label.Location = new System.Drawing.Point(162, 147);
-            this.extPhone1Label.Name = "extPhone1Label";
-            this.extPhone1Label.Size = new System.Drawing.Size(83, 13);
-            this.extPhone1Label.TabIndex = 7;
-            this.extPhone1Label.Text = "Доп. телефон :";
+            this.ExtPhoneLabel.AutoSize = true;
+            this.ExtPhoneLabel.Location = new System.Drawing.Point(162, 147);
+            this.ExtPhoneLabel.Name = "ExtPhoneLabel";
+            this.ExtPhoneLabel.Size = new System.Drawing.Size(83, 13);
+            this.ExtPhoneLabel.TabIndex = 7;
+            this.ExtPhoneLabel.Text = "Доп. телефон :";
             // 
             // websiteLabel
             // 
@@ -532,6 +512,43 @@
             this.bottomPanel.Name = "bottomPanel";
             this.bottomPanel.Size = new System.Drawing.Size(595, 187);
             this.bottomPanel.TabIndex = 83;
+            // 
+            // loginBackPanel
+            // 
+            this.loginBackPanel.Controls.Add(this.loginTextBox);
+            this.loginBackPanel.Location = new System.Drawing.Point(137, 64);
+            this.loginBackPanel.Name = "loginBackPanel";
+            this.loginBackPanel.Size = new System.Drawing.Size(124, 24);
+            this.loginBackPanel.TabIndex = 82;
+            // 
+            // loginTextBox
+            // 
+            this.loginTextBox.Location = new System.Drawing.Point(2, 2);
+            this.loginTextBox.Name = "loginTextBox";
+            this.loginTextBox.Size = new System.Drawing.Size(120, 20);
+            this.loginTextBox.TabIndex = 69;
+            this.toolTip.SetToolTip(this.loginTextBox, "Имя вашей учетной записи, по которому будет осуществляться авторизация.");
+            this.loginTextBox.Leave += new System.EventHandler(this.loginTextBox_Leave);
+            // 
+            // loginLabel
+            // 
+            this.loginLabel.AutoSize = true;
+            this.loginLabel.Location = new System.Drawing.Point(87, 69);
+            this.loginLabel.Name = "loginLabel";
+            this.loginLabel.Size = new System.Drawing.Size(44, 13);
+            this.loginLabel.TabIndex = 80;
+            this.loginLabel.Text = "Логин :";
+            this.toolTip.SetToolTip(this.loginLabel, "Пароль учетной записи");
+            // 
+            // loginStarLabel
+            // 
+            this.loginStarLabel.AutoSize = true;
+            this.loginStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.loginStarLabel.Location = new System.Drawing.Point(77, 57);
+            this.loginStarLabel.Name = "loginStarLabel";
+            this.loginStarLabel.Size = new System.Drawing.Size(20, 25);
+            this.loginStarLabel.TabIndex = 81;
+            this.loginStarLabel.Text = "*";
             // 
             // accessLayerBackPanel
             // 
@@ -704,43 +721,6 @@
             this.deselectToolStripMenuItem.Text = "Убрать фотографию";
             this.deselectToolStripMenuItem.Click += new System.EventHandler(this.deselectToolStripMenuItem_Click);
             // 
-            // loginBackPanel
-            // 
-            this.loginBackPanel.Controls.Add(this.loginTextBox);
-            this.loginBackPanel.Location = new System.Drawing.Point(137, 64);
-            this.loginBackPanel.Name = "loginBackPanel";
-            this.loginBackPanel.Size = new System.Drawing.Size(124, 24);
-            this.loginBackPanel.TabIndex = 82;
-            // 
-            // loginTextBox
-            // 
-            this.loginTextBox.Location = new System.Drawing.Point(2, 2);
-            this.loginTextBox.Name = "loginTextBox";
-            this.loginTextBox.Size = new System.Drawing.Size(120, 20);
-            this.loginTextBox.TabIndex = 69;
-            this.toolTip.SetToolTip(this.loginTextBox, "Имя вашей учетной записи, по которому будет осуществляться авторизация.");
-            this.loginTextBox.Leave += new System.EventHandler(this.loginTextBox_Leave);
-            // 
-            // loginLabel
-            // 
-            this.loginLabel.AutoSize = true;
-            this.loginLabel.Location = new System.Drawing.Point(87, 69);
-            this.loginLabel.Name = "loginLabel";
-            this.loginLabel.Size = new System.Drawing.Size(44, 13);
-            this.loginLabel.TabIndex = 80;
-            this.loginLabel.Text = "Логин :";
-            this.toolTip.SetToolTip(this.loginLabel, "Пароль учетной записи");
-            // 
-            // loginStarLabel
-            // 
-            this.loginStarLabel.AutoSize = true;
-            this.loginStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.loginStarLabel.Location = new System.Drawing.Point(77, 57);
-            this.loginStarLabel.Name = "loginStarLabel";
-            this.loginStarLabel.Size = new System.Drawing.Size(20, 25);
-            this.loginStarLabel.TabIndex = 81;
-            this.loginStarLabel.Text = "*";
-            // 
             // AddEmployeeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -769,6 +749,7 @@
             this.Controls.Add(this.middleNameTextBox);
             this.Controls.Add(this.addEmployeePhotoButton);
             this.Controls.Add(this.photoPictureBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AddEmployeeForm";
@@ -784,14 +765,14 @@
             this.contactInfoPanel.PerformLayout();
             this.bottomPanel.ResumeLayout(false);
             this.bottomPanel.PerformLayout();
+            this.loginBackPanel.ResumeLayout(false);
+            this.loginBackPanel.PerformLayout();
             this.accessLayerBackPanel.ResumeLayout(false);
             this.passwordAgainBackPanel.ResumeLayout(false);
             this.passwordAgainBackPanel.PerformLayout();
             this.passwordBackPanel.ResumeLayout(false);
             this.passwordBackPanel.PerformLayout();
             this.photoContextMenuStrip.ResumeLayout(false);
-            this.loginBackPanel.ResumeLayout(false);
-            this.loginBackPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -825,18 +806,16 @@
         private System.Windows.Forms.TextBox roomTextBox;
         private System.Windows.Forms.TextBox emailTextBox;
         private System.Windows.Forms.TextBox websiteTextBox;
-        private System.Windows.Forms.TextBox extPhone2TextBox;
-        private System.Windows.Forms.TextBox extPhoneTextBox;
+        private System.Windows.Forms.TextBox ExtPhoneTextBox;
         private System.Windows.Forms.TextBox phoneTextBox;
         private System.Windows.Forms.TextBox houseTextBox;
         private System.Windows.Forms.TextBox streetTextBox;
         private System.Windows.Forms.TextBox cityTextBox;
         private System.Windows.Forms.TextBox regionTextBox;
         private System.Windows.Forms.TextBox countryTextBox;
-        private System.Windows.Forms.Label extPhone2Label;
         private System.Windows.Forms.Label emailLabel;
         private System.Windows.Forms.Label streetLabel;
-        private System.Windows.Forms.Label extPhone1Label;
+        private System.Windows.Forms.Label ExtPhoneLabel;
         private System.Windows.Forms.Label websiteLabel;
         private System.Windows.Forms.Label phoneLabel;
         private System.Windows.Forms.Label houseLabel;

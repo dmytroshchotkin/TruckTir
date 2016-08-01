@@ -422,7 +422,7 @@ namespace PartsApp
             houseTextBox.Text       = contactInfo.House;
             roomTextBox.Text        = contactInfo.Room;
             phoneTextBox.Text       = contactInfo.Phone;
-            extPhoneTextBox.Text   = contactInfo.ExtPhone;
+            ExtPhoneTextBox.Text   = contactInfo.ExtPhone;
             emailTextBox.Text       = contactInfo.Email; ;
             websiteTextBox.Text     = contactInfo.Website; 
         }//FillTheContactInfoPanel        
@@ -537,6 +537,7 @@ namespace PartsApp
             employee.Login          = loginTextBox.Text.Trim();
             employee.Password       = PasswordClass.GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
         }//FillTheEmployeeFromForm
+
         /// <summary>
         /// Возвращает true если все необходимые данные введены корректно, иначе false.
         /// </summary>
