@@ -100,8 +100,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="IContragent.cs" />
     <Compile Include="Models\ContactInfo.cs" />
+    <Compile Include="Models\IContragent.cs" />
     <Compile Include="Models\IOperation.cs" />
     <Compile Include="Models\Markup.cs" />
     <Compile Include="Models\MeasureUnits.cs" />
