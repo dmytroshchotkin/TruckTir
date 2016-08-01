@@ -29,7 +29,7 @@ namespace PartsApp
             articulTextBox.Text = editSparePart.Articul;
             titleTextBox.Text = editSparePart.Title;
             manufacturerTextBox.Text = editSparePart.Manufacturer;
-            unitComboBox.SelectedItem = editSparePart.Unit;
+            unitComboBox.SelectedItem = editSparePart.MeasureUnit;
             if (editSparePart.Photo != null)
             {
                 if (System.IO.File.Exists(System.IO.Path.GetFullPath(editSparePart.Photo)))
@@ -51,7 +51,7 @@ namespace PartsApp
             unitComboBox.DataSource = Models.MeasureUnit.GetDescriptions();
             if (editSparePart == null)
                 unitComboBox.SelectedIndex = -1;
-            else unitComboBox.SelectedItem = editSparePart.Unit;
+            else unitComboBox.SelectedItem = editSparePart.MeasureUnit;
             //Добавляем в выпадающий список всех Производителей.
 /*!!!*/     manufacturerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllManufacturersName());
 
@@ -333,7 +333,7 @@ namespace PartsApp
             }//else
 
             //Вставляем ед. изм. 
-            sparePart.Unit = unitComboBox.SelectedValue.ToString();
+            sparePart.MeasureUnit = unitComboBox.SelectedValue.ToString();
         }//FillTheSparePartFromForm
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)

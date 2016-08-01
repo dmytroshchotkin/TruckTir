@@ -103,7 +103,7 @@ namespace PartsApp
                 row.Cells[Manufacturer.Name].Value = sparePart.Manufacturer;
                 row.Cells[Articul.Name].Value = sparePart.Articul;
                 row.Cells[Title.Name].Value = sparePart.Title;
-                row.Cells[Unit.Name].Value = sparePart.Unit;
+                row.Cells[Unit.Name].Value = sparePart.MeasureUnit;
                 row.Cells[Count.Name].Value = sparePart.Count;
                 row.Cells[Price.Name].Value = sparePart.Price;
      /*!!!*/    row.Cells[Sum.Name].Value = sparePart.Price * sparePart.Count;

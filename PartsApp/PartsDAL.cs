@@ -194,8 +194,8 @@ namespace PartsApp
             {
                 connection.Open();
                 //Вставляем запись в табл. "SparePart"
-                const string query = "INSERT INTO SpareParts(Photo, Articul, Title, Description, ManufacturerId, Unit) " +
-                                     "VALUES(@Photo, @Articul, @Title, @Description, @ManufacturerId, @Unit);";
+                const string query = "INSERT INTO SpareParts(Photo, Articul, Title, Description, ManufacturerId, MeasureUnit) " +
+                                     "VALUES(@Photo, @Articul, @Title, @Description, @ManufacturerId, @MeasureUnit);";
 
                 var cmd = new SQLiteCommand(query, connection);
 
@@ -204,7 +204,7 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@Title", sparePart.Title);
                 cmd.Parameters.AddWithValue("@Description", sparePart.Description);
                 cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.ManufacturerId);
-                cmd.Parameters.AddWithValue("@Unit", sparePart.Unit);
+                cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
 
                 cmd.ExecuteNonQuery();
                 
@@ -222,7 +222,7 @@ namespace PartsApp
                 connection.Open();
                 //Вставляем запись в табл. "SparePart"
                 const string query = "UPDATE SpareParts SET Photo = @Photo, Articul = @Articul, Title = @Title, "
-                                   + "Description = @Description, ManufacturerId = @ManufacturerId, Unit = @Unit " 
+                                   + "Description = @Description, ManufacturerId = @ManufacturerId, MeasureUnit = @MeasureUnit " 
                                    + "WHERE SparePartId = @SparePartId;";
                  
 
@@ -234,7 +234,7 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@Title", sparePart.Title);
                 cmd.Parameters.AddWithValue("@Description", sparePart.Description);
                 cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.ManufacturerId);
-                cmd.Parameters.AddWithValue("@Unit", sparePart.Unit);
+                cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
 
                 cmd.ExecuteNonQuery();
 
@@ -1069,9 +1069,7 @@ namespace PartsApp
                 sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
 
                 sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                //sparePart.Manufacturer = (sparePart.ManufacturerId == null) ? String.Empty : FindManufacturerNameById(sparePart.ManufacturerId, openConnection);
-                //sparePart.Manufacturer = (dataReader["ManufacturerId"] == DBNull.Value) ? String.Empty : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"]), connection);
-                sparePart.Unit = dataReader["Unit"] as string;
+                sparePart.MeasureUnit = dataReader["MeasureUnit"] as string;
 
                 spareParts.Add(sparePart);
             }//while     
@@ -3571,7 +3569,7 @@ namespace PartsApp
                 title          : dataReader["Title"] as string,
                 description    : (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,                
                 manufacturerId : (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]),                              
-                unit           : dataReader["Unit"] as string             
+                measureUnit           : dataReader["MeasureUnit"] as string             
             );
 
             return sparePart;        
@@ -3592,7 +3590,7 @@ namespace PartsApp
                 description: (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,
                 manufacturerId: (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]),                                
                 purchaseId: Convert.ToInt32(dataReader["PurchaseId"]),
-                unit: dataReader["Unit"] as string,
+                measureUnit: dataReader["MeasureUnit"] as string,
                 storageAdress : dataReader["StorageAdress"] as string,
                 count: Convert.ToDouble(dataReader["Count"]),
                 price: Convert.ToDouble(dataReader["Price"]),
@@ -3707,7 +3705,7 @@ namespace PartsApp
         [DisplayName("Адрес склада")]
         public string StorageAdress { get; set; }     
         [DisplayName("Ед. изм.")]
-        public string Unit { get; set; }
+        public string MeasureUnit { get; set; }
         [DisplayName("Осн.Скл.")]
         public double Count { get; set; }
         [DisplayName("Вирт. скл.")]
@@ -3765,7 +3763,7 @@ namespace PartsApp
             this.Description    = sparePart.Description;
             this.ManufacturerId = sparePart.ManufacturerId;
             this.Manufacturer   = (ManufacturerId == null) ? null : PartsDAL.FindManufacturerNameById(ManufacturerId);/*!!!*/
-            this.Unit           = sparePart.Unit;
+            this.MeasureUnit    = sparePart.MeasureUnit;
             this.Count          = sparePart.Count;
             this.VirtCount      = sparePart.VirtCount;
             this.StorageAdress  = sparePart.StorageAdress;
@@ -3777,7 +3775,7 @@ namespace PartsApp
         }//
 
         public SparePart(int sparePartId, string photo, string articul, string title, string description, 
-                         int? manufacturerId, string unit)
+                         int? manufacturerId, string measureUnit)
         {
             this.SparePartId    = sparePartId;
             this.Photo          = photo;
@@ -3786,11 +3784,11 @@ namespace PartsApp
             this.Description    = description;
             this.ManufacturerId = manufacturerId;
             this.Manufacturer   = (ManufacturerId == null) ? null : PartsDAL.FindManufacturerNameById(ManufacturerId);
-            this.Unit           = unit;
+            this.MeasureUnit    = measureUnit;
         }//
 
         public SparePart(int sparePartId, string photo, string articul, string title, string description,
-                         int? manufacturerId, int purchaseId, string unit, string storageAdress, double count, 
+                         int? manufacturerId, int purchaseId, string measureUnit, string storageAdress, double count, 
                          double price, double? markup)
         {          
             this.SparePartId    = sparePartId;
@@ -3800,7 +3798,7 @@ namespace PartsApp
             this.Description    = description;
             this.ManufacturerId = manufacturerId;
             this.Manufacturer   = (manufacturerId == null) ? null : PartsDAL.FindManufacturerNameById(manufacturerId); /*!!!*/
-            this.Unit           = unit;
+            this.MeasureUnit = measureUnit;
             this.PurchaseId     = purchaseId;
             this.SupplierName   = PartsDAL.FindSupplierByPurchaseId(purchaseId).ContragentName; /*!!!*/
             if (storageAdress == null) this.Count = count; 
@@ -3814,7 +3812,7 @@ namespace PartsApp
         public override string ToString()
         {
             return String.Format("Photo: {0}, Articul: {1}, Title: {2}, Descrip {3},\n  Manuf: {4}, Unit: {5}, minUnit: {6}",
-                    Photo, Articul, Title, Description, Manufacturer, Unit);
+                    Photo, Articul, Title, Description, Manufacturer, MeasureUnit);
 
         }
     }//SparePart

@@ -384,7 +384,7 @@ namespace PartsApp
                             row.Cells["SparePartId"].Value  = currentSparePart.SparePartId;
                             row.Cells["Title"].Value        = currentSparePart.Title;
                             row.Cells["Articul"].Value      = currentSparePart.Articul;
-                            row.Cells["Unit"].Value         = currentSparePart.Unit;
+                            row.Cells["Unit"].Value = currentSparePart.MeasureUnit;
 
                             //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
                             sparePartsId.Add(currentSparePart.SparePartId);
@@ -421,7 +421,7 @@ namespace PartsApp
                                     row.Cells["SparePartId"].Value = currentSparePart.SparePartId;
                                     row.Cells["Title"].Value = currentSparePart.Title;
                                     row.Cells["Articul"].Value = currentSparePart.Articul;
-                                    row.Cells["Unit"].Value = currentSparePart.Unit;
+                                    row.Cells["Unit"].Value = currentSparePart.MeasureUnit;
 
                                     //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
                                     sparePartsId.Add(currentSparePart.SparePartId);
@@ -747,107 +747,7 @@ namespace PartsApp
             if (purchase is Purchase)
                 LoadPurchaseToExcelFile(purchase as Purchase, spareParts);
         }//BeginLoadPurchaseToExcelFile
-        ///// <summary>
-        ///// Метод вывода приходной информации в Excel-файл.
-        ///// </summary>
-        ///// <param name="sale">Информация о приходе.</param>
-        ///// <param name="spareParts">Список оприходованных товаров.</param>
-        //private void LoadPurchaseToExcelFile(Purchase sale, IList<SparePart> spareParts)
-        //{
-        //    Excel.Application excelApp = new Excel.Application();
-        //    Excel.Workbook ExcelWorkBook;
-        //    Excel.Worksheet ExcelWorkSheet;
-        //    //Книга.
-        //    ExcelWorkBook = excelApp.Workbooks.Add(System.Reflection.Missing.Value);
-        //    //Таблица.
-        //    ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
 
-        //    int row = 1, column = 1;
-
-        //    //Выводим Id и Дату. 
-        //    excelApp.Cells[row, column] = String.Format("Приходная накладная №{0} от {1}г.", sale.PurchaseId, sale.PurchaseDate.ToString("dd/MM/yyyy"));
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
-
-        //    //Выводим поставщика.
-        //    row += 2;
-        //    excelApp.Cells[row, column] = String.Format("Поставщик:   \t{0}", supplierTextBox.Text);//PartsDAL.FindSupplierNameById(sale.SupplierId));
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-        //    //Выводим покупателя.
-        //    row += 2;
-        //    excelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", buyerTextBox.Text);
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-        //    //Выводим таблицу товаров.
-        //    //Выводим заголовок.
-        //    row += 2;
-        //    excelApp.Cells[row, column] = "Название";
-        //    excelApp.Cells[row, column+1] = "Ед. изм.";
-        //    excelApp.Cells[row, column+2] = "Кол-во";
-        //    excelApp.Cells[row, column+3] = "Цена";
-        //    excelApp.Cells[row, column+4] = "Сумма";
-
-        //    Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "E" + row.ToString());
-        //    excelCells.Font.Bold = true;
-        //    excelCells.Font.Size = 12;
-        //    //Обводим заголовки таблицы рамкой. 
-        //    excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-        //    //Устанавливаем стиль и толщину линии
-        //    //excelCells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-        //    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-
-        //    //Устанавливаем ширину первой Колонки для Title.
-        //    double width = 45; //45 -- Взято методом тыка.           
-        //    (excelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = width;
-        //    //Выводим список товаров.
-        //    for (int i = 0; i < spareParts.Count; ++i)
-        //    {
-        //        ++row;                
-        //        excelApp.Cells[row, column] = spareParts[i].Title;
-        //        //Если Title не влазиет в одну строку, увеличиваем высоту.
-        //        if (spareParts[i].Title.Length > width)
-        //        {
-        //            (excelApp.Cells[row, column] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
-        //            ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
-        //        }
-        //        excelApp.Cells[row, column + 1] = spareParts[i].Unit;
-        //        excelApp.Cells[row, column + 2] = spareParts[i].Count;
-        //        excelApp.Cells[row, column + 3] = spareParts[i].Price;
-        //        excelApp.Cells[row, column + 4] = spareParts[i].Price * spareParts[i].Count;
-        //        //Выравнивание диапазона строк.
-        //        ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft; 
-        //    }//for
-
-        //    //Обводим талицу рамкой. 
-        //    excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "E" + row.ToString());
-        //    excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-
-        //    //Выводим "Итого".
-        //    ++row;            
-        //    //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
-        //    int indent = 0; //отступ
-        //    if (inTotalNumberLabel.Text.Length <= 9)
-        //        indent = 1;
-
-        //    excelApp.Cells[row, column + 2 + indent] = inTotalLabel.Text;
-        //    excelApp.Cells[row, column + 3 + indent] = inTotalNumberLabel.Text; //inTotal;// 
-        //    (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Underline = true;
-        //    (excelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Size = (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
-        //    (excelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Bold = (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
-
-        //    //Выводим имена агентов.
-        //    row += 2;
-        //    excelApp.Cells[row, column]     = String.Format("\t{0} {1} ", supplierAgentLabel.Text, supplierAgentTextBox.Text);
-        //    excelApp.Cells[row, column + 1] = String.Format("{0} {1}",  buyerAgentLabel.Text, buyerAgentTextBox.Text);
-
-        //    //Вызываем нашу созданную эксельку.
-        //    excelApp.Visible = true;
-        //    ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-        //    excelApp.UserControl = true;
-
-        //    this.Close();
         //}//LoadPurchaseToExcelFile        
         /// <summary>
         /// Метод вывода приходной информации в Excel-файл.
@@ -940,7 +840,7 @@ namespace PartsApp
 
                 ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
 
-                ExcelApp.Cells[row, column + 3] = spareParts[i].Unit;
+                ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;
                 ExcelApp.Cells[row, column + 4] = spareParts[i].Count;
                 ExcelApp.Cells[row, column + 5] = spareParts[i].Price;
                 ExcelApp.Cells[row, column + 6] = spareParts[i].Price * spareParts[i].Count;
@@ -1052,8 +952,6 @@ namespace PartsApp
             ExcelApp.Visible = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
             ExcelApp.UserControl = true;
-
-            this.Close();
         }//LoadPurchaseToExcelFile  
 
         /// <summary>
@@ -1377,7 +1275,6 @@ namespace PartsApp
             {
                 supplierTextBox_Leave(null, null);
                 storageAdressTextBox_Leave(null, null);
-                //receiverTextBox_Leave(null, null);
                 storageAdressTextBox_Leave(null, null);
 
                 if (supplierBackPanel.BackColor != Color.Red && buyerBackPanel.BackColor != Color.Red
@@ -1417,7 +1314,7 @@ namespace PartsApp
 /*!!!*/             new System.Threading.Thread(BeginLoadPurchaseToExcelFile).Start(purchase); //Сделать по нормальному вызов с потоком.
 
                     this.Visible = false;
-                    //this.Close();
+                    this.Close();
                 }//if
             }//if
         }

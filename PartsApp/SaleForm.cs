@@ -423,7 +423,7 @@ namespace PartsApp
                                     row.Cells["SparePartId"].Value = currentSparePart.SparePartId;
                                     row.Cells["Title"].Value = currentSparePart.Title;
                                     row.Cells["Articul"].Value = currentSparePart.Articul;
-                                    row.Cells["Unit"].Value = currentSparePart.Unit;
+                                    row.Cells["Unit"].Value = currentSparePart.MeasureUnit;
 
                                     //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
                                     sparePartsId.Add(currentSparePart.SparePartId);
@@ -824,7 +824,7 @@ namespace PartsApp
             row.Cells["SparePartId"].Value = currentSparePart.SparePartId;
             row.Cells["Title"].Value = currentSparePart.Title;
             row.Cells["Articul"].Value = currentSparePart.Articul;
-            row.Cells["Unit"].Value = currentSparePart.Unit;
+            row.Cells["Unit"].Value = currentSparePart.MeasureUnit;
 
             PartsDAL.FindUniqueSparePartsAvaliabilityCount(currentSparePart); //находим общее кол-во   
             row.Cells["Count"].Style.ForeColor = Color.Gray;
@@ -849,7 +849,7 @@ namespace PartsApp
                 extDataGridView.Rows[i].Cells[extSupplier.Name].Value = sparePartsAvaliability[i].SupplierName;
                 extDataGridView.Rows[i].Cells["extTitle"].Value = sparePartsAvaliability[i].Title;
                 extDataGridView.Rows[i].Cells["extArticul"].Value = sparePartsAvaliability[i].Articul;
-                extDataGridView.Rows[i].Cells["extUnit"].Value = sparePartsAvaliability[i].Unit;
+                extDataGridView.Rows[i].Cells["extUnit"].Value = sparePartsAvaliability[i].MeasureUnit;
 
                 extDataGridView.Rows[i].Cells["extCount"].Style.ForeColor = Color.Gray;
                 extDataGridView.Rows[i].Cells["extCount"].Style.SelectionForeColor = Color.Gray;
@@ -1157,7 +1157,7 @@ namespace PartsApp
 
                 ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
 
-                ExcelApp.Cells[row, column + 3] = spareParts[i].Unit;
+                ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;
                 ExcelApp.Cells[row, column + 4] = spareParts[i].Count;
                 ExcelApp.Cells[row, column + 5] = spareParts[i].Price;
                 ExcelApp.Cells[row, column + 6] = spareParts[i].Price * spareParts[i].Count;

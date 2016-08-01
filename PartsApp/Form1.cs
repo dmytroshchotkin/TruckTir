@@ -161,8 +161,8 @@ namespace PartsApp
                 }//if
                 
                 ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
-                
-                ExcelApp.Cells[row, column + 3] = spareParts[i].Unit;                
+
+                ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;                
                 ExcelApp.Cells[row, column + 4] = spareParts[i].Count;
                 //excelApp.Cells[row, column + 5] = spareParts[i].Price;                
                 //excelApp.Cells[row, column + 5] = spareParts[i].Price * spareParts[i].Count;
@@ -1090,8 +1090,8 @@ namespace PartsApp
             partsDataGridView.Columns["Description"].MinimumWidth = 100;
             partsDataGridView.Columns["Manufacturer"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
 
-            partsDataGridView.Columns["Unit"].MinimumWidth = 35;
-            partsDataGridView.Columns["Unit"].Width = 35;
+            partsDataGridView.Columns["MeasureUnit"].MinimumWidth = 35;
+            partsDataGridView.Columns["MeasureUnit"].Width = 35;
 
             partsDataGridView.Columns["Avaliability"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             partsDataGridView.Columns[SellingPriceCol.Name].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
@@ -1117,8 +1117,8 @@ namespace PartsApp
             extPartsDataGridView.Columns["Articul"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             extPartsDataGridView.Columns["Title"].MinimumWidth = 100;
 
-            extPartsDataGridView.Columns["Unit"].MinimumWidth = 35;
-            extPartsDataGridView.Columns["Unit"].Width = 35;
+            extPartsDataGridView.Columns["MeasureUnit"].MinimumWidth = 35;
+            extPartsDataGridView.Columns["MeasureUnit"].Width = 35;
 
             extPartsDataGridView.Columns["Avaliability"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             extPartsDataGridView.Columns["StorageAdress"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
@@ -1142,7 +1142,7 @@ namespace PartsApp
                 row.Cells[ArticulCol.Name].Value      = sparePart.Articul;
                 row.Cells[TitleCol.Name].Value        = sparePart.Title;
                 row.Cells[DescriptionCol.Name].Value  = sparePart.Description;
-                row.Cells[MeasureUnitCol.Name].Value  = sparePart.Unit;
+                row.Cells[MeasureUnitCol.Name].Value = sparePart.MeasureUnit;
                 row.Cells[AvaliabilityCol.Name].Value = sparePart.Count;
                 row.Cells[SellingPriceCol.Name].Value = sparePart.SellingPrice;
             }//foreach

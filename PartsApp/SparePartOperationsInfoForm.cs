@@ -48,7 +48,7 @@ namespace PartsApp
                 row.Cells[ContragentEmployeeCol.Index].Value = operat.ContragentEmployee;
 
                 SparePart sparePart = operat.OperationDetails.First(sp => sp.SparePartId == sparePartId);
-                row.Cells[UnitCol.Index].Value = sparePart.Unit;
+                row.Cells[UnitCol.Index].Value = sparePart.MeasureUnit;
                 row.Cells[CountCol.Index].Value = sparePart.Count;
                 //double? price = (operat.GetType() == typeof(Sale)) ? sparePart.SellingPrice : sparePart.Price;
                 double? price = sparePart.Price;
