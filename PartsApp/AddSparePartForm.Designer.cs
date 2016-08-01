@@ -31,9 +31,9 @@
             this.components = new System.ComponentModel.Container();
             this.descrRichTextBox = new System.Windows.Forms.RichTextBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
-            this.unitLabel = new System.Windows.Forms.Label();
-            this.unitComboBoxBackPanel = new System.Windows.Forms.Panel();
-            this.unitComboBox = new System.Windows.Forms.ComboBox();
+            this.MeasureUnitLabel = new System.Windows.Forms.Label();
+            this.MeasureUnitBackPanel = new System.Windows.Forms.Panel();
+            this.MeasureUnitComboBox = new System.Windows.Forms.ComboBox();
             this.unitContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.titleTextBoxBackPanel = new System.Windows.Forms.Panel();
@@ -42,7 +42,7 @@
             this.articulTextBox = new System.Windows.Forms.TextBox();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
-            this.unitStarLabel = new System.Windows.Forms.Label();
+            this.MeasureUnitStarLabel = new System.Windows.Forms.Label();
             this.titleStarLabel = new System.Windows.Forms.Label();
             this.articulStarLabel = new System.Windows.Forms.Label();
             this.manufacturerTextBox = new System.Windows.Forms.TextBox();
@@ -55,7 +55,7 @@
             this.articulLabel = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.photoOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.unitComboBoxBackPanel.SuspendLayout();
+            this.MeasureUnitBackPanel.SuspendLayout();
             this.unitContextMenuStrip.SuspendLayout();
             this.titleTextBoxBackPanel.SuspendLayout();
             this.articulTextBoxBackPanel.SuspendLayout();
@@ -80,34 +80,34 @@
             this.descriptionLabel.TabIndex = 41;
             this.descriptionLabel.Text = "Описание:";
             // 
-            // unitLabel
+            // MeasureUnitLabel
             // 
-            this.unitLabel.AutoSize = true;
-            this.unitLabel.Location = new System.Drawing.Point(42, 156);
-            this.unitLabel.Name = "unitLabel";
-            this.unitLabel.Size = new System.Drawing.Size(49, 13);
-            this.unitLabel.TabIndex = 55;
-            this.unitLabel.Text = "Ед. изм.";
-            this.toolTip.SetToolTip(this.unitLabel, "Единица измерения товара");
+            this.MeasureUnitLabel.AutoSize = true;
+            this.MeasureUnitLabel.Location = new System.Drawing.Point(42, 156);
+            this.MeasureUnitLabel.Name = "MeasureUnitLabel";
+            this.MeasureUnitLabel.Size = new System.Drawing.Size(49, 13);
+            this.MeasureUnitLabel.TabIndex = 55;
+            this.MeasureUnitLabel.Text = "Ед. изм.";
+            this.toolTip.SetToolTip(this.MeasureUnitLabel, "Единица измерения товара");
             // 
-            // unitComboBoxBackPanel
+            // MeasureUnitBackPanel
             // 
-            this.unitComboBoxBackPanel.Controls.Add(this.unitComboBox);
-            this.unitComboBoxBackPanel.Location = new System.Drawing.Point(130, 156);
-            this.unitComboBoxBackPanel.Name = "unitComboBoxBackPanel";
-            this.unitComboBoxBackPanel.Size = new System.Drawing.Size(89, 25);
-            this.unitComboBoxBackPanel.TabIndex = 67;
+            this.MeasureUnitBackPanel.Controls.Add(this.MeasureUnitComboBox);
+            this.MeasureUnitBackPanel.Location = new System.Drawing.Point(130, 148);
+            this.MeasureUnitBackPanel.Name = "MeasureUnitBackPanel";
+            this.MeasureUnitBackPanel.Size = new System.Drawing.Size(89, 25);
+            this.MeasureUnitBackPanel.TabIndex = 67;
             // 
-            // unitComboBox
+            // MeasureUnitComboBox
             // 
-            this.unitComboBox.ContextMenuStrip = this.unitContextMenuStrip;
-            this.unitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.unitComboBox.FormattingEnabled = true;
-            this.unitComboBox.Location = new System.Drawing.Point(2, 2);
-            this.unitComboBox.Name = "unitComboBox";
-            this.unitComboBox.Size = new System.Drawing.Size(85, 21);
-            this.unitComboBox.TabIndex = 32;
-            this.unitComboBox.Leave += new System.EventHandler(this.unitComboBox_Leave);
+            this.MeasureUnitComboBox.ContextMenuStrip = this.unitContextMenuStrip;
+            this.MeasureUnitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MeasureUnitComboBox.FormattingEnabled = true;
+            this.MeasureUnitComboBox.Location = new System.Drawing.Point(2, 2);
+            this.MeasureUnitComboBox.Name = "MeasureUnitComboBox";
+            this.MeasureUnitComboBox.Size = new System.Drawing.Size(85, 21);
+            this.MeasureUnitComboBox.TabIndex = 32;
+            this.MeasureUnitComboBox.Leave += new System.EventHandler(this.unitComboBox_Leave);
             // 
             // unitContextMenuStrip
             // 
@@ -177,15 +177,15 @@
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.okButton_MouseClick);
             // 
-            // unitStarLabel
+            // MeasureUnitStarLabel
             // 
-            this.unitStarLabel.AutoSize = true;
-            this.unitStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.unitStarLabel.Location = new System.Drawing.Point(25, 148);
-            this.unitStarLabel.Name = "unitStarLabel";
-            this.unitStarLabel.Size = new System.Drawing.Size(20, 25);
-            this.unitStarLabel.TabIndex = 60;
-            this.unitStarLabel.Text = "*";
+            this.MeasureUnitStarLabel.AutoSize = true;
+            this.MeasureUnitStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.MeasureUnitStarLabel.Location = new System.Drawing.Point(25, 148);
+            this.MeasureUnitStarLabel.Name = "MeasureUnitStarLabel";
+            this.MeasureUnitStarLabel.Size = new System.Drawing.Size(20, 25);
+            this.MeasureUnitStarLabel.TabIndex = 60;
+            this.MeasureUnitStarLabel.Text = "*";
             // 
             // titleStarLabel
             // 
@@ -289,17 +289,17 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 438);
-            this.Controls.Add(this.unitComboBoxBackPanel);
+            this.Controls.Add(this.MeasureUnitBackPanel);
             this.Controls.Add(this.titleTextBoxBackPanel);
             this.Controls.Add(this.articulTextBoxBackPanel);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.descrRichTextBox);
-            this.Controls.Add(this.unitStarLabel);
+            this.Controls.Add(this.MeasureUnitStarLabel);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.titleStarLabel);
             this.Controls.Add(this.articulStarLabel);
-            this.Controls.Add(this.unitLabel);
+            this.Controls.Add(this.MeasureUnitLabel);
             this.Controls.Add(this.manufacturerTextBox);
             this.Controls.Add(this.manufacturerLabel);
             this.Controls.Add(this.titleLabel);
@@ -311,7 +311,7 @@
             this.Name = "AddSparePartForm";
             this.Text = "Форма добавления новой единицы товара";
             this.Load += new System.EventHandler(this.AddSparePartForm_Load);
-            this.unitComboBoxBackPanel.ResumeLayout(false);
+            this.MeasureUnitBackPanel.ResumeLayout(false);
             this.unitContextMenuStrip.ResumeLayout(false);
             this.titleTextBoxBackPanel.ResumeLayout(false);
             this.titleTextBoxBackPanel.PerformLayout();
@@ -326,8 +326,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel unitComboBoxBackPanel;
-        private System.Windows.Forms.ComboBox unitComboBox;
+        private System.Windows.Forms.Panel MeasureUnitBackPanel;
+        private System.Windows.Forms.ComboBox MeasureUnitComboBox;
         private System.Windows.Forms.Panel titleTextBoxBackPanel;
         private System.Windows.Forms.TextBox titleTextBox;
         private System.Windows.Forms.Panel articulTextBoxBackPanel;
@@ -336,10 +336,10 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.RichTextBox descrRichTextBox;
         private System.Windows.Forms.Label descriptionLabel;
-        private System.Windows.Forms.Label unitStarLabel;
+        private System.Windows.Forms.Label MeasureUnitStarLabel;
         private System.Windows.Forms.Label titleStarLabel;
         private System.Windows.Forms.Label articulStarLabel;
-        private System.Windows.Forms.Label unitLabel;
+        private System.Windows.Forms.Label MeasureUnitLabel;
         private System.Windows.Forms.TextBox manufacturerTextBox;
         private System.Windows.Forms.Label manufacturerLabel;
         private System.Windows.Forms.Label titleLabel;

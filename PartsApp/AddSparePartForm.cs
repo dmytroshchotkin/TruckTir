@@ -29,7 +29,7 @@ namespace PartsApp
             articulTextBox.Text = editSparePart.Articul;
             titleTextBox.Text = editSparePart.Title;
             manufacturerTextBox.Text = editSparePart.Manufacturer;
-            unitComboBox.SelectedItem = editSparePart.MeasureUnit;
+            MeasureUnitComboBox.SelectedItem = editSparePart.MeasureUnit;
             if (editSparePart.Photo != null)
             {
                 if (System.IO.File.Exists(System.IO.Path.GetFullPath(editSparePart.Photo)))
@@ -48,10 +48,10 @@ namespace PartsApp
         {
             //добавляем все варианты выбора единицы измерения.
 
-            unitComboBox.DataSource = Models.MeasureUnit.GetDescriptions();
+            MeasureUnitComboBox.DataSource = Models.MeasureUnit.GetDescriptions();
             if (editSparePart == null)
-                unitComboBox.SelectedIndex = -1;
-            else unitComboBox.SelectedItem = editSparePart.MeasureUnit;
+                MeasureUnitComboBox.SelectedIndex = -1;
+            else MeasureUnitComboBox.SelectedItem = editSparePart.MeasureUnit;
             //Добавляем в выпадающий список всех Производителей.
 /*!!!*/     manufacturerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllManufacturersName());
 
@@ -128,36 +128,36 @@ namespace PartsApp
         private void unitComboBox_Leave(object sender, EventArgs e)
         {
             //Если добавляется новая ед.изм.
-            if (unitComboBox.DropDownStyle == ComboBoxStyle.DropDown)
+            if (MeasureUnitComboBox.DropDownStyle == ComboBoxStyle.DropDown)
             {
-                if (String.IsNullOrWhiteSpace(unitComboBox.Text))
+                if (String.IsNullOrWhiteSpace(MeasureUnitComboBox.Text))
                 {
-                    WrongValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel, "Введите новую единицу измерения", 5000);
+                    WrongValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel, "Введите новую единицу измерения", 5000);
                 }//if
                 else
-                    if (unitComboBox.Items.Contains(unitComboBox.Text))//если введена уже существующая ед.изм.
+                    if (MeasureUnitComboBox.Items.Contains(MeasureUnitComboBox.Text))//если введена уже существующая ед.изм.
                     {
-                        CorrectValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel);
-                        toolTip.Show("Такая единица измерения уже существует!", this, unitComboBoxBackPanel.Location, 5000);
+                        CorrectValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel);
+                        toolTip.Show("Такая единица измерения уже существует!", this, MeasureUnitBackPanel.Location, 5000);
 
-                        string text = unitComboBox.Text;
-                        unitComboBox.Leave -= unitComboBox_Leave;
-                        unitComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-                        unitComboBox.Leave += unitComboBox_Leave;
+                        string text = MeasureUnitComboBox.Text;
+                        MeasureUnitComboBox.Leave -= unitComboBox_Leave;
+                        MeasureUnitComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                        MeasureUnitComboBox.Leave += unitComboBox_Leave;
 
-                        unitComboBox.Text = text;
+                        MeasureUnitComboBox.Text = text;
                     }// else if
                     else //если title введен правильно
                     {
-                        CorrectValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel);
+                        CorrectValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel);
                     }//else
             }//if
             else //Если новая ед. изм. не добавляется
             {
-                if (String.IsNullOrWhiteSpace(unitComboBox.Text))
-                    WrongValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel, "Выберите ед. изм.", 2000);
+                if (String.IsNullOrWhiteSpace(MeasureUnitComboBox.Text))
+                    WrongValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel, "Выберите ед. изм.", 2000);
                 else
-                    CorrectValueInput(unitComboBox, unitComboBoxBackPanel, unitStarLabel);
+                    CorrectValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel);
             }//else
         }//unitComboBox_Leave
 
@@ -216,9 +216,9 @@ namespace PartsApp
         //Событие для добавления новой единицы измерения в БД.
         private void addUnitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            unitComboBox.DropDownStyle = ComboBoxStyle.DropDown;
-            unitComboBox.Text = String.Empty;
-            unitComboBox.Focus();
+            MeasureUnitComboBox.DropDownStyle = ComboBoxStyle.DropDown;
+            MeasureUnitComboBox.Text = String.Empty;
+            MeasureUnitComboBox.Focus();
         }//addUnitToolStripMenuItem_Click
 
         private void addPhotoButton_Click(object sender, EventArgs e)
@@ -333,7 +333,7 @@ namespace PartsApp
             }//else
 
             //Вставляем ед. изм. 
-            sparePart.MeasureUnit = unitComboBox.SelectedValue.ToString();
+            sparePart.MeasureUnit = MeasureUnitComboBox.SelectedValue.ToString();
         }//FillTheSparePartFromForm
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
@@ -359,7 +359,7 @@ namespace PartsApp
 
                 //Если все корректно.
                 if (articulTextBoxBackPanel.BackColor != Color.Red && titleTextBoxBackPanel.BackColor != Color.Red
-                    && unitComboBoxBackPanel.BackColor != Color.Red)
+                    && MeasureUnitBackPanel.BackColor != Color.Red)
                 {
                     this.Cursor = Cursors.WaitCursor;
 
