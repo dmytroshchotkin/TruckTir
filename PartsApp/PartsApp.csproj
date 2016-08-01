@@ -116,7 +116,6 @@
       <DependentUpon>OperationInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PartsDAL.cs" />
-    <Compile Include="PasswordClass.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseForm.cs">
@@ -138,6 +137,7 @@
       <DependentUpon>SparePartOperationsInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SupportClasses\ExtensionClasses.cs" />
+    <Compile Include="SupportClasses\PasswordClass.cs" />
     <EmbeddedResource Include="AddEmployeeForm.resx">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </EmbeddedResource>
