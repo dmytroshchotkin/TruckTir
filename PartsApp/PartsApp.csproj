@@ -86,7 +86,6 @@
     <Compile Include="AuthorizationForm.Designer.cs">
       <DependentUpon>AuthorizationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ContactInfo.cs" />
     <Compile Include="ContragentOperationsInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +101,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="IContragent.cs" />
+    <Compile Include="Models\ContactInfo.cs" />
     <Compile Include="Models\IOperation.cs" />
     <Compile Include="Models\Markup.cs" />
     <Compile Include="Models\MeasureUnits.cs" />
