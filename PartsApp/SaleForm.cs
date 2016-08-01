@@ -763,7 +763,8 @@ namespace PartsApp
             double countAvaliability = Convert.ToDouble(System.Text.RegularExpressions.Regex.Replace(fullExtCount, @"[^\d]+", "")); //Достаём число из строки, строка возможна типа "(20)", поэтому исп-ся рег. выр.
             if (count > countAvaliability) throw new Exception();
             //Проверяем является ли введенное число корректным для продажи, т.е. соответствует ли оно минимальному 
-            if (count % PartsDAL.FindMinUnitSaleOfUnit(cell.OwningRow.Cells["extUnit"].Value as string) != 0)
+            string unitOfMeasure = cell.OwningRow.Cells["extUnit"].Value as string;
+            if (count % Models.MeasureUnit.GetMinUnitSale(unitOfMeasure) != 0)
                 throw new Exception();
             return count;
         }//TestInputValueInExtDGV
