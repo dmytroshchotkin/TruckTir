@@ -306,6 +306,8 @@
             this.Controls.Add(this.addPhotoButton);
             this.Controls.Add(this.photoPictureBox);
             this.Controls.Add(this.articulLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "AddSparePartForm";
             this.Text = "Форма добавления новой единицы товара";
             this.Load += new System.EventHandler(this.AddSparePartForm_Load);
