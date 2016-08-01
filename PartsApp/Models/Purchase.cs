@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PartsApp
+namespace PartsApp.Models
 {
-    class Purchase : IOperation
+    public class Purchase : IOperation
     {
         public int OperationId { get; set; }
         public Employee Employee { get; set; }
@@ -17,13 +17,9 @@ namespace PartsApp
         public double ExcRate { get; set; }
         public string Description { get; set; }
         public IList<SparePart> OperationDetails { get; set; }
-          
-        public Purchase() {}
-        
+
+        public Purchase() { }
+
     }//Purchase
 
 }//namespace
-
-/*
- для преобразования даты в целое число используется функция strftime('%s', value), а для обратного преобразования используется функция datetime(value, 'unixepoch').
-*/
