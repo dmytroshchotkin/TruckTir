@@ -92,7 +92,6 @@
     <Compile Include="ContragentOperationsInfoForm.Designer.cs">
       <DependentUpon>ContragentOperationsInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Customer.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -101,6 +100,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ContactInfo.cs" />
+    <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\IContragent.cs" />
     <Compile Include="Models\IOperation.cs" />
     <Compile Include="Models\Markup.cs" />

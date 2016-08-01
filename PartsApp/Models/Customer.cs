@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PartsApp
+namespace PartsApp.Models
 {
-    class Customer : IContragent
+    public class Customer : IContragent
     {
         //[Browsable(false)]
         public int ContragentId { get; set; }
@@ -22,7 +22,6 @@ namespace PartsApp
         public string Description { get; set; }
 
         public Customer() { }
-
 
     }//Customer
 
