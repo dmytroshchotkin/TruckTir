@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PartsApp
+namespace PartsApp.Models
 {
     interface IOperation
     {
@@ -19,6 +19,5 @@ namespace PartsApp
         IList<SparePart> OperationDetails { get; set; }
 
     }//IOperation
-
 
 }//namespace

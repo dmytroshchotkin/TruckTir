@@ -102,7 +102,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="IContragent.cs" />
-    <Compile Include="IOperation.cs" />
+    <Compile Include="Models\IOperation.cs" />
     <Compile Include="Models\Markup.cs" />
     <Compile Include="Models\MeasureUnits.cs" />
     <Compile Include="Models\SparePart.cs" />
