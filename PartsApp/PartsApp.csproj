@@ -105,6 +105,7 @@
     <Compile Include="IOperation.cs" />
     <Compile Include="Models\Markup.cs" />
     <Compile Include="Models\MeasureUnits.cs" />
+    <Compile Include="Models\SparePart.cs" />
     <Compile Include="OperationInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
