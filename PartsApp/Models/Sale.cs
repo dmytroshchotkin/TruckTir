@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PartsApp
+namespace PartsApp.Models
 {
-    class Sale : IOperation
+    public class Sale : IOperation
     {
         public int OperationId { get; set; }
         public Employee Employee { get; set; }
@@ -17,9 +17,9 @@ namespace PartsApp
         public double ExcRate { get; set; }
         public string Description { get; set; }
         public IList<SparePart> OperationDetails { get; set; }
-          
-        public Sale() {}
-        
+
+        public Sale() { }
+
     }//Sale
 
 

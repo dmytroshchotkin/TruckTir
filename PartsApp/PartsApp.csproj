@@ -105,6 +105,7 @@
     <Compile Include="Models\IOperation.cs" />
     <Compile Include="Models\Markup.cs" />
     <Compile Include="Models\MeasureUnits.cs" />
+    <Compile Include="Models\Sale.cs" />
     <Compile Include="Models\SparePart.cs" />
     <Compile Include="OperationInfoForm.cs">
       <SubType>Form</SubType>
@@ -123,7 +124,6 @@
     <Compile Include="PurchaseForm.Designer.cs">
       <DependentUpon>PurchaseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sale.cs" />
     <Compile Include="SaleForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PartsApp.Models
 {
-    interface IOperation
+    public interface IOperation
     {
         int OperationId { get; set; }
         Employee Employee { get; set; }
