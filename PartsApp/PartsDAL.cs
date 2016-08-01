@@ -460,8 +460,8 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                string query = String.Format("INSERT INTO ContactInfo (Country, Region, City, Street, House, Room, Phone, ExtPhone1, Website, Email)"
-                                           + "VALUES (@Country, @Region, @City, @Street, @House, @Room, @Phone, @ExtPhone1, @Website, @Email);"
+                string query = String.Format("INSERT INTO ContactInfo (Country, Region, City, Street, House, Room, Phone, ExtPhone, Website, Email)"
+                                           + "VALUES (@Country, @Region, @City, @Street, @House, @Room, @Phone, @ExtPhone, @Website, @Email);"
                                            + "SELECT ContactInfoId FROM ContactInfo WHERE rowid = last_insert_rowid();");
                 //Вставляем запись в табл. "Manufacturer"
                 var cmd = new SQLiteCommand(query, connection);
@@ -473,7 +473,7 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@House",     contactInfo.House);
                 cmd.Parameters.AddWithValue("@Room",      contactInfo.Room);
                 cmd.Parameters.AddWithValue("@Phone",     contactInfo.Phone);
-                cmd.Parameters.AddWithValue("@ExtPhone1", contactInfo.ExtPhone1);
+                cmd.Parameters.AddWithValue("@ExtPhone",  contactInfo.ExtPhone);
                 cmd.Parameters.AddWithValue("@Website",   contactInfo.Website);
                 cmd.Parameters.AddWithValue("@Email",     contactInfo.Email);
 
@@ -2459,16 +2459,16 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    contactInfo.Country = dataReader["Country"] as string;
-                    contactInfo.Region = dataReader["Region"] as string;
-                    contactInfo.City = dataReader["City"] as string;
-                    contactInfo.Street = dataReader["Street"] as string;
-                    contactInfo.House = dataReader["House"] as string;
-                    contactInfo.Room = dataReader["Room"] as string;
-                    contactInfo.Phone = dataReader["Phone"] as string;
-                    contactInfo.ExtPhone1 = dataReader["ExtPhone1"] as string;
-                    contactInfo.Email = dataReader["Email"] as string;
-                    contactInfo.Website = dataReader["Website"] as string;
+                    contactInfo.Country     = dataReader["Country"] as string;
+                    contactInfo.Region      = dataReader["Region"] as string;
+                    contactInfo.City        = dataReader["City"] as string;
+                    contactInfo.Street      = dataReader["Street"] as string;
+                    contactInfo.House       = dataReader["House"] as string;
+                    contactInfo.Room        = dataReader["Room"] as string;
+                    contactInfo.Phone       = dataReader["Phone"] as string;
+                    contactInfo.ExtPhone    = dataReader["ExtPhone"] as string;
+                    contactInfo.Email       = dataReader["Email"] as string;
+                    contactInfo.Website     = dataReader["Website"] as string;
                 }//while 
 
                 connection.Close();

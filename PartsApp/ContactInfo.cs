@@ -16,14 +16,14 @@ namespace PartsApp
         public string House      { get; set; }
         public string Room       { get; set; }  
         public string Phone      { get; set; }
-        public string ExtPhone1  { get; set; }
+        public string ExtPhone  { get; set; }
         public string Website    { get; set; }
         public string Email      { get; set; }
 
           
         public ContactInfo() { }
         public ContactInfo(string country, string region, string city, string street, string house,
-                           string room, string phone, string extphone1, string website, string email)
+                           string room, string phone, string extphone, string website, string email)
         {
             Country = country;
             Region = region;
@@ -32,12 +32,12 @@ namespace PartsApp
             House = house;
             Room = room;
             Phone = phone;
-            ExtPhone1 = extphone1;
+            ExtPhone = extphone;
             Website = website;
             Email = email;
         }//
         public ContactInfo(int contactinfoid, string country, string region, string city, string street, string house,      
-                           string room, string phone, string extphone1, string website, string email)
+                           string room, string phone, string extphone, string website, string email)
         {             
            ContactInfoId = contactinfoid;
            Country       = country;
@@ -47,7 +47,7 @@ namespace PartsApp
            House         = house;
            Room          = room; 
            Phone         = phone;
-           ExtPhone1     = extphone1;
+           ExtPhone      = extphone;
            Website       = website;
            Email         = email;
         }//

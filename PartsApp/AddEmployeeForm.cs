@@ -420,7 +420,7 @@ namespace PartsApp
             houseTextBox.Text       = contactInfo.House;
             roomTextBox.Text        = contactInfo.Room;
             phoneTextBox.Text       = contactInfo.Phone;
-            extPhone1TextBox.Text   = contactInfo.ExtPhone1;
+            extPhoneTextBox.Text   = contactInfo.ExtPhone;
             emailTextBox.Text       = contactInfo.Email; ;
             websiteTextBox.Text     = contactInfo.Website; 
         }//FillTheContactInfoPanel        

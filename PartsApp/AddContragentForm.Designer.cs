@@ -46,7 +46,7 @@
             this.roomTextBox = new System.Windows.Forms.TextBox();
             this.emailTextBox = new System.Windows.Forms.TextBox();
             this.websiteTextBox = new System.Windows.Forms.TextBox();
-            this.extPhone1TextBox = new System.Windows.Forms.TextBox();
+            this.extPhoneTextBox = new System.Windows.Forms.TextBox();
             this.phoneTextBox = new System.Windows.Forms.TextBox();
             this.houseTextBox = new System.Windows.Forms.TextBox();
             this.streetTextBox = new System.Windows.Forms.TextBox();
@@ -55,7 +55,7 @@
             this.countryTextBox = new System.Windows.Forms.TextBox();
             this.emailLabel = new System.Windows.Forms.Label();
             this.streetLabel = new System.Windows.Forms.Label();
-            this.extPhone1Label = new System.Windows.Forms.Label();
+            this.extPhoneLabel = new System.Windows.Forms.Label();
             this.websiteLabel = new System.Windows.Forms.Label();
             this.phoneLabel = new System.Windows.Forms.Label();
             this.houseLabel = new System.Windows.Forms.Label();
@@ -195,7 +195,7 @@
             this.contactInfoPanel.Controls.Add(this.roomTextBox);
             this.contactInfoPanel.Controls.Add(this.emailTextBox);
             this.contactInfoPanel.Controls.Add(this.websiteTextBox);
-            this.contactInfoPanel.Controls.Add(this.extPhone1TextBox);
+            this.contactInfoPanel.Controls.Add(this.extPhoneTextBox);
             this.contactInfoPanel.Controls.Add(this.phoneTextBox);
             this.contactInfoPanel.Controls.Add(this.houseTextBox);
             this.contactInfoPanel.Controls.Add(this.streetTextBox);
@@ -204,7 +204,7 @@
             this.contactInfoPanel.Controls.Add(this.countryTextBox);
             this.contactInfoPanel.Controls.Add(this.emailLabel);
             this.contactInfoPanel.Controls.Add(this.streetLabel);
-            this.contactInfoPanel.Controls.Add(this.extPhone1Label);
+            this.contactInfoPanel.Controls.Add(this.extPhoneLabel);
             this.contactInfoPanel.Controls.Add(this.websiteLabel);
             this.contactInfoPanel.Controls.Add(this.phoneLabel);
             this.contactInfoPanel.Controls.Add(this.houseLabel);
@@ -248,12 +248,12 @@
             this.websiteTextBox.Size = new System.Drawing.Size(192, 20);
             this.websiteTextBox.TabIndex = 19;
             // 
-            // extPhone1TextBox
+            // extPhoneTextBox
             // 
-            this.extPhone1TextBox.Location = new System.Drawing.Point(165, 163);
-            this.extPhone1TextBox.Name = "extPhone1TextBox";
-            this.extPhone1TextBox.Size = new System.Drawing.Size(125, 20);
-            this.extPhone1TextBox.TabIndex = 17;
+            this.extPhoneTextBox.Location = new System.Drawing.Point(165, 163);
+            this.extPhoneTextBox.Name = "extPhoneTextBox";
+            this.extPhoneTextBox.Size = new System.Drawing.Size(125, 20);
+            this.extPhoneTextBox.TabIndex = 17;
             // 
             // phoneTextBox
             // 
@@ -315,14 +315,14 @@
             this.streetLabel.TabIndex = 8;
             this.streetLabel.Text = "Улица :";
             // 
-            // extPhone1Label
+            // extPhoneLabel
             // 
-            this.extPhone1Label.AutoSize = true;
-            this.extPhone1Label.Location = new System.Drawing.Point(162, 147);
-            this.extPhone1Label.Name = "extPhone1Label";
-            this.extPhone1Label.Size = new System.Drawing.Size(83, 13);
-            this.extPhone1Label.TabIndex = 7;
-            this.extPhone1Label.Text = "Доп. телефон :";
+            this.extPhoneLabel.AutoSize = true;
+            this.extPhoneLabel.Location = new System.Drawing.Point(162, 147);
+            this.extPhoneLabel.Name = "extPhoneLabel";
+            this.extPhoneLabel.Size = new System.Drawing.Size(83, 13);
+            this.extPhoneLabel.TabIndex = 7;
+            this.extPhoneLabel.Text = "Доп. телефон :";
             // 
             // websiteLabel
             // 
@@ -477,7 +477,7 @@
         private System.Windows.Forms.Panel contactInfoPanel;
         private System.Windows.Forms.TextBox emailTextBox;
         private System.Windows.Forms.TextBox websiteTextBox;
-        private System.Windows.Forms.TextBox extPhone1TextBox;
+        private System.Windows.Forms.TextBox extPhoneTextBox;
         private System.Windows.Forms.TextBox phoneTextBox;
         private System.Windows.Forms.TextBox houseTextBox;
         private System.Windows.Forms.TextBox streetTextBox;
@@ -486,7 +486,7 @@
         private System.Windows.Forms.TextBox countryTextBox;
         private System.Windows.Forms.Label emailLabel;
         private System.Windows.Forms.Label streetLabel;
-        private System.Windows.Forms.Label extPhone1Label;
+        private System.Windows.Forms.Label extPhoneLabel;
         private System.Windows.Forms.Label websiteLabel;
         private System.Windows.Forms.Label phoneLabel;
         private System.Windows.Forms.Label houseLabel;

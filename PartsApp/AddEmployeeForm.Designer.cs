@@ -56,7 +56,7 @@
             this.emailTextBox = new System.Windows.Forms.TextBox();
             this.websiteTextBox = new System.Windows.Forms.TextBox();
             this.extPhone2TextBox = new System.Windows.Forms.TextBox();
-            this.extPhone1TextBox = new System.Windows.Forms.TextBox();
+            this.extPhoneTextBox = new System.Windows.Forms.TextBox();
             this.phoneTextBox = new System.Windows.Forms.TextBox();
             this.houseTextBox = new System.Windows.Forms.TextBox();
             this.streetTextBox = new System.Windows.Forms.TextBox();
@@ -299,7 +299,7 @@
             this.contactInfoPanel.Controls.Add(this.emailTextBox);
             this.contactInfoPanel.Controls.Add(this.websiteTextBox);
             this.contactInfoPanel.Controls.Add(this.extPhone2TextBox);
-            this.contactInfoPanel.Controls.Add(this.extPhone1TextBox);
+            this.contactInfoPanel.Controls.Add(this.extPhoneTextBox);
             this.contactInfoPanel.Controls.Add(this.phoneTextBox);
             this.contactInfoPanel.Controls.Add(this.houseTextBox);
             this.contactInfoPanel.Controls.Add(this.streetTextBox);
@@ -360,12 +360,12 @@
             this.extPhone2TextBox.Size = new System.Drawing.Size(172, 20);
             this.extPhone2TextBox.TabIndex = 18;
             // 
-            // extPhone1TextBox
+            // extPhoneTextBox
             // 
-            this.extPhone1TextBox.Location = new System.Drawing.Point(165, 163);
-            this.extPhone1TextBox.Name = "extPhone1TextBox";
-            this.extPhone1TextBox.Size = new System.Drawing.Size(125, 20);
-            this.extPhone1TextBox.TabIndex = 17;
+            this.extPhoneTextBox.Location = new System.Drawing.Point(165, 163);
+            this.extPhoneTextBox.Name = "extPhone1TextBox";
+            this.extPhoneTextBox.Size = new System.Drawing.Size(125, 20);
+            this.extPhoneTextBox.TabIndex = 17;
             // 
             // phoneTextBox
             // 
@@ -826,7 +826,7 @@
         private System.Windows.Forms.TextBox emailTextBox;
         private System.Windows.Forms.TextBox websiteTextBox;
         private System.Windows.Forms.TextBox extPhone2TextBox;
-        private System.Windows.Forms.TextBox extPhone1TextBox;
+        private System.Windows.Forms.TextBox extPhoneTextBox;
         private System.Windows.Forms.TextBox phoneTextBox;
         private System.Windows.Forms.TextBox houseTextBox;
         private System.Windows.Forms.TextBox streetTextBox;
