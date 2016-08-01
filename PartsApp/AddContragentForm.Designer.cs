@@ -46,7 +46,6 @@
             this.roomTextBox = new System.Windows.Forms.TextBox();
             this.emailTextBox = new System.Windows.Forms.TextBox();
             this.websiteTextBox = new System.Windows.Forms.TextBox();
-            this.extPhone2TextBox = new System.Windows.Forms.TextBox();
             this.extPhone1TextBox = new System.Windows.Forms.TextBox();
             this.phoneTextBox = new System.Windows.Forms.TextBox();
             this.houseTextBox = new System.Windows.Forms.TextBox();
@@ -54,7 +53,6 @@
             this.cityTextBox = new System.Windows.Forms.TextBox();
             this.regionTextBox = new System.Windows.Forms.TextBox();
             this.countryTextBox = new System.Windows.Forms.TextBox();
-            this.extPhone2Label = new System.Windows.Forms.Label();
             this.emailLabel = new System.Windows.Forms.Label();
             this.streetLabel = new System.Windows.Forms.Label();
             this.extPhone1Label = new System.Windows.Forms.Label();
@@ -197,7 +195,6 @@
             this.contactInfoPanel.Controls.Add(this.roomTextBox);
             this.contactInfoPanel.Controls.Add(this.emailTextBox);
             this.contactInfoPanel.Controls.Add(this.websiteTextBox);
-            this.contactInfoPanel.Controls.Add(this.extPhone2TextBox);
             this.contactInfoPanel.Controls.Add(this.extPhone1TextBox);
             this.contactInfoPanel.Controls.Add(this.phoneTextBox);
             this.contactInfoPanel.Controls.Add(this.houseTextBox);
@@ -205,7 +202,6 @@
             this.contactInfoPanel.Controls.Add(this.cityTextBox);
             this.contactInfoPanel.Controls.Add(this.regionTextBox);
             this.contactInfoPanel.Controls.Add(this.countryTextBox);
-            this.contactInfoPanel.Controls.Add(this.extPhone2Label);
             this.contactInfoPanel.Controls.Add(this.emailLabel);
             this.contactInfoPanel.Controls.Add(this.streetLabel);
             this.contactInfoPanel.Controls.Add(this.extPhone1Label);
@@ -251,13 +247,6 @@
             this.websiteTextBox.Name = "websiteTextBox";
             this.websiteTextBox.Size = new System.Drawing.Size(192, 20);
             this.websiteTextBox.TabIndex = 19;
-            // 
-            // extPhone2TextBox
-            // 
-            this.extPhone2TextBox.Location = new System.Drawing.Point(310, 163);
-            this.extPhone2TextBox.Name = "extPhone2TextBox";
-            this.extPhone2TextBox.Size = new System.Drawing.Size(172, 20);
-            this.extPhone2TextBox.TabIndex = 18;
             // 
             // extPhone1TextBox
             // 
@@ -307,15 +296,6 @@
             this.countryTextBox.Name = "countryTextBox";
             this.countryTextBox.Size = new System.Drawing.Size(125, 20);
             this.countryTextBox.TabIndex = 11;
-            // 
-            // extPhone2Label
-            // 
-            this.extPhone2Label.AutoSize = true;
-            this.extPhone2Label.Location = new System.Drawing.Point(307, 147);
-            this.extPhone2Label.Name = "extPhone2Label";
-            this.extPhone2Label.Size = new System.Drawing.Size(83, 13);
-            this.extPhone2Label.TabIndex = 10;
-            this.extPhone2Label.Text = "Доп. телефон :";
             // 
             // emailLabel
             // 
@@ -497,7 +477,6 @@
         private System.Windows.Forms.Panel contactInfoPanel;
         private System.Windows.Forms.TextBox emailTextBox;
         private System.Windows.Forms.TextBox websiteTextBox;
-        private System.Windows.Forms.TextBox extPhone2TextBox;
         private System.Windows.Forms.TextBox extPhone1TextBox;
         private System.Windows.Forms.TextBox phoneTextBox;
         private System.Windows.Forms.TextBox houseTextBox;
@@ -505,7 +484,6 @@
         private System.Windows.Forms.TextBox cityTextBox;
         private System.Windows.Forms.TextBox regionTextBox;
         private System.Windows.Forms.TextBox countryTextBox;
-        private System.Windows.Forms.Label extPhone2Label;
         private System.Windows.Forms.Label emailLabel;
         private System.Windows.Forms.Label streetLabel;
         private System.Windows.Forms.Label extPhone1Label;

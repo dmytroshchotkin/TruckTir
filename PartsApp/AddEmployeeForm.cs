@@ -421,7 +421,6 @@ namespace PartsApp
             roomTextBox.Text        = contactInfo.Room;
             phoneTextBox.Text       = contactInfo.Phone;
             extPhone1TextBox.Text   = contactInfo.ExtPhone1;
-            extPhone2TextBox.Text   = contactInfo.ExtPhone2;
             emailTextBox.Text       = contactInfo.Email; ;
             websiteTextBox.Text     = contactInfo.Website; 
         }//FillTheContactInfoPanel        
