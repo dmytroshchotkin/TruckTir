@@ -43,7 +43,7 @@ namespace PartsApp
         private void AddEmployeeForm_Load(object sender, EventArgs e)
         {
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
-        }
+        }//AddEmployeeForm_Load
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
         {
@@ -436,7 +436,7 @@ namespace PartsApp
             if (employee == Form1.CurEmployee)
             {
                 //Если права "Обычные" -- может редактировать только пароль и логин.
-                if (employee.AccessLayer == EmployeeAccessLayers.Usual)
+                if (employee.AccessLayer == Employee.AccessLayers.User.ToDescription())
                 {
                     foreach (Control control in this.Controls)
                         control.Enabled = false;
@@ -452,7 +452,7 @@ namespace PartsApp
             else //Если редактируемый юзер не является авторизованным юзером
             {
                 //если права "Админ" -- может редактировать всё, кроме пароля и логина.
-                if (employee.AccessLayer == EmployeeAccessLayers.Admin)
+                if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
                 {
                     passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
                     loginTextBox.Visible = false;
@@ -479,7 +479,7 @@ namespace PartsApp
             if (employee.EmployeeId == Form1.CurEmployee.EmployeeId)
             {
                 //Если права "Админ"  
-                if (employee.AccessLayer == EmployeeAccessLayers.Admin)
+                if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
                 {
                     //Если пароль не менялся, обновляем без пароля, иначе обновляем полностью.
                     if (passwordTextBox.Text.Trim() == Form1.CurEmployee.Password)                    
@@ -500,7 +500,7 @@ namespace PartsApp
             else //Если редактируемый юзер не является авторизованным юзером
             {
                 //если права "Админ" 
-                if (employee.AccessLayer == EmployeeAccessLayers.Admin)                
+                if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())           
                     PartsDAL.UpdateEmployeeWithoutPassword(employee);                
             }//else    
         }//UpdateEmployee

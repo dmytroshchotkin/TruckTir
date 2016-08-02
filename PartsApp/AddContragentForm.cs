@@ -28,7 +28,8 @@ namespace PartsApp
         {
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
             codeMaskedTextBox.SelectionStart = 1;            
-        }
+        }//
+
         private void addContactInfoButton_Click(object sender, EventArgs e)
         {
             //Проверяем есть ли уже введенная информация. 
@@ -40,7 +41,7 @@ namespace PartsApp
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
             else
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y + contactInfoPanel.Size.Height);
-        }
+        }//addContactInfoButton_Click
 
         private void contragentNameTextBox_Leave(object sender, EventArgs e)
         {

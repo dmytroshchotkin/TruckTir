@@ -8,6 +8,14 @@ namespace PartsApp.Models
 {
     public class Employee
     {
+        public enum AccessLayers
+        {
+            [System.ComponentModel.Description("Администратор")]
+            Admin,
+            [System.ComponentModel.Description("Обычный")]
+            User
+        }//AccessLayers
+
         public int EmployeeId { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
@@ -57,14 +65,5 @@ namespace PartsApp.Models
             return String.Format("{0} {1}. {2}", LastName, FirstName.ToUpper()[0], shortMiddleName);
         }//GetShortFullName
     }//Employee
-
-    /*!!!!*/
-    /// <summary>
-    /// Корявая реализация типов уровней доступа. Лучше сделать Enum в самом классе Employee!
-    /// </summary>
-    public static class EmployeeAccessLayers
-    {
-        public static string Admin { get { return "Администратор"; } }
-        public static string Usual { get { return "Обычный"; } }
-    }//EmployeeAccessLayers
+  
 }//namespace
