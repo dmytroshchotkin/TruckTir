@@ -28,14 +28,14 @@ namespace PartsApp
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         private static void AddSparePartAvaliability(SparePart sparePart, SQLiteCommand cmd)
         {
-            var query = "INSERT INTO Avaliability VALUES (@SparePartId, @PurchaseId, @Price, @Markup, @StorageAdress, @Count);";
+            var query = "INSERT INTO Avaliability VALUES (@SparePartId, @OperationId, @Price, @Markup, @StorageAdress, @Count);";
 
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
             
             cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
-            cmd.Parameters.AddWithValue("@PurchaseId", sparePart.PurchaseId);
+            cmd.Parameters.AddWithValue("@OperationId", sparePart.PurchaseId);
             cmd.Parameters.AddWithValue("@Price", sparePart.Price);
             cmd.Parameters.AddWithValue("@Markup", sparePart.Markup);
             cmd.Parameters.AddWithValue("@StorageAdress", sparePart.StorageAdress);
@@ -51,12 +51,12 @@ namespace PartsApp
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         public static void UpdateSparePartСountAvaliability(int sparePartId, int purchaseId, double newCount, SQLiteCommand cmd)
         {
-            string query = "UPDATE Avaliability SET Count = @Count WHERE SparePartId = @SparePartId AND PurchaseId = @PurchaseId;";
+            string query = "UPDATE Avaliability SET Count = @Count WHERE SparePartId = @SparePartId AND OperationId = @OperationId;";
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-            cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+            cmd.Parameters.AddWithValue("@OperationId", purchaseId);
             cmd.Parameters.AddWithValue("@Count", newCount);
 
             cmd.ExecuteNonQuery();            
@@ -70,14 +70,14 @@ namespace PartsApp
         /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
         public static void UpdateSparePartMarkup(int sparePartId, int purchaseId, double markup, SQLiteCommand cmd)
         {
-            const string query = "UPDATE Avaliability SET Markup = @Markup WHERE SparePartId = @SparePartId AND PurchaseId = @PurchaseId;";
+            const string query = "UPDATE Avaliability SET Markup = @Markup WHERE SparePartId = @SparePartId AND OperationId = @OperationId;";
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
 
             cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
             cmd.Parameters.AddWithValue("@Markup", markup);
-            cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+            cmd.Parameters.AddWithValue("@OperationId", purchaseId);
 
             cmd.ExecuteNonQuery();                                                              
         }//UpdateSparePartMarkup
@@ -132,12 +132,12 @@ namespace PartsApp
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         public static void DeleteSparePartAvaliability(int sparePartId, int purchaseId, SQLiteCommand cmd)
         {
-            const string query = "DELETE FROM Avaliability WHERE SparePartId = @SparePartId AND PurchaseId = @PurchaseId;";
+            const string query = "DELETE FROM Avaliability WHERE SparePartId = @SparePartId AND OperationId = @OperationId;";
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-            cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+            cmd.Parameters.AddWithValue("@OperationId", purchaseId);
 
             cmd.ExecuteNonQuery();
         }//DeleteSparePartAvaliability
@@ -281,10 +281,11 @@ namespace PartsApp
             {
                 connection.Open();
 
-                //Вставляем запись в табл. "Supplier"
-                var cmd = new SQLiteCommand("INSERT INTO Suppliers(SupplierName, Code, Entity, ContactInfoId, Description) VALUES (@SupplierName, @Code, @Entity, @ContactInfoId, @Description);", connection);
+                const string query = "INSERT INTO Suppliers (ContragentName, Code, Entity, ContactInfoId, Description) "
+                                   + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description);";
+                var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@SupplierName",  supplier.ContragentName);
+                cmd.Parameters.AddWithValue("@ContragentName", supplier.ContragentName);
                 cmd.Parameters.AddWithValue("@Code",          supplier.Code);
                 cmd.Parameters.AddWithValue("@Entity",        supplier.Entity);
                 cmd.Parameters.AddWithValue("@ContactInfoId", (supplier.ContactInfo != null) ? supplier.ContactInfo.ContactInfoId : (int?)null);
@@ -341,11 +342,11 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "INSERT INTO Customers(CustomerName, Code, Entity, ContactInfoId, Description) " 
-                                   + "VALUES (@CustomerName, @Code, @Entity, @ContactInfoId, @Description);";
+                const string query = "INSERT INTO Customers (ContragentName, Code, Entity, ContactInfoId, Description) "
+                                   + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description);";
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@CustomerName", customer.ContragentName);
+                cmd.Parameters.AddWithValue("@ContragentName", customer.ContragentName);
                 cmd.Parameters.AddWithValue("@Code", customer.Code);
                 cmd.Parameters.AddWithValue("@Entity", customer.Entity);
                 cmd.Parameters.AddWithValue("@ContactInfoId", (customer.ContactInfo != null) ? customer.ContactInfo.ContactInfoId : (int?)null);
@@ -386,7 +387,6 @@ namespace PartsApp
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion        
-
 
         #region Модификация таблицы Manufacturers
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -566,21 +566,21 @@ namespace PartsApp
         private static int AddPurchase(Purchase purchase, SQLiteCommand cmd)
         {
             int purchaseId = 0;
-            
-            string query = String.Format("INSERT INTO Purchases (EmployeeID, SupplierId, SupplierEmployee, PurchaseDate, Description)"
-                                       + "VALUES (@EmployeeID, @SupplierId, @SupplierEmployee, strftime('%s', @PurchaseDate), @Description);"
-                                       + "SELECT PurchaseId FROM Purchases WHERE rowid = last_insert_rowid();");
+
+            string query = String.Format("INSERT INTO Purchases (EmployeeID, ContragentId, ContragentEmployee, OperationDate, Description)"
+                                       + "VALUES (@EmployeeID, @ContragentId, @ContragentEmployee, strftime('%s', @OperationDate), @Description);"
+                                       + "SELECT OperationId FROM Purchases WHERE rowid = last_insert_rowid();");
 
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
 
             cmd.Parameters.AddWithValue("@EmployeeID", purchase.Employee.EmployeeId);
-            cmd.Parameters.AddWithValue("@SupplierId", purchase.Contragent.ContragentId);
-            cmd.Parameters.AddWithValue("@SupplierEmployee", purchase.ContragentEmployee);
+            cmd.Parameters.AddWithValue("@ContragentId", purchase.Contragent.ContragentId);
+            cmd.Parameters.AddWithValue("@ContragentEmployee", purchase.ContragentEmployee);
 
             cmd.Parameters.AddWithValue("@Description", purchase.Description);
-            cmd.Parameters.AddWithValue("@PurchaseDate", purchase.OperationDate);
+            cmd.Parameters.AddWithValue("@OperationDate", purchase.OperationDate);
 
             purchaseId = Convert.ToInt32(cmd.ExecuteScalar());     
                    
@@ -597,16 +597,16 @@ namespace PartsApp
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         private static void AddPurchaseDetail(SparePart purchaseDetail, SQLiteCommand cmd)
         {
-            string query = "INSERT INTO PurchaseDetails VALUES (@PurchaseId, @SparePartId, @Price, @Quantity);";
+            string query = "INSERT INTO PurchaseDetails VALUES (@OperationId, @SparePartId, @Quantity, @Price);";
 
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
 
-            cmd.Parameters.AddWithValue("@PurchaseId", purchaseDetail.PurchaseId);
+            cmd.Parameters.AddWithValue("@OperationId", purchaseDetail.PurchaseId);
             cmd.Parameters.AddWithValue("@SparePartId", purchaseDetail.SparePartId);
-            cmd.Parameters.AddWithValue("@Price", purchaseDetail.Price);
             cmd.Parameters.AddWithValue("@Quantity", purchaseDetail.Count);
+            cmd.Parameters.AddWithValue("@Price", purchaseDetail.Price);
 
             cmd.ExecuteNonQuery();
         }//AddPurchaseDetail
@@ -712,20 +712,21 @@ namespace PartsApp
         {
             int saleId = 0;
 
-            var query = String.Format("INSERT INTO Sales (EmployeeID, CustomerId, CustomerEmployee, SaleDate, Description) "
-                                    + "VALUES (@EmployeeID, @CustomerId, @CustomerEmployee, strftime('%s', @SaleDate), @Description); "
-                                    + "SELECT SaleId FROM Sales WHERE rowid = last_insert_rowid();");
+
+            string query = String.Format("INSERT INTO Sales (EmployeeID, ContragentId, ContragentEmployee, OperationDate, Description)"
+                                       + "VALUES (@EmployeeID, @ContragentId, @ContragentEmployee, strftime('%s', @OperationDate), @Description);"
+                                       + "SELECT OperationId FROM Sales WHERE rowid = last_insert_rowid();");
 
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
 
             cmd.Parameters.AddWithValue("@EmployeeID", sale.Employee.EmployeeId);
-            cmd.Parameters.AddWithValue("@CustomerId", sale.Contragent.ContragentId);
-            cmd.Parameters.AddWithValue("@CustomerEmployee", sale.ContragentEmployee);
-            cmd.Parameters.AddWithValue("@Description", sale.Description);           
+            cmd.Parameters.AddWithValue("@ContragentId", sale.Contragent.ContragentId);
+            cmd.Parameters.AddWithValue("@ContragentEmployee", sale.ContragentEmployee);
+            cmd.Parameters.AddWithValue("@Description", sale.Description);
 
-            cmd.Parameters.AddWithValue("@SaleDate", sale.OperationDate);
+            cmd.Parameters.AddWithValue("@OperationDate", sale.OperationDate);
 
             saleId = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -745,13 +746,13 @@ namespace PartsApp
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         private static void AddSaleDetail(int saleId, int sparePartId, double sellingPrice, double quantity, SQLiteCommand cmd)
         {
-            string query = "INSERT INTO SaleDetails VALUES (@SaleId, @SparePartId, @Quantity, @SellingPrice);";
+            string query = "INSERT INTO SaleDetails VALUES (@OperationId, @SparePartId, @Quantity, @SellingPrice);";
 
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
 
-            cmd.Parameters.AddWithValue("@SaleId", saleId);
+            cmd.Parameters.AddWithValue("@OperationId", saleId);
             cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
             cmd.Parameters.AddWithValue("@Quantity", quantity);
             cmd.Parameters.AddWithValue("@SellingPrice", sellingPrice);
@@ -1021,14 +1022,14 @@ namespace PartsApp
             double count = 0;         
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
-                connection.Open();   
+                connection.Open();
 
-                string query = "SELECT Count FROM Avaliability WHERE SparePartId = @SparePartId AND PurchaseId = @PurchaseId;";
+                string query = "SELECT Count FROM Avaliability WHERE SparePartId = @SparePartId AND OperationId = @OperationId;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
                 cmd.CommandText = query;
 
                 cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+                cmd.Parameters.AddWithValue("@OperationId", purchaseId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
@@ -1588,9 +1589,9 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    Supplier supplier = new Supplier();                    
-                    supplier.ContragentId   = Convert.ToInt32(dataReader["SupplierId"]);
-                    supplier.ContragentName = dataReader["SupplierName"] as string;
+                    Supplier supplier = new Supplier();
+                    supplier.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
+                    supplier.ContragentName = dataReader["ContragentName"] as string;
                     supplier.Code        = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     supplier.Entity      = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
                     supplier.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
@@ -1614,12 +1615,12 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT SupplierName FROM Suppliers;", connection);
+                SQLiteCommand cmd = new SQLiteCommand("SELECT ContragentName FROM Suppliers;", connection);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    suppliersNameList.Add(dataReader["SupplierName"] as string);                    
+                    suppliersNameList.Add(dataReader["ContragentName"] as string);                    
                 }//while
 
                 connection.Close();
@@ -1643,16 +1644,16 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT * FROM  Suppliers WHERE SupplierId = @SupplierId;";
+                const string query = "SELECT * FROM  Suppliers WHERE ContragentId = @ContragentId;";
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@SupplierId", supplierId);
+                cmd.Parameters.AddWithValue("@ContragentId", supplierId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    supplier.ContragentId = Convert.ToInt32(dataReader["SupplierId"]);
-                    supplier.ContragentName = dataReader["SupplierName"] as string;
+                    supplier.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
+                    supplier.ContragentName = dataReader["ContragentName"] as string;
                     supplier.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     supplier.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
                     supplier.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
@@ -1677,17 +1678,17 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT * FROM Purchases AS p JOIN Suppliers AS s ON p.SupplierId = s.SupplierId "
-                                   + "WHERE p.PurchaseId = @PurchaseId;";
+                const string query = "SELECT * FROM Purchases AS p JOIN Suppliers AS s ON p.ContragentId = s.ContragentId "
+                                   + "WHERE p.OperationId = @OperationId;";
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+                cmd.Parameters.AddWithValue("@OperationId", purchaseId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    supplier.ContragentId = Convert.ToInt32(dataReader["SupplierId"]);
-                    supplier.ContragentName = dataReader["SupplierName"] as string;
+                    supplier.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
+                    supplier.ContragentName = dataReader["ContragentName"] as string;
                     supplier.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     supplier.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
                     supplier.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
@@ -1713,17 +1714,17 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT * FROM Suppliers WHERE SupplierName LIKE @SupplierName;";
+                const string query = "SELECT * FROM Suppliers WHERE ContragentName LIKE @ContragentName;";
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@SupplierName", supplierName);
+                cmd.Parameters.AddWithValue("@ContragentName", supplierName);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
                     supplier = new Supplier();
-                    supplier.ContragentId = Convert.ToInt32(dataReader["SupplierId"]);
-                    supplier.ContragentName = dataReader["SupplierName"] as string;
+                    supplier.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
+                    supplier.ContragentName = dataReader["ContragentName"] as string;
                     supplier.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     supplier.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
                     supplier.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
@@ -1814,8 +1815,8 @@ namespace PartsApp
                 while (dataReader.Read())
                 {
                     Customer customer = new Customer();
-                    customer.ContragentId   = Convert.ToInt32(dataReader["CustomerId"]);
-                    customer.ContragentName = dataReader["CustomerName"] as string;
+                    customer.ContragentId   = Convert.ToInt32(dataReader["ContragentId"]);
+                    customer.ContragentName = dataReader["ContragentName"] as string;
                     customer.Code           = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     customer.Entity      = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
                     customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
@@ -1842,17 +1843,17 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT * FROM Customers WHERE CustomerName LIKE @CustomerName;";
+                const string query = "SELECT * FROM Customers WHERE ContragentName LIKE @ContragentName;";
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@CustomerName", customerName);
+                cmd.Parameters.AddWithValue("@ContragentName", customerName);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
                     customer = new Customer();
-                    customer.ContragentId   = Convert.ToInt32(dataReader["CustomerId"]);
-                    customer.ContragentName = dataReader["CustomerName"] as string;
+                    customer.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
+                    customer.ContragentName = dataReader["ContragentName"] as string;
                     customer.Code        = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     customer.Entity      = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
                     customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
@@ -1876,12 +1877,12 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT CustomerName FROM Customers;", connection);
+                SQLiteCommand cmd = new SQLiteCommand("SELECT ContragentName FROM Customers;", connection);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    string name = dataReader["CustomerName"] as string;
+                    string name = dataReader["ContragentName"] as string;
                     customersNameList.Add(name);
                 }//while
 
@@ -1906,17 +1907,17 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                
-                const string query = "SELECT * FROM Customers WHERE CustomerId = @CustomerId;";
+
+                const string query = "SELECT * FROM Customers WHERE ContragentId = @ContragentId;";
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@CustomerId", customerId);
+                cmd.Parameters.AddWithValue("@ContragentId", customerId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    customer.ContragentId   = Convert.ToInt32(dataReader["CustomerId"]);
-                    customer.ContragentName = dataReader["CustomerName"] as string;
+                    customer.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
+                    customer.ContragentName = dataReader["ContragentName"] as string;
                     customer.Code   = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     customer.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
                     customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
@@ -1971,12 +1972,12 @@ namespace PartsApp
                 {
                     Purchase purchase = new Purchase();
 
-                    purchase.OperationId = Convert.ToInt32(dataReader["PurchaseId"]);
+                    purchase.OperationId = Convert.ToInt32(dataReader["OperationId"]);
                     purchase.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null;
-                    purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["SupplierId"]));
-                    purchase.ContragentEmployee = dataReader["SupplierEmployee"] as string;
+                    purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["ContragentId"]));
+                    purchase.ContragentEmployee = dataReader["ContragentEmployee"] as string;
                     //Переводим кол-во секунд Utc в DateTime.
-                    TimeSpan ts = TimeSpan.FromSeconds(Convert.ToInt32(dataReader["PurchaseDate"]));
+                    TimeSpan ts = TimeSpan.FromSeconds(Convert.ToInt32(dataReader["OperationDate"]));
                     DateTime purchaseDate = new DateTime(1970, 1, 1);
                     purchaseDate += ts;
                     purchase.OperationDate = purchaseDate;
@@ -1997,12 +1998,12 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT *, datetime(PurchaseDate, 'unixepoch') as PD "
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
                                    + "FROM Purchases "
-                                   + "WHERE SupplierId = @SupplierId "
-                                   + "ORDER BY PurchaseDate desc;";
+                                   + "WHERE ContragentId = @ContragentId "
+                                   + "ORDER BY OperationDate desc;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@SupplierId", supplierId);
+                cmd.Parameters.AddWithValue("@ContragentId", supplierId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
@@ -2027,12 +2028,12 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT *, datetime(SaleDate, 'unixepoch') as SD "
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
                                    + "FROM Sales "
-                                   + "WHERE CustomerId = @CustomerId "
-                                   + "ORDER BY SaleDate desc;";
+                                   + "WHERE ContragentId = @ContragentId "
+                                   + "ORDER BY OperationDate desc;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@CustomerId", customerId);
+                cmd.Parameters.AddWithValue("@ContragentId", customerId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
@@ -2057,19 +2058,19 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                var cmd = new SQLiteCommand("SELECT * FROM Purchases WHERE PurchaseId = @PurchaseId;", connection);
+                var cmd = new SQLiteCommand("SELECT * FROM Purchases WHERE OperationId = @OperationId;", connection);
 
-                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+                cmd.Parameters.AddWithValue("@OperationId", purchaseId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    purchase.OperationId = Convert.ToInt32(dataReader["PurchaseId"]);
+                    purchase.OperationId = Convert.ToInt32(dataReader["OperationId"]);
                     purchase.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null;
-                    purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["SupplierId"]));
-                    purchase.ContragentEmployee = dataReader["SupplierEmployee"] as string;
+                    purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["ContragentId"]));
+                    purchase.ContragentEmployee = dataReader["ContragentEmployee"] as string;
                     //Переводим кол-во секунд Utc в DateTime.
-                    TimeSpan ts = TimeSpan.FromSeconds(Convert.ToInt32(dataReader["PurchaseDate"]));
+                    TimeSpan ts = TimeSpan.FromSeconds(Convert.ToInt32(dataReader["OperationDate"]));
                     DateTime purchaseDate = new DateTime(1970, 1, 1);
                     purchaseDate += ts;
                     purchase.OperationDate = purchaseDate;
@@ -2092,9 +2093,9 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                var cmd = new SQLiteCommand("SELECT SUM(Price) FROM PurchaseDetails WHERE PurchaseId = @PurchaseId;", connection);
+                var cmd = new SQLiteCommand("SELECT SUM(Price) FROM PurchaseDetails WHERE OperationId = @OperationId;", connection);
 
-                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+                cmd.Parameters.AddWithValue("@OperationId", purchaseId);
 
                 totalSum = Convert.ToDouble(cmd.ExecuteScalar());
 
@@ -2134,7 +2135,7 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT *, datetime(PurchaseDate, 'unixepoch') as PD "
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
                                    + "FROM Purchases;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
 
@@ -2159,7 +2160,7 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT *, datetime(SaleDate, 'unixepoch') as SD "
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
                                    + "FROM Sales;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
 
@@ -2188,11 +2189,11 @@ namespace PartsApp
         {
             Purchase purchase = new Purchase();
 
-            purchase.OperationId = Convert.ToInt32(dataReader["PurchaseId"]);
+            purchase.OperationId = Convert.ToInt32(dataReader["OperationId"]);
             purchase.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null;
-            purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["SupplierId"]));
-            purchase.ContragentEmployee = dataReader["SupplierEmployee"] as string;
-            purchase.OperationDate = Convert.ToDateTime(dataReader["PD"]);
+            purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["ContragentId"]));
+            purchase.ContragentEmployee = dataReader["ContragentEmployee"] as string;
+            purchase.OperationDate = Convert.ToDateTime(dataReader["OD"]);
             purchase.OperationDetails = FindPurchaseDetails(purchase.OperationId);
 
             return purchase;
@@ -2201,11 +2202,11 @@ namespace PartsApp
         {
             Sale sale = new Sale();
 
-            sale.OperationId = Convert.ToInt32(dataReader["SaleId"]);
+            sale.OperationId = Convert.ToInt32(dataReader["OperationId"]);
             sale.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null;
-            sale.Contragent = FindCustomers(Convert.ToInt32(dataReader["CustomerId"]));
-            sale.ContragentEmployee = dataReader["CustomerEmployee"] as string;
-            sale.OperationDate = Convert.ToDateTime(dataReader["SD"]);
+            sale.Contragent = FindCustomers(Convert.ToInt32(dataReader["ContragentId"]));
+            sale.ContragentEmployee = dataReader["ContragentEmployee"] as string;
+            sale.OperationDate = Convert.ToDateTime(dataReader["OD"]);
             sale.OperationDetails = FindSaleDetails(sale.OperationId);
 
             return sale;
@@ -2219,10 +2220,10 @@ namespace PartsApp
             {
                 connection.Open();
                 const string query = "SELECT * FROM PurchaseDetails "
-                                   + "WHERE PurchaseId = @PurchaseId;";
+                                   + "WHERE OperationId = @OperationId;";
 
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+                cmd.Parameters.AddWithValue("@OperationId", purchaseId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
@@ -2246,16 +2247,16 @@ namespace PartsApp
             {
                 connection.Open();
                 const string query = "SELECT * FROM SaleDetails "
-                                   + "WHERE SaleId = @SaleId;";
+                                   + "WHERE OperationId = @OperationId;";
 
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@SaleId", saleId);
+                cmd.Parameters.AddWithValue("@OperationId", saleId);
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
                     SparePart sparePart = FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]));
-                    sparePart.Price = Convert.ToDouble(dataReader["SellingPrice"]);
+                    sparePart.Price = Convert.ToDouble(dataReader["Price"]);
                     sparePart.Count = Convert.ToDouble(dataReader["Quantity"]);
 
                     sparePartsList.Add(sparePart);
@@ -3575,8 +3576,8 @@ namespace PartsApp
                 articul: dataReader["Articul"] as string,
                 title: dataReader["Title"] as string,
                 description: (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,
-                manufacturerId: (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]),                                
-                purchaseId: Convert.ToInt32(dataReader["PurchaseId"]),
+                manufacturerId: (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]),
+                purchaseId: Convert.ToInt32(dataReader["OperationId"]),
                 measureUnit: dataReader["MeasureUnit"] as string,
                 storageAdress : dataReader["StorageAdress"] as string,
                 count: Convert.ToDouble(dataReader["Count"]),

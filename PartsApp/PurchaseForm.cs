@@ -789,6 +789,7 @@ namespace PartsApp
                                                          buyerLabel.Text + " " + buyerTextBox.Text);
 
             #region Вывод таблицы товаров.
+
             row += 2;
             //Выводим заголовок.
             ExcelApp.Cells[row, column] = "Произв.";
@@ -865,69 +866,6 @@ namespace PartsApp
 
             #endregion
 
-            #region Вывод таблицы товаров старый.
-            
-            ////Выводим заголовок.
-            //row += 2;
-            //excelApp.Cells[row, column] = "Произв.";
-            //excelApp.Cells[row, column + 1] = "Название";
-            //excelApp.Cells[row, column + 2] = "Ед. изм.";
-            //excelApp.Cells[row, column + 3] = "Кол-во";
-            //excelApp.Cells[row, column + 4] = "Цена";
-            //excelApp.Cells[row, column + 5] = "Сумма";
-
-            //excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
-            //excelCells.Font.Bold = true;
-            //excelCells.Font.Size = 12;
-            ////Обводим заголовки таблицы рамкой. 
-            //excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-            ////Устанавливаем стиль и толщину линии
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-
-            ////Устанавливаем ширину первой Колонки для Title.
-            //double titleColWidth = 50; //50 -- Взято методом тыка.         
-            //int manufColWidth = 15;    //15 -- Взято методом тыка.
-            //(excelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = manufColWidth; //titleColWidth;
-            //(excelApp.Cells[row, column + 1] as Excel.Range).Columns.ColumnWidth = titleColWidth; //manufColWidth;
-            ////Выводим список товаров.
-            //for (int i = 0; i < spareParts.Count; ++i)
-            //{
-            //    ++row;
-            //    excelApp.Cells[row, column + 1] = spareParts[i].Title;
-            //    //Если Title не влазиет в одну строку, увеличиваем высоту.
-            //    if (spareParts[i].Title.Length > titleColWidth)
-            //    {
-            //        (excelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
-            //        ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
-            //    }
-            //    excelApp.Cells[row, column] = spareParts[i].Manufacturer;
-            //    excelApp.Cells[row, column + 2] = spareParts[i].Unit;
-            //    excelApp.Cells[row, column + 3] = spareParts[i].Count;
-            //    excelApp.Cells[row, column + 4] = spareParts[i].Price;
-            //    excelApp.Cells[row, column + 5] = spareParts[i].Price * spareParts[i].Count;
-            //    //Выравнивание диапазона строк.
-            //    ExcelWorkSheet.get_Range("C" + row.ToString(), "F" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-            //}//for
-
-            ////Обводим талицу рамкой. 
-            //excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "F" + row.ToString());
-            //excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-
-            ////Выводим "Итого".
-            //++row;
-            ////В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
-            //int indent = 0; //отступ
-            //if (inTotalNumberLabel.Text.Length <= 9)
-            //    indent = 1;
-
-            //excelApp.Cells[row,  column + 3 + indent] = inTotalLabel.Text;
-            //excelApp.Cells[row,  column + 4 + indent] = inTotalNumberLabel.Text;
-            //(excelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Underline = true;
-            //(excelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Size = (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
-            //(excelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Bold = (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
-
-            #endregion
-
             //Выводим имена агентов.
             row += 2;
             ExcelApp.Cells[row, column].Font.Name = "Consolas"; //моноширинный шрифт
@@ -952,6 +890,10 @@ namespace PartsApp
             ExcelApp.Visible = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
             ExcelApp.UserControl = true;
+
+
+            //Закрываем форму (будет ошибка при отладке закрытия не из того потока), здесь потому что, если закрыть в okButton_click не будет выводится inTotal в Excel.
+            this.Close();
         }//LoadPurchaseToExcelFile  
 
         /// <summary>
@@ -1312,7 +1254,6 @@ namespace PartsApp
 /*!!!*/             new System.Threading.Thread(BeginLoadPurchaseToExcelFile).Start(purchase); //Сделать по нормальному вызов с потоком.
 
                     this.Visible = false;
-                    this.Close();
                 }//if
             }//if
         }
