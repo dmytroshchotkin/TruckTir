@@ -13,8 +13,6 @@ namespace PartsApp.Models
         IContragent Contragent { get; set; }
         string ContragentEmployee { get; set; }
         DateTime OperationDate { get; set; }
-        string Currency { get; set; }
-        double ExcRate { get; set; }
         string Description { get; set; }
         IList<SparePart> OperationDetails { get; set; }
 

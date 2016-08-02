@@ -34,22 +34,11 @@
             this.operationSplitContainer = new System.Windows.Forms.SplitContainer();
             this.operationIdFilterTextBox = new System.Windows.Forms.TextBox();
             this.storageFilterComboBox = new System.Windows.Forms.ComboBox();
-            this.currencyFilterComboBox = new System.Windows.Forms.ComboBox();
             this.operationDateFilterTimePicker = new System.Windows.Forms.DateTimePicker();
             this.employeeFilterTextBox = new System.Windows.Forms.TextBox();
             this.contragentFilterTextBox = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.operationDataGridView = new System.Windows.Forms.DataGridView();
-            this.Contragent = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Employee = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.InTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Currency = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ExcRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ContragentEmployee = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Storage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OperationId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.operationStatusStrip = new System.Windows.Forms.StatusStrip();
             this.operationToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.operationRowsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -68,6 +57,14 @@
             this.operationDetailsRowsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.operationDetailsPrintToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.Contragent = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Employee = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.InTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ContragentEmployee = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Storage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OperationId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
             this.mainSplitContainer.Panel2.SuspendLayout();
             this.mainSplitContainer.SuspendLayout();
@@ -140,7 +137,6 @@
             this.operationSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
             this.operationSplitContainer.Panel1.Controls.Add(this.operationIdFilterTextBox);
             this.operationSplitContainer.Panel1.Controls.Add(this.storageFilterComboBox);
-            this.operationSplitContainer.Panel1.Controls.Add(this.currencyFilterComboBox);
             this.operationSplitContainer.Panel1.Controls.Add(this.operationDateFilterTimePicker);
             this.operationSplitContainer.Panel1.Controls.Add(this.employeeFilterTextBox);
             this.operationSplitContainer.Panel1.Controls.Add(this.contragentFilterTextBox);
@@ -173,21 +169,11 @@
             this.storageFilterComboBox.TabIndex = 4;
             this.toolTip.SetToolTip(this.storageFilterComboBox, "Выберите склад ");
             // 
-            // currencyFilterComboBox
-            // 
-            this.currencyFilterComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.currencyFilterComboBox.FormattingEnabled = true;
-            this.currencyFilterComboBox.Location = new System.Drawing.Point(345, 1);
-            this.currencyFilterComboBox.Name = "currencyFilterComboBox";
-            this.currencyFilterComboBox.Size = new System.Drawing.Size(56, 21);
-            this.currencyFilterComboBox.TabIndex = 3;
-            this.toolTip.SetToolTip(this.currencyFilterComboBox, "Выберите валюту в которой происходила операция");
-            // 
             // operationDateFilterTimePicker
             // 
             this.operationDateFilterTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.operationDateFilterTimePicker.Location = new System.Drawing.Point(224, 4);
-            this.operationDateFilterTimePicker.MinimumSize = new System.Drawing.Size(0, 21);
+            this.operationDateFilterTimePicker.MinimumSize = new System.Drawing.Size(4, 21);
             this.operationDateFilterTimePicker.Name = "operationDateFilterTimePicker";
             this.operationDateFilterTimePicker.Size = new System.Drawing.Size(80, 21);
             this.operationDateFilterTimePicker.TabIndex = 2;
@@ -247,8 +233,6 @@
             this.Employee,
             this.Date,
             this.InTotal,
-            this.Currency,
-            this.ExcRate,
             this.ContragentEmployee,
             this.Storage,
             this.OperationId,
@@ -259,83 +243,6 @@
             this.operationDataGridView.Size = new System.Drawing.Size(839, 195);
             this.operationDataGridView.TabIndex = 0;
             this.operationDataGridView.Resize += new System.EventHandler(this.operationDataGridView_Resize);
-            // 
-            // Contragent
-            // 
-            this.Contragent.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Contragent.HeaderText = "Контрагент";
-            this.Contragent.Name = "Contragent";
-            this.Contragent.Width = 90;
-            // 
-            // Employee
-            // 
-            this.Employee.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Employee.HeaderText = "Сотрудник";
-            this.Employee.Name = "Employee";
-            this.Employee.Width = 85;
-            // 
-            // Date
-            // 
-            this.Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Date.HeaderText = "Дата";
-            this.Date.MinimumWidth = 80;
-            this.Date.Name = "Date";
-            this.Date.Width = 80;
-            // 
-            // InTotal
-            // 
-            this.InTotal.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.InTotal.HeaderText = "Сумма";
-            this.InTotal.MinimumWidth = 50;
-            this.InTotal.Name = "InTotal";
-            this.InTotal.Width = 50;
-            // 
-            // Currency
-            // 
-            this.Currency.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.Currency.HeaderText = "Валюта";
-            this.Currency.MinimumWidth = 50;
-            this.Currency.Name = "Currency";
-            this.Currency.Width = 50;
-            // 
-            // ExcRate
-            // 
-            this.ExcRate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.ExcRate.HeaderText = "Курс";
-            this.ExcRate.MinimumWidth = 40;
-            this.ExcRate.Name = "ExcRate";
-            this.ExcRate.ToolTipText = "Курс к рос. рублю.";
-            this.ExcRate.Width = 40;
-            // 
-            // ContragentEmployee
-            // 
-            this.ContragentEmployee.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.ContragentEmployee.HeaderText = "Предст-ль контр-та";
-            this.ContragentEmployee.MinimumWidth = 62;
-            this.ContragentEmployee.Name = "ContragentEmployee";
-            this.ContragentEmployee.ToolTipText = "Представитель контрагента";
-            this.ContragentEmployee.Width = 62;
-            // 
-            // Storage
-            // 
-            this.Storage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Storage.HeaderText = "Склад";
-            this.Storage.Name = "Storage";
-            this.Storage.Width = 63;
-            // 
-            // OperationId
-            // 
-            this.OperationId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
-            this.OperationId.HeaderText = "№ операции";
-            this.OperationId.MinimumWidth = 60;
-            this.OperationId.Name = "OperationId";
-            this.OperationId.Width = 60;
-            // 
-            // Description
-            // 
-            this.Description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Description.HeaderText = "Описание";
-            this.Description.Name = "Description";
             // 
             // operationStatusStrip
             // 
@@ -502,6 +409,66 @@
             this.operationDetailsPrintToolStripButton.Text = "Распечатать";
             this.operationDetailsPrintToolStripButton.ToolTipText = "Распечатать данные в Excel файл";
             // 
+            // Contragent
+            // 
+            this.Contragent.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Contragent.HeaderText = "Контрагент";
+            this.Contragent.Name = "Contragent";
+            this.Contragent.Width = 90;
+            // 
+            // Employee
+            // 
+            this.Employee.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Employee.HeaderText = "Сотрудник";
+            this.Employee.Name = "Employee";
+            this.Employee.Width = 85;
+            // 
+            // Date
+            // 
+            this.Date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Date.HeaderText = "Дата";
+            this.Date.MinimumWidth = 80;
+            this.Date.Name = "Date";
+            this.Date.Width = 80;
+            // 
+            // InTotal
+            // 
+            this.InTotal.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+            this.InTotal.HeaderText = "Сумма";
+            this.InTotal.MinimumWidth = 50;
+            this.InTotal.Name = "InTotal";
+            this.InTotal.Width = 50;
+            // 
+            // ContragentEmployee
+            // 
+            this.ContragentEmployee.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ContragentEmployee.HeaderText = "Предст-ль контр-та";
+            this.ContragentEmployee.MinimumWidth = 62;
+            this.ContragentEmployee.Name = "ContragentEmployee";
+            this.ContragentEmployee.ToolTipText = "Представитель контрагента";
+            this.ContragentEmployee.Width = 62;
+            // 
+            // Storage
+            // 
+            this.Storage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Storage.HeaderText = "Склад";
+            this.Storage.Name = "Storage";
+            this.Storage.Width = 63;
+            // 
+            // OperationId
+            // 
+            this.OperationId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader;
+            this.OperationId.HeaderText = "№ операции";
+            this.OperationId.MinimumWidth = 60;
+            this.OperationId.Name = "OperationId";
+            this.OperationId.Width = 60;
+            // 
+            // Description
+            // 
+            this.Description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Description.HeaderText = "Описание";
+            this.Description.Name = "Description";
+            // 
             // OperationInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -556,7 +523,6 @@
         private System.Windows.Forms.TextBox contragentFilterTextBox;
         private System.Windows.Forms.ComboBox storageFilterComboBox;
         private System.Windows.Forms.ToolTip toolTip;
-        private System.Windows.Forms.ComboBox currencyFilterComboBox;
         private System.Windows.Forms.DateTimePicker operationDateFilterTimePicker;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.StatusStrip operationStatusStrip;
@@ -573,17 +539,15 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Count;
         private System.Windows.Forms.DataGridViewTextBoxColumn Price;
         private System.Windows.Forms.DataGridViewTextBoxColumn Sum;
+        private System.Windows.Forms.ToolStripButton operationPrintToolStripButton;
+        private System.Windows.Forms.ToolStripButton operationDetailsPrintToolStripButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn Contragent;
         private System.Windows.Forms.DataGridViewTextBoxColumn Employee;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn InTotal;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Currency;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ExcRate;
         private System.Windows.Forms.DataGridViewTextBoxColumn ContragentEmployee;
         private System.Windows.Forms.DataGridViewTextBoxColumn Storage;
         private System.Windows.Forms.DataGridViewTextBoxColumn OperationId;
         private System.Windows.Forms.DataGridViewTextBoxColumn Description;
-        private System.Windows.Forms.ToolStripButton operationPrintToolStripButton;
-        private System.Windows.Forms.ToolStripButton operationDetailsPrintToolStripButton;
     }
 }

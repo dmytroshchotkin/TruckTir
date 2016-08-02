@@ -567,8 +567,8 @@ namespace PartsApp
         {
             int purchaseId = 0;
             
-            string query = String.Format("INSERT INTO Purchases (EmployeeID, SupplierId, SupplierEmployee, PurchaseDate, Currency, ExcRate, Description)"
-                                       + "VALUES (@EmployeeID, @SupplierId, @SupplierEmployee, strftime('%s', @PurchaseDate), @Currency, @ExcRate, @Description);"
+            string query = String.Format("INSERT INTO Purchases (EmployeeID, SupplierId, SupplierEmployee, PurchaseDate, Description)"
+                                       + "VALUES (@EmployeeID, @SupplierId, @SupplierEmployee, strftime('%s', @PurchaseDate), @Description);"
                                        + "SELECT PurchaseId FROM Purchases WHERE rowid = last_insert_rowid();");
 
             cmd.CommandText = query;
@@ -579,8 +579,6 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@SupplierId", purchase.Contragent.ContragentId);
             cmd.Parameters.AddWithValue("@SupplierEmployee", purchase.ContragentEmployee);
 
-            cmd.Parameters.AddWithValue("@Currency", purchase.Currency);
-            cmd.Parameters.AddWithValue("@ExcRate", purchase.ExcRate);
             cmd.Parameters.AddWithValue("@Description", purchase.Description);
             cmd.Parameters.AddWithValue("@PurchaseDate", purchase.OperationDate);
 
@@ -714,8 +712,8 @@ namespace PartsApp
         {
             int saleId = 0;
 
-            var query = String.Format("INSERT INTO Sales (EmployeeID, CustomerId, CustomerEmployee, SaleDate, Currency, ExcRate, Description) "
-                                    + "VALUES (@EmployeeID, @CustomerId, @CustomerEmployee, strftime('%s', @SaleDate), @Currency, @ExcRate, @Description); "
+            var query = String.Format("INSERT INTO Sales (EmployeeID, CustomerId, CustomerEmployee, SaleDate, Description) "
+                                    + "VALUES (@EmployeeID, @CustomerId, @CustomerEmployee, strftime('%s', @SaleDate), @Description); "
                                     + "SELECT SaleId FROM Sales WHERE rowid = last_insert_rowid();");
 
             cmd.CommandText = query;
@@ -725,9 +723,6 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@EmployeeID", sale.Employee.EmployeeId);
             cmd.Parameters.AddWithValue("@CustomerId", sale.Contragent.ContragentId);
             cmd.Parameters.AddWithValue("@CustomerEmployee", sale.ContragentEmployee);
-
-            cmd.Parameters.AddWithValue("@Currency", sale.Currency);
-            cmd.Parameters.AddWithValue("@ExcRate", sale.ExcRate);
             cmd.Parameters.AddWithValue("@Description", sale.Description);           
 
             cmd.Parameters.AddWithValue("@SaleDate", sale.OperationDate);
@@ -1985,8 +1980,6 @@ namespace PartsApp
                     DateTime purchaseDate = new DateTime(1970, 1, 1);
                     purchaseDate += ts;
                     purchase.OperationDate = purchaseDate;
-                    purchase.Currency = dataReader["Currency"] as string;
-                    purchase.ExcRate = Convert.ToDouble(dataReader["ExcRate"]);
 
                     purchases.Add(purchase);
                 }//while
@@ -2081,8 +2074,6 @@ namespace PartsApp
                     purchaseDate += ts;
                     purchase.OperationDate = purchaseDate;
 
-                    purchase.Currency = dataReader["Currency"] as string;
-                    purchase.ExcRate = Convert.ToDouble(dataReader["ExcRate"]);
                 }//while
                 connection.Close();
             }//using
@@ -2202,8 +2193,6 @@ namespace PartsApp
             purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["SupplierId"]));
             purchase.ContragentEmployee = dataReader["SupplierEmployee"] as string;
             purchase.OperationDate = Convert.ToDateTime(dataReader["PD"]);
-            purchase.Currency = dataReader["Currency"] as string;
-            purchase.ExcRate = Convert.ToDouble(dataReader["ExcRate"]);
             purchase.OperationDetails = FindPurchaseDetails(purchase.OperationId);
 
             return purchase;
@@ -2217,8 +2206,6 @@ namespace PartsApp
             sale.Contragent = FindCustomers(Convert.ToInt32(dataReader["CustomerId"]));
             sale.ContragentEmployee = dataReader["CustomerEmployee"] as string;
             sale.OperationDate = Convert.ToDateTime(dataReader["SD"]);
-            sale.Currency = dataReader["Currency"] as string;
-            sale.ExcRate = Convert.ToDouble(dataReader["ExcRate"]);
             sale.OperationDetails = FindSaleDetails(sale.OperationId);
 
             return sale;

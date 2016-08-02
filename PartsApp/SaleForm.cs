@@ -1454,8 +1454,6 @@ namespace PartsApp
 /*!!!*/             sale.Contragent = PartsDAL.FindCustomers().Where(c => c.ContragentName == customerTextBox.Text).First();
                     sale.ContragentEmployee = (String.IsNullOrWhiteSpace(customerAgentTextBox.Text) == false) ? customerAgentTextBox.Text.Trim() : null;
                     sale.OperationDate = saleDateTimePicker.Value;
-                    sale.Currency = currencyComboBox.SelectedItem.ToString();
-                    sale.ExcRate = (double)excRateNumericUpDown.Value;
                     sale.Description = (String.IsNullOrWhiteSpace(descriptionRichTextBox.Text) == false) ? descriptionRichTextBox.Text.Trim() : null;
                     
                     try
@@ -1476,7 +1474,6 @@ namespace PartsApp
                 }//if
             }//if
         }
-
         
 
         

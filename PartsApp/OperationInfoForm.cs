@@ -35,7 +35,6 @@ namespace PartsApp
             SetFilterPosition(Contragent, contragentFilterTextBox);
             SetFilterPosition(Employee,   employeeFilterTextBox);
             SetFilterPosition(Date,       operationDateFilterTimePicker);
-            SetFilterPosition(Currency,   currencyFilterComboBox);
             SetFilterPosition(Storage,    storageFilterComboBox);
             SetFilterPosition(OperationId, operationIdFilterTextBox);
             
@@ -78,8 +77,6 @@ namespace PartsApp
                 
                 row.Cells[Date.Name].Value = purchase.OperationDate.ToShortDateString();
                 row.Cells[InTotal.Name].Value = PartsDAL.FindTotalSumOfPurchase(purchase.OperationId);
-                row.Cells[Currency.Name].Value = purchase.Currency;
-                row.Cells[ExcRate.Name].Value = purchase.ExcRate;
                 row.Cells[Description.Name].Value = purchase.Description;
                 row.Cells[ContragentEmployee.Name].Value = purchase.ContragentEmployee;
                 //row.Cells[Storage.Name].Value = sale.;

@@ -1295,8 +1295,6 @@ namespace PartsApp
 /*!!!*/             purchase.Contragent = PartsDAL.FindSuppliers().Where(s => s.ContragentName == supplierTextBox.Text).First();
                     purchase.ContragentEmployee = (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null;
                     purchase.OperationDate = purchaseDateTimePicker.Value;
-                    purchase.Currency = currencyComboBox.SelectedItem.ToString();
-                    purchase.ExcRate = (double)excRateNumericUpDown.Value;
                     purchase.Description = (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null;
                     purchase.OperationDetails = spareParts;
 
