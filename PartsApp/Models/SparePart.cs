@@ -10,41 +10,52 @@ namespace PartsApp.Models
     {
         #region Св-ва класса.
         public int SparePartId { get; set; }
+        [System.ComponentModel.DisplayName("Фото")]
         public string Photo { get; set; }
         public int PurchaseId { get; set; }
+        [System.ComponentModel.DisplayName("Поставщик")]
         public string SupplierName { get; set; }
+        [System.ComponentModel.DisplayName("Производитель")]
         public string Manufacturer { get; set; }
         public int? ManufacturerId { get; set; }
+        [System.ComponentModel.DisplayName("Артикул")]
         public string Articul { get; set; }
+        [System.ComponentModel.DisplayName("Название")]
         public string Title { get; set; }
+        [System.ComponentModel.DisplayName("Описание")]
         public string Description { get; set; }
 
+        [System.ComponentModel.DisplayName("Адрес склада")]
         public string StorageAdress { get; set; }
+        [System.ComponentModel.DisplayName("Ед. изм.")]
         public string MeasureUnit { get; set; }
         public double Count { get; set; }
         public double VirtCount { get; set; }
         [System.ComponentModel.Browsable(false)]
         private string _avaliability;
+        [System.ComponentModel.DisplayName("Наличие")]
         public string Avaliability
         {
             get { return (VirtCount == 0) ? Count.ToString() : (Count == 0) ? String.Format("({0})", VirtCount) : String.Format("{0} ({1})", Count, VirtCount); }
             set { _avaliability = value; }
         }
 
+        [System.ComponentModel.DisplayName("Цена")]
         public double? Price { get; set; }
         [System.ComponentModel.Browsable(false)]
-        public double? Markup { get; set; }        
+        public double? Markup { get; set; }
+        [System.ComponentModel.DisplayName("Тип наценки")]
         public string MarkupType { get; set; }
         [System.ComponentModel.Browsable(false)]
         private double _excRate = 1;
-
+        [System.ComponentModel.Browsable(false)]
         public double ExcRate
         {
             get { return _excRate; }
             set { _excRate = value; }
         }
         //[Browsable(false)]
-        //[DisplayName("Цена продажи")]
+        [System.ComponentModel.DisplayName("Цена продажи")]
         public double? SellingPrice
         {
             get

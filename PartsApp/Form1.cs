@@ -925,13 +925,15 @@ namespace PartsApp
 
                 //Находим запись в SpList с данным SparePartId.
                 foreach (var sparePart in SpList)
+                {
                     if (sparePart.SparePartId == sparePartId)
                     {
                         sparePart.ExcRate = (double)excRateNumericUpDown.Value;
                         row.Cells[SellingPriceCol.Name].Value = sparePart.SellingPrice;
                         break;
-                    }
-                partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
+                    }//if
+                    partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
+                }//foreach
             }//foreach   
             //Обновляем отображение столбцов в extPartsDataGridView.
             extPartsDataGridView.Invalidate();    
