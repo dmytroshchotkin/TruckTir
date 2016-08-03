@@ -63,7 +63,7 @@ namespace PartsApp
                 {
                     toolTip.Show("Введены неверные данные.", this, okButton.Location, 3000); 
                 }
-                //var employees = PartsDAL.FindAllEmployees().Where(empl => empl.GetFullName() == fullNameTextBox.Text.Trim() && empl.Password == inputPasswordHash).First();
+                //var employeesList = PartsDAL.FindAllEmployees().Where(empl => empl.GetFullName() == fullNameTextBox.Text.Trim() && empl.Password == inputPasswordHash).First();
                 
             }//if
         }

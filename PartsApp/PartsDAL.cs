@@ -460,10 +460,10 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                string query = String.Format("INSERT INTO ContactInfo (Country, Region, City, Street, House, Room, Phone, ExtPhone, Website, Email)"
-                                           + "VALUES (@Country, @Region, @City, @Street, @House, @Room, @Phone, @ExtPhone, @Website, @Email);"
+                string query = String.Format("INSERT INTO ContactInfo (Country, Region, City, Street, House, Room, Phone, ExtPhone, Website, Email) "
+                                           + "VALUES (@Country, @Region, @City, @Street, @House, @Room, @Phone, @ExtPhone, @Website, @Email); "
                                            + "SELECT ContactInfoId FROM ContactInfo WHERE rowid = last_insert_rowid();");
-                //Вставляем запись в табл. "Manufacturer"
+
                 var cmd = new SQLiteCommand(query, connection);
 
                 cmd.Parameters.AddWithValue("@Country",   contactInfo.Country);
@@ -481,7 +481,33 @@ namespace PartsApp
 
                 connection.Close();
             }//using
+
             return id;
+        }//AddContactInfo
+
+        /// <summary>
+        /// Метод добавляет новую запись в таблицу ContactInfo и возвращает Id вставленной записи.
+        /// </summary>
+        /// <param name="contactInfo">объект типа ContactInfo данные которого будут добавлены в базу</param>
+        /// <returns></returns>
+        public static int AddContactInfo(ContactInfo contactInfo, SQLiteCommand cmd)
+        {
+            cmd.CommandText = "INSERT INTO ContactInfo (Country, Region, City, Street, House, Room, Phone, ExtPhone, Website, Email) "
+                            + "VALUES (@Country, @Region, @City, @Street, @House, @Room, @Phone, @ExtPhone, @Website, @Email); "
+                            + "SELECT ContactInfoId FROM ContactInfo WHERE rowid = last_insert_rowid();";
+
+            cmd.Parameters.AddWithValue("@Country", contactInfo.Country);
+            cmd.Parameters.AddWithValue("@Region", contactInfo.Region);
+            cmd.Parameters.AddWithValue("@City", contactInfo.City);
+            cmd.Parameters.AddWithValue("@Street", contactInfo.Street);
+            cmd.Parameters.AddWithValue("@House", contactInfo.House);
+            cmd.Parameters.AddWithValue("@Room", contactInfo.Room);
+            cmd.Parameters.AddWithValue("@Phone", contactInfo.Phone);
+            cmd.Parameters.AddWithValue("@ExtPhone", contactInfo.ExtPhone);
+            cmd.Parameters.AddWithValue("@Website", contactInfo.Website);
+            cmd.Parameters.AddWithValue("@Email", contactInfo.Email);
+
+            return Convert.ToInt32(cmd.ExecuteScalar());
         }//AddContactInfo
 
 
@@ -799,51 +825,70 @@ namespace PartsApp
         #region Модификация таблицы Employees.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /// <summary>
-        /// Добавляет объект типа Employee в таблицу Employees.
-        /// </summary>
-        /// <param name="employee">объект типа Employee добавляемый в БД.</param>
         public static void AddEmployee(Employee employee)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
 
-                const string query = "INSERT INTO Employees (LastName, FirstName, MiddleName, BirthDate, HireDate, "
-                                   + "ContactInfoId, Photo, Note, PassportNum, Title, AccessLayer, Login, Password) "
-                                   + "VALUES (@LastName, @FirstName, @MiddleName, @BirthDate, @HireDate, @ContactInfoId, "
-                                   + "@Photo, @Note, @PassportNum, @Title, @AccessLayer, @Login, @Password);";
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
-                cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
-                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
-                cmd.Parameters.AddWithValue("@Note", employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title", employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Login", employee.Login);
-                cmd.Parameters.AddWithValue("@Password", employee.Password);
-
-                if (employee.HireDate != null)
+                using (SQLiteTransaction trans = connection.BeginTransaction())
                 {
-                    Int32 unixTimestamp = (Int32)(((DateTime)employee.HireDate).Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                    cmd.Parameters.AddWithValue("@HireDate", unixTimestamp);
-                }
-                else cmd.Parameters.AddWithValue("@HireDate", null);
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
+                    {
+                        try
+                        {
+                            //Вставляем запись в таблицу ContactInfo, если требуется.
+                            if (employee.ContactInfo != null)
+                                employee.ContactInfo.ContactInfoId = AddContactInfo(employee.ContactInfo, cmd);
+                            //Вставляем записm в табл. Employees.
+                            AddEmployee(employee, cmd);
+                            
 
-                cmd.ExecuteNonQuery();
+                            trans.Commit();
+                        }//try
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new Exception(ex.Message);
+                        }//catch
+                    }//using cmd
+                }//using transaction
 
                 connection.Close();
-            }//using 
-
-
-
+            }//using connection
         }//AddEmployee
+
+        /// <summary>
+        /// Добавляет объект типа Employee в таблицу Employees.
+        /// </summary>
+        /// <param name="employee">объект типа Employee добавляемый в БД.</param>
+        private static void AddEmployee(Employee employee, SQLiteCommand cmd)
+        {
+
+            cmd.CommandText = "INSERT INTO Employees (LastName, FirstName, MiddleName, BirthDate, HireDate, DismissalDate, "
+                            + "ContactInfoId, Photo, Note, PassportNum, Title, AccessLayer, Login, Password) "
+                            + "VALUES (@LastName, @FirstName, @MiddleName, @BirthDate, strftime('%s', @HireDate), "
+                            + "strftime('%s', @DismissalDate), @ContactInfoId, @Photo, @Note, @PassportNum, @Title, @AccessLayer, @Login, @Password);";
+
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@LastName",      employee.LastName);
+            cmd.Parameters.AddWithValue("@FirstName",     employee.FirstName);
+            cmd.Parameters.AddWithValue("@MiddleName",    employee.MiddleName);
+            cmd.Parameters.AddWithValue("@BirthDate",     (employee.BirthDate     != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
+            cmd.Parameters.AddWithValue("@HireDate",      (employee.HireDate      != null) ? employee.HireDate : null);
+            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
+            cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo   != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
+            cmd.Parameters.AddWithValue("@Photo",         employee.Photo);
+            cmd.Parameters.AddWithValue("@Note",          employee.Note);
+            cmd.Parameters.AddWithValue("@PassportNum",   employee.PassportNum);
+            cmd.Parameters.AddWithValue("@Title",         employee.Title);
+            cmd.Parameters.AddWithValue("@AccessLayer",   employee.AccessLayer);
+            cmd.Parameters.AddWithValue("@Login",         employee.Login);
+            cmd.Parameters.AddWithValue("@Password",      employee.Password);
+
+            cmd.ExecuteNonQuery();
+        }//AddEmployee
+
         /// <summary>
         /// Метод обновляющий значения заданного сотрудника.
         /// </summary>
@@ -855,34 +900,29 @@ namespace PartsApp
                 connection.Open();
 
                 const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
-                                   + "BirthDate = @BirthDate, ContactInfoId = @ContactInfoId, Photo = @Photo, Note = @Note, "
-                                   + "PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, Login = @Login, "
-                                   + "Password = @Password "
+                                   + "BirthDate = @BirthDate, HireDate = strftime('%s', @HireDate), ContactInfoId = @ContactInfoId, "
+                                   + "Photo = @Photo, Note = @Note, PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, "
+                                   + "Login = @Login, Password = @Password, DismissalDate = strftime('%s', @DismissalDate) "
                                    + "WHERE EmployeeId = @EmployeeId;";
 
 
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
-                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
-                cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
-                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
-                cmd.Parameters.AddWithValue("@Note", employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title", employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Login", employee.Login);
-                cmd.Parameters.AddWithValue("@Password", employee.Password);
-
-                if (employee.HireDate != null)
-                {
-                    Int32 unixTimestamp = (Int32)(((DateTime)employee.HireDate).Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                    cmd.Parameters.AddWithValue("@HireDate", unixTimestamp);
-                }
-                else cmd.Parameters.AddWithValue("@HireDate", null);
+                cmd.Parameters.AddWithValue("@EmployeeId",    employee.EmployeeId);
+                cmd.Parameters.AddWithValue("@LastName",      employee.LastName);
+                cmd.Parameters.AddWithValue("@FirstName",     employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName",    employee.MiddleName);
+                cmd.Parameters.AddWithValue("@BirthDate",     (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
+                cmd.Parameters.AddWithValue("@HireDate",      (employee.HireDate != null) ? employee.HireDate : null);
+                cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
+                cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
+                cmd.Parameters.AddWithValue("@Photo",         employee.Photo);
+                cmd.Parameters.AddWithValue("@Note",          employee.Note);
+                cmd.Parameters.AddWithValue("@PassportNum",   employee.PassportNum);
+                cmd.Parameters.AddWithValue("@Title",         employee.Title);
+                cmd.Parameters.AddWithValue("@AccessLayer",   employee.AccessLayer);
+                cmd.Parameters.AddWithValue("@Login",         employee.Login);
+                cmd.Parameters.AddWithValue("@Password",      employee.Password);
 
                 cmd.ExecuteNonQuery();
 
@@ -900,8 +940,9 @@ namespace PartsApp
                 connection.Open();
 
                 const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
-                                   + "BirthDate = @BirthDate, ContactInfoId = @ContactInfoId, Photo = @Photo, Note = @Note, "
-                                   + "PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, Login = @Login "
+                                   + "BirthDate = @BirthDate, HireDate = strftime('%s', @HireDate), ContactInfoId = @ContactInfoId, "
+                                   + "Photo = @Photo, Note = @Note, PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, "
+                                   + "Login = @Login, DismissalDate = strftime('%s', @DismissalDate) "
                                    + "WHERE EmployeeId = @EmployeeId;";
 
 
@@ -912,7 +953,9 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
                 cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
                 cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
-                cmd.Parameters.AddWithValue("@ContactInfoId", employee.ContactInfoId);
+                cmd.Parameters.AddWithValue("@HireDate", (employee.HireDate != null) ? employee.HireDate : null);
+                cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
+                cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
                 cmd.Parameters.AddWithValue("@Photo", employee.Photo);
                 cmd.Parameters.AddWithValue("@Note", employee.Note);
                 cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
@@ -920,12 +963,6 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
                 cmd.Parameters.AddWithValue("@Login", employee.Login);
 
-                if (employee.HireDate != null)
-                {
-                    Int32 unixTimestamp = (Int32)(((DateTime)employee.HireDate).Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                    cmd.Parameters.AddWithValue("@HireDate", unixTimestamp);
-                }
-                else cmd.Parameters.AddWithValue("@HireDate", null);
 
                 cmd.ExecuteNonQuery();
 
@@ -2282,9 +2319,9 @@ namespace PartsApp
         /// Возвращает список из объектов типа Employee, состоящий из всех сотрудников.
         /// </summary>
         /// <returns></returns>
-        public static IList<Employee> FindEmployees()
+        public static List<Employee> FindEmployees()
         {
-            IList<Employee> employees = new List<Employee>();
+            List<Employee> employeesList = new List<Employee>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -2293,33 +2330,16 @@ namespace PartsApp
                 const string query = "SELECT date(HireDate, \"Unixepoch\") AS 'HD', date(DismissalDate, \"Unixepoch\") AS 'DD', * FROM Employees;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
 
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
-                    Employee employee = new Employee();
-                    employee.EmployeeId     = Convert.ToInt32(dataReader["EmployeeId"]);
-                    employee.LastName       = dataReader["LastName"] as string;
-                    employee.FirstName      = dataReader["FirstName"] as string;
-                    employee.MiddleName     = dataReader["MiddleName"] as string;
-                    employee.BirthDate      = (dataReader["BirthDate"] != DBNull.Value)     ? Convert.ToDateTime(dataReader["BirthDate"]) : (DateTime?)null;
-                    employee.HireDate       = (dataReader["HireDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["HD"]) : (DateTime?)null;
-                    employee.DismissalDate  = (dataReader["DismissalDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["DD"]) : (DateTime?)null;
-                    employee.ContactInfoId  = (dataReader["ContactInfoId"] != DBNull.Value) ? Convert.ToInt32(dataReader["ContactInfoId"]) : (int?)null;
-                    employee.Photo          = dataReader["Photo"] as string;    
-                    employee.Note           = dataReader["Note"] as string;
-                    employee.PassportNum    = dataReader["PassportNum"] as string;
-                    employee.Title          = dataReader["Title"] as string;
-                    employee.AccessLayer    = dataReader["AccessLayer"] as string;
-                    employee.Login          = dataReader["Login"] as string;
-                    employee.Password       = dataReader["Password"] as string;
-
-                    employees.Add(employee);
-                }//while 
+                    while (dataReader.Read())
+                        employeesList.Add(CreateEmployee(dataReader));
+                }//using dataReader
 
                 connection.Close();
             }//using
 
-            return employees;
+            return employeesList;
         }//FindAllEmployees
         /// <summary>
         /// Возвращает объект типа Employee, найденный по заданному Id.
@@ -2328,7 +2348,7 @@ namespace PartsApp
         /// <returns></returns>
         public static Employee FindEmployees(int employeeId)
         {
-            Employee employee = new Employee();
+            Employee employee = null;
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -2340,26 +2360,12 @@ namespace PartsApp
 
                 cmd.Parameters.AddWithValue("@EmployeeId", employeeId);
 
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
-                    
-                    employee.EmployeeId = Convert.ToInt32(dataReader["EmployeeId"]);
-                    employee.LastName = dataReader["LastName"] as string;
-                    employee.FirstName = dataReader["FirstName"] as string;
-                    employee.MiddleName = dataReader["MiddleName"] as string;
-                    employee.BirthDate = (dataReader["BirthDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["BirthDate"]) : (DateTime?)null;
-                    employee.HireDate = (dataReader["HireDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["HD"]) : (DateTime?)null;
-                    employee.DismissalDate = (dataReader["DismissalDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["DD"]) : (DateTime?)null;
-                    employee.ContactInfoId = (dataReader["ContactInfoId"] != DBNull.Value) ? Convert.ToInt32(dataReader["ContactInfoId"]) : (int?)null;
-                    employee.Photo = dataReader["Photo"] as string;
-                    employee.Note = dataReader["Note"] as string;
-                    employee.PassportNum = dataReader["PassportNum"] as string;
-                    employee.Title = dataReader["Title"] as string;
-                    employee.AccessLayer = dataReader["AccessLayer"] as string;
-                    employee.Login = dataReader["Login"] as string;
-                    employee.Password = dataReader["Password"] as string;
-                }//while
+                    while (dataReader.Read())
+                        employee = CreateEmployee(dataReader);
+                }//using dataReader
+
                 connection.Close();
             }//using
 
@@ -2376,32 +2382,15 @@ namespace PartsApp
 
                 const string query = "SELECT date(HireDate, \"Unixepoch\") AS 'HD', date(DismissalDate, \"Unixepoch\") AS 'DD', * "
                                    + "FROM Employees WHERE LastName LIKE @LastName AND FirstName ;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
 
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
                 cmd.Parameters.AddWithValue("@LastName", lastName);
 
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
-                    Employee employee = new Employee();
-                    employee.EmployeeId    = Convert.ToInt32(dataReader["EmployeeId"]);
-                    employee.LastName      = dataReader["LastName"] as string;
-                    employee.FirstName     = dataReader["FirstName"] as string;
-                    employee.MiddleName    = dataReader["MiddleName"] as string;
-                    employee.BirthDate     = (dataReader["BirthDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["BirthDate"]) : (DateTime?)null;
-                    employee.HireDate      = (dataReader["HireDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["HD"]) : (DateTime?)null;
-                    employee.DismissalDate = (dataReader["DismissalDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["DD"]) : (DateTime?)null;
-                    employee.ContactInfoId = (dataReader["ContactInfoId"] != DBNull.Value) ? Convert.ToInt32(dataReader["ContactInfoId"]) : (int?)null;
-                    employee.Photo         = dataReader["Photo"] as string;
-                    employee.Note          = dataReader["Note"] as string;
-                    employee.PassportNum   = dataReader["PassportNum"] as string;
-                    employee.Title         = dataReader["Title"] as string;
-                    employee.AccessLayer   = dataReader["AccessLayer"] as string;
-                    employee.Login         = dataReader["Login"] as string;
-                    employee.Password      = dataReader["Password"] as string;
-
-                    employees.Add(employee);
-                }//while 
+                    while (dataReader.Read())
+                        employees.Add(CreateEmployee(dataReader));
+                }//using dataReader
 
                 connection.Close();
             }//using
@@ -2409,13 +2398,37 @@ namespace PartsApp
             return employees;       
         }//FindEmployees
 
-        
 
 
 
 
 
-
+        /// <summary>
+        /// Возвращает объект типа Employee созданный из данныз переданного SQLiteDataReader.
+        /// </summary>
+        /// <param name="dataReader"></param>
+        /// <returns></returns>
+        private static Employee CreateEmployee(SQLiteDataReader dataReader)
+        { 
+            return new Employee
+            (
+                employeeId     : Convert.ToInt32(dataReader["EmployeeId"]),
+                lastName       : dataReader["LastName"] as string,
+                firstName      : dataReader["FirstName"] as string,
+                middleName     : dataReader["MiddleName"] as string,
+                birthDate      : (dataReader["BirthDate"] != DBNull.Value)     ? Convert.ToDateTime(dataReader["BirthDate"]) : (DateTime?)null,
+                hireDate       : (dataReader["HireDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["HD"]) : (DateTime?)null,
+                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["DD"]) : (DateTime?)null,
+                contactInfo    : (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
+                photo          : dataReader["Photo"] as string,
+                note           : dataReader["Note"] as string,
+                passportNum    : dataReader["PassportNum"] as string,
+                title          : dataReader["Title"] as string,
+                accessLayer    : dataReader["AccessLayer"] as string,
+                login          : dataReader["Login"] as string,
+                password       : dataReader["Password"] as string               
+            );
+        }//CreateEmployee
 
 
 
@@ -2463,6 +2476,41 @@ namespace PartsApp
             return contactInfo;
         }//FindContactInfoById
 
+        /// <summary>
+        /// Возвращает объект типа ContactInfo, найденный по заданному Id сотрудника, или null если ничего не найдено.
+        /// </summary>
+        /// <param name="employeeId">Id сотрудника.</param>
+        /// <returns></returns>
+        public static ContactInfo FindContactInfo(int employeeId)
+        {
+            ContactInfo contactInfo = null;
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT ci.* FROM Employees as e "
+                                   + "JOIN ContactInfo as ci "
+                                   + "ON e.ContactInfoId = ci.ContactInfoId "
+                                   + "WHERE EmployeeId = @EmployeeId;";
+
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@EmployeeId", employeeId);
+
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        contactInfo = CreateContactInfo(dataReader);
+                    }//while 
+                }//using dataReader
+
+                connection.Close();
+            }//using
+
+            return contactInfo;
+
+        }//FindContactInfo
 
 
 
@@ -2474,9 +2522,28 @@ namespace PartsApp
 
 
 
-
-
-
+        /// <summary>
+        /// Возвращает объект типа ContactInfo, заполненный инф-цией из переданного SQLiteDataReader.
+        /// </summary>
+        /// <param name="dataReader"></param>
+        /// <returns></returns>
+        private static ContactInfo CreateContactInfo(SQLiteDataReader dataReader)
+        {
+            return new ContactInfo
+            (
+                contactInfoId : Convert.ToInt32(dataReader["Country"]),
+                country       : dataReader["Country"] as string,
+                region        : dataReader["Region"] as string,
+                city          : dataReader["City"] as string,
+                street        : dataReader["Street"] as string,
+                house         : dataReader["House"] as string,
+                room          : dataReader["Room"] as string,
+                phone         : dataReader["Phone"] as string,
+                extPhone      : dataReader["ExtPhone"] as string,
+                email         : dataReader["Email"] as string,
+                website       : dataReader["Website"] as string                                
+            );
+        }//CreateContactInfo
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3675,7 +3742,3 @@ namespace PartsApp
 }//namespace
 
 /*Задачи*/
-
-/*На будущее*/
-//1) Разобраться с Enum и добавить fieldNames
-//2)Перенести определение ManufacturerName в методы класса PartsDAL (CreateSparePart, ...).

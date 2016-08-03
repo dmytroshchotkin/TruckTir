@@ -22,8 +22,7 @@ namespace PartsApp.Models
         public string MiddleName { get; set; }
         public DateTime? BirthDate { get; set; }
         public DateTime? HireDate { get; set; }
-        public DateTime? DismissalDate { get; set; }
-        public int? ContactInfoId { get; set; }
+        public DateTime? DismissalDate { get; set; }        
         public string Photo { get; set; }
         public string Note { get; set; }
         public string PassportNum { get; set; }
@@ -32,28 +31,56 @@ namespace PartsApp.Models
         public string Login { get; set; }
         public string Password { get; set; }
 
+        private Lazy<ContactInfo> _contactInfo;
+        public ContactInfo ContactInfo { get { return _contactInfo.Value; } }
 
-        public Employee() { }
-        public Employee(int employeeId, string lastName, string firstName, string middleName, DateTime? birthDate,
-                        DateTime? hireDate, DateTime? dismissalDate, int? contactInfoId, string photo, string note,
-                        string passportNum, string title, string accessLayer, string login, string password)
+
+
+        public Employee() { }//
+
+        public Employee(string lastName, string firstName, string middleName, DateTime? birthDate,
+                        DateTime? hireDate, DateTime? dismissalDate, string photo, string note, string passportNum,
+                        string title, string accessLayer, string login, string password, ContactInfo contactInfo)
         {
-            EmployeeId = employeeId;
-            LastName = lastName;
-            FirstName = firstName;
-            MiddleName = middleName;
-            BirthDate = birthDate;
-            HireDate = hireDate;
+            LastName      = lastName;
+            FirstName     = firstName;
+            MiddleName    = middleName;
+            BirthDate     = birthDate;
+            HireDate      = hireDate;
             DismissalDate = dismissalDate;
-            ContactInfoId = contactInfoId;
-            Photo = photo;
-            Note = note;
-            PassportNum = passportNum;
-            Title = title;
-            AccessLayer = accessLayer;
-            Login = login;
-            Password = password;
-        }
+            Photo         = photo;
+            Note          = note;
+            PassportNum   = passportNum;
+            Title         = title;
+            AccessLayer   = accessLayer;
+            Login         = login;
+            Password      = password;
+
+            _contactInfo = new Lazy<ContactInfo>(() => contactInfo);
+        }//
+
+
+        public Employee(int employeeId, string lastName, string firstName, string middleName, DateTime? birthDate,
+                        DateTime? hireDate, DateTime? dismissalDate, string photo, string note, string passportNum, 
+                        string title, string accessLayer, string login, string password, ContactInfo contactInfo)
+        {
+            EmployeeId    = employeeId;
+            LastName      = lastName;
+            FirstName     = firstName;
+            MiddleName    = middleName;
+            BirthDate     = birthDate;
+            HireDate      = hireDate;
+            DismissalDate = dismissalDate;
+            Photo         = photo;
+            Note          = note;
+            PassportNum   = passportNum;
+            Title         = title;
+            AccessLayer   = accessLayer;
+            Login         = login;
+            Password      = password;
+
+            _contactInfo = new Lazy<ContactInfo>(() => contactInfo);
+        }//
 
         public string GetFullName()
         {

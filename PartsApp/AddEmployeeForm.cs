@@ -265,7 +265,7 @@ namespace PartsApp
         /// Возвращает Id контактной информации если она введена, иначе возвращает null.
         /// </summary>
         /// <returns></returns>
-        private int? GetContactInfoId()
+        private ContactInfo GetContactInfo()
         {
             //Если ContactInfoPanel развернута.
             if (contactInfoPanel.Visible == true && IsThereContactInfo() == true)
@@ -289,11 +289,12 @@ namespace PartsApp
                     }//if
                 }//foreach    
                 //добавляем запись в таблицу ContactInfo.
-                int contactInfoId = PartsDAL.AddContactInfo(contactInfo);
-                return contactInfoId;
+                PartsDAL.AddContactInfo(contactInfo);
+                return contactInfo;
             }//if
             return null;
-        }//GetContactInfoId
+        }//GetContactInfo
+
         /// <summary>
         /// Возвращает true если в contactInfoPanel введена какая-то инф-ция, иначе false.
         /// </summary>
@@ -390,8 +391,8 @@ namespace PartsApp
             loginTextBox.Text           = employee.Login;
             accessLayerComboBox.SelectedItem = employee.AccessLayer;
 
-            if (employee.ContactInfoId != null)
-                FillTheContactInfoPanel(PartsDAL.FindContactInfoById((int)employee.ContactInfoId));
+            if (employee.ContactInfo != null)
+                FillTheContactInfoPanel(employee.ContactInfo);
             //Проверяем наличие фото.
             //photoPictureBox.Image = (employee.Photo != null) ? new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size) : null;
             if (employee.Photo != null)
@@ -511,9 +512,9 @@ namespace PartsApp
         /// Заполняет объект типа Employee информацией из формы. 
         /// </summary>
         /// <param name="employee">Сотрудник, который будет заполнен инф-цией из формы.</param>
-        private void FillTheEmployeeFromForm(Employee employee)
+        private Employee GetEmployeeFromForm()
         {
-            //Проверяем наличие фото.
+            string photoPath = null;            //Проверяем наличие фото.
             if (photoPictureBox.Image != null)
             {
                 if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
@@ -521,22 +522,29 @@ namespace PartsApp
                     string destFilePath = photoPictureBox.Tag as string;
                     System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
                 }
-                employee.Photo = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
+                photoPath = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
             }//else
 
-            employee.LastName       = lastNameTextBox.Text.Trim();
-            employee.FirstName      = firstNameTextBox.Text.Trim();
-            employee.MiddleName     = (!String.IsNullOrWhiteSpace(middleNameTextBox.Text)) ? middleNameTextBox.Text.Trim() : null;
-            employee.BirthDate      = birthDateTimePicker.Value;
-            employee.HireDate       = hireDateTimePicker.Value;
-            employee.Note           = (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null;
-            employee.PassportNum    = (!String.IsNullOrWhiteSpace(passportNumTextBox.Text)) ? passportNumTextBox.Text.Trim() : null;
-            employee.Title          = (!String.IsNullOrWhiteSpace(titleTextBox.Text)) ? titleTextBox.Text.Trim() : null;
-            employee.AccessLayer    = accessLayerComboBox.SelectedItem as string;
-            employee.ContactInfoId  = GetContactInfoId();
-            employee.Login          = loginTextBox.Text.Trim();
-            employee.Password       = PasswordClass.GetHashString(passwordTextBox.Text.Trim()); //получаем хэш введенного пароля.
-        }//FillTheEmployeeFromForm
+            Employee employee = new Employee
+            (
+                photo          : photoPath,
+                lastName       : lastNameTextBox.Text.Trim(),
+                firstName      : firstNameTextBox.Text.Trim(),
+                middleName     : (!String.IsNullOrWhiteSpace(middleNameTextBox.Text)) ? middleNameTextBox.Text.Trim() : null,
+                birthDate      : birthDateTimePicker.Value,
+                hireDate       : hireDateTimePicker.Value,
+                dismissalDate  : null,
+                note           : (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null,
+                passportNum    : (!String.IsNullOrWhiteSpace(passportNumTextBox.Text)) ? passportNumTextBox.Text.Trim() : null,
+                title          : (!String.IsNullOrWhiteSpace(titleTextBox.Text)) ? titleTextBox.Text.Trim() : null,
+                accessLayer    : accessLayerComboBox.SelectedItem as string,
+                contactInfo    : GetContactInfo(),
+                login          : loginTextBox.Text.Trim(),
+                password       : PasswordClass.GetHashString(passwordTextBox.Text.Trim())//получаем хэш введенного пароля.
+            );
+
+            return employee;
+        }//GetEmployeeFromForm
 
         /// <summary>
         /// Возвращает true если все необходимые данные введены корректно, иначе false.
@@ -586,8 +594,7 @@ namespace PartsApp
                 if (CheckAllConditionsForWrightValues() == true)
                 {
                     this.Cursor = Cursors.WaitCursor;
-                    Employee employee = new Employee();
-                    FillTheEmployeeFromForm(employee);
+                    Employee employee = GetEmployeeFromForm();
                     try
                     {
                         //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.                    

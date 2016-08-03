@@ -209,7 +209,7 @@ namespace PartsApp
                 return contactInfo;
             }//if
             return null;
-        }//GetContactInfoId
+        }//GetContactInfo
         /// <summary>
         /// Возвращает true если в contactInfoPanel введена какая-то инф-ция, иначе false.
         /// </summary>
