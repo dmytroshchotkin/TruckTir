@@ -36,8 +36,8 @@ namespace PartsApp.Models
         public Availability(OperationDetails operationDetails, string storageAddress, float markup)
         {
             OperationDetails = operationDetails;
-            StorageAddress = storageAddress;
-            Markup = markup;
+            StorageAddress   = storageAddress;
+            Markup           = markup;
         }//
 
     }//Availability

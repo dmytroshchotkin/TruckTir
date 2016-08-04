@@ -559,7 +559,7 @@ namespace PartsApp
                             //вставляем запись в таблицу Purchase.
                             purchaseId = AddPurchase(purchase, cmd);
                             //вставляем записи в PurchaseDetails и Avaliability.
-                            foreach (SparePart sp in purchase.OperationDetails)
+                            foreach (SparePart sp in purchase.OperationDetailsList)
                             {
                                 sp.PurchaseId = purchaseId;                                
                                 AddPurchaseDetail(sp, cmd);
@@ -684,7 +684,7 @@ namespace PartsApp
         /// Осуществляет полный цикл продажи товара, вставляя записи в таблицы Sales, Avaliability и SaleDetails.
         /// Возвращает Id вставленной записи в табл. Sale.
         /// </summary>
-        /// <param name="spareParts">Список продаваемого товара.</param>
+        /// <param name="availabilityList">Список продаваемого товара.</param>
         /// <param name="sale">Информация о продаже.</param>
         /// <returns></returns>
         public static int AddSale(IList<SparePart> spareParts, IList<SparePart> extSpareParts, Sale sale)
@@ -1292,6 +1292,7 @@ namespace PartsApp
 
                 connection.Close();
             }//using
+
             return spareParts;
         }//FindAllSparePartsAvaliableToDisplay
 
@@ -1299,7 +1300,57 @@ namespace PartsApp
 
 
 
+        public static List<Availability> FindAvailability(SparePart2 sparePart)
+        {
+            List<Availability> availabilityList = new List<Availability>();
 
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT * FROM Avaliability "
+                                   + "WHERE SparePartId = @SparePartId;";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
+
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            availabilityList.Add(CreateAvailability(dataReader, sparePart));
+                    }//using dataReader
+                }//using cmd
+
+                connection.Close();
+            }//using
+
+            return availabilityList;
+        }//FindAvailability
+
+        private static Availability CreateAvailability(SQLiteDataReader dataReader, SparePart2 sparePart)
+        {
+            OperationDetails od = new OperationDetails
+            (
+                sparePart   : sparePart,
+                purchase    : FindPurchase(Convert.ToInt32(dataReader["OperationId"])),
+                count       : Convert.ToSingle(dataReader["Count"]),
+                price       : Convert.ToSingle(dataReader["Price"])
+            );
+
+            Availability avail = new Availability
+            (
+                operationDetails : od,
+                storageAddress   : dataReader["StorageAdress"] as string,
+                markup           : Convert.ToSingle(dataReader["Markup"])
+            );
+
+            return avail;
+        }//CreateAvailability
+
+
+
+        
 
 
 
@@ -2180,7 +2231,7 @@ namespace PartsApp
                 while (dataReader.Read())
                 {
                     Purchase purchase = CreatePurchase(dataReader);
-                    if (purchase.OperationDetails.Any(sp => sp.SparePartId == sparePartId))
+                    if (purchase.OperationDetailsList.Any(sp => sp.SparePartId == sparePartId))
                         purchases.Add(purchase);
                 }//while
 
@@ -2205,7 +2256,7 @@ namespace PartsApp
                 while (dataReader.Read())
                 {
                     Sale sale = CreateSale(dataReader);
-                    if (sale.OperationDetails.Any(sp => sp.SparePartId == sparePartId))
+                    if (sale.OperationDetailsList.Any(sp => sp.SparePartId == sparePartId))
                         salesList.Add(sale);
                 }//while
 
@@ -2231,7 +2282,7 @@ namespace PartsApp
             purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["ContragentId"]));
             purchase.ContragentEmployee = dataReader["ContragentEmployee"] as string;
             purchase.OperationDate = Convert.ToDateTime(dataReader["OD"]);
-            purchase.OperationDetails = FindPurchaseDetails(purchase.OperationId);
+            purchase.OperationDetailsList = FindPurchaseDetails(purchase.OperationId);
 
             return purchase;
         }//CreatePurchase
@@ -2244,7 +2295,7 @@ namespace PartsApp
             sale.Contragent = FindCustomers(Convert.ToInt32(dataReader["ContragentId"]));
             sale.ContragentEmployee = dataReader["ContragentEmployee"] as string;
             sale.OperationDate = Convert.ToDateTime(dataReader["OD"]);
-            sale.OperationDetails = FindSaleDetails(sale.OperationId);
+            sale.OperationDetailsList = FindSaleDetails(sale.OperationId);
 
             return sale;
         }//CreateSale
@@ -3234,7 +3285,7 @@ namespace PartsApp
 
         }//SearchSparePartsByArticul
         /// <summary>
-        /// Возвращает массив строк, состоящий из названий всех spareParts совпадающих с переданным параметром.
+        /// Возвращает массив строк, состоящий из названий всех availabilityList совпадающих с переданным параметром.
         /// </summary>
         /// <param name="title">Строка по которой нужно искать совпадение.</param>
         /// <returns></returns>
@@ -3265,7 +3316,7 @@ namespace PartsApp
             return titles;        
         }//SearchSparePartsTitle
         /// <summary>
-        /// Возвращает массив строк, состоящий из названий всех spareParts совпадающих с переданным параметром.
+        /// Возвращает массив строк, состоящий из названий всех availabilityList совпадающих с переданным параметром.
         /// </summary>
         /// <param name="title">Строка по которой нужно искать совпадение.</param>
         /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>
@@ -3298,7 +3349,7 @@ namespace PartsApp
             return titles;
         }//SearchSparePartsTitle
         /// <summary>
-        /// Возвращает массив строк, состоящий из артикулов всех spareParts совпадающих с переданным параметром.
+        /// Возвращает массив строк, состоящий из артикулов всех availabilityList совпадающих с переданным параметром.
         /// </summary>
         /// <param name="title">Строка по которой нужно искать совпадение.</param>
         /// <returns></returns>
@@ -3329,7 +3380,7 @@ namespace PartsApp
             return articuls;   
         }//SearchSparePartsArticul
         /// <summary>
-        /// Возвращает массив строк, состоящий из артикулов всех spareParts совпадающих с переданным параметром.
+        /// Возвращает массив строк, состоящий из артикулов всех availabilityList совпадающих с переданным параметром.
         /// </summary>
         /// <param name="title">Строка по которой нужно искать совпадение.</param>
         /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>

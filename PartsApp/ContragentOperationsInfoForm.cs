@@ -96,7 +96,7 @@ namespace PartsApp
                 row.Cells[DateCol.Index].Value = oper.OperationDate;
                 row.Cells[EmployeeCol.Index].Value = (oper.Employee != null) ? oper.Employee.GetShortFullName() : null;
                 row.Cells[ContragentEmployeeCol.Index].Value = oper.ContragentEmployee;
-                row.Cells[TotalSumCol.Index].Value = oper.OperationDetails.Sum(sp => sp.Price * sp.Count);
+                row.Cells[TotalSumCol.Index].Value = oper.OperationDetailsList.Sum(sp => sp.Price * sp.Count);
 
                 OperationsInfoDGV.ClearSelection();
                 OperationsInfoDGV.SelectionChanged += OperationsInfoDGV_SelectionChanged;
@@ -120,7 +120,7 @@ namespace PartsApp
                 IOperation oper = _contragentsOperations[contragId].First(op => op.OperationId == operId); //Находим нужную операцию
                 
                 //Выводим инф-цию в таблицу доп. инф-ции по данной операции.
-                FillTheOperationDetailsDGV(oper.OperationDetails);
+                FillTheOperationDetailsDGV(oper.OperationDetailsList);
             }//if
         }//OperationsInfoDGV_SelectionChanged
 

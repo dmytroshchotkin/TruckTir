@@ -54,7 +54,7 @@ namespace PartsApp
             /* Пробная зона */
             PartsDAL.RegistrateUDFs();
             /////////////////////////////////////////////////////////////////////////////            
-
+            var availList = PartsDAL.FindAvailability(new SparePart2() { SparePartId = 1123 });
 
             //////////////////////////////////////////////////////////////////////////////
         }//Form1_Load
@@ -164,8 +164,8 @@ namespace PartsApp
 
                 ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;                
                 ExcelApp.Cells[row, column + 4] = spareParts[i].Count;
-                //excelApp.Cells[row, column + 5] = spareParts[i].Price;                
-                //excelApp.Cells[row, column + 5] = spareParts[i].Price * spareParts[i].Count;
+                //excelApp.Cells[row, column + 5] = availabilityList[i].Price;                
+                //excelApp.Cells[row, column + 5] = availabilityList[i].Price * availabilityList[i].Count;
                 ExcelApp.Cells[row, column + 5] = spareParts[i].SellingPrice;                
             }//for
 
@@ -202,7 +202,7 @@ namespace PartsApp
         /// <summary>
         /// Устанавливает ширину столбцов.
         /// </summary>
-        /// <param name="spareParts">Коллекция эл-тов заполняюхий таблицу</param>
+        /// <param name="availabilityList">Коллекция эл-тов заполняюхий таблицу</param>
         /// <param name="titleCol">Столбец "Название".</param>
         /// <param name="articulCol">Столбец "Артикул".</param>
         /// <param name="manufCol">Столбец "Производитель".</param>
@@ -800,7 +800,7 @@ namespace PartsApp
         /// <param name="markup">Наценка на которую требуется изменить.</param>
         private void extPartsDataGridViewMarkupChange(float markup)
         {
-            //IList<SparePart> spareParts = new List<SparePart>(); //список для всех запчастей с изменяемой наценкой.
+            //IList<SparePart> availabilityList = new List<SparePart>(); //список для всех запчастей с изменяемой наценкой.
             //Находим Id запчастей с изменяемой наценкой, т.к. SpId у всех вхождений одинаковый, берем его у первого вхождения.
             int sparePartId = Convert.ToInt32(extPartsDataGridView.SelectedRows[0].Cells["SparePartId"].Value);
             //Находим все SP с изменяемой наценкой. 
@@ -862,7 +862,7 @@ namespace PartsApp
         /// <summary>
         /// Проверяет одинаков ли Процент Наценки у всех эл-тов переданного списка запчастей. 
         /// </summary>
-        /// <param name="spareParts">Список проверяемых запчастей</param>
+        /// <param name="availabilityList">Список проверяемых запчастей</param>
         /// <returns></returns>
         private bool IsSameMarkup(IList<SparePart> spareParts)
         {
@@ -1050,12 +1050,12 @@ namespace PartsApp
         /// <summary>
         /// Метод изменения источника данных для обоих dataGridView.
         /// </summary>
-        /// <param name="spareParts">Новый источник данных для partsDataGridView.</param>
+        /// <param name="availabilityList">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
             partsDataGridView.Cursor = Cursors.WaitCursor;
             //progressBar.Value = progressBar.Maximum / 2;  //не работает
-            //partsDataGridView.DataSource = SpList = Cloner.Clone(spareParts).OrderBy(sp => sp.Title).ToList();
+            //partsDataGridView.DataSource = SpList = Cloner.Clone(availabilityList).OrderBy(sp => sp.Title).ToList();
 
             IList<SparePart> orderSPList = Cloner.Clone(spareParts.OrderBy(sp => sp.Title).ToList());
             FillThePartsDataGridView(orderSPList.ToList());

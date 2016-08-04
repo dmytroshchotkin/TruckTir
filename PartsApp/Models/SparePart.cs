@@ -127,13 +127,37 @@ namespace PartsApp.Models
             this.Price = price;
             this.Markup = markup;
             this.MarkupType = (markup == null) ? null : Models.Markup.GetDescription((float)markup);
-        }
+        }//
 
-        public override string ToString()
-        {
-            return String.Format("Photo: {0}, Articul: {1}, Title: {2}, Descrip {3},\n  Manuf: {4}, Unit: {5}, minUnit: {6}",
-                    Photo, Articul, Title, Description, Manufacturer, MeasureUnit);
-
-        }
     }//SparePart
-}
+
+    public class SparePart2 : SparePart
+    {
+        public int SparePartId { get; set; }
+        public string Photo { get; set; }
+        public string Manufacturer { get; set; }
+        public string Articul { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string MeasureUnit { get; set; }
+
+        private Lazy<List<Availability>> _availabilityList;
+        public List<Availability> AvailabilityList { get { return _availabilityList.Value; } }
+
+        public void SparePart(){}
+        public void SparePart(int sparePartId, string photo, string manufacturer, string articul, 
+                         string title, string description, string measureUnit)
+        {
+            SparePartId    =  sparePartId;         
+            Photo          =  photo;         
+            Manufacturer   =  manufacturer;         
+            Articul        =  articul;         
+            Title          =  title;
+            Description    =  description;
+            MeasureUnit    =  measureUnit;
+
+            //_availabilityList = 
+        }//
+
+    }//SparePart
+}//namespace

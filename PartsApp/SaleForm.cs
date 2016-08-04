@@ -969,8 +969,8 @@ namespace PartsApp
         ///// Метод вывода приходной информации в Excel-файл.
         ///// </summary>
         ///// <param name="sale">Информация о приходе.</param>
-        ///// <param name="spareParts">Список оприходованных товаров.</param>
-        //private void LoadSaleToExcelFile(Sale sale, IList<SparePart> spareParts)
+        ///// <param name="availabilityList">Список оприходованных товаров.</param>
+        //private void LoadSaleToExcelFile(Sale sale, IList<SparePart> availabilityList)
         //{
         //    Excel.Application excelApp = new Excel.Application();
         //    Excel.Workbook ExcelWorkBook;
@@ -1019,26 +1019,26 @@ namespace PartsApp
         //    double width = 45; //45 -- Взято методом тыка.           
         //    (excelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = width;
         //    //Выводим список товаров.
-        //    for (int i = 0; i < spareParts.Count; ++i)
+        //    for (int i = 0; i < availabilityList.Count; ++i)
         //    {
         //        ++row;
-        //        excelApp.Cells[row, column] = spareParts[i].Title;
+        //        excelApp.Cells[row, column] = availabilityList[i].Title;
         //        //Если Title не влазиет в одну строку, увеличиваем высоту.
-        //        if (spareParts[i].Title.Length > width)
+        //        if (availabilityList[i].Title.Length > width)
         //        {
         //            (excelApp.Cells[row, column] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
         //            ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
         //        }
-        //        excelApp.Cells[row, column + 1] = spareParts[i].Unit;
-        //        excelApp.Cells[row, column + 2] = spareParts[i].Count;
-        //        excelApp.Cells[row, column + 3] = spareParts[i].Price;
-        //        excelApp.Cells[row, column + 4] = spareParts[i].Price * spareParts[i].Count;
+        //        excelApp.Cells[row, column + 1] = availabilityList[i].Unit;
+        //        excelApp.Cells[row, column + 2] = availabilityList[i].Count;
+        //        excelApp.Cells[row, column + 3] = availabilityList[i].Price;
+        //        excelApp.Cells[row, column + 4] = availabilityList[i].Price * availabilityList[i].Count;
         //        //Выравнивание диапазона строк.
         //        ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
         //    }//for
 
         //    //Обводим талицу рамкой. 
-        //    excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "E" + row.ToString());
+        //    excelCells = ExcelWorkSheet.get_Range("A" + (row - availabilityList.Count + 1).ToString(), "E" + row.ToString());
         //    excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
 
         //    //Выводим "Итого".
@@ -1071,7 +1071,7 @@ namespace PartsApp
         /// Метод вывода расходной информации в Excel-файл.
         /// </summary>
         /// <param name="sale">Информация о расходе.</param>
-        /// <param name="spareParts">Список проданного товара.</param>
+        /// <param name="availabilityList">Список проданного товара.</param>
         private void LoadSaleToExcelFile(Sale sale, IList<SparePart> spareParts)
         {
             Excel.Application ExcelApp = new Excel.Application();
@@ -1244,7 +1244,7 @@ namespace PartsApp
         /// <summary>
         /// Устанавливает ширину столбцов.
         /// </summary>
-        /// <param name="spareParts">Коллекция эл-тов заполняюхий таблицу</param>
+        /// <param name="availabilityList">Коллекция эл-тов заполняюхий таблицу</param>
         /// <param name="titleCol">Столбец "Название".</param>
         /// <param name="articulCol">Столбец "Артикул".</param>
         /// <param name="manufCol">Столбец "Производитель".</param>
@@ -1466,7 +1466,7 @@ namespace PartsApp
                         return;
                     }//catch 
 
-                    //LoadsaleToExcelFile(sale, spareParts);
+                    //LoadsaleToExcelFile(sale, availabilityList);
 /*!!!*/             new System.Threading.Thread(BeginLoadSaleToExcelFile).Start(sale); //Сделать по нормальному вызов с потоком.
 
                     this.Visible = false;

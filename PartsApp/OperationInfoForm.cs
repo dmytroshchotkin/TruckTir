@@ -88,7 +88,7 @@ namespace PartsApp
         /// <summary>
         /// Заполняет operationDetailsDGV коллекцией переданных эл-тов.
         /// </summary>
-        /// <param name="spareParts">Коллекция, эл-тами которой заполняется таблица.</param>
+        /// <param name="availabilityList">Коллекция, эл-тами которой заполняется таблица.</param>
         private void FillTheOperationDetailsDGV(IList<SparePart> spareParts)
         {
             operationDetailsDGV.Rows.Add(spareParts.Count);

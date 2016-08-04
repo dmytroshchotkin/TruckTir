@@ -753,7 +753,7 @@ namespace PartsApp
         /// Метод вывода приходной информации в Excel-файл.
         /// </summary>
         /// <param name="sale">Информация о приходе.</param>
-        /// <param name="spareParts">Список оприходованных товаров.</param>
+        /// <param name="availabilityList">Список оприходованных товаров.</param>
         private void LoadPurchaseToExcelFile(Purchase purchase, IList<SparePart> spareParts)
         {
             Excel.Application ExcelApp = new Excel.Application();
@@ -899,7 +899,7 @@ namespace PartsApp
         /// <summary>
         /// Устанавливает ширину столбцов.
         /// </summary>
-        /// <param name="spareParts">Коллекция эл-тов заполняюхий таблицу</param>
+        /// <param name="availabilityList">Коллекция эл-тов заполняюхий таблицу</param>
         /// <param name="titleCol">Столбец "Название".</param>
         /// <param name="articulCol">Столбец "Артикул".</param>
         /// <param name="manufCol">Столбец "Производитель".</param>
@@ -1238,7 +1238,7 @@ namespace PartsApp
                     purchase.ContragentEmployee = (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null;
                     purchase.OperationDate = purchaseDateTimePicker.Value;
                     purchase.Description = (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null;
-                    purchase.OperationDetails = spareParts;
+                    purchase.OperationDetailsList = spareParts;
 
                     try
                     {
@@ -1250,7 +1250,7 @@ namespace PartsApp
                         return;
                     }//catch 
 
-                    //LoadPurchaseToExcelFile(sale, spareParts);
+                    //LoadPurchaseToExcelFile(sale, availabilityList);
 /*!!!*/             new System.Threading.Thread(BeginLoadPurchaseToExcelFile).Start(purchase); //Сделать по нормальному вызов с потоком.
 
                     this.Visible = false;

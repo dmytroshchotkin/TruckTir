@@ -14,7 +14,7 @@ namespace PartsApp.Models
         string ContragentEmployee { get; set; }
         DateTime OperationDate { get; set; }
         string Description { get; set; }
-        IList<SparePart> OperationDetails { get; set; }
+        IList<SparePart> OperationDetailsList { get; set; }
 
     }//IOperation
 
