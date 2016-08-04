@@ -288,8 +288,7 @@ namespace PartsApp
                         property.SetValue(contactInfo, textBox.Text.Trim());
                     }//if
                 }//foreach    
-                //добавляем запись в таблицу ContactInfo.
-                PartsDAL.AddContactInfo(contactInfo);
+
                 return contactInfo;
             }//if
             return null;

@@ -2327,7 +2327,8 @@ namespace PartsApp
             {
                 connection.Open();
                 
-                const string query = "SELECT date(HireDate, \"Unixepoch\") AS 'HD', date(DismissalDate, \"Unixepoch\") AS 'DD', * FROM Employees;";
+                const string query = "SELECT date(HireDate, \"Unixepoch\") AS 'HD', date(DismissalDate, \"Unixepoch\") AS 'DD', * "
+                                   + "FROM Employees;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
 
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
@@ -2418,8 +2419,7 @@ namespace PartsApp
                 middleName     : dataReader["MiddleName"] as string,
                 birthDate      : (dataReader["BirthDate"] != DBNull.Value)     ? Convert.ToDateTime(dataReader["BirthDate"]) : (DateTime?)null,
                 hireDate       : (dataReader["HireDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["HD"]) : (DateTime?)null,
-                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["DD"]) : (DateTime?)null,
-                contactInfo    : (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
+                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["DD"]) : (DateTime?)null,                
                 photo          : dataReader["Photo"] as string,
                 note           : dataReader["Note"] as string,
                 passportNum    : dataReader["PassportNum"] as string,
@@ -2452,23 +2452,15 @@ namespace PartsApp
                 connection.Open();
 
                 const string query = "SELECT * FROM ContactInfo WHERE ContactInfoId = @ContactInfoId;";
+
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
                 cmd.Parameters.AddWithValue("@ContactInfoId", contactInfoId);
 
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
-                    contactInfo.Country     = dataReader["Country"] as string;
-                    contactInfo.Region      = dataReader["Region"] as string;
-                    contactInfo.City        = dataReader["City"] as string;
-                    contactInfo.Street      = dataReader["Street"] as string;
-                    contactInfo.House       = dataReader["House"] as string;
-                    contactInfo.Room        = dataReader["Room"] as string;
-                    contactInfo.Phone       = dataReader["Phone"] as string;
-                    contactInfo.ExtPhone    = dataReader["ExtPhone"] as string;
-                    contactInfo.Email       = dataReader["Email"] as string;
-                    contactInfo.Website     = dataReader["Website"] as string;
-                }//while 
+                    while (dataReader.Read())
+                        contactInfo = CreateContactInfo(dataReader);
+                }//using dataReader
 
                 connection.Close();
             }//using
@@ -2531,17 +2523,17 @@ namespace PartsApp
         {
             return new ContactInfo
             (
-                contactInfoId : Convert.ToInt32(dataReader["Country"]),
-                country       : dataReader["Country"] as string,
-                region        : dataReader["Region"] as string,
-                city          : dataReader["City"] as string,
-                street        : dataReader["Street"] as string,
-                house         : dataReader["House"] as string,
-                room          : dataReader["Room"] as string,
-                phone         : dataReader["Phone"] as string,
+                contactInfoId : Convert.ToInt32(dataReader["ContactInfoId"]),
+                country       : dataReader["Country"]  as string,
+                region        : dataReader["Region"]   as string,
+                city          : dataReader["City"]     as string,
+                street        : dataReader["Street"]   as string,
+                house         : dataReader["House"]    as string,
+                room          : dataReader["Room"]     as string,
+                phone         : dataReader["Phone"]    as string,
                 extPhone      : dataReader["ExtPhone"] as string,
-                email         : dataReader["Email"] as string,
-                website       : dataReader["Website"] as string                                
+                email         : dataReader["Email"]    as string,
+                website       : dataReader["Website"]  as string                                
             );
         }//CreateContactInfo
 
