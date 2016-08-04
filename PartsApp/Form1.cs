@@ -49,7 +49,7 @@ namespace PartsApp
             //Выводим окно авторизации.
             CurEmployee = PartsDAL.FindEmployees().First();
             //new AuthorizationForm().ShowDialog(this);
-            //userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
+            userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
 
             /* Пробная зона */
             PartsDAL.RegistrateUDFs();
