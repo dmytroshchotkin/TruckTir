@@ -1418,6 +1418,36 @@ namespace PartsApp
             }//if (Button.Right)
         }//saleDataGridView_CellMouseClick        
 
+
+
+        /// <summary>
+        /// Возвращает объект типа Sale, созданный из данных формы.
+        /// </summary>
+        /// <returns></returns>
+        public Sale CreateSaleFromForm()
+        {
+            List<OperationDetails> operDetList = new List<OperationDetails>();
+            foreach (SparePart sparePart in spareParts)
+            {
+                OperationDetails od = new OperationDetails(sparePart, null, (float)sparePart.Count, (float)sparePart.Price);
+                operDetList.Add(od);
+            }//foreach
+
+            Sale sale = new Sale
+            (
+                employee: Form1.CurEmployee,
+                contragent: PartsDAL.FindCustomers().Where(s => s.ContragentName == customerTextBox.Text).First(), /*!!!ERROR!!!*/
+                contragentEmployee: (!String.IsNullOrWhiteSpace(customerAgentTextBox.Text)) ? customerAgentTextBox.Text.Trim() : null,
+                operationDate: saleDateTimePicker.Value,
+                description: (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
+                operDetList: operDetList
+            );
+
+            //operDetList.ForEach(od => od.Purchase = sale);
+
+            return sale;
+        }//CreateSaleFromForm
+
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -1439,8 +1469,8 @@ namespace PartsApp
                 if (sellerBackPanel.BackColor != Color.Red && customerBackPanel.BackColor != Color.Red
                     && spareParts.Count != 0)
                 {   
-                    //Проверяем везде ли установлена цена и кол-во. 
-                    foreach (var sparePart in spareParts)
+                    //Проверяем везде ли установлена цена и кол-во.                    
+                    foreach (var sparePart in spareParts) /*ERROR!!! через Linq*/
                     {
                         if (sparePart.Count == 0 || sparePart.Price == null)
                         {
@@ -1448,13 +1478,8 @@ namespace PartsApp
                             return;
                         }
                     }//foreach
-                    
-                    Sale sale = new Sale();
-                    sale.Employee = Form1.CurEmployee;
-/*!!!*/             sale.Contragent = PartsDAL.FindCustomers().Where(c => c.ContragentName == customerTextBox.Text).First();
-                    sale.ContragentEmployee = (String.IsNullOrWhiteSpace(customerAgentTextBox.Text) == false) ? customerAgentTextBox.Text.Trim() : null;
-                    sale.OperationDate = saleDateTimePicker.Value;
-                    sale.Description = (String.IsNullOrWhiteSpace(descriptionRichTextBox.Text) == false) ? descriptionRichTextBox.Text.Trim() : null;
+
+                    Sale sale = CreateSaleFromForm();
                     
                     try
                     {
