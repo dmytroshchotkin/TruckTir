@@ -131,33 +131,33 @@ namespace PartsApp.Models
 
     }//SparePart
 
-    public class SparePart2 : SparePart
-    {
-        public int SparePartId { get; set; }
-        public string Photo { get; set; }
-        public string Manufacturer { get; set; }
-        public string Articul { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string MeasureUnit { get; set; }
+    //public class SparePart
+    //{
+    //    public int SparePartId { get; set; }
+    //    public string Photo { get; set; }
+    //    public string Manufacturer { get; set; }
+    //    public string Articul { get; set; }
+    //    public string Title { get; set; }
+    //    public string Description { get; set; }
+    //    public string MeasureUnit { get; set; }
 
-        private Lazy<List<Availability>> _availabilityList;
-        public List<Availability> AvailabilityList { get { return _availabilityList.Value; } }
+    //    private Lazy<List<Availability>> _availabilityList;
+    //    public List<Availability> AvailabilityList { get { return _availabilityList.Value; } }
 
-        public void SparePart(){}
-        public void SparePart(int sparePartId, string photo, string manufacturer, string articul, 
-                         string title, string description, string measureUnit)
-        {
-            SparePartId    =  sparePartId;         
-            Photo          =  photo;         
-            Manufacturer   =  manufacturer;         
-            Articul        =  articul;         
-            Title          =  title;
-            Description    =  description;
-            MeasureUnit    =  measureUnit;
+    //    public SparePart() { }
+    //    public SparePart(int sparePartId, string photo, string manufacturer, string articul, 
+    //                     string title, string description, string measureUnit)
+    //    {
+    //        SparePartId    =  sparePartId;         
+    //        Photo          =  photo;         
+    //        Manufacturer   =  manufacturer;         
+    //        Articul        =  articul;         
+    //        Title          =  title;
+    //        Description    =  description;
+    //        MeasureUnit    =  measureUnit;
 
-            //_availabilityList = 
-        }//
+    //        _availabilityList = new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(this));
+    //    }//
 
-    }//SparePart
+    //}//SparePart
 }//namespace

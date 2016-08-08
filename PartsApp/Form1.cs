@@ -54,7 +54,7 @@ namespace PartsApp
             /* Пробная зона */
             PartsDAL.RegistrateUDFs();
             /////////////////////////////////////////////////////////////////////////////            
-            var availList = PartsDAL.FindAvailability(new SparePart2() { SparePartId = 1123 });
+            
 
             //////////////////////////////////////////////////////////////////////////////
         }//Form1_Load
@@ -1169,6 +1169,11 @@ namespace PartsApp
             Rectangle rect = partsDataGridView.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
             photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDataGridView.Location.Y);
         }//FillThePartsDataGridView
+
+        private void FillTheExtPartsDataGridView(List<SparePart> sparePartsList)
+        { 
+        
+        }//FillTheExtPartsDataGridView
 
         //Метод для сброса выделений
         /// <summary>

@@ -8,19 +8,19 @@ namespace PartsApp.Models
 {
     public class Availability
     {
-        OperationDetails OperationDetails { get; set; }
+        public OperationDetails OperationDetails { get; set; }
         /// <summary>
         /// Адрес хранилища.
         /// </summary>
-        string StorageAddress { get; set; }
+        public string StorageAddress { get; set; }
         /// <summary>
         /// Наценка.
         /// </summary>
-        float Markup { get; set; }
+        public float Markup { get; set; }
         /// <summary>
         /// Цена продажи.
         /// </summary>
-        float SellingPrice 
+        public float SellingPrice 
         { 
             get 
             {
@@ -40,6 +40,40 @@ namespace PartsApp.Models
             Markup           = markup;
         }//
 
+        /// <summary>
+        /// Возвращает максимальную цену продажи из переданного списка.
+        /// </summary>
+        /// <param name="availabilityList">Список товаров в наличии.</param>
+        /// <returns></returns>
+        public static float GetMaxSellingPrice(IList<Availability> availabilityList)
+        {
+            return availabilityList.Max(av => av.SellingPrice);
+        }//GetMaxSellingPrice
+        /// <summary>
+        /// Возвращает общее кол-во товара с основного и виртуального склада.
+        /// </summary>
+        /// <param name="availabilityList">Список товаров в наличии.</param>
+        /// <returns></returns>
+        public static string GetTotalCount(IList<Availability> availabilityList)
+        {
+            float mainStorageCount = 0f, virtStorageCount = 0f;
+
+            foreach (Availability avail in availabilityList)
+            {
+                if (avail.StorageAddress == null)
+                    mainStorageCount += avail.OperationDetails.Count;
+                else
+                    virtStorageCount += avail.OperationDetails.Count;
+            }//foreach
+
+            //Присваиваем общее кол-во товара в формате "X (Y)", где X - кол-во товара на осн. складе, а Y - на виртуальном.
+            if (virtStorageCount == 0)
+                return mainStorageCount.ToString();
+            else if (mainStorageCount == 0)
+                return String.Format("({0})", virtStorageCount);
+            else
+                return String.Format("{0} ({1})", mainStorageCount, virtStorageCount);
+        }//GetTotalCount
     }//Availability
 
 }//namespace

@@ -17,6 +17,16 @@ namespace PartsApp.Models
         public IList<SparePart> OperationDetailsList { get; set; }
 
         public Sale() { }
+        public Sale(int operationId, Employee employee, IContragent contragent, string contragentEmployee,
+                    DateTime operationDate, string description ) 
+        {
+            OperationId           = operationId;
+            Employee              = employee;
+            Contragent            = contragent;
+            ContragentEmployee    = contragentEmployee;
+            OperationDate         = operationDate;
+            Description           = description;          
+        }//
 
     }//Sale
 

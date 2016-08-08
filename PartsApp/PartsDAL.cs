@@ -1300,7 +1300,7 @@ namespace PartsApp
 
 
 
-        public static List<Availability> FindAvailability(SparePart2 sparePart)
+        public static List<Availability> FindAvailability(SparePart sparePart)
         {
             List<Availability> availabilityList = new List<Availability>();
 
@@ -1328,19 +1328,11 @@ namespace PartsApp
             return availabilityList;
         }//FindAvailability
 
-        private static Availability CreateAvailability(SQLiteDataReader dataReader, SparePart2 sparePart)
+        private static Availability CreateAvailability(SQLiteDataReader dataReader, SparePart sparePart)
         {
-            OperationDetails od = new OperationDetails
-            (
-                sparePart   : sparePart,
-                purchase    : FindPurchase(Convert.ToInt32(dataReader["OperationId"])),
-                count       : Convert.ToSingle(dataReader["Count"]),
-                price       : Convert.ToSingle(dataReader["Price"])
-            );
-
             Availability avail = new Availability
             (
-                operationDetails : od,
+                operationDetails : CreateOperationDetails(dataReader, sparePart),
                 storageAddress   : dataReader["StorageAdress"] as string,
                 markup           : Convert.ToSingle(dataReader["Markup"])
             );
@@ -1350,6 +1342,16 @@ namespace PartsApp
 
 
 
+        private static OperationDetails CreateOperationDetails (SQLiteDataReader dataReader, SparePart sparePart)
+        {
+            return new OperationDetails
+            (
+                sparePart   : sparePart,
+                purchase    : FindPurchase(Convert.ToInt32(dataReader["OperationId"])),
+                count       : Convert.ToSingle(dataReader["Count"]),
+                price       : Convert.ToSingle(dataReader["Price"])
+            );
+        }//CreateOperationDetails
         
 
 
