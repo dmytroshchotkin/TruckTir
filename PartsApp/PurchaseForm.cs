@@ -1200,6 +1200,34 @@ namespace PartsApp
             }//if
         }//purchaseDataGridView_CellMouseClick        
 
+        /// <summary>
+        /// Возвращает объект типа Purchase, созданный из данных формы.
+        /// </summary>
+        /// <returns></returns>
+        public Purchase CreatePurchaseFromForm()
+        { 
+            List<OperationDetails> operDetList = new List<OperationDetails>();
+            foreach (SparePart sparePart in spareParts)
+            {
+                OperationDetails od = new OperationDetails(sparePart, null, (float)sparePart.Count, (float)sparePart.Price);
+                operDetList.Add(od);
+            }//foreach
+
+            Purchase purchase =  new Purchase
+            (
+                employee: Form1.CurEmployee,
+                contragent: PartsDAL.FindSuppliers().Where(s => s.ContragentName == supplierTextBox.Text).First(), /*!!!ERROR!!!*/
+                contragentEmployee: (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null,
+                operationDate: purchaseDateTimePicker.Value,
+                description: (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
+                operDetList: operDetList                                                
+            );
+
+            operDetList.ForEach(od => od.Purchase = purchase);
+
+            return purchase;
+        }//CreatePurchaseFromForm
+
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -1231,18 +1259,14 @@ namespace PartsApp
                             return;
                         }
                     }//foreach
-                    
-                    Purchase purchase = new Purchase();
-                    purchase.Employee = Form1.CurEmployee;
-/*!!!*/             purchase.Contragent = PartsDAL.FindSuppliers().Where(s => s.ContragentName == supplierTextBox.Text).First();
-                    purchase.ContragentEmployee = (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null;
-                    purchase.OperationDate = purchaseDateTimePicker.Value;
-                    purchase.Description = (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null;
-                    purchase.OperationDetailsList = spareParts;
+
+                    Purchase purchase = CreatePurchaseFromForm();
 
                     try
                     {
-                        purchase.OperationId = PartsDAL.AddPurchase(purchase);
+                        string storageAddress = String.IsNullOrWhiteSpace(storageAdressTextBox.Text) ? null : storageAdressTextBox.Text.Trim();
+
+                        purchase.OperationId = PartsDAL.AddPurchase(purchase, storageAddress, 100f); /*ERROR!!! markup*/
                     }//try
                     catch(Exception)
                     {

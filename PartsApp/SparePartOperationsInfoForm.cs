@@ -35,31 +35,31 @@ namespace PartsApp
         /// <param name="operList">Ид выводимого в таблицу товара.</param>
         private void FillTheOperationDGV(IList<IOperation> operList, int sparePartId)
         {
-            foreach (IOperation operat in operList.OrderByDescending(p => p.OperationDate))
-            {
-                int rowIndx = OperationsInfoDGV.Rows.Add();
-                DataGridViewRow row = OperationsInfoDGV.Rows[rowIndx];
+            //foreach (IOperation operat in operList.OrderByDescending(p => p.OperationDate))
+            //{
+            //    int rowIndx = OperationsInfoDGV.Rows.Add();
+            //    DataGridViewRow row = OperationsInfoDGV.Rows[rowIndx];
 
-                row.Cells[OperationTypeCol.Index].Value = (operat.GetType() == typeof(Sale)) ? "Расход" : "Приход";
-                row.DefaultCellStyle.BackColor = (operat.GetType() == typeof(Sale)) ? Color.LightGreen : Color.Khaki;//Color.Pink;
-                row.Cells[OperationIdCol.Index].Value = operat.OperationId;
-                row.Cells[DateCol.Index].Value = operat.OperationDate.ToShortDateString();
-                row.Cells[EmployeeCol.Index].Value = (operat.Employee != null) ? operat.Employee.GetShortFullName() : null;
-                row.Cells[ContragentCol.Index].Value = operat.Contragent.ContragentName;
-                row.Cells[ContragentEmployeeCol.Index].Value = operat.ContragentEmployee;
+            //    row.Cells[OperationTypeCol.Index].Value = (operat.GetType() == typeof(Sale)) ? "Расход" : "Приход";
+            //    row.DefaultCellStyle.BackColor = (operat.GetType() == typeof(Sale)) ? Color.LightGreen : Color.Khaki;//Color.Pink;
+            //    row.Cells[OperationIdCol.Index].Value = operat.OperationId;
+            //    row.Cells[DateCol.Index].Value = operat.OperationDate.ToShortDateString();
+            //    row.Cells[EmployeeCol.Index].Value = (operat.Employee != null) ? operat.Employee.GetShortFullName() : null;
+            //    row.Cells[ContragentCol.Index].Value = operat.Contragent.ContragentName;
+            //    row.Cells[ContragentEmployeeCol.Index].Value = operat.ContragentEmployee;
 
-                SparePart sparePart = operat.OperationDetailsList.First(sp => sp.SparePartId == sparePartId);
-                row.Cells[UnitCol.Index].Value = sparePart.MeasureUnit;
-                row.Cells[CountCol.Index].Value = sparePart.Count;
-                //double? price = (operat.GetType() == typeof(Sale)) ? sparePart.SellingPrice : sparePart.Price;
-                double? price = sparePart.Price;
-                row.Cells[PriceCol.Index].Value = price;
-                row.Cells[SumCol.Index].Value = price * sparePart.Count;
+            //    SparePart sparePart = operat.OperationDetailsList.First(sp => sp.SparePartId == sparePartId);
+            //    row.Cells[UnitCol.Index].Value = sparePart.MeasureUnit;
+            //    row.Cells[CountCol.Index].Value = sparePart.Count;
+            //    //double? price = (operat.GetType() == typeof(Sale)) ? avail.SellingPrice : avail.Price;
+            //    double? price = sparePart.Price;
+            //    row.Cells[PriceCol.Index].Value = price;
+            //    row.Cells[SumCol.Index].Value = price * sparePart.Count;
 
-                //Выводим название и артикул запчасти.
-                ArticulLabel.Text = sparePart.Articul;
-                TitleLabel.Text = sparePart.Title;
-            }//foreach
+            //    //Выводим название и артикул запчасти.
+            //    ArticulLabel.Text = sparePart.Articul;
+            //    TitleLabel.Text = sparePart.Title;
+            //}//foreach
         }//FillTheOperationDGV
 
         private void SaleCheckBox_CheckedChanged(object sender, EventArgs e)

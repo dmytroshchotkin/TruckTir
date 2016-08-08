@@ -1566,12 +1566,12 @@ namespace PartsApp
 //                {
 //                    autoCompleteListBox.Items.Clear();
 //                    string str = null;
-//                    foreach (var sparePart in searchSparePartsList)
+//                    foreach (var avail in searchSparePartsList)
 //                    {
 //                        if (lastEditCell.OwningColumn.Name == "Title")
-//                            str = sparePart.Title + "   " + sparePart.Articul;
+//                            str = avail.Title + "   " + avail.Articul;
 //                        else if (lastEditCell.OwningColumn.Name == "Articul")
-//                            str = sparePart.Articul + "   " + sparePart.Title;
+//                            str = avail.Articul + "   " + avail.Title;
 
 //                        autoCompleteListBox.Items.Add(str);
 //                    }//foreach                                                                        

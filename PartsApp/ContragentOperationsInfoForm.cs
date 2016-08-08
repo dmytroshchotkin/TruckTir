@@ -120,7 +120,8 @@ namespace PartsApp
                 IOperation oper = _contragentsOperations[contragId].First(op => op.OperationId == operId); //Находим нужную операцию
                 
                 //Выводим инф-цию в таблицу доп. инф-ции по данной операции.
-                FillTheOperationDetailsDGV(oper.OperationDetailsList);
+                List<SparePart> spList = oper.OperationDetailsList.Select(od => od.SparePart).ToList();
+                FillTheOperationDetailsDGV(spList);
             }//if
         }//OperationsInfoDGV_SelectionChanged
 
@@ -128,20 +129,20 @@ namespace PartsApp
         /// Заполняет таблицу доп. инф-ции по Операции данными из переданного списка.
         /// </summary>
         /// <param name="operDetList">Список операций для заполнения.</param>
-        private void FillTheOperationDetailsDGV(IList<SparePart> operDetList)
+        private void FillTheOperationDetailsDGV(IList<SparePart> sparePartsList)
         {            
-            foreach (SparePart sparePart in operDetList)
+            foreach (SparePart sparePart in sparePartsList)
             {
                 int rowIndx = OperationDetailsDGV.Rows.Add();
                 DataGridViewRow row = OperationDetailsDGV.Rows[rowIndx];
 
-                row.Cells[ManufacturerCol.Index].Value = sparePart.Manufacturer;
-                row.Cells[ArticulCol.Index].Value = sparePart.Articul;
-                row.Cells[TitleCol.Index].Value = sparePart.Title;
-                row.Cells[MeasureUnitCol.Index].Value = sparePart.MeasureUnit;
-                row.Cells[CountCol.Index].Value = sparePart.Count;
-                row.Cells[PriceCol.Index].Value = sparePart.Price;
-                row.Cells[SumCol.Index].Value = sparePart.Count * sparePart.Price;
+                row.Cells[ManufacturerCol.Index].Value  = sparePart.Manufacturer;
+                row.Cells[ArticulCol.Index].Value       = sparePart.Articul;
+                row.Cells[TitleCol.Index].Value         = sparePart.Title;
+                row.Cells[MeasureUnitCol.Index].Value   = sparePart.MeasureUnit;
+                row.Cells[CountCol.Index].Value         = sparePart.Count;
+                row.Cells[PriceCol.Index].Value         = sparePart.Price;
+                row.Cells[SumCol.Index].Value           = sparePart.Count * sparePart.Price;
             }//foreach                          
 
         }//FillTheOperationDetailsDGV

@@ -8,13 +8,14 @@ namespace PartsApp.Models
 {
     public interface IOperation
     {
-        int OperationId { get; set; }
-        Employee Employee { get; set; }
-        IContragent Contragent { get; set; }
-        string ContragentEmployee { get; set; }
-        DateTime OperationDate { get; set; }
-        string Description { get; set; }
-        IList<SparePart> OperationDetailsList { get; set; }
+        int         OperationId         { get; set; }
+        Employee    Employee            { get; set; }
+        IContragent Contragent          { get; set; }
+        string      ContragentEmployee  { get; set; }
+        DateTime    OperationDate       { get; set; }
+        string      Description         { get; set; }
+
+        IList<OperationDetails> OperationDetailsList { get;}
 
     }//IOperation
 

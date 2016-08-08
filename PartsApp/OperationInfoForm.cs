@@ -55,7 +55,7 @@ namespace PartsApp
         /// <summary>
         /// Заполняет таблицу коллекцией переданных эл-тов.
         /// </summary>
-        /// <param name="sparePartsList">Коллекция, эл-тами которой заполняется таблица.</param>
+        /// <param name="operDetList">Коллекция, эл-тами которой заполняется таблица.</param>
         private void FillTheOperationDGV(IList<Purchase> purchases)
         {            
             operationDataGridView.Rows.Add(purchases.Count);
