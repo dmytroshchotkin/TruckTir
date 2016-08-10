@@ -74,10 +74,11 @@ namespace PartsApp
             //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
 
-            /* Пробная зона */
+            
             PartsDAL.RegistrateUDFs();
+            /* Пробная зона */
             /////////////////////////////////////////////////////////////////////////////            
-            ChangeDataSource(PartsDAL.FindSparePartAvailability());
+
 
             //////////////////////////////////////////////////////////////////////////////
         }//Form1_Load
@@ -668,8 +669,7 @@ namespace PartsApp
             if (partsDataGridView.SelectedCells.Count == 0) 
                 return;
 
-            saveChangesButton.Enabled = true; //сделать доступной кнопку "Сохранить изменения"
-            cancelChangesButton.Enabled = true; //сделать доступной кнопку "Отменить изменения"
+            
             //выделяем строки всех выделенных клеток.
             foreach (DataGridViewCell cell in partsDataGridView.SelectedCells)    cell.OwningRow.Selected = true;
             foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
@@ -680,15 +680,14 @@ namespace PartsApp
                 float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
                 //Если выделены только строки в partsDataGridView.
                 if (extPartsDataGridView.SelectedRows.Count == 0)
-                {
                     partsDataGridViewMarkupChange(markup);
-                }//if
-                //Если есть выделенные строки в extPartsDataGridView.
+
                 else
-                {
-                    extPartsDataGridViewMarkupChange(markup);
-                }//else
-            }//try
+                    extPartsDataGridViewMarkupChange(markup); //Если есть выделенные строки в extPartsDataGridView.
+
+                //Делаем доступными кнопки "Сохранить изменения" и "Отменить изменения"
+                saveChangesButton.Enabled = cancelChangesButton.Enabled = true; 
+            }//try                
             catch 
             { 
                 toolTip.Show("Введены некорректные значения", this, markupComboBox.Location, 2000); 
@@ -796,7 +795,7 @@ namespace PartsApp
             //Находим все SP с изменяемой наценкой. 
             foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
             {
-                if (row.Cells[AvaliabilityCol.Name].Value.ToString() == "0") 
+                if (row.Cells[AvaliabilityCol.Name].Value.ToString() == "0") /*ERROR!!!*/
                     continue;
 
                 int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
@@ -831,9 +830,6 @@ namespace PartsApp
         /// <param name="markup">Наценка на которую требуется изменить.</param>
         private void extPartsDataGridViewMarkupChange(float markup)
         {
-            //IList<SparePart> availabilityList = new List<SparePart>(); //список для всех запчастей с изменяемой наценкой.
-            //Находим Id запчастей с изменяемой наценкой, т.к. SpId у всех вхождений одинаковый, берем его у первого вхождения.
-            int sparePartId = Convert.ToInt32(extPartsDataGridView.SelectedRows[0].Cells["SparePartId"].Value);
             //Находим все SP с изменяемой наценкой. 
             foreach (DataGridViewRow row in extPartsDataGridView.SelectedRows)
             {
@@ -843,31 +839,36 @@ namespace PartsApp
                 //Обновляем столбец 'Цена продажи' в главной таблице.
                 SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
 
-                int purchaseId = Convert.ToInt32(row.Cells["PurchaseId"].Value);
+                int sparePartId = avail.OperationDetails.SparePart.SparePartId;
+                int purchaseId  = avail.OperationDetails.Purchase.OperationId;
                 //Ищем все записи с нужным SparaPartId.
                 foreach (var sparePart in ExtSpList)
                 {
                     //if (sparePart.SparePartId == sparePartId && sparePart.PurchaseId == purchaseId)
-                    {
+                    //{
                         //sparePart.Markup = markup;
-                        SaveMarkupChangeToBuffer(sparePartId, purchaseId, markup);
-                    }//if
+                        SaveMarkupChangeToBuffer(sparePartId, purchaseId, markup); 
+                    //}//if
                 }//foreach                
             }//foreach   
-            //Если одинаковя Наценка у всех SparePart с данным Id.
-            SparePart sP = null;
-            //Находим запись в SpList с данным SparePartId.
-            foreach (var sparePart in SpList)
-                if (sparePart.SparePartId == sparePartId)
-                {
-                    sP = sparePart;
-                    break;
-                }
+                        
+            //SparePart sP = null;
+            ////Находим запись в SpList с данным SparePartId.
+            //foreach (var sparePart in SpList)
+            //{
+            //    if (sparePart.SparePartId == sparePartId)
+            //    {
+            //        sP = sparePart;
+            //        break;
+            //    }
+            //}//foreach
+
+            ////Если одинаковя Наценка у всех SparePart с данным Id.
             //if (IsSameMarkup(FindSparePartsFromExtSpListBySparePartId(sparePartId)) == true)
                // sP.Markup = markup;
             //else sP.Markup = null;
             //Обновляем отображение столбцов в extPartsDataGridView.
-            partsDataGridView.Invalidate();
+            partsDataGridView.Invalidate();   /*ERROR!!! Нужно ли?*/
             extPartsDataGridView.Invalidate();
 
         }//extPartsDataGridViewMarkupChange
@@ -936,7 +937,6 @@ namespace PartsApp
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
-
         #region Обработчики событий для талбиц.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       
@@ -1046,6 +1046,7 @@ namespace PartsApp
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
+
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
@@ -1370,20 +1371,6 @@ namespace PartsApp
 
     public static class Cloner
     {
-        public static object BinaryClone(object something, int size)
-        {
-            object obj;
-            var serializer = new System.Xml.Serialization.XmlSerializer(something.GetType());
-            Byte[] bytes = new Byte[size];
-            using (var tempStream = new System.IO.MemoryStream(bytes))
-            {
-                serializer.Serialize(tempStream, something);
-                tempStream.Seek(0, System.IO.SeekOrigin.Begin);
-                obj = serializer.Deserialize(tempStream);
-                tempStream.Close();
-            }//using
-            return obj;
-        }//BinaryClone
         public static IList<SparePart> Clone(IList<SparePart> spareParts)
         {
             IList<SparePart> _spareParts = new List<SparePart>(spareParts.Count);

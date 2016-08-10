@@ -172,6 +172,18 @@ namespace PartsApp.Models
             _availabilityList = new Lazy<List<Availability>>(() => availabilityList);
         }//
 
+        public SparePart(SparePart sparePart)
+        {
+           this.SparePartId       = sparePart.SparePartId;
+           this.Photo             = sparePart.Photo;    
+           this.Manufacturer      = sparePart.Manufacturer;
+           this.Articul           = sparePart.Articul;  
+           this.Title             = sparePart.Title;   
+           this.Description       = sparePart.Description;
+           this.MeasureUnit       = sparePart.MeasureUnit;
+           this._availabilityList = new Lazy<List<Availability>>(() => sparePart.AvailabilityList);
+        }//
+
     }//SparePart
 
 }//namespace
