@@ -18,7 +18,9 @@ namespace PartsApp
         IList<SparePart> searchSpList;                                      //для выпадающего списка в searchTextBox.
         IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;  //для изменения наценки.  
         IList<SparePart> SpList, origSpList;                                //для вывода в partsDataGridView.  
-        IList<SparePart> ExtSpList, origExtSpList;                          //для вывода в extPartsDataGridView.  
+        
+        //IList<Availability> ExtSpList;
+        //IList<SparePart> origExtSpList;                          //для вывода в extPartsDataGridView.  
         /// <summary>
         /// Переменная для запоминания введенного поль-лем текста в searchTextBox.
         /// </summary>
@@ -36,10 +38,7 @@ namespace PartsApp
             searchSpList = new List<SparePart>();
             changeMarkupBufferDict = new Dictionary<int, IDictionary<int, double>>();
             SpList = origSpList = new List<SparePart>();
-            ExtSpList = origExtSpList = new List<SparePart>();
-
-            //textChangeEvent = true;
-        }
+        }//
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -757,13 +756,12 @@ namespace PartsApp
                 progressBar.Value = progressBar.Maximum;
                 //Перезаписываем начальный список.            
                 origSpList = Cloner.Clone(SpList);
-                origExtSpList = Cloner.Clone(ExtSpList);
 
                 changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
             }//try			
             catch (System.Data.SQLite.SQLiteException ex)
             {
-                if (ex.Message == "database is locked\r\ndatabase is locked")
+                if (ex.Message == "database is locked\r\ndatabase is locked") /*ERROR!!! корявое сообщение*/
                     MessageBox.Show("Вероятно кто-то другой сейчас осуществляет запись в базу\nПопробуйте ещё раз.", "База данных занята в данный момент." );
                 else MessageBox.Show(String.Format("Ошибка записи изменения наценки\n{0}", ex.Message));
             }//catch    
@@ -779,7 +777,7 @@ namespace PartsApp
              
             //Отменяем все изменения.
             SpList = (List<SparePart>)Cloner.Clone(origSpList);
-            ExtSpList = (List<SparePart>)Cloner.Clone(origExtSpList);
+            //ExtSpList = (List<SparePart>)Cloner.Clone(origExtSpList);
 
             //partsDataGridView.DataSource = SpList;
 
@@ -797,33 +795,18 @@ namespace PartsApp
             //Находим все SP с изменяемой наценкой. 
             foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
             {
-                if (row.Cells[AvaliabilityCol.Name].Value.ToString() == "0") /*ERROR!!!*/
-                    continue;
-
-                int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
-                //Находим запись в SpList с данным SparePartId.
-                foreach (var sparePart in SpList)
+                List<Availability> availList = (row.DataBoundItem as SparePart).AvailabilityList;
+                if (availList.Count > 0)
                 {
-                    if (sparePart.SparePartId == sparePartId)
-                    {
-                        //sparePart.Markup = markup;
-                        row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList); //Присваиваем новое значение столбцу 'ЦенаПродажи'.
-                        break;
-                    }//if
-                }//foreach
-                //Ищем все записи с нужным SparaPartId.
-                foreach (var sparePart in ExtSpList)
-                {
-                    if (sparePart.SparePartId == sparePartId)
-                    {
-                        //sparePart.Markup = markup;
-                        //SaveMarkupChangeToBuffer(sparePart.SparePartId, sparePart.PurchaseId, markup);
-                    }//if
-                }//foreach                                
-                //partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
+                    //Меняем наценку во всем списке этого товара в наличии.
+                    availList.ForEach(av => av.Markup = markup);
+                    //запоминем объекты Availability наценка кот. изменилась.                    
+                    availList.ForEach(av => SaveMarkupChangeToBuffer(av));
+                    //Присваиваем новое значение столбцу 'ЦенаПродажи'.
+                    row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(availList); 
+                }//if                                                      
             }//foreach   
-            //Обновляем отображение столбцов в extPartsDataGridView.
-            extPartsDataGridView.Invalidate();
+            extPartsDataGridView.Invalidate(); //Обновляем отображение столбцов в extPartsDataGridView.
         }//partsDataGridViewMarkupChange
 
         /// <summary>
@@ -838,41 +821,12 @@ namespace PartsApp
                 Availability avail = row.DataBoundItem as Availability;
                 avail.Markup = markup;
                 row.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
-                //Обновляем столбец 'Цена продажи' в главной таблице.
+                //Заполняем столбец 'Цена продажи' в главной таблице.
                 SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
-
-                int sparePartId = avail.OperationDetails.SparePart.SparePartId;
-                int purchaseId  = avail.OperationDetails.Purchase.OperationId;
-                //Ищем все записи с нужным SparaPartId.
-                foreach (var sparePart in ExtSpList)
-                {
-                    //if (sparePart.SparePartId == sparePartId && sparePart.PurchaseId == purchaseId)
-                    //{
-                        //sparePart.Markup = markup;
-                        SaveMarkupChangeToBuffer(sparePartId, purchaseId, markup); 
-                    //}//if
-                }//foreach                
+                //запоминем объекты Availability наценка кот. изменилась.
+                SaveMarkupChangeToBuffer(avail);
+                extPartsDataGridView.InvalidateCell(row.Cells[MarkupCol.Index]); //Обновляем измененную ячейку.
             }//foreach   
-                        
-            //SparePart sP = null;
-            ////Находим запись в SpList с данным SparePartId.
-            //foreach (var sparePart in SpList)
-            //{
-            //    if (sparePart.SparePartId == sparePartId)
-            //    {
-            //        sP = sparePart;
-            //        break;
-            //    }
-            //}//foreach
-
-            ////Если одинаковя Наценка у всех SparePart с данным Id.
-            //if (IsSameMarkup(FindSparePartsFromExtSpListBySparePartId(sparePartId)) == true)
-               // sP.Markup = markup;
-            //else sP.Markup = null;
-            //Обновляем отображение столбцов в extPartsDataGridView.
-            partsDataGridView.Invalidate();   /*ERROR!!! Нужно ли?*/
-            extPartsDataGridView.Invalidate();
-
         }//extPartsDataGridViewMarkupChange
 
         /// <summary>
@@ -881,19 +835,22 @@ namespace PartsApp
         /// <param name="sparePartId">Id запчасти с изменяемой наценкой.</param>
         /// <param name="saleId">Id прихода с изменяемой наценкой.</param>
         /// <param name="markup">Наценка на которую нужно изменить старое значение.</param>
-        private void SaveMarkupChangeToBuffer(int sparePartId, int purchaseId, double markup)
+        private void SaveMarkupChangeToBuffer(Availability avail)
         {
+            int sparePartId = avail.OperationDetails.SparePart.SparePartId;
+            int purchaseId = avail.OperationDetails.Purchase.OperationId;
+
             if (changeMarkupBufferDict.ContainsKey(sparePartId)) //Если уже есть такой SparePartId.
             {
                 if (changeMarkupBufferDict[sparePartId].ContainsKey(purchaseId)) //если уже есть такой PurchaseId. 
-                    (changeMarkupBufferDict[sparePartId])[purchaseId] = markup;
+                    (changeMarkupBufferDict[sparePartId])[purchaseId] = avail.Markup;
                 else //если у данной SparePartId ещё нет такой PurchaseId.
-                    (changeMarkupBufferDict[sparePartId]).Add(new KeyValuePair<int, double>(purchaseId, markup));
+                    (changeMarkupBufferDict[sparePartId]).Add(new KeyValuePair<int, double>(purchaseId, avail.Markup));
             }//if
             else //Если ещё нет данной SparePartId
             {
                 IDictionary<int, double> dict = new Dictionary<int, double>();
-                dict.Add(new KeyValuePair<int, double>(purchaseId, markup));
+                dict.Add(new KeyValuePair<int, double>(purchaseId, avail.Markup));
                 changeMarkupBufferDict.Add(new KeyValuePair<int, IDictionary<int, double>>(sparePartId, dict));
             }//else
         }//SaveMarkupChangeToBuffer
@@ -1053,39 +1010,39 @@ namespace PartsApp
 
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            //Если нет выделенных строк, то выходим.
-            if (partsDataGridView.SelectedCells.Count == 0) return;
+            ////Если нет выделенных строк, то выходим.
+            //if (partsDataGridView.SelectedCells.Count == 0) return;
 
-            //выделяем строки всех выделенных клеток.
-            foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
-            foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+            ////выделяем строки всех выделенных клеток.
+            //foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+            //foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
 
-            foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
-            {
-                int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
-                //Ищем все записи с нужным SparaPartId.
-                foreach (var sparePart in ExtSpList)
-                {
-                    if (sparePart.SparePartId == sparePartId)
-                    {
-                        //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
-                    }//if
-                }//foreach
+            //foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
+            //{
+            //    int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
+            //    //Ищем все записи с нужным SparaPartId.
+            //    foreach (var sparePart in ExtSpList)
+            //    {
+            //        if (sparePart.SparePartId == sparePartId)
+            //        {
+            //            //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
+            //        }//if
+            //    }//foreach
 
-                //Находим запись в SpList с данным SparePartId.
-                foreach (var sparePart in SpList)
-                {
-                    if (sparePart.SparePartId == sparePartId)
-                    {
-                        //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
-                        row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
-                        break;
-                    }//if
-                    partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
-                }//foreach
-            }//foreach   
-            //Обновляем отображение столбцов в extPartsDataGridView.
-            extPartsDataGridView.Invalidate();    
+            //    //Находим запись в SpList с данным SparePartId.
+            //    foreach (var sparePart in SpList)
+            //    {
+            //        if (sparePart.SparePartId == sparePartId)
+            //        {
+            //            //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
+            //            row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
+            //            break;
+            //        }//if
+            //        partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
+            //    }//foreach
+            //}//foreach   
+            ////Обновляем отображение столбцов в extPartsDataGridView.
+            //extPartsDataGridView.Invalidate();    
 
         }//excRateNumericUpDown_ValueChanged
         
@@ -1205,18 +1162,12 @@ namespace PartsApp
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
             //Очищаем и заполняем DataSource новымы значениями.
-            partsDataGridView.DataSource = null;
-            extPartsDataGridView.DataSource = null;
-            partsDataGridView.DataSource = spareParts;
-            extPartsDataGridView.DataSource = spareParts;
+            partsDataGridView.DataSource = extPartsDataGridView.DataSource = null;
+            partsDataGridView.DataSource = extPartsDataGridView.DataSource = spareParts;
 
             IList<SparePart> orderSPList = Cloner.Clone(spareParts.OrderBy(sp => sp.Title).ToList());
             SpList = orderSPList;
             origSpList = Cloner.Clone(spareParts.OrderBy(sp => sp.Title).ToList());
-
-            ExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);   /*ERROR надо ли это вообще?*/
-            origExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
-  
         }//ChangeDataSource
        
         /// <summary>
@@ -1273,18 +1224,6 @@ namespace PartsApp
 
             return result;
         }//ResizeOrigImg
-        /// <summary>
-        /// Возвращает из списка ExtSpList список запчастей с заданным SparePartId.
-        /// </summary>
-        /// <param name="sparePartId">Id искомой запчасти</param>
-        /// <returns></returns>
-        private List<SparePart> FindSparePartsFromExtSpListBySparePartId(int sparePartId)
-        {
-            return (from sp in ExtSpList
-                    where sp.SparePartId == sparePartId
-                    select sp).ToList<SparePart>();
-        }//FindSparePartsFromExtSpListBySparePartId
-
 
         #region Методы вызова дополнительных окон.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
