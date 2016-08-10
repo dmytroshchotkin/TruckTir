@@ -921,6 +921,11 @@ namespace PartsApp
                 }//if
         }//extPartsDataGridView_CellFormatting
 
+        private void extPartsDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            
+        }//extPartsDataGridView_RowsAdded
+
         private void extPartsDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             StorageAddressExtCol.Visible = NoteExtCol.Visible = false;
@@ -1161,9 +1166,14 @@ namespace PartsApp
         /// <param name="availabilityList">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
+            BindingSource binding = new BindingSource();
+            //binding.SuspendBinding();
+            binding.DataSource = spareParts;
+            //binding.ResumeBinding();
+            
             //Очищаем и заполняем DataSource новымы значениями.
-            partsDataGridView.DataSource = extPartsDataGridView.DataSource = null;
-            partsDataGridView.DataSource = extPartsDataGridView.DataSource = spareParts;
+            //partsDataGridView.DataSource = extPartsDataGridView.DataSource = null; /*Выдаёт ошибку при раскомментировании*/
+            partsDataGridView.DataSource = extPartsDataGridView.DataSource = binding;
 
             IList<SparePart> orderSPList = Cloner.Clone(spareParts.OrderBy(sp => sp.Title).ToList());
             SpList = orderSPList;
@@ -1288,6 +1298,8 @@ namespace PartsApp
             else
                 new ContragentOperationsInfoForm(typeof(Customer)).Show();
         }
+
+
 
         
 
