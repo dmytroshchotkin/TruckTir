@@ -111,12 +111,6 @@
     <Compile Include="Models\Sale.cs" />
     <Compile Include="Models\SparePart.cs" />
     <Compile Include="Models\Supplier.cs" />
-    <Compile Include="OperationInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OperationInfoForm.Designer.cs">
-      <DependentUpon>OperationInfoForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="PartsDAL.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -157,10 +151,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OperationInfoForm.resx">
-      <DependentUpon>OperationInfoForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

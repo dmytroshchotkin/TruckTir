@@ -1075,44 +1075,7 @@ namespace PartsApp
             return count;        
         }//FindSparePartAvaliabilityCount
         
-        //Нахождение кол-ва SparePart на осн. и вирт. складах отдельно.
-        public static IList<SparePart> FindAvaliabilityBySparePartId(int sparePartId)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND av.SparePartId = @SparePartId;", connection);
-                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    SparePart sparePart = CreateFullSparePart(dataReader);
-                    spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-            return spareParts;
-        }//FindAvaliabilityBySparePartId
-        public static IList<SparePart> FindAvaliabilityBySparePartId(int sparePartId, SQLiteConnection openConnection)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            const string query = "SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND av.SparePartId = @SparePartId;";
-            SQLiteCommand cmd = new SQLiteCommand(query, openConnection);
-            cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-
-            var dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
-            {
-                SparePart sparePart = CreateFullSparePart(dataReader);
-                spareParts.Add(sparePart);
-            }//while    
-
-            return spareParts;
-        }//FindAvaliabilityBySparePartId
+       
         //Возвращает разделенный по приходам список всех товаров в Наличии из ИД переданных SpareParts
         /// <summary>
         /// Возвращает разделенный по приходам список всех товаров в Наличии из ИД переданных SpareParts
@@ -1154,50 +1117,7 @@ namespace PartsApp
             }//using
             return spareParts;
         }//FindAvaliabilityBySparePartId
-
-        /// <summary>
-        /// Возвращает кол-во записей данной SparePart (со скольких приходов данная запчасть сейчас в наличии, 0 -- запчасти нет в наличии.) 
-        /// </summary>
-        /// <param name="sparePartId">Ид искомой SP</param>
-        /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
-        /// <returns></returns>
-        public static int FindCountOfEntrySparePartInAvaliability(int sparePartId, SQLiteConnection openConnection)
-        {
-            var cmd = new SQLiteCommand("SELECT COUNT() FROM SpareParts AS sp JOIN Avaliability AS av ON sp.SparePartId = av.SparePartId WHERE sp.SparePartId = @SparePartId;", openConnection);
-            cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-
-            var dataReader = cmd.ExecuteReader();
-            dataReader.Read();
-
-            return Convert.ToInt32(dataReader["COUNT()"]);
-        }//FindCountOfEntrySparePart
-        /// <summary>
-        /// Возвращает полный список готовый к выводу всех запчастей кот. сейчас в наличии.
-        /// </summary>
-        /// <returns></returns>
-        public static IList<SparePart> FindSparePartAvailability()
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                var cmd = new SQLiteCommand("SELECT DISTINCT SparePartId FROM Avaliability;", connection);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    int sparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-
-                    spareParts.Add(FindSparePartById(sparePartId, connection));
-                }//while
-
-                connection.Close();
-            }//using
-
-            return spareParts;
-        }//FindSparePartAvailability
+       
 
 
 
@@ -1231,6 +1151,9 @@ namespace PartsApp
             return availabilityList;
         }//FindAvailability
 
+
+
+
         private static Availability CreateAvailability(SQLiteDataReader dataReader, SparePart sparePart)
         {
             Availability avail = new Availability
@@ -1259,13 +1182,14 @@ namespace PartsApp
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
         #region *****************Поиск по таблицам SpareParts. *********************************************************************
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         /// <summary>
-        /// Возвращает SparePart заполненный только полями из таблицы SpareParts, остальные поля не заполняются.
+        /// Возвращает объект типа SparePart, найденный по заданному Id, или null если такого объекта не найдено.
         /// </summary>
-        /// <param name="sparePartId">Ид заполняемой SP</param>
+        /// <param name="sparePartId">Ид товара</param>
         /// <returns></returns>
-        public static SparePart FindSparePartById(int sparePartId)
+        public static SparePart FindSparePart(int sparePartId)
         {
             SparePart sparePart = null;
 
@@ -1273,21 +1197,21 @@ namespace PartsApp
             {
                 connection.Open();
 
-                sparePart = FindSparePartById(sparePartId, connection);
+                sparePart = FindSparePart(sparePartId, connection);
                 
                 connection.Close();
             }//using
 
             return sparePart;
-        }//FindSparePartById
+        }//FindSparePart
 
         /// <summary>
-        /// /// Возвращает SparePart заполненный только полями из таблицы SpareParts, остальные поля не заполняются.
+        /// Возвращает объект типа SparePart, найденный по заданному Id, или null если такого объекта не найдено.
         /// </summary>
-        /// <param name="sparePartId">Ид заполняемой SP</param>
+        /// <param name="sparePartId">Ид товара</param>
         /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
-        /// <returns>Заполненный SparePart</returns>
-        private static SparePart FindSparePartById(int sparePartId, SQLiteConnection openConnection)
+        /// <returns></returns>
+        private static SparePart FindSparePart(int sparePartId, SQLiteConnection openConnection)
         {
             SparePart sparePart = null;
 
@@ -1301,7 +1225,10 @@ namespace PartsApp
             }//using dataReader
 
             return sparePart;
-        }//FindSparePartById
+        }//FindSparePart
+
+
+
         /// <summary>
         /// Возвращает список запчастей с заданным артикулом, заполненных только полями таблицы SpareParts, остальные поля не заполнены. 
         /// </summary>
@@ -1317,35 +1244,13 @@ namespace PartsApp
 
                 IList<int> sparePartsId = FindSparePartsIdByArticul(sparePartArticul, connection);
                 foreach (var sparePartId in sparePartsId)
-                    spareParts.Add(FindSparePartById(sparePartId, connection));
+                    spareParts.Add(FindSparePart(sparePartId, connection));
 
                 connection.Close();
             }//using
             return spareParts;
         }//FindSparePartsIdByArticul
         
-        public static IList<int> FindSparePartsIdByArticul(string sparePartArticul)
-        {
-            IList<int> sparePartsId = new List<int>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                var cmd = new SQLiteCommand("SELECT SparePartId FROM SpareParts WHERE Articul LIKE @Articul;", connection);
-
-                cmd.Parameters.AddWithValue("@Articul", sparePartArticul);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    sparePartsId.Add(Convert.ToInt32(dataReader["SparePartId"]));
-                }//while
-
-                connection.Close();
-            }//using
-            return sparePartsId;
-        }//FindSparePartsIdByArticul
         public static IList<int> FindSparePartsIdByArticul(string sparePartArticul, SQLiteConnection openConnection)
         {
             IList<int> sparePartsId = new List<int>();
@@ -1363,29 +1268,6 @@ namespace PartsApp
             return sparePartsId;
         }//FindSparePartsIdByArticul
 
-        /// <summary>
-        /// Возвращает полностью готовый к выводу список всех запчастей в БД с общим кол-вом.
-        /// </summary>
-        /// <returns></returns>
-        public static IList<SparePart> FindAllSparePartsToDisplay()
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                var cmd = new SQLiteCommand("SELECT SparePartId FROM SpareParts;", connection);
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    int sparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-
-                    spareParts.Add(FindSparePartById(sparePartId, connection));
-                }//while
-                connection.Close();
-            }//using
-            return spareParts;
-        }//FindAllSparePartsToDisplay
 
 
 
@@ -1403,8 +1285,7 @@ namespace PartsApp
 
 
 
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
         #region *****************Поиск по полям остальных таблиц.*******************************************************************
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2178,7 +2059,7 @@ namespace PartsApp
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
-                    sparePartsList.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"])));
+                    sparePartsList.Add(FindSparePart(Convert.ToInt32(dataReader["SparePartId"])));
                 connection.Close();
             }//using
 
@@ -2235,7 +2116,7 @@ namespace PartsApp
         {
             return new OperationDetails
             (
-                sparePart : FindSparePartById(Convert.ToInt32(dataReader["SparePartId"])),
+                sparePart : FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
                 purchase  : purchase,
                 count     : Convert.ToSingle(dataReader["Count"]),
                 price     : Convert.ToSingle(dataReader["Price"])
@@ -2580,39 +2461,7 @@ namespace PartsApp
 
             return spareParts;
 
-        }//SearchSparePartsByArticul
-
-        /// <summary>
-        /// Возвращает список размера не более limit, состоящий из запчастей в наличии чьи Title имеют совпадение с параметром title. 
-        /// </summary>
-        /// <param name="title">Строка по которой ищутся совпадения.</param>
-        /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSparePartsAvaliablityByTitle(string title, int limit)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND sp.Title LIKE @Title LIMIT @Limit", connection);
-
-                cmd.Parameters.AddWithValue("@Title", title + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-                
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    SparePart sparePart = new SparePart();
-                    sparePart = CreateFullSparePart(dataReader);
-                    spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-
-            return spareParts;
-        }//SearchSparePartsByTitle
+        }//SearchSparePartsByArticul       
 
         /// <summary>
         /// Возвращает список размера не более limit, состоящий из запчастей в Наличии, чьи Title имеют совпадение с параметром title. 
@@ -2661,138 +2510,9 @@ namespace PartsApp
             }//using
 
             return spareParts;
-        }//SearchSparePartsAvaliablityByTitle
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из заданного кол-ва эл-тов в Наличии, найдейнных по заданному параметру. 
-        /// </summary>
-        /// <param name="titleOrArticul">Title или Articul совпадение с которым нужно искать.</param>
-        /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSpAvaliabilityByTitleOrArticulToDisplay(string titleOrArticul, int limit)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
+        }//SearchSparePartsAvaliablityByTitle        
+                        
 
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = 
-                   "SELECT DISTINCT a.SparePartId FROM SpareParts AS sp JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId " +
-                   "WHERE sp.Articul LIKE @TitleOrArticul OR sp.Title LIKE @TitleOrArticul LIMIT @Limit;";
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@TitleOrArticul", titleOrArticul + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;    
-        
-        }//SearchSpAvaliabilityByTitleOrArticulToDisplay
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из всех эл-тов в Наличии, найдейнных по заданному параметру. 
-        /// </summary>
-        /// <param name="titleOrArticul">Title или Articul совпадение с которым нужно искать.</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSpAvaliabilityByTitleOrArticulToDisplay(string titleOrArticul)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = 
-                "SELECT DISTINCT a.SparePartId FROM SpareParts AS sp JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId " +
-                "WHERE sp.Articul LIKE @TitleOrArticul OR sp.Title LIKE @TitleOrArticul;";
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@TitleOrArticul", titleOrArticul + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;
-
-        }//SearchSpAvaliabilityByTitleOrArticulToDisplay
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из эл-тов в Наличии, найдейнных по заданным параметрам.
-        /// </summary>
-        /// <param name="title">Искомый Title</param>
-        /// <param name="Articul">Искомый Articul</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSpAvaliabilityByTitleAndArticulToDisplay(string title, string articul)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "SELECT DISTINCT a.SparePartId FROM SpareParts AS sp JOIN Avaliability AS a " +
-                                     "ON sp.SparePartId = a.SparePartId " +
-                                     "AND sp.Articul LIKE @Articul OR sp.Title LIKE @Title;";
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@Title", title + "%");
-                cmd.Parameters.AddWithValue("@Articul", articul + "%");
-
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;
-
-        }//SearchSpAvaliabilityByTitleAndArticulToDisplay
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из заданного кол-ва эл-тов найдейнных по заданному параметру. 
-        /// </summary>
-        /// <param name="titleOrArticul">Title или Articul совпадение с которым нужно искать.</param>
-        /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSpByTitleOrArticulToDisplay(string titleOrArticul, int limit)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT SparePartId FROM SpareParts WHERE Articul LIKE @TitleOrArticul OR Title LIKE @TitleOrArticul LIMIT @limit;", connection);
-
-                cmd.Parameters.AddWithValue("@TitleOrArticul", titleOrArticul + "%");
-                cmd.Parameters.AddWithValue("@limit", limit);
-
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;
-        }//SearchByTitleOrArticul
         /// <summary>
         /// Возвращает полностью готовый для отображения в общей таблице список из заданного кол-ва эл-тов найдейнных по заданному параметру. 
         /// </summary>
@@ -2800,29 +2520,9 @@ namespace PartsApp
         /// <returns></returns>
         public static IList<SparePart> SearchSpByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf)
         {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                const string query = "SELECT SparePartId FROM SpareParts AS sp LEFT JOIN Manufacturers AS m "
-                                   + "ON sp.ManufacturerId = m.ManufacturerId "
-                                   + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul "
-                                   + "OR ToLower(sp.Title) LIKE @TitleOrArticul OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@TitleOrArticul", "%" + titleOrArticulOrManuf.ToLower() + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;
+            return SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArticulOrManuf, -1);
         }//SearchByTitleOrArticul
+
         /// <summary>
         /// Возвращает полностью готовый для отображения в общей таблице список из заданного кол-ва эл-тов найдейнных по заданному параметру. 
         /// </summary>
@@ -2849,7 +2549,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePart(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -2882,7 +2582,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePart(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -2919,7 +2619,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePart(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -2927,92 +2627,8 @@ namespace PartsApp
             return spareParts;
 
         }//SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDispla
+                        
         
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из всех эл-тов найдейнных по заданному параметру. 
-        /// </summary>
-        /// <param name="titleOrArticul">Title или Articul совпадение с которым нужно искать.</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSpByTitleOrArticulToDisplay(string titleOrArticul)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT SparePartId FROM SpareParts WHERE Articul LIKE @TitleOrArticul OR Title LIKE @TitleOrArticul;", connection);
-
-                cmd.Parameters.AddWithValue("@TitleOrArticul", titleOrArticul + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;
-        }//SearchByTitleOrArticul
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из всех эл-тов найдейнных по заданным параметрам.
-        /// </summary>
-        /// <param name="title">Искомый Title</param>
-        /// <param name="Articul">Искомый Articul</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSpByTitleAndArticulToDisplay(string title, string articul)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT SparePartId FROM SpareParts WHERE Articul LIKE @Articul OR Title LIKE @Title;", connection);
-
-                cmd.Parameters.AddWithValue("@Title", title + "%");
-                cmd.Parameters.AddWithValue("@Articul", articul + "%");
-
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;
-        }//SearchByTitleOrArticul
-
-        /// <summary>
-        /// Возвращает список размера не более limit, состоящий из запчастей чьи Title имеют совпадение с параметром title. 
-        /// </summary>
-        /// <param name="title">Строка по которой ищутся совпадения.</param>
-        /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSparePartsByTitle(string title, int limit)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM  SpareParts WHERE Title LIKE @Title LIMIT @Limit", connection);
-
-                cmd.Parameters.AddWithValue("@Title", title + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    SparePart sparePart = CreateSparePart(dataReader);
-                    spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-
-            return spareParts;
-        }//SearchSparePartByTitle
         /// <summary>
         /// Возвращает список размера не более limit, состоящий из запчастей чьи Title имеют совпадение с параметром title. 
         /// </summary>
@@ -3059,66 +2675,7 @@ namespace PartsApp
             return spareParts;
         
         }//SearchSparePartsByTitle
-        /// <summary>
-        /// Возвращает список всех SparePart найденных по совпадению с заданным артикулом.
-        /// </summary>
-        /// <param name="articul">Артикул по которому ищутся совпадения.</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSparePartsByArticul(string articul)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM SpareParts WHERE Articul LIKE @Articul;", connection);
-
-                cmd.Parameters.AddWithValue("@Articul", articul + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    SparePart sparePart = new SparePart();
-                    sparePart = CreateSparePart(dataReader);
-
-                    spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-
-            return spareParts;
-        }//SearchSparePartsByArticul
-        /// <summary>
-        /// Возвращает список всех SparePart размером не более limit, найденных по совпадению с заданным артикулом.
-        /// </summary>
-        /// <param name="articul">Артикул по которому ищутся совпадения.</param>
-        /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSparePartsByArticul(string articul, int limit)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM SpareParts WHERE Articul LIKE @Articul LIMIT @Limit;", connection);
-
-                cmd.Parameters.AddWithValue("@Articul", articul + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    SparePart sparePart = new SparePart();
-                    sparePart = CreateSparePart(dataReader);
-
-                    spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-
-            return spareParts;
-        }//SearchSparePartsByArticul
+                
         /// <summary>
         /// Возвращает список всех SparePart размером не более limit, найденных по совпадению с заданным артикулом.
         /// </summary>
@@ -3165,342 +2722,10 @@ namespace PartsApp
 
             return spareParts;
 
-        }//SearchSparePartsByArticul
-        /// <summary>
-        /// Возвращает массив строк, состоящий из названий всех availabilityList совпадающих с переданным параметром.
-        /// </summary>
-        /// <param name="title">Строка по которой нужно искать совпадение.</param>
-        /// <returns></returns>
-        public static string[] SearchSparePartsTitleByTitle(string title)
-        {
-            IList<string> titlesList = new List<string>();
+        }//SearchSparePartsByArticul           
 
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT Title FROM SpareParts WHERE Title LIKE @Title;", connection);
 
-                cmd.Parameters.AddWithValue("@Title", title + "%");
 
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    titlesList.Add(dataReader["Title"] as string);
-                }//while
-                connection.Close();
-            }//using
-
-            //создаём массив string.
-            string[] titles = new string[titlesList.Count];
-            for (int i = 0; i < titles.Length; ++i)
-                titles[i] = titlesList[i];
-
-            return titles;        
-        }//SearchSparePartsTitle
-        /// <summary>
-        /// Возвращает массив строк, состоящий из названий всех availabilityList совпадающих с переданным параметром.
-        /// </summary>
-        /// <param name="title">Строка по которой нужно искать совпадение.</param>
-        /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>
-        /// <returns></returns>
-        public static string[] SearchSparePartsTitleByTitle(string title, int limit)
-        {
-            IList<string> titlesList = new List<string>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT Title FROM SpareParts WHERE Title LIKE @Title LIMIT @Limit;", connection);
-
-                cmd.Parameters.AddWithValue("@Title", title + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    titlesList.Add(dataReader["Title"] as string);
-                }//while
-                connection.Close();
-            }//using
-
-            //создаём массив string.
-            string[] titles = new string[titlesList.Count];
-            for (int i = 0; i < titles.Length; ++i)
-                titles[i] = titlesList[i];
-
-            return titles;
-        }//SearchSparePartsTitle
-        /// <summary>
-        /// Возвращает массив строк, состоящий из артикулов всех availabilityList совпадающих с переданным параметром.
-        /// </summary>
-        /// <param name="title">Строка по которой нужно искать совпадение.</param>
-        /// <returns></returns>
-        public static string[] SearchSparePartsArticulByArticul(string articul)
-        {
-            IList<string> articulsList = new List<string>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT Articul FROM SpareParts WHERE Articul LIKE @Articul", connection);
-
-                cmd.Parameters.AddWithValue("@Articul", articul + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    articulsList.Add(dataReader["Articul"] as string);
-                }//while
-                connection.Close();
-            }//using
-
-            //создаём массив string.
-            string[] articuls = new string[articulsList.Count];
-            for (int i = 0; i < articuls.Length; ++i)
-                articuls[i] = articulsList[i];
-
-            return articuls;   
-        }//SearchSparePartsArticul
-        /// <summary>
-        /// Возвращает массив строк, состоящий из артикулов всех availabilityList совпадающих с переданным параметром.
-        /// </summary>
-        /// <param name="title">Строка по которой нужно искать совпадение.</param>
-        /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>
-        /// <returns></returns>
-        public static string[] SearchSparePartsArticulByArticul(string articul, int limit)
-        {
-            IList<string> articulsList = new List<string>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                var cmd = new SQLiteCommand("SELECT Articul FROM SpareParts WHERE Articul LIKE @Articul LIMIT @Limit", connection);
-
-                cmd.Parameters.AddWithValue("@Articul", articul + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    articulsList.Add(dataReader["Articul"] as string);
-                }//while
-                connection.Close();
-            }//using
-
-            //создаём массив string.
-            string[] articuls = new string[articulsList.Count];
-            for (int i = 0; i < articuls.Length; ++i)
-                articuls[i] = articulsList[i];
-
-            return articuls;
-        }//SearchSparePartsArticul       
-
-        //Поиск по Manufacturer.
-        /// <summary>
-        /// Возвращает массив строк состоящий из имен производителей подходящих под заданный параметр.
-        /// </summary>
-        /// <param name="manufacturerName">Имя по которому ищутся совпадения.</param>
-        /// <returns></returns>
-        public static string[] SearchManufacturersName(string manufacturerName)
-        {
-            IList<string> manufacturersName = new List<string>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "SELECT ManufacturerName FROM Manufacturers WHERE ManufacturerName LIKE @ManufacturerName;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@ManufacturerName", manufacturerName + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    manufacturersName.Add(dataReader["ManufacturerName"] as string);
-                }//while
-
-                connection.Close();
-            }//using
-
-            //создаём массив string.
-            string[] manuf = new string[manufacturersName.Count];
-            for (int i = 0; i < manuf.Length; ++i)
-                manuf[i] = manufacturersName[i];
-
-            return manuf;
-        }//FindAllManufacturersName
-        /// <summary>
-        /// Возвращает массив строк состоящий из имен производителей подходящих под заданный параметр.
-        /// </summary>
-        /// <param name="manufName">Имя по которому ищутся совпадения.</param>
-        /// <param name="limit">Ограничение по максимально возможному кол-ву найденных совпадений.</param>
-        /// <returns></returns>
-        public static string[] SearchManufacturersName(string manufacturerName, int limit)
-        {
-            IList<string> manufacturersName = new List<string>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "SELECT ManufacturerName FROM Manufacturers WHERE ManufacturerName LIKE @ManufacturerName LIMIT @limit;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@ManufacturerName", manufacturerName + "%");
-                cmd.Parameters.AddWithValue("@limit", limit);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    manufacturersName.Add(dataReader["ManufacturerName"] as string);
-                }//while
-
-                connection.Close();
-            }//using
-
-            //создаём массив string.
-           string[] manuf = new string[manufacturersName.Count];
-            for (int i = 0; i < manuf.Length; ++i)
-                manuf[i] = manufacturersName[i];
-
-            return manuf;
-        }//FindAllManufacturersName
-
-        //Поиск по Supplier.
-        /// <summary>
-        /// Возвращает массив строк состоящий из имен поставщиков подходящих под заданный параметр.
-        /// </summary>
-        /// <param name="supplierName">Имя по которому ищутся совпадения.</param>
-        /// <returns></returns>
-        public static string[] SearchSuppliersName(string supplierName)
-        {
-            IList<string> suppliersName = new List<string>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT SupplierName FROM Suppliers WHERE SupplierName LIKE @SupplierName;", connection);
-
-                cmd.Parameters.AddWithValue("@SupplierName", supplierName + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    suppliersName.Add(dataReader["SupplierName"] as string);
-                }//while
-                connection.Close();
-            }//using
-
-            //создаём массив string.
-            string[] suppliers = new string[suppliersName.Count];
-            for (int i = 0; i < suppliers.Length; ++i)
-                suppliers[i] = suppliersName[i];
-
-            return suppliers;
-        }//SearchSuppliersName
-        /// <summary>
-        /// Возвращает массив строк состоящий из имен поставщиков подходящих под заданный параметр.
-        /// </summary>
-        /// <param name="supplierName">Имя по которому ищутся совпадения.</param>
-        /// <param name="limit">Ограничение по максимально возможному кол-ву найденных совпадений.</param>
-        /// <returns></returns>
-        public static string[] SearchSuppliersName(string supplierName, int limit)
-        {
-            IList<string> suppliersName = new List<string>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT SupplierName FROM Suppliers WHERE SupplierName LIKE @SupplierName LIMIT @limit;", connection);
-
-                cmd.Parameters.AddWithValue("@SupplierName", supplierName + "%");
-                cmd.Parameters.AddWithValue("@limit", limit);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    suppliersName.Add(dataReader["SupplierName"] as string);
-                }//while
-                connection.Close();
-            }//using
-
-            //создаём массив string.
-            string[] suppliers = new string[suppliersName.Count];
-            for (int i = 0; i < suppliers.Length; ++i)
-                suppliers[i] = suppliersName[i];
-
-            return suppliers;
-        }//SearchSuppliersName
-
-
-
-
-
-        #region Поиск по таблице Customers.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Возвращает коллекцию Customer по совпадению с заданным именем.
-        /// </summary>
-        /// <param name="customerName">Имя по совпадению с которым надо найти Customer-ов.</param>
-        /// <returns></returns>
-        public static IList<Customer> SearchCustomers(string customerName)
-        {
-            IList<Customer> customers = new List<Customer>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                var cmd = new SQLiteCommand("SELECT * FROM Customers WHERE CustomerName LIKE @CustomerName;", connection);
-
-                cmd.Parameters.AddWithValue("@CustomerName", customerName + "%");
-                
-                var dataReader = cmd.ExecuteReader();
-                
-                while (dataReader.Read())
-                {
-                    Customer customer = new Customer();
-                    customer.ContragentId = Convert.ToInt32(dataReader["CustomerId"]);
-                    customer.ContragentName = dataReader["CustomerName"] as string;
-                    customer.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    customer.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
-
-                    customers.Add(customer);
-                }//while
-
-                connection.Close();
-            }//using
-            return customers;
-        }//FindCustomerIdByName
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion
 
 
 
@@ -3641,6 +2866,7 @@ namespace PartsApp
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
+
     }//PartsDAL
 
     [SQLiteFunction(Arguments = 1, FuncType = FunctionType.Scalar, Name = "ToLower")]

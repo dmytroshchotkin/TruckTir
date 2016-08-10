@@ -506,11 +506,13 @@ namespace PartsApp
                 if (String.IsNullOrWhiteSpace(searchTextBox.Text))
                 {
                     if (onlyAvaliabilityCheckBox.Checked)
-                        ChangeDataSource(PartsDAL.FindSparePartAvailability());
-                    else ChangeDataSource(PartsDAL.FindAllSparePartsToDisplay());
+                        ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(String.Empty));
+                    else
+                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(String.Empty));
 
                     return;
                 }//if
+
                 //Если нет элементов удовлетворяющих поиску, выводим сообщение об этом.
                 if (searchSpList.Count == 0)
                 {
@@ -524,10 +526,10 @@ namespace PartsApp
                 //если выбор не из вып. списка.
                 if (titleOrArtOrManuf.Length == 1)
                 {
-                    if (onlyAvaliabilityCheckBox.Checked == false)
-                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArtOrManuf[0]));
-                    else 
+                    if (onlyAvaliabilityCheckBox.Checked)
                         ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(titleOrArtOrManuf[0]));
+                    else 
+                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArtOrManuf[0]));
 
                     autoCompleteListBox.Visible = false;
                     return;
@@ -945,19 +947,21 @@ namespace PartsApp
             DataGridView grid = (DataGridView)sender;
             DataGridViewRow row = grid.Rows[e.RowIndex];
             DataGridViewColumn col = grid.Columns[e.ColumnIndex];
-            if (row.DataBoundItem != null && col.DataPropertyName.Contains("."))
-            {
-                string[] props = col.DataPropertyName.Split('.');
-                Type type = row.DataBoundItem.GetType();
-                System.Reflection.PropertyInfo propInfo = type.GetProperty(props[0]);
-                object val = propInfo.GetValue(row.DataBoundItem, null);
-                for (int i = 1; i < props.Length; i++)
+
+            if (row.DataBoundItem != null)
+                if (col.DataPropertyName.Contains("."))
                 {
-                    propInfo = val.GetType().GetProperty(props[i]);
-                    val = propInfo.GetValue(val, null);
-                }//for
-                e.Value = val;
-            }//if
+                    string[] props = col.DataPropertyName.Split('.');
+                    Type type = row.DataBoundItem.GetType();
+                    System.Reflection.PropertyInfo propInfo = type.GetProperty(props[0]);
+                    object val = propInfo.GetValue(row.DataBoundItem, null);
+                    for (int i = 1; i < props.Length; i++)
+                    {
+                        propInfo = val.GetType().GetProperty(props[i]);
+                        val = propInfo.GetValue(val, null);
+                    }//for
+                    e.Value = val;
+                }//if
         }//extPartsDataGridView_CellFormatting
 
         private void extPartsDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -1089,7 +1093,8 @@ namespace PartsApp
         private void partsDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             //Если заголовок то ничего не делаем.
-            if (e.RowIndex == partsDataGridView.Columns[0].HeaderCell.RowIndex) return;
+            if (e.RowIndex == partsDataGridView.Columns[0].HeaderCell.RowIndex) 
+                return;
 
             //Если ЛКМ
             if (e.Button == MouseButtons.Left)
@@ -1209,7 +1214,7 @@ namespace PartsApp
             SpList = orderSPList;
             origSpList = Cloner.Clone(spareParts.OrderBy(sp => sp.Title).ToList());
 
-            ExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
+            ExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);   /*ERROR надо ли это вообще?*/
             origExtSpList = PartsDAL.FindAvaliabilityBySparePartId(SpList);
   
         }//ChangeDataSource
@@ -1377,7 +1382,7 @@ namespace PartsApp
 
             for (int i = 0; i < spareParts.Count; ++i)
             {
-                //_spareParts.Add(new SparePart(spareParts[i]));
+                _spareParts.Add(new SparePart(spareParts[i]));
             }
 
             return _spareParts;

@@ -24,7 +24,7 @@ namespace PartsApp
         public AddSparePartForm(int sparePartModifyId)
         {
             InitializeComponent();
-            editSparePart = PartsDAL.FindSparePartById(sparePartModifyId); 
+            editSparePart = PartsDAL.FindSparePart(sparePartModifyId); 
 
             //Заполняем все поля в форме по заданному Id.
             articulTextBox.Text = editSparePart.Articul;
@@ -70,7 +70,7 @@ namespace PartsApp
             else //Если артикул введен.
             {
                 //если такой артикул уже есть в базе
-                if (PartsDAL.FindSparePartsIdByArticul(articulTextBox.Text).Count > 0)
+                if (PartsDAL.FindSparePartsByArticul(articulTextBox.Text).Count > 0)
                 {
                     //если (доб-ся новая ед. товара или (редактируется уже существующая, но артикул изменен)), выводим предупреждение, но разрешаем дальнейший ввод инф-ции.
                     if (editSparePart == null || (editSparePart != null && editSparePart.Articul != articulTextBox.Text))
