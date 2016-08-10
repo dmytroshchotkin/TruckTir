@@ -147,18 +147,17 @@ namespace PartsApp
         /// </summary>
         /// <param name="avail">уменьшаемый или удаляемый товар</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
-        private static void SaleSparePartAvaliability(SparePart sparePart, SQLiteCommand cmd)
+        private static void SaleSparePartAvaliability(OperationDetails operDet, SQLiteCommand cmd)
         {
             //Узнаем количество данного товара в наличии.
-            double spAvaliabilityCount = FindSparePartAvaliabilityCount(sparePart.SparePartId, sparePart.PurchaseId);//FindSparePartAvaliability(avail.SparePartId, avail.PurchaseId, cmd);
-            //В зависимости от того на осн. или вирт. складе находится товар, узнаем его количестов. 
-            double saleSpCount = (sparePart.VirtCount == 0) ? sparePart.Count : sparePart.VirtCount;
+            double spAvaliabilityCount = FindSparePartAvaliabilityCount(operDet.SparePart.SparePartId, operDet.Purchase.OperationId);
+            
 
             //Если кол-во продаваемого товара с данного прихода равно всему кол-во товара данной записи, удаляем из таблицы эту запись, иначе обновляем кол-во товара в базе.
-            if (spAvaliabilityCount == saleSpCount) 
-                DeleteSparePartAvaliability(sparePart.SparePartId, sparePart.PurchaseId, cmd);
+            if (spAvaliabilityCount == operDet.Count)
+                DeleteSparePartAvaliability(operDet.SparePart.SparePartId, operDet.Purchase.OperationId, cmd);
             else
-                UpdateSparePartСountAvaliability(sparePart.SparePartId, sparePart.PurchaseId, spAvaliabilityCount - saleSpCount, cmd);
+                UpdateSparePartСountAvaliability(operDet.SparePart.SparePartId, operDet.Purchase.OperationId, spAvaliabilityCount - operDet.Count, cmd);
 
         }//SaleSparePartAvaliability
 
@@ -204,7 +203,7 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@Articul", sparePart.Articul);
                 cmd.Parameters.AddWithValue("@Title", sparePart.Title);
                 cmd.Parameters.AddWithValue("@Description", sparePart.Description);
-                cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.ManufacturerId);
+                cmd.Parameters.AddWithValue("@ManufacturerId", FindManufacturersIdByName(sparePart.Manufacturer));
                 cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
 
                 cmd.ExecuteNonQuery();
@@ -234,7 +233,7 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@Articul", sparePart.Articul);
                 cmd.Parameters.AddWithValue("@Title", sparePart.Title);
                 cmd.Parameters.AddWithValue("@Description", sparePart.Description);
-                cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.ManufacturerId);
+                cmd.Parameters.AddWithValue("@ManufacturerId", FindManufacturersIdByName(sparePart.Manufacturer));
                 cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
 
                 cmd.ExecuteNonQuery();
@@ -686,9 +685,8 @@ namespace PartsApp
         /// <param name="availabilityList">Список продаваемого товара.</param>
         /// <param name="sale">Информация о продаже.</param>
         /// <returns></returns>
-        public static int AddSale(IList<SparePart> spareParts, IList<SparePart> extSpareParts, Sale sale)
+        public static int AddSale(Sale sale)
         {
-            int saleId = 0;
             string message = null;
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -701,13 +699,13 @@ namespace PartsApp
                         try
                         {
                             //вставляем запись в таблицу Sales.
-                            saleId = AddSale(sale, cmd);
+                            sale.OperationId = AddSale(sale, cmd);
                             //вставляем записи в SaleDetails.
-                            foreach (SparePart sp in extSpareParts)
-                                SaleSparePartAvaliability(sp, cmd);
+                            foreach (OperationDetails operDet in sale.OperationDetailsList)
+                                SaleSparePartAvaliability(operDet, cmd);
                             // и модифицируем Avaliability.
-                            foreach (SparePart sp in spareParts)
-                                AddSaleDetail(saleId, sp.SparePartId, (double)sp.Price, sp.Count, cmd);
+                            foreach (OperationDetails operDet in sale.OperationDetailsList)
+                                AddSaleDetail(sale.OperationId, operDet, cmd);
 
                             trans.Commit();
                         }//try
@@ -723,7 +721,7 @@ namespace PartsApp
             }//using connection
             if (message != null) throw new Exception(message);
 
-            return saleId;
+            return sale.OperationId;
         }//AddSale
 
         //Модификация таблицы Sales
@@ -769,7 +767,7 @@ namespace PartsApp
         /// <param name="sellingPrice">Отпускная цена товара</param>
         /// <param name="quantity">Кол-во товара</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
-        private static void AddSaleDetail(int saleId, int sparePartId, double sellingPrice, double quantity, SQLiteCommand cmd)
+        private static void AddSaleDetail(int saleId, OperationDetails operDet, SQLiteCommand cmd)
         {
             string query = "INSERT INTO SaleDetails VALUES (@OperationId, @SparePartId, @Quantity, @SellingPrice);";
 
@@ -778,9 +776,9 @@ namespace PartsApp
             cmd.Parameters.Clear();
 
             cmd.Parameters.AddWithValue("@OperationId", saleId);
-            cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-            cmd.Parameters.AddWithValue("@Quantity", quantity);
-            cmd.Parameters.AddWithValue("@SellingPrice", sellingPrice);
+            cmd.Parameters.AddWithValue("@SparePartId", operDet.SparePart.SparePartId);
+            cmd.Parameters.AddWithValue("@Quantity", operDet.Count);
+            cmd.Parameters.AddWithValue("@SellingPrice", operDet.Purchase);
             
             cmd.ExecuteNonQuery();
         }//AddSaleDetail
@@ -1076,38 +1074,6 @@ namespace PartsApp
             }//using
             return count;        
         }//FindSparePartAvaliabilityCount
-
-        public static IList<SparePart> FindAllUniqueSparePartsAvaliability(SQLiteConnection openConnection)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            const string query = "SELECT * FROM Avaliability as av "
-                               + "JOIN SpareParts as sp "
-                               + "ON av.SparePartId = sp.SparePartId "
-                               + "GROUP BY av.SparePartId;";
-            SQLiteCommand cmd = new SQLiteCommand(query, openConnection);
-
-            var dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
-            {
-                SparePart sparePart = new SparePart();
-
-                sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                sparePart.Photo = (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string;
-                sparePart.SparePartId = Convert.ToInt32(dataReader["SparePartId"]);
-                sparePart.Articul = dataReader["Articul"] as string;
-                sparePart.Title = dataReader["Title"] as string;
-
-                sparePart.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
-
-                sparePart.ManufacturerId = (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]);
-                sparePart.MeasureUnit = dataReader["MeasureUnit"] as string;
-
-                spareParts.Add(sparePart);
-            }//while     
-
-            return spareParts;
-        }//FindAllUniqueSparePartsAvaliability
         
         //Нахождение кол-ва SparePart на осн. и вирт. складах отдельно.
         public static IList<SparePart> FindAvaliabilityBySparePartId(int sparePartId)
@@ -1189,68 +1155,6 @@ namespace PartsApp
             return spareParts;
         }//FindAvaliabilityBySparePartId
 
-        //Добавляет в передаваемый SparePart общее значение Count из таблицы Avaliability.
-        /// <summary>
-        /// Добавляет в передаваемый SparePart общее значение Count из таблицы Avaliability.
-        /// </summary>
-        /// <param name="avail">Модифицируемый SparePart</param>
-        /// <returns></returns>
-        public static SparePart FindUniqueSparePartsAvaliabilityCount(SparePart sparePart)
-        {
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "SELECT SUM(Count), StorageAdress "
-                                   + "FROM Avaliability "
-                                   + "WHERE SparePartId = @SparePartId "
-                                   + "GROUP BY StorageAdress;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    if ((dataReader["StorageAdress"] as string) == null) 
-                        sparePart.Count = Convert.ToDouble(dataReader["SUM(Count)"]);
-                    else 
-                        sparePart.VirtCount = Convert.ToDouble(dataReader["SUM(Count)"]);
-                }//while
-
-                connection.Close();
-            }//using
-            return sparePart;
-        }//FindAllUniqueSparePartAvaliability
-
-        /// <summary>
-        /// Добавляет в передаваемый SparePart общее значение Count из таблицы Avaliability.
-        /// </summary>
-        /// <param name="avail">Модифицируемый SparePart</param>
-        /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
-        /// <returns></returns>
-        public static SparePart FindUniqueSparePartsAvaliabilityCount(SparePart sparePart, SQLiteConnection openConnection)
-        {
-            const string query = "SELECT SUM(Count), StorageAdress "
-                                   + "FROM Avaliability "
-                                   + "WHERE SparePartId = @SparePartId "
-                                   + "GROUP BY StorageAdress;";
-            SQLiteCommand cmd = new SQLiteCommand(query, openConnection);
-
-            cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
-
-            var dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
-            {            
-                if ((dataReader["StorageAdress"] as string) == null) 
-                    sparePart.Count = Convert.ToDouble(dataReader["SUM(Count)"]);
-                else 
-                    sparePart.VirtCount = Convert.ToDouble(dataReader["SUM(Count)"]);
-            }//while    
-
-            return sparePart;
-        }//FindAllUniqueSparePartAvaliability
-
         /// <summary>
         /// Возвращает кол-во записей данной SparePart (со скольких приходов данная запчасть сейчас в наличии, 0 -- запчасти нет в наличии.) 
         /// </summary>
@@ -1271,7 +1175,7 @@ namespace PartsApp
         /// Возвращает полный список готовый к выводу всех запчастей кот. сейчас в наличии.
         /// </summary>
         /// <returns></returns>
-        public static IList<SparePart> FindAllSparePartsAvaliableToDisplay()
+        public static IList<SparePart> FindSparePartAvailability()
         {
             IList<SparePart> spareParts = new List<SparePart>();
 
@@ -1286,14 +1190,14 @@ namespace PartsApp
                 {
                     int sparePartId = Convert.ToInt32(dataReader["SparePartId"]);
 
-                    spareParts.Add(FindSparePartByIdToDisplay(sparePartId, connection));
+                    spareParts.Add(FindSparePartById(sparePartId, connection));
                 }//while
 
                 connection.Close();
             }//using
 
             return spareParts;
-        }//FindAllSparePartsAvaliableToDisplay
+        }//FindSparePartAvailability
 
 
 
@@ -1458,37 +1362,7 @@ namespace PartsApp
 
             return sparePartsId;
         }//FindSparePartsIdByArticul
-        /// <summary>
-        /// Возвращает SparePart полостью готовый для отображения в общей таблице.
-        /// </summary>
-        /// <param name="sparePartId">ИД искомого SparePart</param>
-        /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
-        /// <returns></returns>
-        public static SparePart FindSparePartByIdToDisplay(int sparePartId, SQLiteConnection openConnection)
-        {
-            SparePart sparePart = new SparePart();
-            //Находим кол-во записей с данной запчастью.
-            int countOfEntry = FindCountOfEntrySparePartInAvaliability(sparePartId, openConnection);
-            //Если нет в наличии.
-            if (countOfEntry == 0)
-                sparePart = FindSparePartById(sparePartId, openConnection);
-            //Если товар в наличии только с одного прихода
-            else if (countOfEntry == 1)
-                sparePart = FindAvaliabilityBySparePartId(sparePartId, openConnection)[0];
-            //Если товар в наличии с многочисленных приходов.                
-            else if (countOfEntry > 1)
-            {
-                IList<SparePart> spareParts = FindAvaliabilityBySparePartId(sparePartId, openConnection);
-                //Выводим в общ. таблицу значения товара с наибольшей ценой продажи.
-                sparePart = spareParts.OrderByDescending(sp => sp.SellingPrice).First();
 
-                FindUniqueSparePartsAvaliabilityCount(sparePart, openConnection);
-
-                sparePart.PurchaseId = -1; //Помечаем что у данной строки имеется подтаблица(т.е. болеее одного поставщика).
-            }//if    
-
-            return sparePart;
-        }//FindSparePartById
         /// <summary>
         /// Возвращает полностью готовый к выводу список всех запчастей в БД с общим кол-вом.
         /// </summary>
@@ -1506,7 +1380,7 @@ namespace PartsApp
                 {
                     int sparePartId = Convert.ToInt32(dataReader["SparePartId"]);
 
-                    spareParts.Add(FindSparePartByIdToDisplay(sparePartId, connection));
+                    spareParts.Add(FindSparePartById(sparePartId, connection));
                 }//while
                 connection.Close();
             }//using
@@ -2304,13 +2178,7 @@ namespace PartsApp
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
-                {
-                    SparePart sparePart = FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]));
-                    sparePart.Price = Convert.ToDouble(dataReader["Price"]);
-                    sparePart.Count = Convert.ToDouble(dataReader["Quantity"]);
-
-                    sparePartsList.Add(sparePart);
-                }//while
+                    sparePartsList.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"])));
                 connection.Close();
             }//using
 
@@ -2821,7 +2689,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -2853,7 +2721,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -2888,7 +2756,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -2918,7 +2786,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -2948,7 +2816,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -2981,7 +2849,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -3014,7 +2882,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -3051,7 +2919,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -3079,7 +2947,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -3108,7 +2976,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    spareParts.Add(FindSparePartByIdToDisplay(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    spareParts.Add(FindSparePartById(Convert.ToInt32(dataReader["SparePartId"]), connection));
                 }//while
 
                 connection.Close();
@@ -3673,18 +3541,16 @@ namespace PartsApp
         /// <returns></returns>
         private static SparePart CreateSparePart(SQLiteDataReader dataReader)
         {
-            SparePart sparePart = new SparePart
+            return new SparePart
             (
                 sparePartId    : Convert.ToInt32(dataReader["SparePartId"]),
                 photo          : dataReader["Photo"] as string,
                 articul        : dataReader["Articul"] as string,
                 title          : dataReader["Title"] as string,
-                description    : (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,                
-                manufacturerId : (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]),                              
-                measureUnit           : dataReader["MeasureUnit"] as string             
-            );
-
-            return sparePart;        
+                description    : (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,
+                manufacturer   : (dataReader["ManufacturerId"] == DBNull.Value) ? null : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])), 
+                measureUnit    : dataReader["MeasureUnit"] as string             
+            );     
         }//CreateSparePart
         /// <summary>
         /// /// Возвращает полный объект SparePart созданный из переданного dataReader.
@@ -3693,23 +3559,16 @@ namespace PartsApp
         /// <returns></returns>
         private static SparePart CreateFullSparePart(SQLiteDataReader dataReader)
         {
-            SparePart sparePart = new SparePart
+            return new SparePart
             (
                 sparePartId: Convert.ToInt32(dataReader["SparePartId"]),
-                photo: (dataReader["Photo"] == DBNull.Value) ? String.Empty : dataReader["Photo"] as string,
+                photo: dataReader["Photo"] as string,
                 articul: dataReader["Articul"] as string,
                 title: dataReader["Title"] as string,
                 description: (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,
-                manufacturerId: (dataReader["ManufacturerId"] == DBNull.Value) ? (int?)null : Convert.ToInt32(dataReader["ManufacturerId"]),
-                purchaseId: Convert.ToInt32(dataReader["OperationId"]),
-                measureUnit: dataReader["MeasureUnit"] as string,
-                storageAdress : dataReader["StorageAdress"] as string,
-                count: Convert.ToDouble(dataReader["Count"]),
-                price: Convert.ToDouble(dataReader["Price"]),
-                markup: (dataReader["Markup"] == DBNull.Value) ? (double?)null : Convert.ToDouble(dataReader["Markup"])
+                manufacturer: (dataReader["ManufacturerId"] == DBNull.Value) ? null : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
+                measureUnit: dataReader["MeasureUnit"] as string
             );
-
-            return sparePart;
         }//CreateFullSparePart
         /// <summary>
         /// Коннект к базе данных.

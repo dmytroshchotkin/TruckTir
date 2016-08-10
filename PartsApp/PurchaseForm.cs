@@ -570,7 +570,7 @@ namespace PartsApp
 
                         //Округляем Price до 2-х десятичных знаков.
                         price = Math.Round(price, 2, MidpointRounding.AwayFromZero);
-                        currentSparePart.Price = price;
+                        //currentSparePart.Price = price;
                         cell.Value = String.Format("{0:N2}", price);
 
                         amountCalculation(cell.OwningRow);
@@ -584,7 +584,7 @@ namespace PartsApp
                 {
                     if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
                     {
-                        double count = Convert.ToDouble(cell.Value);
+                        float count = Convert.ToSingle(cell.Value);
                         if (count == 0) 
                             throw new Exception(); //ввод нуля также является ошибкой.
 
@@ -596,7 +596,7 @@ namespace PartsApp
                         int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
 
                         currentSparePart = spareParts.First(sparePart => sparePart.SparePartId == sparePartId);
-                        currentSparePart.Count = count;
+                        currentSparePart.AvailabilityList[0].OperationDetails.Count = count;
 
                         amountCalculation(cell.OwningRow);
                         RowMarkupChanges(row); //расчитывае ЦенуПродажи и выводим её и Наценку.                        
@@ -630,18 +630,18 @@ namespace PartsApp
         /// <param name="row">Строка, в которой требуется рассчитать сумму</param>
         private void amountCalculation(DataGridViewRow row)
         {
-            if (currentSparePart.Count != 0 && currentSparePart.Price != null)
+            if (currentSparePart.AvailabilityList.Count != 0)
             {
                 //Узнаем была ли уже до этого введена цена, для изменения строки "итого".
                 if (row.Cells[Sum.Name].Value != null)
                     inTotal -= Convert.ToDouble((row.Cells[Sum.Name].Value));
 
                 //Рассчитываем сумму и отображаем в таблице.
-                double sum = Math.Round((double)currentSparePart.Price * currentSparePart.Count, 2, MidpointRounding.AwayFromZero);
-                row.Cells[Sum.Name].Value = String.Format("{0:N2}", sum);
+                //double sum = Math.Round((double)currentSparePart.Price * currentSparePart.Count, 2, MidpointRounding.AwayFromZero);
+                //row.Cells[Sum.Name].Value = String.Format("{0:N2}", sum);
 
                 //Меняем значение "Итого".
-                inTotal += sum;
+                //inTotal += sum;
                 inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
 
                 //Запрещаем дальнейшее редактирование кол-ва и цены.
@@ -842,9 +842,12 @@ namespace PartsApp
                 ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
 
                 ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;
-                ExcelApp.Cells[row, column + 4] = spareParts[i].Count;
-                ExcelApp.Cells[row, column + 5] = spareParts[i].Price;
-                ExcelApp.Cells[row, column + 6] = spareParts[i].Price * spareParts[i].Count;
+
+                float count = spareParts[i].AvailabilityList[0].OperationDetails.Count;
+                float price = spareParts[i].AvailabilityList[0].OperationDetails.Price;
+                ExcelApp.Cells[row, column + 4] = count;
+                ExcelApp.Cells[row, column + 5] = price;
+                ExcelApp.Cells[row, column + 6] = price * count;
             }//for
 
             //Обводим талицу рамкой. 
@@ -1075,7 +1078,6 @@ namespace PartsApp
         
         private void markupCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            //if (markupCheckBox.CheckState == CheckState.Checked)
             //Если ничего не введено то ничего не включаем.
             if (spareParts.Count == 0) 
             {
@@ -1086,8 +1088,9 @@ namespace PartsApp
                 return; 
             }//if
             //Если в таблице есть данные, проверяем везде ли указана цена и количество.
-            foreach (var sparePart in spareParts)
-                if (sparePart.Price == null || sparePart.Count == 0)
+            foreach (DataGridViewRow row in purchaseDataGridView.Rows)
+            {
+                if (row.Cells[Price.Index].Value == null || row.Cells[Count.Index].Value == null)
                 {
                     markupCheckBox.CheckedChanged -= markupCheckBox_CheckedChanged;
                     markupCheckBox.CheckState = CheckState.Unchecked;
@@ -1095,6 +1098,7 @@ namespace PartsApp
                     toolTip.Show("Не везде указана цена или количество товара", this, markupCheckBox.Location, 3000);
                     return;
                 }//if
+            }//foreach
 
             bool visible = purchaseDataGridView.Columns["Markup"].Visible;
 
@@ -1159,8 +1163,8 @@ namespace PartsApp
                 {
                     if (sparePart.SparePartId == Convert.ToInt32(row.Cells["SparePartId"].Value))
                     {
-                        sparePart.Markup = markup;
-                        row.Cells["SellingPrice"].Value = sparePart.SellingPrice;
+                        sparePart.AvailabilityList.ForEach(av => av.Markup = markup);
+                        row.Cells["SellingPrice"].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
                     }//if
                 }//foreach
             }//try
@@ -1207,9 +1211,15 @@ namespace PartsApp
         public Purchase CreatePurchaseFromForm()
         { 
             List<OperationDetails> operDetList = new List<OperationDetails>();
-            foreach (SparePart sparePart in spareParts)
+
+            foreach (DataGridViewRow row in purchaseDataGridView.Rows)
             {
-                OperationDetails od = new OperationDetails(sparePart, null, (float)sparePart.Count, (float)sparePart.Price);
+                float count = Convert.ToSingle(row.Cells[Count.Index].Value);
+                float price = Convert.ToSingle(row.Cells[Price.Index].Value);
+
+                int sparePartId = Convert.ToInt32(row.Cells[SparePartId.Index].Value);
+                SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
+                OperationDetails od = new OperationDetails(sparePart, null, count, price);
                 operDetList.Add(od);
             }//foreach
 
@@ -1251,13 +1261,13 @@ namespace PartsApp
                     && spareParts.Count != 0 && storageAdressBackPanel.BackColor != Color.Red)
                 {   
                     //Проверяем везде ли установлена цена и кол-во. 
-                    foreach (var sparePart in spareParts)
+                    foreach (DataGridViewRow row in purchaseDataGridView.Rows)
                     {
-                        if (sparePart.Count == 0 || sparePart.Price == null)
-                        {                            
+                        if (row.Cells[Price.Index].Value == null || row.Cells[Count.Index].Value == null)
+                        {                           
                             toolTip.Show("Не везде указана цена или количество товара", this, okButton.Location, 3000);
                             return;
-                        }
+                        }//if
                     }//foreach
 
                     Purchase purchase = CreatePurchaseFromForm();

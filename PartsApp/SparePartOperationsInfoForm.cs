@@ -48,17 +48,17 @@ namespace PartsApp
             //    row.Cells[ContragentCol.Index].Value = operat.Contragent.ContragentName;
             //    row.Cells[ContragentEmployeeCol.Index].Value = operat.ContragentEmployee;
 
-            //    SparePart sparePart = operat.OperationDetailsList.First(sp => sp.SparePartId == sparePartId);
-            //    row.Cells[UnitCol.Index].Value = sparePart.MeasureUnit;
-            //    row.Cells[CountCol.Index].Value = sparePart.Count;
+            //    SparePart operDet = operat.OperationDetailsList.First(sp => sp.SparePartId == sparePartId);
+            //    row.Cells[UnitCol.Index].Value = operDet.MeasureUnit;
+            //    row.Cells[CountCol.Index].Value = operDet.Count;
             //    //double? price = (operat.GetType() == typeof(Sale)) ? avail.SellingPrice : avail.Price;
-            //    double? price = sparePart.Price;
+            //    double? price = operDet.Price;
             //    row.Cells[PriceCol.Index].Value = price;
-            //    row.Cells[SumCol.Index].Value = price * sparePart.Count;
+            //    row.Cells[SumCol.Index].Value = price * operDet.Count;
 
             //    //Выводим название и артикул запчасти.
-            //    ArticulLabel.Text = sparePart.Articul;
-            //    TitleLabel.Text = sparePart.Title;
+            //    ArticulLabel.Text = operDet.Articul;
+            //    TitleLabel.Text = operDet.Title;
             //}//foreach
         }//FillTheOperationDGV
 

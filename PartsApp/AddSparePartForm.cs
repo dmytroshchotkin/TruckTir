@@ -328,9 +328,9 @@ namespace PartsApp
             {
                 //Если такого ManufacturerName нет в базе, значит добавить.
                 if (PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim()).Count == 0)
-                    sparePart.ManufacturerId = PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
-                else
-                    sparePart.ManufacturerId = PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim())[0]; //!!! Кроется опасность путаницы в случае одинакового имени производителей, необходимо будет внести добавление в базу для избежания потенциальной угрозы!
+                    PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
+
+                sparePart.Manufacturer = manufacturerTextBox.Text.Trim();
             }//else
 
             //Вставляем ед. изм. 

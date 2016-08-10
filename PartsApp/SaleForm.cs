@@ -14,9 +14,8 @@ namespace PartsApp
 {
     public partial class SaleForm : Form
     {
-        IList<SparePart> spareParts = new List<SparePart>();
-        IList<SparePart> extSpareParts = new List<SparePart>();
-        SparePart currentSparePart = new SparePart();
+        List<SparePart> sparePartsList = new List<SparePart>(); /*ERROR!!! убрать поле*/
+        //SparePart currentSparePart = new SparePart();
 
         IList<SparePart> searchSparePartsList = new List<SparePart>();
         IList<SparePart> extCurrentSparePartsList = new List<SparePart>();
@@ -342,9 +341,9 @@ namespace PartsApp
 
         //Привести в порядок метод!!!!
         private void saleDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            
-            if (isCellEditError) return;
+        {            
+            if (isCellEditError) 
+                return;
 
             autoCompleteListBox.Visible = false;
             //autoCompleteListBox.Items.Clear();
@@ -355,7 +354,8 @@ namespace PartsApp
             #region Articul Or Title
             if (cell.OwningColumn.Name == "Title" || cell.OwningColumn.Name == "Articul")
             {
-                if (cell.Value == null) return;
+                if (cell.Value == null) 
+                    return;
                 //убираем события с заполненной клетки.
                 if (textBoxCell != null)
                 {
@@ -363,7 +363,8 @@ namespace PartsApp
                      
                     textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
                     textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
-                }
+                }//if
+
                 //Если есть такой товар в базе.
                 if (searchSparePartsList.Count > 0)
                 {
@@ -373,26 +374,25 @@ namespace PartsApp
                     if (titleAndArticul.Length == 2)
                     {
 
-                        title   = cell.OwningColumn.Name == "Title" ? titleAndArticul[0] : titleAndArticul[1];
-                        articul = cell.OwningColumn.Name == "Title" ? titleAndArticul[1] : titleAndArticul[0];        
+                        title   = (cell.OwningColumn.Index == Title.Index) ? titleAndArticul[0] : titleAndArticul[1];
+                        articul = (cell.OwningColumn.Index == Title.Index) ? titleAndArticul[1] : titleAndArticul[0];        
                         
                         //находим из списка нужную запчасть.
-                        var sparePartsList = (from sp in searchSparePartsList
-                                              where sp.Title.Trim() == title.Trim() && sp.Articul.Trim() == articul.Trim()
-                                              select sp).ToList<SparePart>();
+                        /*ERROR!!! FirstOrDefault*/
+                        var sparePartsList = searchSparePartsList.Where(sp => sp.Title.Trim() == title.Trim() && sp.Articul.Trim() == articul.Trim()).ToList();
                         //Если такой товар найден в вып. списке.
                         if (sparePartsList.Count > 0)
                         {
-                            currentSparePart = sparePartsList[0];                            
+                            //currentSparePart = sparePartsList[0];                            
 
-                            FillTheBothDGV(row);
+                            FillTheBothDGV(row, sparePartsList[0]);
 
-                            spareParts.Add(currentSparePart);
+                            sparePartsList.Add(sparePartsList[0]); //Добавляем в список.
 
                             //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
-                            sparePartsId.Add(currentSparePart.SparePartId);
-                            cell.OwningRow.Cells[SellingPrice.Name].ReadOnly = cell.OwningRow.Cells["Count"].ReadOnly   = false;
-                            cell.OwningRow.Cells["Title"].ReadOnly = cell.OwningRow.Cells["Articul"].ReadOnly = true;
+                            sparePartsId.Add(sparePartsList[0].SparePartId);
+                            row.Cells[SellingPrice.Index].ReadOnly = row.Cells[Count.Index].ReadOnly   = false;
+                            row.Cells[Title.Index].ReadOnly        = row.Cells[Articul.Index].ReadOnly = true;
 
                             userText = null;
                             #region Увеличение saleGroupBox.
@@ -411,26 +411,19 @@ namespace PartsApp
                             if (searchSparePartsList.Count == 1) //если этот товар уникален.
                             {
                                 //находим из списка нужную запчасть.
-                                var sparePartsList = searchSparePartsList;//(from sp in searchSparePartsList
-                                                                            //where sp.Title == titleAndArticul[0] || sp.Articul == titleAndArticul[0]
-                                                                            //select sp).ToList<SparePart>();
-
+                                var sparePartsList = searchSparePartsList;
+                                /*ERROR!!! Скомпановать код!*/
                                 if (sparePartsList.Count > 0) //если введенный товар именно тот что в списке.
                                 {
-                                    currentSparePart = sparePartsList[0];
-                                    FillTheBothDGV(row);
-                                    spareParts.Add(currentSparePart);
-
-                                    row.Cells["SparePartId"].Value = currentSparePart.SparePartId;
-                                    row.Cells["Title"].Value = currentSparePart.Title;
-                                    row.Cells["Articul"].Value = currentSparePart.Articul;
-                                    row.Cells["Unit"].Value = currentSparePart.MeasureUnit;
+                                    //currentSparePart = sparePartsList[0];
+                                    FillTheBothDGV(row, sparePartsList[0]);
+                                    sparePartsList.Add(sparePartsList[0]); //добавляем в список.
 
                                     //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
-                                    sparePartsId.Add(currentSparePart.SparePartId);
+                                    sparePartsId.Add(sparePartsList[0].SparePartId);
 
-                                    cell.OwningRow.Cells[SellingPrice.Name].ReadOnly = cell.OwningRow.Cells["Count"].ReadOnly = false;
-                                    cell.OwningRow.Cells["Title"].ReadOnly = cell.OwningRow.Cells["Articul"].ReadOnly = true;
+                                    row.Cells[SellingPrice.Index].ReadOnly = row.Cells[Count.Index].ReadOnly = false;
+                                    row.Cells[Title.Index].ReadOnly = row.Cells[Articul.Index].ReadOnly = true;
 
                                     userText = null;
                                 }//if
@@ -466,47 +459,46 @@ namespace PartsApp
                 {
                     try
                     {
-                        double price = Convert.ToDouble(cell.Value);
-                        if (price == 0) throw new Exception();            //ввод нуля также является ошибкой.
+                        int sparePartId = Convert.ToInt32(row.Cells[SparePartId.Index].Value);
+                        SparePart sparePart = sparePartsList.First(sp => sp.SparePartId == sparePartId);
 
-                        //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.
-                        foreach (var sparePart in extSpareParts)
-                            if (sparePart.SparePartId == currentSparePart.SparePartId && sparePart.Price >= price)
-                                if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                                    break; //получили подтверждение, выполняем действия.
-                                else throw new Exception(); //поль-ль отменил свои действия.                                   
+                        float price = Convert.ToSingle(cell.Value);
+                        if (price == 0) throw new Exception();  //ввод нуля также является ошибкой.
+
+                        //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
+                        if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= price))
+                            if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
+                                throw new Exception();                                  
 
                         //Заполняем цену во всех выбранных приходах.
-                        foreach (var sparePart in extSpareParts)
-                            if (sparePart.SparePartId == currentSparePart.SparePartId)
-                                sparePart.SellingPrice = price;
+                        foreach (Availability avail in sparePart.AvailabilityList)
+                            avail.SellingPrice = price;
 
-                        //Если цена вводится в той же строке.
-                        int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
-                        if (sparePartId != currentSparePart.SparePartId)
-                        {
-                            foreach (var sparePart in spareParts)
-                                if (sparePart.SparePartId == sparePartId)
-                                    currentSparePart = sparePart;                            
-                        }//if
+                        ////Если цена вводится в той же строке.
+                        //int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
+                        //if (sparePartId != currentSparePart.SparePartId)
+                        //{
+                        //    foreach (var sparePart in spareParts)
+                        //        if (sparePart.SparePartId == sparePartId)
+                        //            currentSparePart = sparePart;                            
+                        //}//if
 
                         //Округляем Price до 2-х десятичных знаков.
-                        price = Math.Round(price, 2, MidpointRounding.AwayFromZero);
-                        currentSparePart.Price = price; //Запоминаем цену в Price, т.к. SellingPrice не заполнится, потому что Price == null (см. SparePart.SellingPrice.Set()).
-                        foreach (var sp in extCurrentSparePartsList)
-                        {
-                            sp.SellingPrice = price;
-                        }
+                        price = (float)Math.Round(price, 2, MidpointRounding.AwayFromZero);
+                        //currentSparePart.Price = price; //Запоминаем цену в Price, т.к. SellingPrice не заполнится, потому что Price == null (см. SparePart.SellingPrice.Set()).
+                        //foreach (var sp in extCurrentSparePartsList)
+                        //    sp.SellingPrice = price;
+
                         cell.Value = String.Format("{0:N2}", price);
 
-                        if (currentSparePart.Count != 0 || currentSparePart.VirtCount != 0)
+                        if (row.Cells[Count.Index].Value != null)
                         {
                             //Узнаем была ли уже до этого введена цена, для изменения строки "итого".
-                            if (cell.OwningRow.Cells["Sum"].Value != null)
-                                inTotal -= Convert.ToDouble((cell.OwningRow.Cells["Sum"].Value));
+                            if (cell.OwningRow.Cells[Sum.Index].Value != null)
+                                inTotal -= Convert.ToDouble((cell.OwningRow.Cells[Sum.Index].Value));
 
-
-                            double sum = Math.Round(price * (currentSparePart.Count + currentSparePart.VirtCount), 2, MidpointRounding.AwayFromZero);
+                            float totalCount = sparePart.AvailabilityList.Sum(av => av.OperationDetails.Count);
+                            double sum = Math.Round(price * totalCount, 2, MidpointRounding.AwayFromZero);
                             cell.OwningRow.Cells["Sum"].Value = String.Format("{0:N2}", sum);//sum; //price * currentSparePart.Count;
                             inTotal += sum; //price * currentSparePart.Count;
                             inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
@@ -532,30 +524,33 @@ namespace PartsApp
             {
                 try
                 {
-                    double count = TestInputValueInSaleDGV(cell);
+                    float count = TestInputValueInSaleDGV(cell);
 
                     //Если введено корректное значение, блокируем возм-ть ввода в extDGV.
                     extDataGridView.Columns[extCount.Name].ReadOnly = true;
 
-                    //Находим нужный товар из списка.
-                    int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
-                    if (sparePartId != currentSparePart.SparePartId)
-                    {
-                        foreach (var sparePart in spareParts)
-                            if (sparePart.SparePartId == sparePartId)
-                                currentSparePart = sparePart;
-                    }//if
-                    currentSparePart.Count = count;
+                    //Находим нужный товар.
+                    int sparePartId = Convert.ToInt32(row.Cells[SparePartId.Index].Value);
+                    SparePart sparePart = sparePartsList.First(sp => sp.SparePartId == sparePartId);
+
+                    //if (sparePartId != currentSparePart.SparePartId)
+                    //{
+                    //    foreach (var sparePart in spareParts)
+                    //        if (sparePart.SparePartId == sparePartId)
+                    //            currentSparePart = sparePart;
+                    //}//if
+                    //currentSparePart.AvailabilityList[0].OperationDetails.Count = count;
                     //Запрещаем изменение кол-ва после первого корректного ввода.
-                    cell.OwningRow.Cells["Count"].ReadOnly = true;
+                    row.Cells[Count.Index].ReadOnly = true;
 
-                    if (currentSparePart.Price != null)
+                    if (row.Cells[Price.Index].Value != null)
                     {
-                        if (cell.OwningRow.Cells["Sum"].Value != null)
-                            inTotal -= Convert.ToDouble((cell.OwningRow.Cells["Sum"].Value));
+                        if (cell.OwningRow.Cells[Sum.Index].Value != null)
+                            inTotal -= Convert.ToDouble((cell.OwningRow.Cells[Sum.Index].Value));
 
-                        double sum = Math.Round((double)currentSparePart.Price * count, 2, MidpointRounding.AwayFromZero);
-                        cell.OwningRow.Cells["Sum"].Value = sum; //(double)currentSparePart.Price * count;
+                        float price = Convert.ToSingle(row.Cells[Price.Index].Value);
+                        double sum = Math.Round((double)(price * count), 2, MidpointRounding.AwayFromZero);
+                        cell.OwningRow.Cells[Sum.Index].Value = sum; //(double)currentSparePart.Price * count;
                         inTotal += sum; //(double)currentSparePart.Price * count;
                         inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
 
@@ -607,8 +602,8 @@ namespace PartsApp
                 {
                     saleDataGridView.Rows.Clear();
                     extDataGridView.Rows.Clear();
-                    spareParts.Clear();
-                    extSpareParts.Clear();
+                    sparePartsList.Clear();
+                    //extSpareParts.Clear();
                     searchSparePartsList.Clear(); //надо ли?
 
                     sparePartsId.Clear();
@@ -621,10 +616,10 @@ namespace PartsApp
             {
                 int sparePartId = Convert.ToInt32(lastEditCell.OwningRow.Cells["SparePartId"].Value);
                 //Очищаем saleDGV.
-                for (int i = 0; i < spareParts.Count; ++i)
-                    if (spareParts[i].SparePartId == sparePartId)
+                for (int i = 0; i < sparePartsList.Count; ++i)
+                    if (sparePartsList[i].SparePartId == sparePartId)
                     {
-                        spareParts.RemoveAt(i);     /*!!!! Тут Кроется большая потенциальная ошибка, потому что при удалении уменьшается счетчик в оп-ре for. Работает корректно пока удаляется только один элемент из списка.*/
+                        sparePartsList.RemoveAt(i);     /*ERROR!!!! Тут Кроется большая потенциальная ошибка, потому что при удалении уменьшается счетчик в оп-ре for. Работает корректно пока удаляется только один элемент из списка.*/
                         sparePartsId.RemoveAt(i);
                         break;
                     }//if
@@ -637,18 +632,18 @@ namespace PartsApp
                 saleDataGridView.Rows.Remove(lastEditCell.OwningRow);
                 
 
-                //Очищаем extDGV, если удаляется текущая редактируемая строка.
-                if (currentSparePart.SparePartId == sparePartId) 
-                    extDataGridView.Rows.Clear();
-                //Запоминаем объекты которые нужно удалить из списка.
-                var removesSp = new List<SparePart>();
-                for (int i = 0; i < extSpareParts.Count; ++i)
-                    if (extSpareParts[i].SparePartId == sparePartId)
-                        removesSp.Add(extSpareParts[i]);
+                ////Очищаем extDGV, если удаляется текущая редактируемая строка.
+                //if (currentSparePart.SparePartId == sparePartId) 
+                //    extDataGridView.Rows.Clear();
+                ////Запоминаем объекты которые нужно удалить из списка.
+                //var removesSp = new List<SparePart>();
+                //for (int i = 0; i < extSpareParts.Count; ++i)
+                //    if (extSpareParts[i].SparePartId == sparePartId)
+                //        removesSp.Add(extSpareParts[i]);
 
-                //Удаляем эти объекты
-                foreach (var sp in removesSp)
-                    extSpareParts.Remove(sp);
+                ////Удаляем эти объекты
+                //foreach (var sp in removesSp)
+                //    extSpareParts.Remove(sp);
             }//else
 
             //Выводим "Итого".
@@ -677,7 +672,7 @@ namespace PartsApp
         private void extDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             //Если редактировалась колонка "Кол-во". хотя по идее все остальные readOnly.
-            if (extDataGridView.Columns[e.ColumnIndex].Name == "extCount")
+            if (extDataGridView.Columns[e.ColumnIndex].Name == extCount.Name)
             {
                 DataGridViewCell cell = extDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 try
@@ -685,46 +680,48 @@ namespace PartsApp
                     double count = TestInputValueInExtDGV(cell);
                     cell.ReadOnly = true;
 
+                    int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
+                    SparePart currentSparePart = sparePartsList.First(sp => sp.SparePartId == sparePartId);
                     //Создаем переменную с информацией о данном конкретном приходе.                    
                     SparePart extCurrentSparePart  = PartsDAL.FindSparePartAvaliability(currentSparePart.SparePartId, Convert.ToInt32(cell.OwningRow.Cells[extPurchaseId.Name].Value));
-                    //Очищаем, для запоминания данных введенных поль-лем.
-                    extCurrentSparePart.VirtCount = extCurrentSparePart.Count = 0;
+                    ////Очищаем, для запоминания данных введенных поль-лем.
+                    //extCurrentSparePart.VirtCount = extCurrentSparePart.Count = 0;
                     //Находим нужную клетку в табл. продаж.
-                    var saleCountCell = saleDataGridView.Rows[saleDataGridView.Rows.Count - 2].Cells["Count"]; //Находим клетку "количество" предпоследней строки в таблице, потому, что из доп. таблицы изименятся может только она, т.к. все другие будут заблокированны. 
+                    var saleCountCell = saleDataGridView.Rows[saleDataGridView.Rows.Count - 2].Cells[Count.Index]; //Находим клетку "количество" предпоследней строки в таблице, потому, что из доп. таблицы изименятся может только она, т.к. все другие будут заблокированны. 
                     //Если содержит скобку то товар с вирт. склада.
                     if (fullExtCount.Contains('('))
                     {
-                        currentSparePart.VirtCount += count;
-                        extCurrentSparePart.VirtCount = count;
-                        cell.Value = extCurrentSparePart.Avaliability;
+                        //currentSparePart.VirtCount += count;
+                        //extCurrentSparePart.VirtCount = count;
+                        //cell.Value = extCurrentSparePart.Avaliability;
                     }
                     else
                     {
-                        currentSparePart.Count += count;
-                        extCurrentSparePart.Count = count;
+                        //currentSparePart.Count += count;
+                        //extCurrentSparePart.Count = count;
                     }
 
-                    extSpareParts.Add(extCurrentSparePart);
-                    extCurrentSparePartsList.Add(extCurrentSparePart);
-                    //Обновляем "кол-во" в таблице продаж.
-                    saleCountCell.ReadOnly = true;
-                    saleCountCell.Value = currentSparePart.Avaliability;
-                    //Обновляем содержимое столбца "Сумма" в saleDGV, если цена уже указана.
-                    if (currentSparePart.Price != null)
-                    {
-                        //Если отпусная цена уже выставленна запоминаем её в выбранном приходе.
-                        extCurrentSparePart.SellingPrice = currentSparePart.Price;
+                    //extSpareParts.Add(extCurrentSparePart);
+                    //extCurrentSparePartsList.Add(extCurrentSparePart);
+                    ////Обновляем "кол-во" в таблице продаж.
+                    //saleCountCell.ReadOnly = true;
+                    //saleCountCell.Value = currentSparePart.Avaliability;
+                    ////Обновляем содержимое столбца "Сумма" в saleDGV, если цена уже указана.
+                    //if (currentSparePart.Price != null)
+                    //{
+                    //    //Если отпусная цена уже выставленна запоминаем её в выбранном приходе.
+                    //    extCurrentSparePart.SellingPrice = currentSparePart.Price;
 
-                        if (saleCountCell.OwningRow.Cells["Sum"].Value != null)
-                            inTotal -= Convert.ToDouble((saleCountCell.OwningRow.Cells["Sum"].Value));
+                    //    if (saleCountCell.OwningRow.Cells["Sum"].Value != null)
+                    //        inTotal -= Convert.ToDouble((saleCountCell.OwningRow.Cells["Sum"].Value));
 
-                        double sum = Math.Round((double)currentSparePart.Price * (currentSparePart.Count + currentSparePart.VirtCount), 2, MidpointRounding.AwayFromZero);
-                        saleCountCell.OwningRow.Cells["Sum"].Value = sum; //(double)currentSparePart.SellingPrice * count;
-                        inTotal += sum; //(double)currentSparePart.SellingPrice * count;
-                        inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
-                    }//if
-                    saleCountCell.Style.ForeColor = Color.Black;
-                    saleCountCell.Style.SelectionForeColor = Color.White;
+                    //    double sum = Math.Round((double)currentSparePart.Price * (currentSparePart.Count + currentSparePart.VirtCount), 2, MidpointRounding.AwayFromZero);
+                    //    saleCountCell.OwningRow.Cells["Sum"].Value = sum; //(double)currentSparePart.SellingPrice * count;
+                    //    inTotal += sum; //(double)currentSparePart.SellingPrice * count;
+                    //    inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
+                    //}//if
+                    //saleCountCell.Style.ForeColor = Color.Black;
+                    //saleCountCell.Style.SelectionForeColor = Color.White;
                 }//try
                 catch
                 {
@@ -807,76 +804,77 @@ namespace PartsApp
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);        
         }//GetCellBelowLocation
 
-        private void FillTheBothDGV(DataGridViewRow row)
+        private void FillTheBothDGV(DataGridViewRow row, SparePart sparePart)
         {
             //!!!Сделать ограничение выпадающего списка только по товару имеющимся в наличии.
 
-            FillTheSaleDGV(row);
+            FillTheSaleDGV(row, sparePart);
             //Если количество приходов в наличии больше чем один, то выводим информацию в extDGV.
             //if (PartsDAL.FindCountOfEntrySparePartInAvaliability(currentSparePart.SparePartId) > 1)
             //Очищаем таблицу.
             extDataGridView.Rows.Clear();
 
-            FillTheExtDGV(currentSparePart.SparePartId);                
+            FillTheExtDGV(sparePart);                
         }//FillTheBothDGV
 
-        private void FillTheSaleDGV(DataGridViewRow row)
-        {                               
-            row.Cells["SparePartId"].Value = currentSparePart.SparePartId;
-            row.Cells["Title"].Value = currentSparePart.Title;
-            row.Cells["Articul"].Value = currentSparePart.Articul;
-            row.Cells["Unit"].Value = currentSparePart.MeasureUnit;
+        private void FillTheSaleDGV(DataGridViewRow row, SparePart sparePart)
+        {
+            row.Cells[SparePartId.Index].Value  = sparePart.SparePartId;
+            row.Cells[Title.Index].Value        = sparePart.Title;
+            row.Cells[Articul.Index].Value      = sparePart.Articul;
+            row.Cells[Unit.Index].Value         = sparePart.MeasureUnit;
 
-            PartsDAL.FindUniqueSparePartsAvaliabilityCount(currentSparePart); //находим общее кол-во   
-            row.Cells["Count"].Style.ForeColor = Color.Gray;
-            row.Cells["Count"].Style.SelectionForeColor = Color.Gray;
-            row.Cells["Count"].Value = currentSparePart.Avaliability;  
+            //находим общее кол-во
+            string spAvailability = Availability.GetTotalCount(sparePart.AvailabilityList);
+               
+            row.Cells[Count.Index].Style.ForeColor = Color.Gray;
+            row.Cells[Count.Index].Style.SelectionForeColor = Color.Gray;
+            row.Cells[Count.Index].Value = spAvailability;  
           
-            //очищаем "количество" текущей единицы для дальнейшего заполнения поль-лем
-            currentSparePart.Count = currentSparePart.VirtCount = 0;
+            ////очищаем "количество" текущей единицы для дальнейшего заполнения поль-лем
+            //currentSparePart.Count = currentSparePart.VirtCount = 0;
         }//FillTheSaleDGV
 
-        private void FillTheExtDGV(int sparePartId)
+        private void FillTheExtDGV(SparePart sparePart)
         {            
             //Находим все записи товара с табл. Avaliability с данным Id. 
-            var sparePartsAvaliability = PartsDAL.FindAvaliabilityBySparePartId(sparePartId);
+            //var sparePartsAvaliability = PartsDAL.FindAvaliabilityBySparePartId(sparePartId);
             //Создаем нужное кол-во строк в таблице.
-            extDataGridView.Rows.Add(sparePartsAvaliability.Count);
+            extDataGridView.Rows.Add(sparePart.AvailabilityList.Count);
 
             extCurrentSparePartsList.Clear();
-            //Добавляем все приходы данного товара из Avaliability в список и доп. таблицу.
-            for(int i=0; i<sparePartsAvaliability.Count; ++i)
+
+            foreach (Availability avail in sparePart.AvailabilityList)
             {
-                extDataGridView.Rows[i].Cells[extSupplier.Name].Value = sparePartsAvaliability[i].SupplierName;
-                extDataGridView.Rows[i].Cells["extTitle"].Value = sparePartsAvaliability[i].Title;
-                extDataGridView.Rows[i].Cells["extArticul"].Value = sparePartsAvaliability[i].Articul;
-                extDataGridView.Rows[i].Cells["extUnit"].Value = sparePartsAvaliability[i].MeasureUnit;
+                int rowIndx = extDataGridView.Rows.Add();
+                DataGridViewRow row = extDataGridView.Rows[rowIndx];
 
-                extDataGridView.Rows[i].Cells["extCount"].Style.ForeColor = Color.Gray;
-                extDataGridView.Rows[i].Cells["extCount"].Style.SelectionForeColor = Color.Gray;
-                extDataGridView.Rows[i].Cells["extCount"].Value = sparePartsAvaliability[i].Avaliability;
+                row.Cells[extSupplier.Index].Value  = avail.OperationDetails.Purchase.Contragent;
+                row.Cells[extTitle.Index].Value     = avail.OperationDetails.SparePart.Title;
+                row.Cells[extArticul.Index].Value   = avail.OperationDetails.SparePart.Articul;
+                row.Cells[extUnit.Index].Value      = avail.OperationDetails.SparePart.MeasureUnit;
 
-                extDataGridView.Rows[i].Cells["extStorageAdress"].Value = sparePartsAvaliability[i].StorageAdress;
-                extDataGridView.Rows[i].Cells["extPrice"].Value = sparePartsAvaliability[i].Price;
+                //Делаем для ячейки серый цвет.
+                row.Cells[extCount.Index].Style.ForeColor = row.Cells[extCount.Index].Style.SelectionForeColor = Color.Gray;
+                row.Cells[extCount.Index].Value = avail.OperationDetails.Count;
+
+                row.Cells[extStorageAdress.Index].Value = avail.StorageAddress;
+                row.Cells[extPrice.Index].Value = avail.OperationDetails.Price;
+
+                //Добавляем все приходы данного товара из Avaliability в список и доп. таблицу.
+                
                // extDataGridView.Rows[i].Cells["extMarkup"].Value = sparePartsAvaliability[i].Markup;
-                if (sparePartsAvaliability[i].Markup != null)
-                {
-                    //Находим тип наценки.
-                    extDataGridView.Rows[i].Cells["extMarkup"].Value = Models.Markup.GetDescription(Convert.ToSingle(sparePartsAvaliability[i].Markup));
-                }//if
-                extDataGridView.Rows[i].Cells["extSellingPrice"].Value = sparePartsAvaliability[i].SellingPrice;
-                extDataGridView.Rows[i].Cells["extPurchaseId"].Value = sparePartsAvaliability[i].PurchaseId;
-                extDataGridView.Rows[i].Cells["extPurchaseDate"].Value = PartsDAL.FindPurchase(sparePartsAvaliability[i].PurchaseId).OperationDate.ToShortDateString();
-            }//for            
+                row.Cells[extMarkup.Index].Value        = Models.Markup.GetDescription(avail.Markup);
+                row.Cells[extSellingPrice.Index].Value  = avail.SellingPrice;
+                row.Cells[extPurchaseId.Index].Value    = avail.OperationDetails.Purchase.OperationId;
+                row.Cells[extPurchaseDate.Index].Value  = avail.OperationDetails.Purchase.OperationDate;
+            }//foreach            
             
             //Если отпускная цена у всех приходов одинаковая, выводим её в saleDGV.
-            if (sparePartsAvaliability.Count(sp => sp.SellingPrice == sparePartsAvaliability[0].SellingPrice) == sparePartsAvaliability.Count)
-            {
-                lastEditCell.OwningRow.Cells[SellingPrice.Name].Value = sparePartsAvaliability[0].SellingPrice;
-                currentSparePart.Price = sparePartsAvaliability[0].SellingPrice; //Запоминаем цену в Price, т.к. SellingPrice не заполнится, потому что Price == null (см. SparePart.SellingPrice.Set()).
-            }
+            if(!sparePart.AvailabilityList.Any(av => av.SellingPrice != sparePart.AvailabilityList[0].SellingPrice))
+                lastEditCell.OwningRow.Cells[SellingPrice.Name].Value = sparePart.AvailabilityList[0].SellingPrice;
 
-            //extDataGridView.Sort(extDataGridView.Columns[extPurchaseId.Name], ListSortDirection.Ascending); //Сл. сортировка полностью перекрывает предыдущую.
+            //Сортируем таблицу по дате прихода.
             extDataGridView.Sort(extDataGridView.Columns[extPurchaseDate.Name], ListSortDirection.Ascending);
             extDataGridView.ClearSelection();
         }//FillTheExtDGV
@@ -886,9 +884,9 @@ namespace PartsApp
         /// </summary>
         /// <param name="value">Проверяемое значение</param>
         /// <returns></returns>
-        private double TestInputValueInSaleDGV(DataGridViewCell cell)
+        private float TestInputValueInSaleDGV(DataGridViewCell cell)
         {
-            double count = Convert.ToDouble(cell.Value);
+            float count = Convert.ToSingle(cell.Value);
             //ввод нуля или отриц. значения также является ошибкой. 
             if (count <= 0) 
                 throw new Exception(); 
@@ -929,27 +927,27 @@ namespace PartsApp
                 row.Cells[extCount.Name].Style.SelectionForeColor = Color.White;
 
                 //Находим нужный товар в списке.                
-                SparePart extCurrentSparePart = new SparePart();
-                extCurrentSparePart.SparePartId = currentSparePart.SparePartId;
-                extCurrentSparePart.PurchaseId = purchaseId;
-                extCurrentSparePart.Price = Convert.ToDouble(row.Cells[extPrice.Name].Value);
+                //SparePart extCurrentSparePart = new SparePart();
+                //extCurrentSparePart.SparePartId = currentSparePart.SparePartId;
+                //extCurrentSparePart.PurchaseId = purchaseId;
+                //extCurrentSparePart.Price = Convert.ToDouble(row.Cells[extPrice.Name].Value);
 
-                extSpareParts.Add(extCurrentSparePart);
-                //Если продаваемое количество больше чем в данном приходе.
-                if (sellCount > extSellCount)
-                {
-                    extCurrentSparePart.Count = extSellCount;
-                    sellCount -= extSellCount;
-                }//if
-                else
-                {
-                    row.Cells[extCount.Name].Value = extCurrentSparePart.Count = sellCount;
-                    break;
-                }//else    
+                //extSpareParts.Add(extCurrentSparePart);
+                ////Если продаваемое количество больше чем в данном приходе.
+                //if (sellCount > extSellCount)
+                //{
+                //    extCurrentSparePart.Count = extSellCount;
+                //    sellCount -= extSellCount;
+                //}//if
+                //else
+                //{
+                //    row.Cells[extCount.Name].Value = extCurrentSparePart.Count = sellCount;
+                //    break;
+                //}//else    
             
-                //Если отпусная цена уже выставленна запоминаем её в каждом автовыбранном приходе.
-                if (currentSparePart.Price != null)
-                    extCurrentSparePart.SellingPrice = currentSparePart.Price;
+                ////Если отпусная цена уже выставленна запоминаем её в каждом автовыбранном приходе.
+                //if (currentSparePart.Price != null)
+                //    extCurrentSparePart.SellingPrice = currentSparePart.Price;
             }//foreach
         }//AutoChoisePurchases
 
@@ -962,131 +960,25 @@ namespace PartsApp
         private void BeginLoadSaleToExcelFile(object sale)
         {
             if (sale is Sale)
-                LoadSaleToExcelFile(sale as Sale, spareParts);
+                LoadSaleToExcelFile(sale as Sale);
         }//BeginLoadsaleToExcelFile
-
-        ///// <summary>
-        ///// Метод вывода приходной информации в Excel-файл.
-        ///// </summary>
-        ///// <param name="sale">Информация о приходе.</param>
-        ///// <param name="availabilityList">Список оприходованных товаров.</param>
-        //private void LoadSaleToExcelFile(Sale sale, IList<SparePart> availabilityList)
-        //{
-        //    Excel.Application excelApp = new Excel.Application();
-        //    Excel.Workbook ExcelWorkBook;
-        //    Excel.Worksheet ExcelWorkSheet;
-        //    //Книга.
-        //    ExcelWorkBook = excelApp.Workbooks.Add(System.Reflection.Missing.Value);
-        //    //Таблица.
-        //    ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
-
-        //    int row = 1, column = 1;
-
-        //    //Выводим Id и Дату. 
-        //    excelApp.Cells[row, column] = String.Format("Расходная накладная №{0} от {1}г.", sale.SaleId, sale.SaleDate.ToString("dd/MM/yyyy"));
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Bold = true;
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 18;
-
-        //    //Выводим поставщика.
-        //    row += 2;
-        //    excelApp.Cells[row, column] = String.Format("Продавец:    \t{0}", sellerTextBox.Text);//PartsDAL.FindSellerNameById(sale.SellerId));
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-        //    //Выводим покупателя.
-        //    row += 2;
-        //    excelApp.Cells[row, column] = String.Format("Покупатель:  \t{0}", customerTextBox.Text);
-        //    (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Size = 12;
-
-        //    //Выводим таблицу товаров.
-        //    //Выводим заголовок.
-        //    row += 2;
-        //    excelApp.Cells[row, column] = "Название";
-        //    excelApp.Cells[row, column + 1] = "Ед. изм.";
-        //    excelApp.Cells[row, column + 2] = "Кол-во";
-        //    excelApp.Cells[row, column + 3] = "Цена";
-        //    excelApp.Cells[row, column + 4] = "Сумма";
-
-        //    Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "E" + row.ToString());
-        //    excelCells.Font.Bold = true;
-        //    excelCells.Font.Size = 12;
-        //    //Обводим заголовки таблицы рамкой. 
-        //    excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-        //    //Устанавливаем стиль и толщину линии
-        //    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-
-        //    //Устанавливаем ширину первой Колонки для Title.
-        //    double width = 45; //45 -- Взято методом тыка.           
-        //    (excelApp.Cells[row, column] as Excel.Range).Columns.ColumnWidth = width;
-        //    //Выводим список товаров.
-        //    for (int i = 0; i < availabilityList.Count; ++i)
-        //    {
-        //        ++row;
-        //        excelApp.Cells[row, column] = availabilityList[i].Title;
-        //        //Если Title не влазиет в одну строку, увеличиваем высоту.
-        //        if (availabilityList[i].Title.Length > width)
-        //        {
-        //            (excelApp.Cells[row, column] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
-        //            ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
-        //        }
-        //        excelApp.Cells[row, column + 1] = availabilityList[i].Unit;
-        //        excelApp.Cells[row, column + 2] = availabilityList[i].Count;
-        //        excelApp.Cells[row, column + 3] = availabilityList[i].Price;
-        //        excelApp.Cells[row, column + 4] = availabilityList[i].Price * availabilityList[i].Count;
-        //        //Выравнивание диапазона строк.
-        //        ExcelWorkSheet.get_Range("B" + row.ToString(), "E" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-        //    }//for
-
-        //    //Обводим талицу рамкой. 
-        //    excelCells = ExcelWorkSheet.get_Range("A" + (row - availabilityList.Count + 1).ToString(), "E" + row.ToString());
-        //    excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-
-        //    //Выводим "Итого".
-        //    ++row;
-        //    //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
-        //    int indent = 0; //отступ
-        //    if (inTotalNumberLabel.Text.Length <= 9)
-        //        indent = 1;
-
-        //    excelApp.Cells[row, column + 2 + indent] = inTotalLabel.Text;
-        //    excelApp.Cells[row, column + 3 + indent] = inTotalNumberLabel.Text;
-        //    (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Underline = true;
-        //    (excelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Size = (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Size = 12;
-        //    (excelApp.Cells[row, column + 2 + indent] as Excel.Range).Font.Bold = (excelApp.Cells[row, column + 3 + indent] as Excel.Range).Font.Bold = true;
-
-        //    //Выводим имена агентов.
-        //    row += 2;
-        //    excelApp.Cells[row, column] = String.Format("\t{0} {1} ", sellerAgentLabel.Text, sellerAgentTextBox.Text);
-        //    excelApp.Cells[row, column + 1] = String.Format("{0} {1}", customerAgentLabel.Text, customerAgentTextBox.Text);
-
-        //    //Вызываем нашу созданную эксельку.
-        //    excelApp.Visible = true;
-        //    ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-        //    excelApp.UserControl = true;  //что меняет эта настройка?
-
-        //    this.Close();
-        //}//LoadsaleToExcelFile
 
         /// <summary>
         /// Метод вывода расходной информации в Excel-файл.
         /// </summary>
         /// <param name="sale">Информация о расходе.</param>
         /// <param name="availabilityList">Список проданного товара.</param>
-        private void LoadSaleToExcelFile(Sale sale, IList<SparePart> spareParts)
+        private void LoadSaleToExcelFile(Sale sale)
         {
-            Excel.Application ExcelApp = new Excel.Application();
-            Excel.Workbook ExcelWorkBook;
-            Excel.Worksheet ExcelWorkSheet;
-            //Книга.
-            ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
-            //Таблица.
-            ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
+            IList<OperationDetails> operDetList = sale.OperationDetailsList;
 
+            Excel.Application ExcelApp = new Excel.Application();
+            Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
+            Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
+                        
             //Настраиваем горизонтальные и вертикальные границы области печати.
-            ExcelWorkSheet.PageSetup.LeftMargin = 7;
-            ExcelWorkSheet.PageSetup.RightMargin = 7;
-            ExcelWorkSheet.PageSetup.TopMargin = 10;
-            ExcelWorkSheet.PageSetup.BottomMargin = 10;
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin  = 7;
+            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 10;
 
             int row = 1, column = 1;            
             //Выводим Id и Дату. 
@@ -1134,38 +1026,41 @@ namespace PartsApp
             int articulColWidth = 20;
             //int manufColWidth = 15, minManufColWidth = 8; //  15 -- Взято методом тыка.
 
-            SetColumnsWidth(spareParts, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
+            SetColumnsWidth(operDetList, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
+
             //Выводим список товаров.
-            for (int i = 0; i < spareParts.Count; ++i)
+            foreach (OperationDetails operDet in operDetList)
             {
                 ++row;
-                ExcelApp.Cells[row, column + 2] = spareParts[i].Title;
-                ExcelApp.Cells[row, column + 1] = spareParts[i].Articul;
+                ExcelApp.Cells[row, column + 2] = operDet.SparePart.Title;
+                ExcelApp.Cells[row, column + 1] = operDet.SparePart.Articul;
                 //Выравнивание диапазона строк.
                 ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
                 ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
 
                 //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
-                if (spareParts[i].Articul.Length > articulColWidth || spareParts[i].Title.Length > titleColWidth)
+                if (operDet.SparePart.Articul.Length > articulColWidth || operDet.SparePart.Title.Length > titleColWidth)
                 {
                     ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
                     //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
-                    if (spareParts[i].Articul.Length > articulColWidth && spareParts[i].Title.Length <= titleColWidth)
+                    if (operDet.SparePart.Articul.Length > articulColWidth && operDet.SparePart.Title.Length <= titleColWidth)
                         (ExcelApp.Cells[row, column + 2] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-                    if (spareParts[i].Articul.Length <= articulColWidth && spareParts[i].Title.Length > titleColWidth)
+                    if (operDet.SparePart.Articul.Length <= articulColWidth && operDet.SparePart.Title.Length > titleColWidth)
                         (ExcelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
                 }//if
 
-                ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
+                ExcelApp.Cells[row, column] = operDet.SparePart.Manufacturer;
 
-                ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;
-                ExcelApp.Cells[row, column + 4] = spareParts[i].Count;
-                ExcelApp.Cells[row, column + 5] = spareParts[i].Price;
-                ExcelApp.Cells[row, column + 6] = spareParts[i].Price * spareParts[i].Count;
-            }//for
+                ExcelApp.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
+                float count = operDet.Count;
+                float price = operDet.Price;
+                ExcelApp.Cells[row, column + 4] = count;
+                ExcelApp.Cells[row, column + 5] = price;
+                ExcelApp.Cells[row, column + 6] = price * count;
+            }//foreach
 
             //Обводим талицу рамкой. 
-            excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "G" + row.ToString());
+            excelCells = ExcelWorkSheet.get_Range("A" + (row - operDetList.Count + 1).ToString(), "G" + row.ToString());
             excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
 
             //Выводим "Итого".
@@ -1248,7 +1143,7 @@ namespace PartsApp
         /// <param name="titleCol">Столбец "Название".</param>
         /// <param name="articulCol">Столбец "Артикул".</param>
         /// <param name="manufCol">Столбец "Производитель".</param>
-        private void SetColumnsWidth(IList<SparePart> spareParts, Excel.Range titleCol, Excel.Range articulCol, Excel.Range manufCol)
+        private void SetColumnsWidth(IList<OperationDetails> operDetList, Excel.Range titleCol, Excel.Range articulCol, Excel.Range manufCol)
         {
             //Устанавливаем ширину первой Колонок
             double titleColWidth = 30; // -- Взято методом тыка.  
@@ -1257,7 +1152,7 @@ namespace PartsApp
 
             //Проверяем по факту максимальную длину колонки Manufacturer и если она меньше заявленной длины, дополняем лишнее в Title
             int maxManufLenght = 0;
-            var sparePartsManufacturers = spareParts.Select(sp => sp.Manufacturer).Where(man => man != null);
+            var sparePartsManufacturers = operDetList.Select(od => od.SparePart.Manufacturer).Where(man => man != null);
             if (sparePartsManufacturers.Count() > 0)
                 maxManufLenght = sparePartsManufacturers.Max(man => man.Length);
 
@@ -1268,9 +1163,9 @@ namespace PartsApp
                 manufColWidth = (manufColWidth - different < minManufColWidth) ? minManufColWidth : manufColWidth - different;
             }//if
 
-            manufCol.Columns.ColumnWidth = manufColWidth;
-            articulCol.Columns.ColumnWidth = articulColWidth;
-            titleCol.Columns.ColumnWidth = titleColWidth;
+            manufCol.Columns.ColumnWidth    = manufColWidth;
+            articulCol.Columns.ColumnWidth  = articulColWidth;
+            titleCol.Columns.ColumnWidth    = titleColWidth;
         }//SetColumnsWidth
 
         /// <summary>
@@ -1330,21 +1225,19 @@ namespace PartsApp
         private void extDataGridView_SelectionChanged(object sender, EventArgs e)
         {
             //Если есть выделенные клетки делаем доступной изменение наценки.
-            if (extDataGridView.SelectedCells.Count > 0)
-                markupComboBox.Enabled = true;
-            else markupComboBox.Enabled = false;
+            markupComboBox.Enabled = (extDataGridView.SelectedCells.Count > 0);
         }//extDataGridView_SelectionChanged
 
         private void extGroupBox_Click(object sender, EventArgs e)
         {
             extDataGridView.ClearSelection();
-        }
+        }//extGroupBox_Click
 
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
                 markupComboBox_SelectedIndexChanged(sender, e);
-        }
+        }//markupComboBox_PreviewKeyDown
 
         private void currencyComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1427,11 +1320,17 @@ namespace PartsApp
         public Sale CreateSaleFromForm()
         {
             List<OperationDetails> operDetList = new List<OperationDetails>();
-            foreach (SparePart sparePart in spareParts)
+            foreach (DataGridViewRow row in saleDataGridView.Rows)
             {
-                OperationDetails od = new OperationDetails(sparePart, null, (float)sparePart.Count, (float)sparePart.Price);
+                float count = Convert.ToSingle(row.Cells[Count.Index].Value);
+                float price = Convert.ToSingle(row.Cells[Price.Index].Value);
+
+                int sparePartId = Convert.ToInt32(row.Cells[SparePartId.Index].Value);
+                SparePart sparePart = sparePartsList.First(sp => sp.SparePartId == sparePartId);
+                OperationDetails od = new OperationDetails(sparePart, null, count, price);
                 operDetList.Add(od);
             }//foreach
+
 
             Sale sale = new Sale
             (
@@ -1467,12 +1366,12 @@ namespace PartsApp
                 //sellerTextBox_Leave(null, null);
 
                 if (sellerBackPanel.BackColor != Color.Red && customerBackPanel.BackColor != Color.Red
-                    && spareParts.Count != 0)
+                    && sparePartsList.Count != 0)
                 {   
                     //Проверяем везде ли установлена цена и кол-во.                    
-                    foreach (var sparePart in spareParts) /*ERROR!!! через Linq*/
+                    foreach (DataGridViewRow row in saleDataGridView.Rows)
                     {
-                        if (sparePart.Count == 0 || sparePart.Price == null)
+                        if (row.Cells[Price.Index].Value == null || row.Cells[Count.Index].Value == null)
                         {
                             toolTip.Show("Не везде указана цена или количество товара", this, okButton.Location, 3000);
                             return;
@@ -1483,7 +1382,7 @@ namespace PartsApp
                     
                     try
                     {
-                        sale.OperationId = PartsDAL.AddSale(spareParts, extSpareParts, sale);
+                        sale.OperationId = PartsDAL.AddSale(sale);
                     }//try
                     catch(Exception)
                     {

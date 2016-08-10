@@ -18,7 +18,7 @@ namespace PartsApp.Models
         private Lazy<IList<OperationDetails>> _operationDetailsList;
         public IList<OperationDetails> OperationDetailsList { get { return _operationDetailsList.Value; } }
 
-
+        public Sale(){}
         public Sale(Employee employee, IContragent contragent, string contragentEmployee,
                         DateTime operationDate, string description, List<OperationDetails> operDetList)
         {

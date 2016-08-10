@@ -22,7 +22,7 @@ namespace PartsApp
         {
             operationDateFilterTimePicker.Value = DateTime.Now;            
             FillTheOperationDGV(PartsDAL.FindPurchases());
-            FillTheOperationDetailsDGV(PartsDAL.FindAllSparePartsAvaliableToDisplay());
+            FillTheOperationDetailsDGV(PartsDAL.FindSparePartAvailability());
             SetFiltersPosition();
 
         }//OperationInfoForm_Load
@@ -91,21 +91,21 @@ namespace PartsApp
         /// <param name="availabilityList">Коллекция, эл-тами которой заполняется таблица.</param>
         private void FillTheOperationDetailsDGV(IList<SparePart> spareParts)
         {
-            operationDetailsDGV.Rows.Add(spareParts.Count);
+     //       operationDetailsDGV.Rows.Add(operDetList.Count);
 
-            for (int i = 0; i < spareParts.Count; ++i)
-            {
-                SparePart sparePart = spareParts[i];
-                DataGridViewRow row = operationDetailsDGV.Rows[i];
+     //       for (int i = 0; i < operDetList.Count; ++i)
+     //       {
+     //           SparePart operDet = operDetList[i];
+     //           DataGridViewRow row = operationDetailsDGV.Rows[i];
 
-                row.Cells[Manufacturer.Name].Value = sparePart.Manufacturer;
-                row.Cells[Articul.Name].Value = sparePart.Articul;
-                row.Cells[Title.Name].Value = sparePart.Title;
-                row.Cells[Unit.Name].Value = sparePart.MeasureUnit;
-                row.Cells[Count.Name].Value = sparePart.Count;
-                row.Cells[Price.Name].Value = sparePart.Price;
-     /*!!!*/    row.Cells[Sum.Name].Value = sparePart.Price * sparePart.Count;
-            }//for
+     //           row.Cells[Manufacturer.Name].Value = operDet.Manufacturer;
+     //           row.Cells[Articul.Name].Value = operDet.Articul;
+     //           row.Cells[Title.Name].Value = operDet.Title;
+     //           row.Cells[Unit.Name].Value = operDet.MeasureUnit;
+     //           row.Cells[Count.Name].Value = operDet.Count;
+     //           row.Cells[Price.Name].Value = operDet.Price;
+     ///*!!!*/    row.Cells[Sum.Name].Value = operDet.Price * operDet.Count;
+     //       }//for
         }//FillTheOperationDetailsDGV
 
         private void operationDataGridView_Resize(object sender, EventArgs e)
