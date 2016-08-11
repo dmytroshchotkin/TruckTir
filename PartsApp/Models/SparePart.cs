@@ -173,15 +173,10 @@ namespace PartsApp.Models
         }//
 
         public SparePart(SparePart sparePart)
+            : this (sparePart.SparePartId, sparePart.Photo, sparePart.Manufacturer, sparePart.Articul, sparePart.Title,
+                    sparePart.Description, sparePart.MeasureUnit)
         {
-           this.SparePartId       = sparePart.SparePartId;
-           this.Photo             = sparePart.Photo;    
-           this.Manufacturer      = sparePart.Manufacturer;
-           this.Articul           = sparePart.Articul;  
-           this.Title             = sparePart.Title;   
-           this.Description       = sparePart.Description;
-           this.MeasureUnit       = sparePart.MeasureUnit;
-           this._availabilityList = new Lazy<List<Availability>>(() => sparePart.AvailabilityList);
+           this._availabilityList = new Lazy<List<Availability>>(() => Availability.GetNewAvailabilityList(sparePart.AvailabilityList));
         }//
 
     }//SparePart
