@@ -40,6 +40,13 @@ namespace PartsApp.Models
             Markup           = markup;
         }//
 
+        public Availability(Availability avail)
+            : this(avail.OperationDetails, avail.StorageAddress, avail.Markup)
+        {
+
+        }//
+
+
         /// <summary>
         /// Возвращает максимальную цену продажи из переданного списка.
         /// </summary>
@@ -74,6 +81,20 @@ namespace PartsApp.Models
             else
                 return String.Format("{0} ({1})", mainStorageCount, virtStorageCount);
         }//GetTotalCount
+        /// <summary>
+        /// Возвращает список новых объектов созданного на основании переданного списка.
+        /// </summary>
+        /// <param name="availabilityList">Список объектов</param>
+        /// <returns></returns>
+        public static List<Availability> GetNewAvailabilityList(List<Availability> availabilityList)
+        {
+            List<Availability> newAvailList = new List<Availability>();
+            foreach (Availability avail in availabilityList)
+                newAvailList.Add(new Availability(avail));
+
+            return newAvailList;
+        }//GetNewAvailabilityList
+
     }//Availability
 
 }//namespace

@@ -340,79 +340,7 @@ namespace PartsApp
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion
-
-        /*Нумерация строк partsDataGridView*/
-        private void partsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
-        {
-            DataGridView dataGridView = sender as DataGridView;
-            int index = e.RowIndex;
-            string indexStr = (index + 1).ToString();
-            object header = dataGridView.Rows[index].HeaderCell.Value;
-            if (header == null || !header.Equals(indexStr))
-                dataGridView.Rows[index].HeaderCell.Value = indexStr;
-        }//partsDataGridView_RowPrePaint
-
-        //Событие исп-ся для регулирования ширины RowHeaders.
-        private void partsDataGridView_DataSourceChanged(object sender, EventArgs e)
-        {
-            //Заполняем столбец 'Цена продажи' и 'Наличие'.
-            foreach (DataGridViewRow row in partsDataGridView.Rows)
-            {
-                SparePart sp = row.DataBoundItem as SparePart;
-                if (sp.AvailabilityList.Count != 0)
-                {
-                    row.Cells[AvaliabilityCol.Index].Value = Availability.GetTotalCount(sp.AvailabilityList);
-                    row.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sp.AvailabilityList);
-                }//if
-            }//foreach   
-
-            //Обновляем rowsCountLabel по количеству строк. 
-            rowsCountLabel.Text = partsDataGridView.Rows.Count.ToString();
-
-            //обработка размера RowHeaders.
-            int i, count = partsDataGridView.Rows.Count;
-            for (i = 0; count != 0; ++i)
-            {
-                count /= 10;
-            }//for    
-            partsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
-
-            changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
-            saveChangesButton.Enabled = cancelChangesButton.Enabled = false; 
-            Deselection();
-
-            //Устанавливаем постоянную позицию для отображения Фото.           
-            DataGridViewCell cell2 = partsDataGridView.Columns[1].HeaderCell;
-            Rectangle rect = partsDataGridView.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
-            photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDataGridView.Location.Y);
-        }//partsDataGridView_DataSourceChanged
-
-        /// <summary>
-        /// Cобытие изменения DataSource в таблице доп. информации.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void extPartsDataGridView_DataSourceChanged(object sender, EventArgs e)
-        {
-            if (extPartsDataGridView.DataSource == null) 
-                return;
-            
-            //обработка размера RowHeaders.
-            int i, count = extPartsDataGridView.Rows.Count;
-            for (i = 0; count != 0; ++i)
-            {
-                count /= 10;
-            }//for    
-            extPartsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
-
-            //changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
-            //убираем выделение строк.
-            extPartsDataGridView.ClearSelection();
-        }//extPartsDataGridView_DataSourceChanged
-        //События обработки изменения markupNumericUpDown     
-
-
+        #endregion        
         #region Методы связанные с поиском товара.       
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -695,57 +623,8 @@ namespace PartsApp
             }//catch            
         }//markupComboBox_SelectedIndexChanged
 
-        ///// <summary>
-        ///// Возвращает выбранное поль-лем значение наценки. При вводе не числового значения выбрасывает ошибку.
-        ///// </summary>
-        ///// <returns></returns>
-        //private double GetMarkupValue(string markupType)
-        //{
-        //    double markup = 0;
-        //    //Проверяем выбранное или введенное значение наценки на наличие в базе.
-        //    try
-        //    {
-        //        markup = PartsDAL.FindMarkupValue(markupType);
-        //    }//try
-        //    //Если значение введено вручную и не содержится в базе.    
-        //    catch (InvalidOperationException)
-        //    {
-        //        //Проверяем является введенное поль-лем значение числом.
-        //        markup = Convert.ToDouble(markupComboBox.Text);              
-        //    }//catch
-
-        //    return markup;
-        //}//GetMarkupValue
-        ///// <summary>
-        ///// Возвращает тип наценки по заданному значению. 
-        ///// </summary>
-        ///// <param name="markup">Заданная наценка.</param>
-        ///// <returns></returns>
-        //private string GetMarkupType(double markup)
-        //{
-        //    string markupType = null;
-        //    //Проверяем выбранное или введенное значение наценки на наличие в базе.
-        //    try
-        //    {
-        //        markupType = PartsDAL.FindMarkupType(markup);
-        //    }//try
-        //    //Если значение введено вручную и не содержится в базе.    
-        //    catch (InvalidOperationException)
-        //    {
-        //        if (markup > 0) 
-        //            markupType = "Другая наценка";
-        //        else if (markup < 0)
-        //            markupType = "Уценка";
-        //    }//catch
-
-        //    return markupType;
-        //}//GetMarkupType
-
         private void saveChangesButton_Click(object sender, EventArgs e)
         {                      
-            //Визуальное выделение.
-/*!!!*/     //Task.Factory.StartNew(() => { progressBar.Maximum / 2; }); //Не пополняется прогресс бар, возм-но нужно запустить в отд. потоке.
-            progressBar.Value = progressBar.Maximum / 2;
             Cursor = Cursors.WaitCursor;
 
             try
@@ -753,7 +632,7 @@ namespace PartsApp
                 PartsDAL.UpdateSparePartMarkup(changeMarkupBufferDict);
                 //Действия осущ-мые при удачной записи в базу.
                 saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопки недоступными.
-                progressBar.Value = progressBar.Maximum;
+
                 //Перезаписываем начальный список.            
                 origSpList = Cloner.Clone(SpList);
 
@@ -766,8 +645,6 @@ namespace PartsApp
                 else MessageBox.Show(String.Format("Ошибка записи изменения наценки\n{0}", ex.Message));
             }//catch    
 
-            
-            progressBar.Value = 0;
             Cursor = Cursors.Default;
         }//saveChangesButton_Click
 
@@ -776,13 +653,9 @@ namespace PartsApp
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопку недоступной.
              
             //Отменяем все изменения.
-            SpList = (List<SparePart>)Cloner.Clone(origSpList);
-            //ExtSpList = (List<SparePart>)Cloner.Clone(origExtSpList);
-
-            //partsDataGridView.DataSource = SpList;
+            ChangeDataSource(origSpList);
 
             changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
-
         }//cancelChangesButton_Click
 
         /// <summary>
@@ -802,6 +675,9 @@ namespace PartsApp
                     availList.ForEach(av => av.Markup = markup);
                     //запоминем объекты Availability наценка кот. изменилась.                    
                     availList.ForEach(av => SaveMarkupChangeToBuffer(av));
+                    //Меняем значение наценки в соотв. ячейках доп. таблицы.
+                    foreach (DataGridViewRow extRow in extPartsDataGridView.Rows)
+                        extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); 
                     //Присваиваем новое значение столбцу 'ЦенаПродажи'.
                     row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(availList); 
                 }//if                                                      
@@ -898,208 +774,19 @@ namespace PartsApp
         #endregion
         #region Обработчики событий для талбиц.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      
-        private void extPartsDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            DataGridView grid = (DataGridView)sender;
-            DataGridViewRow row = grid.Rows[e.RowIndex];
-            DataGridViewColumn col = grid.Columns[e.ColumnIndex];
-
-            if (row.DataBoundItem != null)
-                if (col.DataPropertyName.Contains("."))
-                {
-                    string[] props = col.DataPropertyName.Split('.');
-                    Type type = row.DataBoundItem.GetType();
-                    System.Reflection.PropertyInfo propInfo = type.GetProperty(props[0]);
-                    object val = propInfo.GetValue(row.DataBoundItem, null);
-                    for (int i = 1; i < props.Length; i++)
-                    {
-                        propInfo = val.GetType().GetProperty(props[i]);
-                        val = propInfo.GetValue(val, null);
-                    }//for
-                    e.Value = val;
-                }//if
-        }//extPartsDataGridView_CellFormatting
-
-        private void extPartsDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            
-        }//extPartsDataGridView_RowsAdded
-
-        private void extPartsDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            StorageAddressExtCol.Visible = NoteExtCol.Visible = false;
-            foreach (DataGridViewRow row in extPartsDataGridView.Rows)
-            {
-                Availability avail = row.DataBoundItem as Availability;
-
-                row.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup); //Заполняем ячейки столбца 'Тип наценки'
-
-                //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.
-                if (avail.StorageAddress != null)
-                    StorageAddressExtCol.Visible = true;
-
-                if (avail.OperationDetails.Purchase.Description != null)
-                    NoteExtCol.Visible = true;
-            }//foreach
-        }//extPartsDataGridView_DataBindingComplete
-
-        private void extPartsDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex == SellingPriceExtCol.Index)
-            {
-                DataGridViewRow extRow = extPartsDataGridView.Rows[e.RowIndex];
-
-                Availability avail = extRow.DataBoundItem as Availability;
-                extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup);//меняем тип наценки.
-
-                //Обновляем ячейки 'Цена продажи' и 'Тип наценки'.
-                extPartsDataGridView.InvalidateCell(extRow.Cells[e.ColumnIndex]);
-                extPartsDataGridView.InvalidateCell(extRow.Cells[MarkupCol.Index]);
-
-                //Обновляем столбец 'Цена продажи' в главной таблице.
-                SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
-            }//if            
-        }//extPartsDataGridView_CellEndEdit
-
-
-
-
-
 
         /// <summary>
-        /// Задает макс. значение в необходимую ячейку столбца "SellingPriceCol".
+        /// Событие для окончания отображения Фотографии.
         /// </summary>
-        /// <param name="sparePart">Товар, в соотв. строке в таблице которого меняется цена продажи.</param>
-        private void SetMaxValueToSellingPriceColumn(SparePart sparePart)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void partsDataGridView_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
-            foreach (DataGridViewRow mainRow in partsDataGridView.Rows)
-            {
-                if (Convert.ToInt32(mainRow.Cells[SparePartIdCol.Index].Value) == sparePart.SparePartId)
-                {
-                    mainRow.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
-                    break;
-                }//if
-            }//foreach
-        }//SetMaxValueToSellingPriceColumn
+            //Проверяем отображается ли сейчас photoPictureBox.
+            if (photoPictureBox.Visible == true) 
+                photoPictureBox.Visible = false;
+        }//partsDataGridView_CellMouseLeave
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion
-
-        private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            ////Если нет выделенных строк, то выходим.
-            //if (partsDataGridView.SelectedCells.Count == 0) return;
-
-            ////выделяем строки всех выделенных клеток.
-            //foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
-            //foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
-
-            //foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
-            //{
-            //    int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
-            //    //Ищем все записи с нужным SparaPartId.
-            //    foreach (var sparePart in ExtSpList)
-            //    {
-            //        if (sparePart.SparePartId == sparePartId)
-            //        {
-            //            //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
-            //        }//if
-            //    }//foreach
-
-            //    //Находим запись в SpList с данным SparePartId.
-            //    foreach (var sparePart in SpList)
-            //    {
-            //        if (sparePart.SparePartId == sparePartId)
-            //        {
-            //            //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
-            //            row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
-            //            break;
-            //        }//if
-            //        partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
-            //    }//foreach
-            //}//foreach   
-            ////Обновляем отображение столбцов в extPartsDataGridView.
-            //extPartsDataGridView.Invalidate();    
-
-        }//excRateNumericUpDown_ValueChanged
-        
-        //Событие для отображения расширенной информации о Наличии запчасти.
-        private void partsDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            //Если заголовок то ничего не делаем.
-            if (e.RowIndex == partsDataGridView.Columns[0].HeaderCell.RowIndex) 
-                return;
-
-            //Если ЛКМ
-            if (e.Button == MouseButtons.Left)
-            {
-                excRateNumericUpDown.Enabled = true;
-                markupComboBox.Enabled = true; //Делаем доступным функционал изменения наценки. 
-
-                ////Находим список всех приходов в наличии искомой запчасти.
-                //int sparePartId = Convert.ToInt32(partsDataGridView.Rows[e.RowIndex].Cells[SparePartIdCol.Name].Value);
-                //extPartsDataGridView.DataSource = FindSparePartsFromExtSpListBySparePartId(sparePartId);
-            }//if
-            //Если ПКМ, выводим контекстное меню.
-            else
-            {
-                //Находим позицию в таблице, где был сделан клик.
-                Point cellLocation = partsDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
-                Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
-                //Выводим контекстное меню.
-                partsDGVContextMenuStrip.Show(partsDataGridView, location);
-            }//else
-        }//partsDataGridView_CellMouseClick
-
-        //События инициируемые для сброса выделения строк в partsDataGridView
-        private void menuStrip_Click(object sender, EventArgs e)
-        {
-            Deselection();
-        }//menuStrip_Click
-        private void componentPanel_Click(object sender, EventArgs e)
-        {
-            Deselection();
-        }//componentPanel_Click  
-        private void partsStatusStrip_Click(object sender, EventArgs e)
-        {
-            Deselection();
-        }      
-        private void extPartsStatusStrip_Click(object sender, EventArgs e)
-        {
-            Deselection();
-        }//extPartsStatusStrip_Click
-        private void extPartsGroupBox_Click(object sender, System.EventArgs e)
-        {
-            extPartsDataGridView.ClearSelection(); //Убираем все выделения.
-        }
         //Событие для отображения Фотографии.
         private void partsDataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
@@ -1153,12 +840,192 @@ namespace PartsApp
                 //По-моему эта обработка нужна, для игнорирования ошибки. Проверить!
             }
         }//partsDataGridView_CellMouseEnter
-        //Событие для окончания отображения Фотографии.
-        private void partsDataGridView_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+
+        //Событие для отображения расширенной информации о Наличии запчасти.
+        private void partsDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            //Проверяем отображается ли сейчас photoPictureBox.
-            if (photoPictureBox.Visible == true) photoPictureBox.Visible = false;
-        }//partsDataGridView_CellMouseLeave
+            //Если заголовок то ничего не делаем.
+            if (e.RowIndex == partsDataGridView.Columns[0].HeaderCell.RowIndex)
+                return;
+
+            //Если ЛКМ
+            if (e.Button == MouseButtons.Left)
+            {
+                excRateNumericUpDown.Enabled = true;
+                markupComboBox.Enabled = true; //Делаем доступным функционал изменения наценки. 
+            }//if
+            //Если ПКМ, выводим контекстное меню.
+            else
+            {
+                //Находим позицию в таблице, где был сделан клик.
+                Point cellLocation = partsDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
+                Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
+                //Выводим контекстное меню.
+                partsDGVContextMenuStrip.Show(partsDataGridView, location);
+            }//else
+        }//partsDataGridView_CellMouseClick
+
+        //Событие исп-ся для регулирования ширины RowHeaders.
+        private void partsDataGridView_DataSourceChanged(object sender, EventArgs e)
+        {
+            //Заполняем столбец 'Цена продажи' и 'Наличие'.
+            foreach (DataGridViewRow row in partsDataGridView.Rows)
+            {
+                SparePart sp = row.DataBoundItem as SparePart;
+                if (sp.AvailabilityList.Count != 0)
+                {
+                    row.Cells[AvaliabilityCol.Index].Value = Availability.GetTotalCount(sp.AvailabilityList);
+                    row.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sp.AvailabilityList);
+                }//if
+            }//foreach   
+
+            //Обновляем rowsCountLabel по количеству строк. 
+            rowsCountLabel.Text = partsDataGridView.Rows.Count.ToString();
+
+            //обработка размера RowHeaders.
+            int i, count = partsDataGridView.Rows.Count;
+            for (i = 0; count != 0; ++i)
+            {
+                count /= 10;
+            }//for    
+            partsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
+
+            changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
+            saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
+            Deselection();
+
+            //Устанавливаем постоянную позицию для отображения Фото.           
+            DataGridViewCell cell2 = partsDataGridView.Columns[1].HeaderCell;
+            Rectangle rect = partsDataGridView.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
+            photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDataGridView.Location.Y);
+        }//partsDataGridView_DataSourceChanged
+
+        /// <summary>
+        /// Нумерация строк partsDataGridView.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void partsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            DataGridView dataGridView = sender as DataGridView;
+            int index = e.RowIndex;
+            string indexStr = (index + 1).ToString();
+            object header = dataGridView.Rows[index].HeaderCell.Value;
+            if (header == null || !header.Equals(indexStr))
+                dataGridView.Rows[index].HeaderCell.Value = indexStr;
+        }//partsDataGridView_RowPrePaint
+
+
+
+        /// <summary>
+        /// Cобытие изменения DataSource в таблице доп. информации.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void extPartsDataGridView_DataSourceChanged(object sender, EventArgs e)
+        {
+            if (extPartsDataGridView.DataSource == null)
+                return;
+
+            //обработка размера RowHeaders.
+            int i, count = extPartsDataGridView.Rows.Count;
+            for (i = 0; count != 0; ++i)
+            {
+                count /= 10;
+            }//for    
+            extPartsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
+
+            //changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
+            //убираем выделение строк.
+            extPartsDataGridView.ClearSelection();
+        }//extPartsDataGridView_DataSourceChanged
+
+        private void extPartsDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            DataGridView grid = (DataGridView)sender;
+            DataGridViewRow row = grid.Rows[e.RowIndex];
+            DataGridViewColumn col = grid.Columns[e.ColumnIndex];
+
+            if (row.DataBoundItem != null)
+                if (col.DataPropertyName.Contains("."))
+                {
+                    string[] props = col.DataPropertyName.Split('.');
+                    Type type = row.DataBoundItem.GetType();
+                    System.Reflection.PropertyInfo propInfo = type.GetProperty(props[0]);
+                    object val = propInfo.GetValue(row.DataBoundItem, null);
+                    for (int i = 1; i < props.Length; i++)
+                    {
+                        propInfo = val.GetType().GetProperty(props[i]);
+                        val = propInfo.GetValue(val, null);
+                    }//for
+                    e.Value = val;
+                }//if
+        }//extPartsDataGridView_CellFormatting
+
+        private void extPartsDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+
+        }//extPartsDataGridView_RowsAdded
+
+        private void extPartsDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            StorageAddressExtCol.Visible = NoteExtCol.Visible = false;
+            foreach (DataGridViewRow row in extPartsDataGridView.Rows)
+            {
+                Availability avail = row.DataBoundItem as Availability;
+
+                row.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup); //Заполняем ячейки столбца 'Тип наценки'
+
+                //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.
+                if (avail.StorageAddress != null)
+                    StorageAddressExtCol.Visible = true;
+
+                if (avail.OperationDetails.Purchase.Description != null)
+                    NoteExtCol.Visible = true;
+            }//foreach
+
+            extPartsDataGridView.ClearSelection();//Убираем выделение ячейки.
+        }//extPartsDataGridView_DataBindingComplete
+
+        private void extPartsDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == SellingPriceExtCol.Index)
+            {
+                DataGridViewRow extRow = extPartsDataGridView.Rows[e.RowIndex];
+
+                Availability avail = extRow.DataBoundItem as Availability;
+                extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup);//меняем тип наценки.
+
+                //Обновляем ячейки 'Цена продажи' и 'Тип наценки'.
+                extPartsDataGridView.InvalidateCell(extRow.Cells[e.ColumnIndex]);
+                extPartsDataGridView.InvalidateCell(extRow.Cells[MarkupCol.Index]);
+
+                //Обновляем столбец 'Цена продажи' в главной таблице.
+                SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
+            }//if            
+        }//extPartsDataGridView_CellEndEdit
+
+
+
+
+
+
+
+        /// <summary>
+        /// Задает макс. значение в необходимую ячейку столбца "SellingPriceCol".
+        /// </summary>
+        /// <param name="sparePart">Товар, в соотв. строке в таблице которого меняется цена продажи.</param>
+        private void SetMaxValueToSellingPriceColumn(SparePart sparePart)
+        {
+            foreach (DataGridViewRow mainRow in partsDataGridView.Rows)
+            {
+                if (Convert.ToInt32(mainRow.Cells[SparePartIdCol.Index].Value) == sparePart.SparePartId)
+                {
+                    mainRow.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
+                    break;
+                }//if
+            }//foreach
+        }//SetMaxValueToSellingPriceColumn
 
         /// <summary>
         /// Метод изменения источника данных для обоих dataGridView.
@@ -1166,20 +1033,21 @@ namespace PartsApp
         /// <param name="availabilityList">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
+            SpList = Cloner.Clone(spareParts);
+            origSpList = spareParts;
+
             BindingSource binding = new BindingSource();
             //binding.SuspendBinding();
-            binding.DataSource = spareParts;
+            binding.DataSource = SpList;
             //binding.ResumeBinding();
-            
+
             //Очищаем и заполняем DataSource новымы значениями.
             //partsDataGridView.DataSource = extPartsDataGridView.DataSource = null; /*Выдаёт ошибку при раскомментировании*/
             partsDataGridView.DataSource = extPartsDataGridView.DataSource = binding;
 
-            IList<SparePart> orderSPList = Cloner.Clone(spareParts.OrderBy(sp => sp.Title).ToList());
-            SpList = orderSPList;
-            origSpList = Cloner.Clone(spareParts.OrderBy(sp => sp.Title).ToList());
+            
         }//ChangeDataSource
-       
+
         /// <summary>
         /// Осуществляет действия необходимые при сбросе выделения.
         /// </summary>
@@ -1191,9 +1059,7 @@ namespace PartsApp
             markupComboBox.Text = String.Empty;
             markupComboBox.Enabled = false;
 
-            partsDataGridView.ClearSelection(); //Очищаем буфер выбранных эл-тов
             extPartsDataGridView.ClearSelection();
-            //extPartsDataGridView.DataSource = null;
         }//Deselection        
 
         /// <summary>
@@ -1206,7 +1072,7 @@ namespace PartsApp
         public Image ResizeOrigImg(Image image, int nWidth, int nHeight)
         {
             int newWidth, newHeight;
-            
+
             var coefH = (double)nHeight / (double)image.Height;
             var coefW = (double)nWidth / (double)image.Width;
             if (coefW >= coefH)
@@ -1234,6 +1100,81 @@ namespace PartsApp
 
             return result;
         }//ResizeOrigImg
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            ////Если нет выделенных строк, то выходим.
+            //if (partsDataGridView.SelectedCells.Count == 0) return;
+
+            ////выделяем строки всех выделенных клеток.
+            //foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+            //foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+
+            //foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
+            //{
+            //    int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
+            //    //Ищем все записи с нужным SparaPartId.
+            //    foreach (var sparePart in ExtSpList)
+            //    {
+            //        if (sparePart.SparePartId == sparePartId)
+            //        {
+            //            //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
+            //        }//if
+            //    }//foreach
+
+            //    //Находим запись в SpList с данным SparePartId.
+            //    foreach (var sparePart in SpList)
+            //    {
+            //        if (sparePart.SparePartId == sparePartId)
+            //        {
+            //            //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
+            //            row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
+            //            break;
+            //        }//if
+            //        partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
+            //    }//foreach
+            //}//foreach   
+            ////Обновляем отображение столбцов в extPartsDataGridView.
+            //extPartsDataGridView.Invalidate();    
+
+        }//excRateNumericUpDown_ValueChanged
+        
+
+
+        //События инициируемые для сброса выделения строк в partsDataGridView
+        private void menuStrip_Click(object sender, EventArgs e)
+        {
+            Deselection();
+        }//menuStrip_Click
+        private void componentPanel_Click(object sender, EventArgs e)
+        {
+            Deselection();
+        }//componentPanel_Click  
+        private void partsStatusStrip_Click(object sender, EventArgs e)
+        {
+            Deselection();
+        }      
+        private void extPartsStatusStrip_Click(object sender, EventArgs e)
+        {
+            Deselection();
+        }//extPartsStatusStrip_Click
+        private void extPartsGroupBox_Click(object sender, System.EventArgs e)
+        {
+            extPartsDataGridView.ClearSelection(); //Убираем все выделения.
+        }
+
+        
+
+
 
         #region Методы вызова дополнительных окон.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
