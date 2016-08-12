@@ -1128,40 +1128,23 @@ namespace PartsApp
 
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            ////Если нет выделенных строк, то выходим.
-            //if (partsDataGridView.SelectedCells.Count == 0) return;
+            //Если нет выделенных строк, то выходим.
+            if (partsDataGridView.SelectedCells.Count == 0) 
+                return;
 
-            ////выделяем строки всех выделенных клеток.
-            //foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
-            //foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+            //выделяем строки всех выделенных клеток.
+            foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+            foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
 
-            //foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
-            //{
-            //    int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
-            //    //Ищем все записи с нужным SparaPartId.
-            //    foreach (var sparePart in ExtSpList)
-            //    {
-            //        if (sparePart.SparePartId == sparePartId)
-            //        {
-            //            //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
-            //        }//if
-            //    }//foreach
-
-            //    //Находим запись в SpList с данным SparePartId.
-            //    foreach (var sparePart in SpList)
-            //    {
-            //        if (sparePart.SparePartId == sparePartId)
-            //        {
-            //            //sparePart.ExcRate = (double)excRateNumericUpDown.Value;
-            //            row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
-            //            break;
-            //        }//if
-            //        partsDataGridView.InvalidateCell(row.Cells[SellingPriceCol.Name]);
-            //    }//foreach
-            //}//foreach   
-            ////Обновляем отображение столбцов в extPartsDataGridView.
-            //extPartsDataGridView.Invalidate();    
-
+            decimal rate = excRateNumericUpDown.Value; //Находим установленный курс.
+            foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
+            {
+                SparePart sparePart = row.DataBoundItem as SparePart; //Находим соотв. строке объект.
+                float selPrice = Availability.GetMaxSellingPrice(sparePart.AvailabilityList); 
+                
+                //Присваиваем новое значение в ячейку 'Цена продажи'.
+                row.Cells[SellingPriceCol.Name].Value = (decimal)selPrice / rate;
+            }//foreach     
         }//excRateNumericUpDown_ValueChanged
         
 
