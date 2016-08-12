@@ -242,8 +242,16 @@ namespace PartsApp
                 cmd.Parameters.AddWithValue("@Articul", sparePart.Articul);
                 cmd.Parameters.AddWithValue("@Title", sparePart.Title);
                 cmd.Parameters.AddWithValue("@Description", sparePart.Description);
-                cmd.Parameters.AddWithValue("@ManufacturerId", FindManufacturersIdByName(sparePart.Manufacturer));
                 cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
+
+                //Находим существующий manufacturerId в базе или добавляем новый объект если отсутствует.
+                if (sparePart.Manufacturer == null)
+                    cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.Manufacturer);
+                else
+                {
+                    IList<int> manufIds = FindManufacturersIdByName(sparePart.Manufacturer);
+                    cmd.Parameters.AddWithValue("@ManufacturerId", (manufIds.Count == 0) ? AddManufacturer(sparePart.Manufacturer) : manufIds[0]);
+                }//else
 
                 cmd.ExecuteNonQuery();
 
