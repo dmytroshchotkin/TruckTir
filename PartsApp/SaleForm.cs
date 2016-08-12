@@ -478,7 +478,7 @@ namespace PartsApp
                         //int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
                         //if (sparePartId != currentSparePart.SparePartId)
                         //{
-                        //    foreach (var sparePart in spareParts)
+                        //    foreach (var sparePart in sparePartsList)
                         //        if (sparePart.SparePartId == sparePartId)
                         //            currentSparePart = sparePart;                            
                         //}//if
@@ -535,7 +535,7 @@ namespace PartsApp
 
                     //if (sparePartId != currentSparePart.SparePartId)
                     //{
-                    //    foreach (var sparePart in spareParts)
+                    //    foreach (var sparePart in sparePartsList)
                     //        if (sparePart.SparePartId == sparePartId)
                     //            currentSparePart = sparePart;
                     //}//if

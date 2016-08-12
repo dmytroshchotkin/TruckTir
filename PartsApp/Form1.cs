@@ -15,12 +15,19 @@ namespace PartsApp
 {
     public partial class Form1 : Form
     {
-        IList<SparePart> searchSpList;                                      //для выпадающего списка в searchTextBox.
-        IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;  //для изменения наценки.  
-        IList<SparePart> SpList, origSpList;                                //для вывода в partsDataGridView.  
+        /// <summary>
+        /// Список для выпадающего списка при поиске в searchTextBox.
+        /// </summary>
+        IList<SparePart> searchSpList;                                      
+        /// <summary>
+        /// Коллекция для запоминания объектов с изм. наценкой.
+        /// </summary>
+        IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;    
+        /// <summary>
+        /// Коллекция для вывода в таблицах.
+        /// </summary>
+        IList<SparePart> SpList, origSpList;                                
         
-        //IList<Availability> ExtSpList;
-        //IList<SparePart> origExtSpList;                          //для вывода в extPartsDataGridView.  
         /// <summary>
         /// Переменная для запоминания введенного поль-лем текста в searchTextBox.
         /// </summary>
@@ -634,7 +641,7 @@ namespace PartsApp
                 saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопки недоступными.
 
                 //Перезаписываем начальный список.            
-                origSpList = Cloner.Clone(SpList);
+                origSpList = SparePart.GetNewSparePartsList(SpList);
 
                 changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
             }//try			
@@ -744,7 +751,7 @@ namespace PartsApp
             {
                 for (int j = i + 1; j < spareParts.Count; ++j)
                 {
-                    //if (spareParts[i].Markup != spareParts[j].Markup) isSameMarkup = false;
+                    //if (sparePartsList[i].Markup != sparePartsList[j].Markup) isSameMarkup = false;
                 }//for j
                 if (isSameMarkup == false) break;
             }//for i
@@ -1033,7 +1040,7 @@ namespace PartsApp
         /// <param name="availabilityList">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
-            SpList = Cloner.Clone(spareParts);
+            SpList = SparePart.GetNewSparePartsList(spareParts);
             origSpList = spareParts;
 
             BindingSource binding = new BindingSource();
@@ -1265,21 +1272,6 @@ namespace PartsApp
         #endregion
 
     }//Form1
-
-    public static class Cloner
-    {
-        public static IList<SparePart> Clone(IList<SparePart> spareParts)
-        {
-            IList<SparePart> _spareParts = new List<SparePart>(spareParts.Count);
-
-            for (int i = 0; i < spareParts.Count; ++i)
-            {
-                _spareParts.Add(new SparePart(spareParts[i]));
-            }
-
-            return _spareParts;
-        }//Clone
-    }//Cloner
 
 }//namespace
 

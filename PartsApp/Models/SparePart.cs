@@ -179,6 +179,22 @@ namespace PartsApp.Models
            this._availabilityList = new Lazy<List<Availability>>(() => Availability.GetNewAvailabilityList(sparePart.AvailabilityList));
         }//
 
+        /// <summary>
+        /// Возвращает список новых объектов созданного на основании переданного списка.
+        /// </summary>
+        /// <param name="sparePartsList">Список объектов</param>
+        /// <returns></returns>
+        public static IList<SparePart> GetNewSparePartsList(IList<SparePart> sparePartsList)
+        {
+            IList<SparePart> newSparePartsList = new List<SparePart>(sparePartsList.Count);
+
+            for (int i = 0; i < sparePartsList.Count; ++i)
+            {
+                newSparePartsList.Add(new SparePart(sparePartsList[i]));
+            }
+
+            return newSparePartsList;
+        }//GetNewSparePartsList
     }//SparePart
 
 }//namespace
