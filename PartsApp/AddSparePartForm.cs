@@ -323,17 +323,7 @@ namespace PartsApp
             sparePart.Articul = articulTextBox.Text.Trim();
             sparePart.Title = titleTextBox.Text.Trim();
             sparePart.Description = (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null;
-            //добаляем manufacturer
-            if (String.IsNullOrWhiteSpace(manufacturerTextBox.Text) == false)
-            {
-                //Если такого ManufacturerName нет в базе, значит добавить.
-                if (PartsDAL.FindManufacturersIdByName(manufacturerTextBox.Text.Trim()).Count == 0)
-                    PartsDAL.AddManufacturer(manufacturerTextBox.Text.Trim());
-
-                sparePart.Manufacturer = manufacturerTextBox.Text.Trim();
-            }//else
-
-            //Вставляем ед. изм. 
+            sparePart.Manufacturer = (String.IsNullOrWhiteSpace(manufacturerTextBox.Text)) ? null : manufacturerTextBox.Text.Trim();
             sparePart.MeasureUnit = MeasureUnitComboBox.SelectedValue.ToString();
         }//FillTheSparePartFromForm
 
