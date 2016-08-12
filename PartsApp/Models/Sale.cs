@@ -39,7 +39,9 @@ namespace PartsApp.Models
             Contragent            = contragent;
             ContragentEmployee    = contragentEmployee;
             OperationDate         = operationDate;
-            Description           = description;          
+            Description           = description;
+
+            _operationDetailsList = new Lazy<IList<OperationDetails>>(() => PartsDAL.FindSaleDetails(this));
         }//
 
     }//Sale

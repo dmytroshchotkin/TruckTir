@@ -61,15 +61,15 @@ namespace PartsApp
             extPartsDataGridView.AutoGenerateColumns = false;
             
 
-            //SupplierExtCol.DataPropertyName = "OperationDetails.Purchase.Contragent.ContragentName";
-            //PurchaseIdExtCol.DataPropertyName = "OperationDetails.Purchase.OperationId";
+            //SupplierExtCol.DataPropertyName = "OperationDetails.Operation.Contragent.ContragentName";
+            //PurchaseIdExtCol.DataPropertyName = "OperationDetails.Operation.OperationId";
             //ArticulExtCol.DataPropertyName = "OperationDetails.SparePart.Articul";
-            //PurchaseDateExtCol.DataPropertyName = "OperationDetails.Purchase.OperationDate";
+            //PurchaseDateExtCol.DataPropertyName = "OperationDetails.Operation.OperationDate";
             //StorageAddressExtCol.DataPropertyName = "StorageAddress";
             //MeasureUnitExtCol.DataPropertyName = "OperationDetails.SparePart.MeasureUnit";
             //AvailabilityExtCol.DataPropertyName = "OperationDetails.Count";
             //SellingPriceExtCol.DataPropertyName = "SellingPrice";
-            //NoteExtCol.DataPropertyName = "OperationDetails.Purchase.Description";
+            //NoteExtCol.DataPropertyName = "OperationDetails.Operation.Description";
             
             //extPartsDataGridView.DataMember = "AvailabilityList";
 
@@ -725,7 +725,7 @@ namespace PartsApp
         private void SaveMarkupChangeToBuffer(Availability avail)
         {
             int sparePartId = avail.OperationDetails.SparePart.SparePartId;
-            int purchaseId = avail.OperationDetails.Purchase.OperationId;
+            int purchaseId = avail.OperationDetails.Operation.OperationId;
 
             if (changeMarkupBufferDict.ContainsKey(sparePartId)) //Если уже есть такой SparePartId.
             {
@@ -986,7 +986,7 @@ namespace PartsApp
                 if (avail.StorageAddress != null)
                     StorageAddressExtCol.Visible = true;
 
-                if (avail.OperationDetails.Purchase.Description != null)
+                if (avail.OperationDetails.Operation.Description != null)
                     NoteExtCol.Visible = true;
             }//foreach
 

@@ -36,7 +36,7 @@ namespace PartsApp
             cmd.Parameters.Clear();
             
             cmd.Parameters.AddWithValue("@SparePartId",   operDet.SparePart.SparePartId);
-            cmd.Parameters.AddWithValue("@OperationId",   operDet.Purchase.OperationId);
+            cmd.Parameters.AddWithValue("@OperationId",   operDet.Operation.OperationId);
             cmd.Parameters.AddWithValue("@Price",         operDet.Price);
             cmd.Parameters.AddWithValue("@Markup",        markup);
             cmd.Parameters.AddWithValue("@StorageAdress", storageAddress);
@@ -150,14 +150,14 @@ namespace PartsApp
         private static void SaleSparePartAvaliability(OperationDetails operDet, SQLiteCommand cmd)
         {
             //Узнаем количество данного товара в наличии.
-            double spAvaliabilityCount = FindSparePartAvaliabilityCount(operDet.SparePart.SparePartId, operDet.Purchase.OperationId);
+            double spAvaliabilityCount = FindSparePartAvaliabilityCount(operDet.SparePart.SparePartId, operDet.Operation.OperationId);
             
 
             //Если кол-во продаваемого товара с данного прихода равно всему кол-во товара данной записи, удаляем из таблицы эту запись, иначе обновляем кол-во товара в базе.
             if (spAvaliabilityCount == operDet.Count)
-                DeleteSparePartAvaliability(operDet.SparePart.SparePartId, operDet.Purchase.OperationId, cmd);
+                DeleteSparePartAvaliability(operDet.SparePart.SparePartId, operDet.Operation.OperationId, cmd);
             else
-                UpdateSparePartСountAvaliability(operDet.SparePart.SparePartId, operDet.Purchase.OperationId, spAvaliabilityCount - operDet.Count, cmd);
+                UpdateSparePartСountAvaliability(operDet.SparePart.SparePartId, operDet.Operation.OperationId, spAvaliabilityCount - operDet.Count, cmd);
 
         }//SaleSparePartAvaliability
 
@@ -550,12 +550,12 @@ namespace PartsApp
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
-        #region Модификация таблицы Purchase.
+        #region Модификация таблицы Operation.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Осуществляет полный цикл приходования товара, вставляя записи в таблицы Purchases, Avaliability и PurchaseDetails.
-        /// Возвращает Id вставленной записи в табл. Purchase.
+        /// Возвращает Id вставленной записи в табл. Operation.
         /// </summary>
         /// <param name="sale">Информация о приходе.</param>
         /// <returns></returns>
@@ -574,7 +574,7 @@ namespace PartsApp
                     {
                         try
                         { 
-                            //вставляем запись в таблицу Purchase.
+                            //вставляем запись в таблицу Operation.
                             purchase.OperationId = AddPurchase(purchase, cmd);
                             //вставляем записи в PurchaseDetails и Avaliability.
                             foreach (OperationDetails operDet in purchase.OperationDetailsList)
@@ -644,7 +644,7 @@ namespace PartsApp
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
-            cmd.Parameters.AddWithValue("@OperationId", purchaseDetails.Purchase.OperationId);
+            cmd.Parameters.AddWithValue("@OperationId", purchaseDetails.Operation.OperationId);
             cmd.Parameters.AddWithValue("@SparePartId", purchaseDetails.SparePart.SparePartId);
             cmd.Parameters.AddWithValue("@Quantity",    purchaseDetails.Count);
             cmd.Parameters.AddWithValue("@Price",       purchaseDetails.Price);
@@ -694,7 +694,7 @@ namespace PartsApp
         #region Модификация таблицы Sales.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*!!! Возможно можно убрать параметр IList<SparePart> передавая его св-вом объекта класса Purchase, PurchaseDetails. Надобность класса PurchaseDetail вообще под вопросом, ведь его можно спокойно заменить объектом уже созданного класса SparePart либо же класс SparePart нужно модифицировать в сторону разбиения на большее кол-во классов!*/
+/*!!! Возможно можно убрать параметр IList<SparePart> передавая его св-вом объекта класса Operation, PurchaseDetails. Надобность класса PurchaseDetail вообще под вопросом, ведь его можно спокойно заменить объектом уже созданного класса SparePart либо же класс SparePart нужно модифицировать в сторону разбиения на большее кол-во классов!*/
         /// <summary>
         /// Осуществляет полный цикл продажи товара, вставляя записи в таблицы Sales, Avaliability и SaleDetails.
         /// Возвращает Id вставленной записи в табл. Sale.
@@ -795,7 +795,7 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@OperationId", saleId);
             cmd.Parameters.AddWithValue("@SparePartId", operDet.SparePart.SparePartId);
             cmd.Parameters.AddWithValue("@Quantity", operDet.Count);
-            cmd.Parameters.AddWithValue("@SellingPrice", operDet.Purchase);
+            cmd.Parameters.AddWithValue("@SellingPrice", operDet.Operation);
             
             cmd.ExecuteNonQuery();
         }//AddSaleDetail
@@ -1857,7 +1857,7 @@ namespace PartsApp
 
 
         /// <summary>
-        /// Возвращает объект класса Purchase, найденный по заданному Id. 
+        /// Возвращает объект класса Operation, найденный по заданному Id. 
         /// </summary>
         /// <param name="saleId">Id прихода информацию о котором нужно вернуть.</param>
         /// <returns></returns>
@@ -2002,33 +2002,13 @@ namespace PartsApp
             );
         }//CreateSale
 
-        public static List<SparePart> FindSaleDetails(int saleId)
-        {
-            List<SparePart> sparePartsList = new List<SparePart>();
 
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                const string query = "SELECT * FROM SaleDetails "
-                                   + "WHERE OperationId = @OperationId;";
-
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@OperationId", saleId);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                    sparePartsList.Add(FindSparePart(Convert.ToInt32(dataReader["SparePartId"])));
-                connection.Close();
-            }//using
-
-            return sparePartsList;
-        }//FindSaleDetails
 
 
         /// <summary>
         /// Возвращает детали операции для заданного прихода.
         /// </summary>
-        /// <param name="purchase">Приход.</param>
+        /// <param name="sale">Приход.</param>
         /// <returns></returns>
         public static List<OperationDetails> FindPurchaseDetails(Purchase purchase)
         {
@@ -2057,27 +2037,59 @@ namespace PartsApp
             return operDetList;
         }//FindPurchaseDetails
 
+        /// <summary>
+        /// Возвращает детали операции для заданного расхода.
+        /// </summary>
+        /// <param name="sale">Приход.</param>
+        /// <returns></returns>
+        public static List<OperationDetails> FindSaleDetails(Sale sale)
+        {
+            List<OperationDetails> operDetList = new List<OperationDetails>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                const string query = "SELECT * FROM SaleDetails "
+                                   + "WHERE OperationId = @OperationId;";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@OperationId", sale.OperationId);
+
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            operDetList.Add(CreateOperationDetails(dataReader, sale));
+                    }//using dataReader
+                }//using cmd
+
+                connection.Close();
+            }//using
+
+            return operDetList;
+        }//FindSaleDetails
+
 
 
         private static OperationDetails CreateOperationDetails(SQLiteDataReader dataReader, SparePart sparePart)
         {
             return new OperationDetails
             (
-                sparePart: sparePart,
-                purchase: FindPurchase(Convert.ToInt32(dataReader["OperationId"])),
-                count: Convert.ToSingle(dataReader["Quantity"]),
-                price: Convert.ToSingle(dataReader["Price"])
+                sparePart   : sparePart,
+                operation   : FindPurchase(Convert.ToInt32(dataReader["OperationId"])),
+                count       : Convert.ToSingle(dataReader["Quantity"]),
+                price       : Convert.ToSingle(dataReader["Price"])
             );
         }//CreateOperationDetails
 
-        private static OperationDetails CreateOperationDetails(SQLiteDataReader dataReader, Purchase purchase)
+        private static OperationDetails CreateOperationDetails(SQLiteDataReader dataReader, IOperation operat)
         {
             return new OperationDetails
             (
-                sparePart: FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
-                purchase: purchase,
-                count: Convert.ToSingle(dataReader["Quantity"]),
-                price: Convert.ToSingle(dataReader["Price"])
+                sparePart   : FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
+                operation   : operat,
+                count       : Convert.ToSingle(dataReader["Quantity"]),
+                price       : Convert.ToSingle(dataReader["Price"])
             );
         }//CreateOperationDetails
 
@@ -2773,9 +2785,9 @@ namespace PartsApp
 
 
 
-        //public static IList<Purchase> FindPurchasesByParameters(Purchase sale)
+        //public static IList<Operation> FindPurchasesByParameters(Operation sale)
         //{
-        //    IList<Purchase> operDetList = new List<Purchase>();
+        //    IList<Operation> operDetList = new List<Operation>();
 
         //    using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
         //    {
@@ -2789,7 +2801,7 @@ namespace PartsApp
         //        var dataReader = cmd.ExecuteReader();
         //        while (dataReader.Read())
         //        {
-        //            Purchase sale = new Purchase();
+        //            Operation sale = new Operation();
 
 
         //            operDetList.Add(sale);

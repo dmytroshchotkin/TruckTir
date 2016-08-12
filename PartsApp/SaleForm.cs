@@ -849,7 +849,7 @@ namespace PartsApp
                 int rowIndx = extDataGridView.Rows.Add();
                 DataGridViewRow row = extDataGridView.Rows[rowIndx];
 
-                row.Cells[extSupplier.Index].Value  = avail.OperationDetails.Purchase.Contragent;
+                row.Cells[extSupplier.Index].Value  = avail.OperationDetails.Operation.Contragent;
                 row.Cells[extTitle.Index].Value     = avail.OperationDetails.SparePart.Title;
                 row.Cells[extArticul.Index].Value   = avail.OperationDetails.SparePart.Articul;
                 row.Cells[extUnit.Index].Value      = avail.OperationDetails.SparePart.MeasureUnit;
@@ -866,8 +866,8 @@ namespace PartsApp
                // extDataGridView.Rows[i].Cells["extMarkup"].Value = sparePartsAvaliability[i].Markup;
                 row.Cells[extMarkup.Index].Value        = Models.Markup.GetDescription(avail.Markup);
                 row.Cells[extSellingPrice.Index].Value  = avail.SellingPrice;
-                row.Cells[extPurchaseId.Index].Value    = avail.OperationDetails.Purchase.OperationId;
-                row.Cells[extPurchaseDate.Index].Value  = avail.OperationDetails.Purchase.OperationDate;
+                row.Cells[extPurchaseId.Index].Value    = avail.OperationDetails.Operation.OperationId;
+                row.Cells[extPurchaseDate.Index].Value  = avail.OperationDetails.Operation.OperationDate;
             }//foreach            
             
             //Если отпускная цена у всех приходов одинаковая, выводим её в saleDGV.
@@ -1342,7 +1342,7 @@ namespace PartsApp
                 operDetList: operDetList
             );
 
-            //operDetList.ForEach(od => od.Purchase = sale);
+            //operDetList.ForEach(od => od.Operation = sale);
 
             return sale;
         }//CreateSaleFromForm

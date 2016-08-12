@@ -44,6 +44,6 @@ namespace PartsApp.Models
             _operationDetailsList = new Lazy<IList<OperationDetails>>(() => PartsDAL.FindPurchaseDetails(this));
         }//
 
-    }//Purchase 
+    }//Operation 
 
 }//namespace

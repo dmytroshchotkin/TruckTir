@@ -1205,7 +1205,7 @@ namespace PartsApp
         }//purchaseDataGridView_CellMouseClick        
 
         /// <summary>
-        /// Возвращает объект типа Purchase, созданный из данных формы.
+        /// Возвращает объект типа Operation, созданный из данных формы.
         /// </summary>
         /// <returns></returns>
         public Purchase CreatePurchaseFromForm()
@@ -1233,7 +1233,7 @@ namespace PartsApp
                 operDetList: operDetList                                                
             );
 
-            operDetList.ForEach(od => od.Purchase = purchase);
+            operDetList.ForEach(od => od.Operation = purchase);
 
             return purchase;
         }//CreatePurchaseFromForm
