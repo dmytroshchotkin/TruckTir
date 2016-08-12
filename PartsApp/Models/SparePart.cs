@@ -189,9 +189,7 @@ namespace PartsApp.Models
             IList<SparePart> newSparePartsList = new List<SparePart>(sparePartsList.Count);
 
             for (int i = 0; i < sparePartsList.Count; ++i)
-            {
                 newSparePartsList.Add(new SparePart(sparePartsList[i]));
-            }
 
             return newSparePartsList;
         }//GetNewSparePartsList

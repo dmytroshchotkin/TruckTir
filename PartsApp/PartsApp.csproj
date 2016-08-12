@@ -134,6 +134,7 @@
     </Compile>
     <Compile Include="SupportClasses\ExtensionClasses.cs" />
     <Compile Include="SupportClasses\PasswordClass.cs" />
+    <Compile Include="SupportClasses\SortableBindingList.cs" />
     <EmbeddedResource Include="AddEmployeeForm.resx">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </EmbeddedResource>
