@@ -875,16 +875,7 @@ namespace PartsApp
         //Событие исп-ся для регулирования ширины RowHeaders.
         private void partsDataGridView_DataSourceChanged(object sender, EventArgs e)
         {
-            //Заполняем столбец 'Цена продажи' и 'Наличие'.
-            foreach (DataGridViewRow row in partsDataGridView.Rows)
-            {
-                SparePart sp = row.DataBoundItem as SparePart;
-                if (sp.AvailabilityList.Count != 0)
-                {
-                    row.Cells[AvaliabilityCol.Index].Value = Availability.GetTotalCount(sp.AvailabilityList);
-                    row.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sp.AvailabilityList);
-                }//if
-            }//foreach   
+            FillColumns();  //Заполняем столбец 'Цена продажи' и 'Наличие'.  
 
             //Обновляем rowsCountLabel по количеству строк. 
             rowsCountLabel.Text = partsDataGridView.Rows.Count.ToString();
@@ -922,6 +913,10 @@ namespace PartsApp
                 dataGridView.Rows[index].HeaderCell.Value = indexStr;
         }//partsDataGridView_RowPrePaint
 
+        private void partsDataGridView_Sorted(object sender, EventArgs e)
+        {
+            FillColumns(); //Заполняем ячейки столбцов 'Цена продажи' и 'Наличие'.
+        }//partsDataGridView_Sorted
 
 
         /// <summary>
@@ -1043,9 +1038,10 @@ namespace PartsApp
             SpList = SparePart.GetNewSparePartsList(spareParts);
             origSpList = spareParts;
 
+            SortableBindingList<SparePart> bindingList = new SortableBindingList<SparePart>(SpList);
             BindingSource binding = new BindingSource();
             //binding.SuspendBinding();
-            binding.DataSource = SpList;
+            binding.DataSource = bindingList;// SpList;
             //binding.ResumeBinding();
 
             //Очищаем и заполняем DataSource новымы значениями.
@@ -1054,6 +1050,22 @@ namespace PartsApp
 
             
         }//ChangeDataSource
+
+        /// <summary>
+        /// Заполняем ячейки столбцов 'Цена продажи' и 'Наличие'.
+        /// </summary>
+        private void FillColumns()
+        {
+            foreach (DataGridViewRow row in partsDataGridView.Rows)
+            {
+                SparePart sp = row.DataBoundItem as SparePart;
+                if (sp.AvailabilityList != null && sp.AvailabilityList.Count != 0)
+                {
+                    row.Cells[AvaliabilityCol.Index].Value = Availability.GetTotalCount(sp.AvailabilityList);
+                    row.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sp.AvailabilityList);
+                }//if
+            }//foreach  
+        }//FillColumns
 
         /// <summary>
         /// Осуществляет действия необходимые при сбросе выделения.
@@ -1246,6 +1258,8 @@ namespace PartsApp
             else
                 new ContragentOperationsInfoForm(typeof(Customer)).Show();
         }
+
+
 
 
 
