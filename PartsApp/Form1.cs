@@ -24,9 +24,13 @@ namespace PartsApp
         /// </summary>
         IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;    
         /// <summary>
-        /// Коллекция для вывода в таблицах.
+        /// Коллекция для вывода в таблице.
         /// </summary>
-        IList<SparePart> SpList, origSpList;                                
+        SortableBindingList<SparePart> SpList;
+        /// <summary>
+        /// Коллекция для запоминания списка вывода в таблице в оригинальном состоянии.
+        /// </summary>
+        IList<SparePart> origSpList;                              
         
         /// <summary>
         /// Переменная для запоминания введенного поль-лем текста в searchTextBox.
@@ -42,9 +46,7 @@ namespace PartsApp
         {
             InitializeComponent();
 
-            searchSpList = new List<SparePart>();
             changeMarkupBufferDict = new Dictionary<int, IDictionary<int, double>>();
-            SpList = origSpList = new List<SparePart>();
         }//
 
         private void Form1_Load(object sender, EventArgs e)
@@ -1035,20 +1037,15 @@ namespace PartsApp
         /// <param name="availabilityList">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
-            SpList = SparePart.GetNewSparePartsList(spareParts);
+            SpList = new SortableBindingList<SparePart>(SparePart.GetNewSparePartsList(spareParts));// SparePart.GetNewSparePartsList(spareParts);
             origSpList = spareParts;
 
-            SortableBindingList<SparePart> bindingList = new SortableBindingList<SparePart>(SpList);
             BindingSource binding = new BindingSource();
-            //binding.SuspendBinding();
-            binding.DataSource = bindingList;// SpList;
-            //binding.ResumeBinding();
+            binding.DataSource = SpList;
 
             //Очищаем и заполняем DataSource новымы значениями.
             //partsDataGridView.DataSource = extPartsDataGridView.DataSource = null; /*Выдаёт ошибку при раскомментировании*/
-            partsDataGridView.DataSource = extPartsDataGridView.DataSource = binding;
-
-            
+            partsDataGridView.DataSource = extPartsDataGridView.DataSource = binding;            
         }//ChangeDataSource
 
         /// <summary>
