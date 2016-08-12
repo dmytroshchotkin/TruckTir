@@ -194,11 +194,12 @@ namespace PartsApp
                 
                 ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
 
-                ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;                
-                ExcelApp.Cells[row, column + 4] = spareParts[i].AvailabilityList[0].OperationDetails.Count;
+                ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;
+                ExcelApp.Cells[row, column + 4] = spareParts[i].AvailabilityList.Sum(av => av.OperationDetails.Count);
                 //excelApp.Cells[row, column + 5] = availabilityList[i].Price;                
                 //excelApp.Cells[row, column + 5] = availabilityList[i].Price * availabilityList[i].Count;
-                ExcelApp.Cells[row, column + 5] = spareParts[i].AvailabilityList[0].SellingPrice;                
+                if (spareParts[i].AvailabilityList.Count > 0)
+                    ExcelApp.Cells[row, column + 5] = Availability.GetMaxSellingPrice(spareParts[i].AvailabilityList);      
             }//for
 
             //Обводим талицу рамкой. 
@@ -326,7 +327,8 @@ namespace PartsApp
 
             //Выводим Розничную цену.
             row += 2;
-            ExcelWorkSheet.Cells[row, column] = String.Format("{0:0.00} руб", Availability.GetMaxSellingPrice(sparePart.AvailabilityList));
+            if (sparePart.AvailabilityList.Count > 0)
+                ExcelWorkSheet.Cells[row, column] = String.Format("{0:0.00} руб", Availability.GetMaxSellingPrice(sparePart.AvailabilityList));
             Excel.Range excelCells = ExcelWorkSheet.get_Range(columnChar + row.ToString());
             excelCells.Font.Size = 24;
             //Выравниваем по центру.
