@@ -1800,42 +1800,6 @@ namespace PartsApp
         #region Поиск по таблице Purchases и Sales.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /// <summary>
-        /// Возвращает список из всех приходов в базе.
-        /// </summary>
-        /// <returns></returns>
-        public static IList<Purchase> FindPurchases()
-        {
-            IList<Purchase> purchases = new List<Purchase>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Purchases;", connection);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    Purchase purchase = new Purchase();
-
-                    purchase.OperationId = Convert.ToInt32(dataReader["OperationId"]);
-                    purchase.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null;
-                    purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["ContragentId"]));
-                    purchase.ContragentEmployee = dataReader["ContragentEmployee"] as string;
-                    //Переводим кол-во секунд Utc в DateTime.
-                    TimeSpan ts = TimeSpan.FromSeconds(Convert.ToInt32(dataReader["OperationDate"]));
-                    DateTime purchaseDate = new DateTime(1970, 1, 1);
-                    purchaseDate += ts;
-                    purchase.OperationDate = purchaseDate;
-
-                    purchases.Add(purchase);
-                }//while
-                connection.Close();
-            }//using
-
-            return purchases;
-        }//FindPurchase
-
         public static List<IOperation> FindPurchases(int supplierId)
         {
             List<IOperation> purchases = new List<IOperation>();
@@ -1927,29 +1891,6 @@ namespace PartsApp
 
             return purchase;
         }//FindPurchase
-        /// <summary>
-        /// Возвращает общую сумму прихода, по указанному Id. 
-        /// </summary>
-        /// <param name="saleId">Id прихода, сумму которого надо найти.</param>
-        /// <returns></returns>
-        public static double FindTotalSumOfPurchase(int purchaseId)
-        {
-            double totalSum = 0;
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                var cmd = new SQLiteCommand("SELECT SUM(Price) FROM PurchaseDetails WHERE OperationId = @OperationId;", connection);
-
-                cmd.Parameters.AddWithValue("@OperationId", purchaseId);
-
-                totalSum = Convert.ToDouble(cmd.ExecuteScalar());
-
-                connection.Close();
-            }//using
-
-            return totalSum;
-        }//FindTotalSumOfPurchase
 
 
         /// <summary>
