@@ -2124,7 +2124,7 @@ namespace PartsApp
             (
                 sparePart: sparePart,
                 purchase: FindPurchase(Convert.ToInt32(dataReader["OperationId"])),
-                count: Convert.ToSingle(dataReader["Count"]),
+                count: Convert.ToSingle(dataReader["Quantity"]),
                 price: Convert.ToSingle(dataReader["Price"])
             );
         }//CreateOperationDetails
@@ -2133,10 +2133,10 @@ namespace PartsApp
         {
             return new OperationDetails
             (
-                sparePart : FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
-                purchase  : purchase,
-                count     : Convert.ToSingle(dataReader["Count"]),
-                price     : Convert.ToSingle(dataReader["Price"])
+                sparePart: FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
+                purchase: purchase,
+                count: Convert.ToSingle(dataReader["Quantity"]),
+                price: Convert.ToSingle(dataReader["Price"])
             );
         }//CreateOperationDetails
 

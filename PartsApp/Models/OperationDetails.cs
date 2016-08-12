@@ -14,7 +14,8 @@ namespace PartsApp.Models
         public Purchase Purchase { get; set; }//{ return _purchase.Value; } }
         public float Count { get; set; }
         public float Price { get; set; }
-        
+
+        public OperationDetails() { }
         public OperationDetails(SparePart sparePart, Purchase purchase, float count, float price)
         {
             SparePart = sparePart;
