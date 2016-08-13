@@ -961,7 +961,8 @@ namespace PartsApp
                     object val = propInfo.GetValue(row.DataBoundItem, null);
                     for (int i = 1; i < props.Length; i++)
                     {
-                        propInfo = val.GetType().GetProperty(props[i]);
+                        Type valueType = val.GetType();
+                        propInfo = valueType.GetProperty(props[i]);
                         val = propInfo.GetValue(val, null);
                     }//for
                     e.Value = val;

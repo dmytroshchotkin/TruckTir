@@ -1173,14 +1173,12 @@ namespace PartsApp
 
         private static Availability CreateAvailability(SQLiteDataReader dataReader, SparePart sparePart)
         {
-            Availability avail = new Availability
+            return new Availability
             (
                 operationDetails : CreateOperationDetails(dataReader, sparePart),
                 storageAddress   : dataReader["StorageAdress"] as string,
                 markup           : Convert.ToSingle(dataReader["Markup"])
             );
-
-            return avail;
         }//CreateAvailability
 
 
@@ -2075,10 +2073,10 @@ namespace PartsApp
         {
             return new OperationDetails
             (
-                sparePart   : sparePart,
-                operation   : FindPurchase(Convert.ToInt32(dataReader["OperationId"])),
-                count       : Convert.ToSingle(dataReader["Quantity"]),
-                price       : Convert.ToSingle(dataReader["Price"])
+                sparePart : sparePart,
+                operation : FindPurchase(Convert.ToInt32(dataReader["OperationId"])),
+                count     : Convert.ToSingle(dataReader["Count"]),
+                price     : Convert.ToSingle(dataReader["Price"])
             );
         }//CreateOperationDetails
 
@@ -2088,7 +2086,7 @@ namespace PartsApp
             (
                 sparePart   : FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
                 operation   : operat,
-                count       : Convert.ToSingle(dataReader["Quantity"]),
+                count       : Convert.ToSingle(dataReader["Count"]),
                 price       : Convert.ToSingle(dataReader["Price"])
             );
         }//CreateOperationDetails
