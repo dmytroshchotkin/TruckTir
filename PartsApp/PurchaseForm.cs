@@ -14,6 +14,8 @@ namespace PartsApp
 {
     public partial class PurchaseForm : Form
     {
+        Purchase purchase;
+
         IList<SparePart> spareParts = new List<SparePart>();
         SparePart currentSparePart = new SparePart();
 
@@ -33,6 +35,8 @@ namespace PartsApp
         public PurchaseForm()
         {
             InitializeComponent();
+
+            purchase = new Purchase();
         }
 
         private void PurchaseForm_Load(object sender, EventArgs e)
@@ -348,7 +352,7 @@ namespace PartsApp
 
             //Если редактировался Артикул или Название
             #region Articul Or Title
-            if (cell.OwningColumn.Name == "Title" || cell.OwningColumn.Name == "Articul")
+            if (cell.OwningColumn.Index == Title.Index || cell.OwningColumn.Index == Articul.Index)
             {
                 //убираем события с заполненной клетки.
                 if (textBoxCell != null)
@@ -367,24 +371,24 @@ namespace PartsApp
                     if (titleAndArticul.Length == 2)
                     {
 
-                        title   = cell.OwningColumn.Name == "Title" ? titleAndArticul[0] : titleAndArticul[1];
-                        articul = cell.OwningColumn.Name == "Title" ? titleAndArticul[1] : titleAndArticul[0];        
+                        title   = (cell.ColumnIndex == Title.Index) ? titleAndArticul[0] : titleAndArticul[1];
+                        articul = (cell.ColumnIndex == Title.Index) ? titleAndArticul[1] : titleAndArticul[0];        
                         
                         //находим из списка нужную запчасть.
-                        var sparePartsList = (from sp in searchSparePartsList
-                                              where sp.Title.Trim() == title.Trim() && sp.Articul.Trim() == articul.Trim()
-                                              select sp).ToList<SparePart>();
+                        SparePart sparePart = searchSparePartsList.FirstOrDefault(sp => sp.Title == title.Trim() 
+                                                                                     && sp.Articul == articul.Trim());
+
 
                         //Если такой товар найден в вып. списке.
-                        if (sparePartsList.Count > 0)
+                        if (sparePart != null)
                         {
-                            currentSparePart = sparePartsList[0];
+                            currentSparePart = sparePart;// sparePartsList[0];
                             spareParts.Add(currentSparePart);
 
-                            row.Cells["SparePartId"].Value  = currentSparePart.SparePartId;
-                            row.Cells["Title"].Value        = currentSparePart.Title;
-                            row.Cells["Articul"].Value      = currentSparePart.Articul;
-                            row.Cells["Unit"].Value = currentSparePart.MeasureUnit;
+                            row.Cells[SparePartId.Index].Value  = currentSparePart.SparePartId;
+                            row.Cells[Title.Index].Value        = currentSparePart.Title;
+                            row.Cells[Articul.Index].Value      = currentSparePart.Articul;
+                            row.Cells[Unit.Index].Value         = currentSparePart.MeasureUnit;
 
                             //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
                             sparePartsId.Add(currentSparePart.SparePartId);
@@ -409,19 +413,17 @@ namespace PartsApp
                             if (searchSparePartsList.Count == 1) //если этот товар уникален.
                             {
                                 //находим из списка нужную запчасть.
-                                var sparePartsList = (from sp in searchSparePartsList
-                                                      where sp.Title == titleAndArticul[0] || sp.Articul == titleAndArticul[0]
-                                                      select sp).ToList<SparePart>();
+                                var sparePartsList = searchSparePartsList.Where(sp => sp.Title == titleAndArticul[0] || sp.Articul == titleAndArticul[0]);                              
 
-                                if (sparePartsList.Count > 0) //если введенный товар именно тот что в списке.
+                                if (sparePartsList.Count() > 0) //если введенный товар именно тот что в списке.
                                 {
-                                    currentSparePart = sparePartsList[0];
+                                    currentSparePart = sparePartsList.ToList()[0];
                                     spareParts.Add(currentSparePart);
 
-                                    row.Cells["SparePartId"].Value = currentSparePart.SparePartId;
-                                    row.Cells["Title"].Value = currentSparePart.Title;
-                                    row.Cells["Articul"].Value = currentSparePart.Articul;
-                                    row.Cells["Unit"].Value = currentSparePart.MeasureUnit;
+                                    row.Cells[SparePartId.Index].Value = currentSparePart.SparePartId;
+                                    row.Cells[Title.Index].Value = currentSparePart.Title;
+                                    row.Cells[Articul.Index].Value = currentSparePart.Articul;
+                                    row.Cells[Unit.Index].Value = currentSparePart.MeasureUnit;
 
                                     //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
                                     sparePartsId.Add(currentSparePart.SparePartId);
@@ -630,22 +632,24 @@ namespace PartsApp
         /// <param name="row">Строка, в которой требуется рассчитать сумму</param>
         private void amountCalculation(DataGridViewRow row)
         {
-            if (currentSparePart.AvailabilityList.Count != 0)
+            if (row.Cells[Price.Index].Value != null && row.Cells[Count.Index].Value != null )
             {
                 //Узнаем была ли уже до этого введена цена, для изменения строки "итого".
                 if (row.Cells[Sum.Name].Value != null)
                     inTotal -= Convert.ToDouble((row.Cells[Sum.Name].Value));
 
                 //Рассчитываем сумму и отображаем в таблице.
-                //double sum = Math.Round((double)currentSparePart.Price * currentSparePart.Count, 2, MidpointRounding.AwayFromZero);
-                //row.Cells[Sum.Name].Value = String.Format("{0:N2}", sum);
+                float price = Convert.ToSingle(row.Cells[Price.Index].Value);
+                float count = Convert.ToSingle(row.Cells[Count.Index].Value);
+                double sum = Math.Round(price * count, 2, MidpointRounding.AwayFromZero);
+                row.Cells[Sum.Name].Value = String.Format("{0:N2}", sum);
 
                 //Меняем значение "Итого".
-                //inTotal += sum;
+                inTotal += sum;
                 inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
 
                 //Запрещаем дальнейшее редактирование кол-ва и цены.
-                row.Cells[Price.Name].ReadOnly = row.Cells[Count.Name].ReadOnly = true;
+                row.Cells[Price.Index].ReadOnly = row.Cells[Count.Index].ReadOnly = true;
             }//if        
         }//amountCalculation()
         private void purchaseDataGridView_SelectionChanged(object sender, EventArgs e)
