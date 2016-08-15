@@ -1136,7 +1136,9 @@ namespace PartsApp
             try
             {
                 //Находим 'Наценку' и 'Цену'.
-                float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
+                float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) 
+                                                                      : Convert.ToSingle(markupComboBox.Text.Trim());   
+                                                                       
                 float price = Convert.ToSingle(row.Cells[Price.Index].Value);
 
                 //Выводим 'Тип наценки' u 'Цену продажи'.
