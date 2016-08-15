@@ -562,7 +562,6 @@ namespace PartsApp
         public static int AddPurchase(Purchase purchase, string storageAddress, float markup)
         {
             /*ERROR!!! лишние пар-ры*/
-            int purchaseId = 0;
             string message = null;
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -595,9 +594,10 @@ namespace PartsApp
 
                 connection.Close();
             }//using connectio
-            if (message != null) throw new Exception(message);
+            if (message != null) 
+                throw new Exception(message);
 
-            return purchaseId;    
+            return purchase.OperationId;    
         }//AddPurchase
 
         /// <summary>

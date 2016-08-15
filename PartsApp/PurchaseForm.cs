@@ -552,16 +552,12 @@ namespace PartsApp
                 {
                     if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
                     {
-                        double price = Convert.ToDouble(cell.Value);
+                        float price = Convert.ToSingle(cell.Value);
                         if (price == 0)
                             throw new Exception(); //ввод нуля также является ошибкой.
 
-                        //Если цена вводится в той же строке.
-                        int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
-                        SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
-
                         //Округляем Price до 2-х десятичных знаков.
-                        price = Math.Round(price, 2, MidpointRounding.AwayFromZero);
+                        price = (float)Math.Round(price, 2, MidpointRounding.AwayFromZero);
                         //currentSparePart.Price = price;
                         cell.Value = String.Format("{0:N2}", price);
 
@@ -584,9 +580,6 @@ namespace PartsApp
                         string unitOfMeasure = cell.OwningRow.Cells[Unit.Index].Value as string;
                         if (count % Models.MeasureUnit.GetMinUnitSale(unitOfMeasure) != 0)
                             throw new Exception();
-
-                        int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
-                        SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
 
                         amountCalculation(cell.OwningRow);
                         RowMarkupChanges(row); //расчитывае ЦенуПродажи и выводим её и Наценку.                        
@@ -613,7 +606,8 @@ namespace PartsApp
 
 
             #endregion
-        }//purchaseDataGridView_CellEndEdit                                
+        }//purchaseDataGridView_CellEndEdit    
+                        
         /// <summary>
         /// Метод расчета суммы в передаваемой строке.
         /// </summary>
@@ -639,7 +633,8 @@ namespace PartsApp
                 //Запрещаем дальнейшее редактирование кол-ва и цены.
                 row.Cells[Price.Index].ReadOnly = row.Cells[Count.Index].ReadOnly = true;
             }//if        
-        }//amountCalculation()
+        }//amountCalculation
+
         private void purchaseDataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (isCellEditError == true)
@@ -730,16 +725,15 @@ namespace PartsApp
         private void BeginLoadPurchaseToExcelFile(object purchase)
         {
             if (purchase is Purchase)
-                LoadPurchaseToExcelFile(purchase as Purchase, spareParts);
+                LoadPurchaseToExcelFile(purchase as Purchase);
         }//BeginLoadPurchaseToExcelFile
-
-        //}//LoadPurchaseToExcelFile        
+     
         /// <summary>
         /// Метод вывода приходной информации в Excel-файл.
         /// </summary>
         /// <param name="sale">Информация о приходе.</param>
         /// <param name="availabilityList">Список оприходованных товаров.</param>
-        private void LoadPurchaseToExcelFile(Purchase purchase, IList<SparePart> spareParts)
+        private void LoadPurchaseToExcelFile(Purchase purchase)
         {
             Excel.Application ExcelApp = new Excel.Application();
             Excel.Workbook ExcelWorkBook;
@@ -777,7 +771,7 @@ namespace PartsApp
 
             row += 2;
             //Выводим заголовок.
-            ExcelApp.Cells[row, column] = "Произв.";
+            ExcelApp.Cells[row, column]     = "Произв.";
             ExcelApp.Cells[row, column + 1] = "Артикул";
             ExcelApp.Cells[row, column + 2] = "Название";
             ExcelApp.Cells[row, column + 3] = "Ед. изм.";
@@ -804,35 +798,35 @@ namespace PartsApp
 
             SetColumnsWidth(spareParts, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
             //Выводим список товаров.
-            for (int i = 0; i < spareParts.Count; ++i)
+            foreach (OperationDetails operDet in purchase.OperationDetailsList)            
             {
                 ++row;
-                ExcelApp.Cells[row, column + 2] = spareParts[i].Title;
-                ExcelApp.Cells[row, column + 1] = spareParts[i].Articul;
+                string title = operDet.SparePart.Title, articul = operDet.SparePart.Articul;
+                ExcelApp.Cells[row, column + 1] = articul;
+                ExcelApp.Cells[row, column + 2] = title;
+                
                 //Выравнивание диапазона строк.
                 ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
                 ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
 
                 //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
-                if (spareParts[i].Articul.Length > articulColWidth || spareParts[i].Title.Length > titleColWidth)
+                if (articul.Length > articulColWidth || title.Length > titleColWidth)
                 {
                     ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
                     //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
-                    if (spareParts[i].Articul.Length > articulColWidth && spareParts[i].Title.Length <= titleColWidth)
+                    if (articul.Length > articulColWidth && title.Length <= titleColWidth)
                         (ExcelApp.Cells[row, column + 2] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-                    if (spareParts[i].Articul.Length <= articulColWidth && spareParts[i].Title.Length > titleColWidth)
+                    if (articul.Length <= articulColWidth && title.Length > titleColWidth)
                         (ExcelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
                 }//if
 
-                ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
+                ExcelApp.Cells[row, column] = operDet.SparePart.Manufacturer;
 
-                ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;
+                ExcelApp.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
 
-                float count = spareParts[i].AvailabilityList[0].OperationDetails.Count;
-                float price = spareParts[i].AvailabilityList[0].OperationDetails.Price;
-                ExcelApp.Cells[row, column + 4] = count;
-                ExcelApp.Cells[row, column + 5] = price;
-                ExcelApp.Cells[row, column + 6] = price * count;
+                ExcelApp.Cells[row, column + 4] = operDet.Count;
+                ExcelApp.Cells[row, column + 5] = operDet.Price;
+                ExcelApp.Cells[row, column + 6] = operDet.Price * operDet.Count;
             }//for
 
             //Обводим талицу рамкой. 
@@ -854,6 +848,7 @@ namespace PartsApp
 
             #endregion
 
+            /*ERROR Передавать имена агентов параметром и закрывать owner-форму не здесь, а в OkButton_Click*/
             //Выводим имена агентов.
             row += 2;
             ExcelApp.Cells[row, column].Font.Name = "Consolas"; //моноширинный шрифт
@@ -1075,7 +1070,8 @@ namespace PartsApp
             //Если в таблице есть данные, проверяем везде ли указана цена и количество.
             foreach (DataGridViewRow row in purchaseDataGridView.Rows)
             {
-                if (row.Cells[Price.Index].Value == null || row.Cells[Count.Index].Value == null)
+                //Если строка не пустая.
+                if (row.Cells[SparePartId.Index].Value != null && (row.Cells[Price.Index].Value == null || row.Cells[Count.Index].Value == null))
                 {
                     markupCheckBox.CheckedChanged -= markupCheckBox_CheckedChanged;
                     markupCheckBox.CheckState = CheckState.Unchecked;
@@ -1139,25 +1135,18 @@ namespace PartsApp
         {
             try
             {
-                //Находим наценку.
+                //Находим 'Наценку' и 'Цену'.
                 float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
+                float price = Convert.ToSingle(row.Cells[Price.Index].Value);
 
-                row.Cells["Markup"].Value = Models.Markup.GetDescription(markup);
-
-                foreach (SparePart sparePart in spareParts)
-                {
-                    if (sparePart.SparePartId == Convert.ToInt32(row.Cells["SparePartId"].Value))
-                    {
-                        sparePart.AvailabilityList.ForEach(av => av.Markup = markup);
-                        row.Cells["SellingPrice"].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
-                    }//if
-                }//foreach
+                //Выводим 'Тип наценки' u 'Цену продажи'.
+                row.Cells[Markup.Index].Value = Models.Markup.GetDescription(markup);
+                row.Cells[SellingPrice.Index].Value = price + (price * markup / 100);
             }//try
             catch
             {
                 //Присваиваем дефолтную наценкц - "Розница".
                 markupComboBox.SelectedItem = markupComboBox.Items.Cast<KeyValuePair<int, string>>().First(m => m.Key == (int)Models.Markup.Types.Retail);
-
                 toolTip.Show("Введено некорректное значение.", this, markupComboBox.Location, 2000);
             }//catch
         }//RowMarkupChanges
@@ -1177,10 +1166,12 @@ namespace PartsApp
                     {
                         lastEditCell = purchaseDataGridView.Rows[e.RowIndex].HeaderCell;
                         //Если строка пустая не делаем ничего.
-                        if (lastEditCell.OwningRow.Cells["SparePartId"].Value == null) return;
+                        if (lastEditCell.OwningRow.Cells[SparePartId.Index].Value == null) 
+                            return;
 
                         lastEditCell.OwningRow.Selected = true;
-                    }
+                    }//else
+
                     Point location = purchaseDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true).Location;
                     location.X += e.Location.X;
                     location.Y += e.Location.Y;
