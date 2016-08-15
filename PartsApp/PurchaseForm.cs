@@ -15,7 +15,6 @@ namespace PartsApp
     public partial class PurchaseForm : Form
     {
         IList<SparePart> spareParts = new List<SparePart>();
-        //SparePart currentSparePart = new SparePart();
 
         IList<SparePart> searchSparePartsList = new List<SparePart>();
         bool isCellEditError = false;
@@ -27,7 +26,6 @@ namespace PartsApp
         string _userText;
 
         double inTotal;
-        //IList<int> sparePartsId = new List<int>();   //коллекция для хранения Id того товара, что уже есть в таблице.
 
 
         public PurchaseForm()
@@ -1201,26 +1199,30 @@ namespace PartsApp
 
             foreach (DataGridViewRow row in purchaseDataGridView.Rows)
             {
-                float count = Convert.ToSingle(row.Cells[Count.Index].Value);
-                float price = Convert.ToSingle(row.Cells[Price.Index].Value);
-
                 int sparePartId = Convert.ToInt32(row.Cells[SparePartId.Index].Value);
-                SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
-                OperationDetails od = new OperationDetails(sparePart, null, count, price);
-                operDetList.Add(od);
+                //Если строка не пустая, заполняем объект.
+                if (sparePartId != 0)
+                {
+                    float count = Convert.ToSingle(row.Cells[Count.Index].Value);
+                    float price = Convert.ToSingle(row.Cells[Price.Index].Value);
+
+                    SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
+                    OperationDetails od = new OperationDetails(sparePart, null, count, price);
+                    operDetList.Add(od);
+                }//if
             }//foreach
 
             Purchase purchase =  new Purchase
             (
-                employee: Form1.CurEmployee,
-                contragent: PartsDAL.FindSuppliers().Where(s => s.ContragentName == supplierTextBox.Text).First(), /*!!!ERROR!!!*/
+                employee    : Form1.CurEmployee,
+                contragent  : PartsDAL.FindSuppliers().First(s => s.ContragentName == supplierTextBox.Text), /*!!!ERROR!!!*/
                 contragentEmployee: (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null,
                 operationDate: purchaseDateTimePicker.Value,
-                description: (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
-                operDetList: operDetList                                                
+                description : (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
+                operDetList : operDetList                                                
             );
 
-            operDetList.ForEach(od => od.Operation = purchase);
+            operDetList.ForEach(od => od.Operation = purchase); //Присваиваем 'Операцию' для каждого OperationDetails.
 
             return purchase;
         }//CreatePurchaseFromForm
@@ -1250,7 +1252,7 @@ namespace PartsApp
                     //Проверяем везде ли установлена цена и кол-во. 
                     foreach (DataGridViewRow row in purchaseDataGridView.Rows)
                     {
-                        if (row.Cells[Price.Index].Value == null || row.Cells[Count.Index].Value == null)
+                        if (row.Cells[SparePartId.Index].Value != null && (row.Cells[Price.Index].Value == null || row.Cells[Count.Index].Value == null))
                         {                           
                             toolTip.Show("Не везде указана цена или количество товара", this, okButton.Location, 3000);
                             return;
