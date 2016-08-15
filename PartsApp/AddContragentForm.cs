@@ -23,12 +23,13 @@ namespace PartsApp
             string contragentType = (contragent is Supplier) ? "поставщик" : "клиент";
             this.Text = String.Format("Форма добавления нового {0}а", contragentType);
             descrLabel.Text += String.Format("{0}е :", contragentType);
-        }
+        }//
+
         private void AddcontragentForm_Load(object sender, EventArgs e)
         {
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
             codeMaskedTextBox.SelectionStart = 1;            
-        }//
+        }//AddcontragentForm_Load
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
         {
@@ -73,7 +74,11 @@ namespace PartsApp
             }//else
         }//contragentNameTextBox_Leave
 
-        //Событие для установления каретки в начало codeMaskedTextBox.
+        /// <summary>
+        /// Событие для установления каретки в начало codeMaskedTextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void codeMaskedTextBox_MouseClick(object sender, MouseEventArgs e)
         {
             //Если клик производится по пустой области, каретка передвигается к концу ранее введенного текста
@@ -135,46 +140,6 @@ namespace PartsApp
             }//else
         }//entityComboBox_Leave
 
-        private void okButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                entityComboBox_Leave(sender, e);
-                contragentNameTextBox_Leave(sender, e);
-                codeMaskedTextBox_Leave(sender, e);
-                //Если все данные введены корректно
-                if (entityBackPanel.BackColor != Color.Red && contragentNameBackPanel.BackColor != Color.Red
-                    && codeBackPanel.BackColor != Color.Red)
-                {
-                    _contragent.Entity = entityComboBox.Text;
-                    _contragent.ContragentName = contragentNameTextBox.Text.Trim();
-                    _contragent.Code = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
-                    _contragent.Description = (String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? null : descrRichTextBox.Text.Trim();
-                    _contragent.ContactInfo = GetContactInfo();
-
-                    if (_contragent is Supplier)
-                        PartsDAL.AddSupplier(_contragent as Supplier);
-                    if (_contragent is Customer)
-                        PartsDAL.AddCustomer(_contragent as Customer);
-
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
-                }//if
-            }//if
-        }//okButton_MouseClick
-
-        private void cancelButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    this.DialogResult = DialogResult.Cancel;
-                    this.Close();
-                }
-            }//if
-        }//cancelButton_MouseClick
-
 
 
         /// <summary>
@@ -190,6 +155,7 @@ namespace PartsApp
                 ContactInfo contactInfo = new ContactInfo();
                 foreach (var control in contactInfoPanel.Controls)
                 {
+                    /*ERROR!!! Рефлексия не нужна.*/
                     if (control is TextBox)
                     {
                         var textBox = control as TextBox;
@@ -205,11 +171,12 @@ namespace PartsApp
                     }//if
                 }//foreach    
                 //добавляем запись в таблицу ContactInfo.
-                contactInfo.ContactInfoId = PartsDAL.AddContactInfo(contactInfo);
+                //contactInfo.ContactInfoId = PartsDAL.AddContactInfo(contactInfo); /*ERROR!!! Сделать через метод в PartsDAL.*/
                 return contactInfo;
             }//if
             return null;
         }//GetContactInfo
+
         /// <summary>
         /// Возвращает true если в contactInfoPanel введена какая-то инф-ция, иначе false.
         /// </summary>
@@ -228,10 +195,48 @@ namespace PartsApp
             }//foreach
             return false;
         }//isThereContactInfo
-
         
 
-        
+
+
+        private void cancelButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    this.DialogResult = DialogResult.Cancel;
+                    this.Close();
+                }
+            }//if
+        }//cancelButton_MouseClick
+
+        private void okButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                entityComboBox_Leave(sender, e);
+                contragentNameTextBox_Leave(sender, e);
+                codeMaskedTextBox_Leave(sender, e);
+                //Если все данные введены корректно
+                if (entityBackPanel.BackColor != Color.Red && contragentNameBackPanel.BackColor != Color.Red
+                    && codeBackPanel.BackColor != Color.Red)
+                {                                        
+                    /*ERROR!!! Через конструктор сделать.*/
+                    _contragent.Entity = entityComboBox.Text;
+                    _contragent.ContragentName = contragentNameTextBox.Text.Trim();
+                    _contragent.Code = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
+                    _contragent.Description = (String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? null : descrRichTextBox.Text.Trim();
+                    _contragent.ContactInfo = GetContactInfo();
+
+                    //Добавляем новую запись в таблицу.
+                    PartsDAL.AddContragent(_contragent);
+
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }//if
+            }//if
+        }//okButton_MouseClick
         
     }//AddcontragentForm
 

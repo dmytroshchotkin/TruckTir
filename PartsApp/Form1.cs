@@ -22,7 +22,7 @@ namespace PartsApp
         /// <summary>
         /// Коллекция для запоминания объектов с изм. наценкой.
         /// </summary>
-        IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;    
+        IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;    /*ERROR заменить*/
         /// <summary>
         /// Коллекция для вывода в таблице.
         /// </summary>

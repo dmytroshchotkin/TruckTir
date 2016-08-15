@@ -289,34 +289,57 @@ namespace PartsApp
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
-        #region Модификация таблицы Suppliers.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Модификация таблицы Suppliers и Customers.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
 
-        public static void AddSupplier(Supplier supplier)
+        public static void AddContragent(IContragent contragent)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
 
-                const string query = "INSERT INTO Suppliers (ContragentName, Code, Entity, ContactInfoId, Description) "
-                                   + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description);";
-                var cmd = new SQLiteCommand(query, connection);
+                using (SQLiteTransaction trans = connection.BeginTransaction())
+                {
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
+                    {
+                        try
+                        {
+                            //Вставляем запись в ContactInfo, если требуется.
+                            if (contragent.ContactInfo != null)
+                                contragent.ContactInfo.ContactInfoId = AddContactInfo(contragent.ContactInfo, cmd);
 
-                cmd.Parameters.AddWithValue("@ContragentName", supplier.ContragentName);
-                cmd.Parameters.AddWithValue("@Code",          supplier.Code);
-                cmd.Parameters.AddWithValue("@Entity",        supplier.Entity);
-                cmd.Parameters.AddWithValue("@ContactInfoId", (supplier.ContactInfo != null) ? supplier.ContactInfo.ContactInfoId : (int?)null);
-                cmd.Parameters.AddWithValue("@Description",   supplier.Description);
+                            //Вставляем запись в Customers или Suppliers.
+                            AddContragent(contragent, cmd);
 
-                cmd.ExecuteNonQuery();
+                            trans.Commit();
+                        }//try
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new Exception(ex.Message);
+                        }//catch
+                    }//using cmd
+                }//using transaction
 
                 connection.Close();
-            }//using
+            }//using connection
+        }//AddContragent
 
-        }//AddSupplier
+        private static void AddContragent(IContragent contragent, SQLiteCommand cmd)
+        {
+            string tableName = (contragent is Supplier) ? "Suppliers" : "Customers";
+            cmd.CommandText = "INSERT INTO " + tableName + " (ContragentName, Code, Entity, ContactInfoId, Description) "
+                            + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description);";
 
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@ContragentName", contragent.ContragentName);
+            cmd.Parameters.AddWithValue("@Code",           contragent.Code);
+            cmd.Parameters.AddWithValue("@Entity",         contragent.Entity);
+            cmd.Parameters.AddWithValue("@ContactInfoId", (contragent.ContactInfo != null) ? contragent.ContactInfo.ContactInfoId : (int?)null);
+            cmd.Parameters.AddWithValue("@Description",    contragent.Description);
 
-
+            cmd.ExecuteNonQuery();
+        }//AddContragent
 
 
 
@@ -349,62 +372,7 @@ namespace PartsApp
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
-
-        #region Модификация таблицы Customers.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        public static void AddCustomer(Customer customer)
-        {
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "INSERT INTO Customers (ContragentName, Code, Entity, ContactInfoId, Description) "
-                                   + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description);";
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@ContragentName", customer.ContragentName);
-                cmd.Parameters.AddWithValue("@Code", customer.Code);
-                cmd.Parameters.AddWithValue("@Entity", customer.Entity);
-                cmd.Parameters.AddWithValue("@ContactInfoId", (customer.ContactInfo != null) ? customer.ContactInfo.ContactInfoId : (int?)null);
-                cmd.Parameters.AddWithValue("@Description", customer.Description);
-
-                cmd.ExecuteNonQuery();
-
-                connection.Close();
-            }//using
-
-        }//AddCustomer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion        
-
+      
         #region Модификация таблицы Manufacturers
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -470,49 +438,13 @@ namespace PartsApp
         /// </summary>
         /// <param name="contactInfo">объект типа ContactInfo данные которого будут добавлены в базу</param>
         /// <returns></returns>
-        public static int AddContactInfo(ContactInfo contactInfo)
-        {
-            int id = 0;
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                string query = String.Format("INSERT INTO ContactInfo (Country, Region, City, Street, House, Room, Phone, ExtPhone, Website, Email) "
-                                           + "VALUES (@Country, @Region, @City, @Street, @House, @Room, @Phone, @ExtPhone, @Website, @Email); "
-                                           + "SELECT ContactInfoId FROM ContactInfo WHERE rowid = last_insert_rowid();");
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@Country",   contactInfo.Country);
-                cmd.Parameters.AddWithValue("@Region",    contactInfo.Region);
-                cmd.Parameters.AddWithValue("@City",      contactInfo.City);
-                cmd.Parameters.AddWithValue("@Street",    contactInfo.Street);
-                cmd.Parameters.AddWithValue("@House",     contactInfo.House);
-                cmd.Parameters.AddWithValue("@Room",      contactInfo.Room);
-                cmd.Parameters.AddWithValue("@Phone",     contactInfo.Phone);
-                cmd.Parameters.AddWithValue("@ExtPhone",  contactInfo.ExtPhone);
-                cmd.Parameters.AddWithValue("@Website",   contactInfo.Website);
-                cmd.Parameters.AddWithValue("@Email",     contactInfo.Email);
-
-                id = Convert.ToInt32(cmd.ExecuteScalar());
-
-                connection.Close();
-            }//using
-
-            return id;
-        }//AddContactInfo
-
-        /// <summary>
-        /// Метод добавляет новую запись в таблицу ContactInfo и возвращает Id вставленной записи.
-        /// </summary>
-        /// <param name="contactInfo">объект типа ContactInfo данные которого будут добавлены в базу</param>
-        /// <returns></returns>
         public static int AddContactInfo(ContactInfo contactInfo, SQLiteCommand cmd)
         {
             cmd.CommandText = "INSERT INTO ContactInfo (Country, Region, City, Street, House, Room, Phone, ExtPhone, Website, Email) "
                             + "VALUES (@Country, @Region, @City, @Street, @House, @Room, @Phone, @ExtPhone, @Website, @Email); "
                             + "SELECT ContactInfoId FROM ContactInfo WHERE rowid = last_insert_rowid();";
 
+            cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@Country", contactInfo.Country);
             cmd.Parameters.AddWithValue("@Region", contactInfo.Region);
             cmd.Parameters.AddWithValue("@City", contactInfo.City);
