@@ -14,10 +14,8 @@ namespace PartsApp
 {
     public partial class PurchaseForm : Form
     {
-        Purchase purchase;
-
         IList<SparePart> spareParts = new List<SparePart>();
-        SparePart currentSparePart = new SparePart();
+        //SparePart currentSparePart = new SparePart();
 
         IList<SparePart> searchSparePartsList = new List<SparePart>();
         bool isCellEditError = false;
@@ -29,14 +27,12 @@ namespace PartsApp
         string _userText;
 
         double inTotal;
-        IList<int> sparePartsId = new List<int>();   //коллекция для хранения Id того товара, что уже есть в таблице.
+        //IList<int> sparePartsId = new List<int>();   //коллекция для хранения Id того товара, что уже есть в таблице.
 
 
         public PurchaseForm()
         {
             InitializeComponent();
-
-            purchase = new Purchase();
         }
 
         private void PurchaseForm_Load(object sender, EventArgs e)
@@ -271,16 +267,18 @@ namespace PartsApp
 
             /* Эта проверка нужна потому что в редких случаях по непонятным причинам TextChanged срабатывает на столбцы Count или др. на которых работать не должен
                 Это случается когда вводишь что-то в столбец Title, а потом стираешь до пустой строки и вводишь что-то в столбец Count.*/
-/*!!!*/         if (lastEditCell.OwningColumn.Name != "Title" && lastEditCell.OwningColumn.Name != "Articul")
+            /*!!!*/
+            if (lastEditCell.OwningColumn.Index != Title.Index && lastEditCell.OwningColumn.Index != Articul.Index)
                     return;
             
             TextBox textBox = (TextBox)sender;
             if (String.IsNullOrEmpty(textBox.Text) == false)
             {
-                if (lastEditCell.OwningColumn.Name == "Title")
-                    searchSparePartsList = PartsDAL.SearchSparePartsByTitle(textBox.Text, 10, sparePartsId);
-                else if (lastEditCell.OwningColumn.Name == "Articul")
-                    searchSparePartsList = PartsDAL.SearchSparePartsByArticul(textBox.Text, 10, sparePartsId);
+                IList<int> sparePartsIdList = spareParts.Select(sp => sp.SparePartId).ToList(); //Находим список всех уже введенных в таблицу Id товаров.
+                if (lastEditCell.OwningColumn.Index == Title.Index)
+                    searchSparePartsList = PartsDAL.SearchSparePartsByTitle(textBox.Text, 10, sparePartsIdList);
+                else if (lastEditCell.OwningColumn.Index == Articul.Index)
+                    searchSparePartsList = PartsDAL.SearchSparePartsByArticul(textBox.Text, 10, sparePartsIdList);
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
                 {
@@ -288,9 +286,9 @@ namespace PartsApp
                     string str = null;
                     foreach (var sparePart in searchSparePartsList)
                     {
-                        if (lastEditCell.OwningColumn.Name == "Title")
+                        if (lastEditCell.OwningColumn.Index == Title.Index)
                             str = sparePart.Title + "     " + sparePart.Articul;
-                        else if (lastEditCell.OwningColumn.Name == "Articul")
+                        else if (lastEditCell.OwningColumn.Index == Articul.Index)
                                str = sparePart.Articul + "     " + sparePart.Title;
 
 /*!!!! Ошибка!*/        autoCompleteListBox.Items.Add(str);
@@ -378,23 +376,19 @@ namespace PartsApp
                         SparePart sparePart = searchSparePartsList.FirstOrDefault(sp => sp.Title == title.Trim() 
                                                                                      && sp.Articul == articul.Trim());
 
-
                         //Если такой товар найден в вып. списке.
                         if (sparePart != null)
                         {
-                            currentSparePart = sparePart;// sparePartsList[0];
-                            spareParts.Add(currentSparePart);
+                            spareParts.Add(sparePart);
 
-                            row.Cells[SparePartId.Index].Value  = currentSparePart.SparePartId;
-                            row.Cells[Title.Index].Value        = currentSparePart.Title;
-                            row.Cells[Articul.Index].Value      = currentSparePart.Articul;
-                            row.Cells[Unit.Index].Value         = currentSparePart.MeasureUnit;
+                            row.Cells[SparePartId.Index].Value  = sparePart.SparePartId;
+                            row.Cells[Title.Index].Value        = sparePart.Title;
+                            row.Cells[Articul.Index].Value      = sparePart.Articul;
+                            row.Cells[Unit.Index].Value         = sparePart.MeasureUnit;
 
-                            //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
-                            sparePartsId.Add(currentSparePart.SparePartId);
-
-                            cell.OwningRow.Cells["Price"].ReadOnly = cell.OwningRow.Cells["Count"].ReadOnly   = false;
-                            cell.OwningRow.Cells["Title"].ReadOnly = cell.OwningRow.Cells["Articul"].ReadOnly = true;
+                            //Запрещаем изменение 'Hазвания' и 'Aртикула', разрешаем заполнение 'Кол-ва' и 'Цены'.
+                            cell.OwningRow.Cells[Price.Index].ReadOnly = cell.OwningRow.Cells[Count.Index].ReadOnly = false;
+                            cell.OwningRow.Cells[Title.Index].ReadOnly = cell.OwningRow.Cells[Articul.Index].ReadOnly = true;
 
                             _userText = null;
                             #region Увеличение PurchaseGroupBox.
@@ -406,6 +400,7 @@ namespace PartsApp
                             //}
                             #endregion
                         }//if
+                        /*ERROR!!! Может ли тут быть ветка else?*/
                     }//if
                     else  //если выбор не из вып. списка.
                         if (titleAndArticul.Length == 1)
@@ -413,23 +408,21 @@ namespace PartsApp
                             if (searchSparePartsList.Count == 1) //если этот товар уникален.
                             {
                                 //находим из списка нужную запчасть.
-                                var sparePartsList = searchSparePartsList.Where(sp => sp.Title == titleAndArticul[0] || sp.Articul == titleAndArticul[0]);                              
+                                SparePart sparePart = searchSparePartsList.FirstOrDefault(sp => sp.Title == titleAndArticul[0] 
+                                                                                           || sp.Articul == titleAndArticul[0]);
 
-                                if (sparePartsList.Count() > 0) //если введенный товар именно тот что в списке.
+                                if (sparePart != null) //если введенный товар именно тот что в списке.
                                 {
-                                    currentSparePart = sparePartsList.ToList()[0];
-                                    spareParts.Add(currentSparePart);
+                                    spareParts.Add(sparePart);
 
-                                    row.Cells[SparePartId.Index].Value = currentSparePart.SparePartId;
-                                    row.Cells[Title.Index].Value = currentSparePart.Title;
-                                    row.Cells[Articul.Index].Value = currentSparePart.Articul;
-                                    row.Cells[Unit.Index].Value = currentSparePart.MeasureUnit;
+                                    row.Cells[SparePartId.Index].Value  = sparePart.SparePartId;
+                                    row.Cells[Title.Index].Value        = sparePart.Title;
+                                    row.Cells[Articul.Index].Value      = sparePart.Articul;
+                                    row.Cells[Unit.Index].Value         = sparePart.MeasureUnit;
 
-                                    //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
-                                    sparePartsId.Add(currentSparePart.SparePartId);
-
-                                    cell.OwningRow.Cells["Price"].ReadOnly = cell.OwningRow.Cells["Count"].ReadOnly = false;
-                                    cell.OwningRow.Cells["Title"].ReadOnly = cell.OwningRow.Cells["Articul"].ReadOnly = true;
+                                    //Запрещаем изменение 'Hазвания' и 'Aртикула', разрешаем заполнение 'Кол-ва' и 'Цены'.
+                                    cell.OwningRow.Cells[Price.Index].ReadOnly = cell.OwningRow.Cells[Count.Index].ReadOnly = false;
+                                    cell.OwningRow.Cells[Title.Index].ReadOnly = cell.OwningRow.Cells[Articul.Index].ReadOnly = true;
 
                                     _userText = null;
                                 }//if
@@ -557,7 +550,7 @@ namespace PartsApp
             #region Count Or Price.
             try
             {
-                if (cell.OwningColumn.Name == "Price")
+                if (cell.OwningColumn.Index == Price.Index)
                 {
                     if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
                     {
@@ -566,9 +559,8 @@ namespace PartsApp
                             throw new Exception(); //ввод нуля также является ошибкой.
 
                         //Если цена вводится в той же строке.
-                        int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
-
-                        currentSparePart = spareParts.First(sparePart => sparePart.SparePartId == sparePartId);
+                        int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
+                        SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
 
                         //Округляем Price до 2-х десятичных знаков.
                         price = Math.Round(price, 2, MidpointRounding.AwayFromZero);
@@ -582,7 +574,7 @@ namespace PartsApp
                         RowMarkupChanges(row);//, markup); //!!!Костыль! Необх-мо пометить какую-то запись в табл. Markups как дефолтную и присваивать её здесь.
                     }//if                
                 }//if
-                if (cell.OwningColumn.Name == "Count")
+                if (cell.OwningColumn.Index == Count.Index)
                 {
                     if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
                     {
@@ -591,14 +583,12 @@ namespace PartsApp
                             throw new Exception(); //ввод нуля также является ошибкой.
 
                         //Проверяем что введенное число кратно минимально возможной единице.
-                        string unitOfMeasure = cell.OwningRow.Cells["Unit"].Value as string;
+                        string unitOfMeasure = cell.OwningRow.Cells[Unit.Index].Value as string;
                         if (count % Models.MeasureUnit.GetMinUnitSale(unitOfMeasure) != 0)
                             throw new Exception();
 
-                        int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
-
-                        currentSparePart = spareParts.First(sparePart => sparePart.SparePartId == sparePartId);
-                        currentSparePart.AvailabilityList[0].OperationDetails.Count = count;
+                        int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
+                        SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
 
                         amountCalculation(cell.OwningRow);
                         RowMarkupChanges(row); //расчитывае ЦенуПродажи и выводим её и Наценку.                        
@@ -679,7 +669,6 @@ namespace PartsApp
                     purchaseDataGridView.Rows.Clear();
                     spareParts.Clear();
                     searchSparePartsList.Clear(); //надо ли?
-                    sparePartsId.Clear();
 
                     //очищаем "Итого".
                     inTotal = 0;
@@ -687,17 +676,11 @@ namespace PartsApp
             }//if
             else
             {
-                int sparePartId = Convert.ToInt32(lastEditCell.OwningRow.Cells["SparePartId"].Value);
-                for (int i = 0; i < spareParts.Count; ++i)
-                    if (spareParts[i].SparePartId == sparePartId)
-                    {
-                        spareParts.RemoveAt(i);
-                        sparePartsId.RemoveAt(i);
-                    }//if
-
+                int sparePartId = Convert.ToInt32(lastEditCell.OwningRow.Cells[SparePartId.Index].Value);
+                spareParts.Remove(spareParts.First(sp => sp.SparePartId == sparePartId)); //Удаляем объект из списка.                
                 //исправляем "Итого".
-                if (lastEditCell.OwningRow.Cells[Sum.Name].Value != null)
-                    inTotal -= Convert.ToDouble((lastEditCell.OwningRow.Cells[Sum.Name].Value));
+                if (lastEditCell.OwningRow.Cells[Sum.Index].Value != null)
+                    inTotal -= Convert.ToDouble((lastEditCell.OwningRow.Cells[Sum.Index].Value));
 
                 //Удаляем строку.
                 purchaseDataGridView.Rows.Remove(lastEditCell.OwningRow);
