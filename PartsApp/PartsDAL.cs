@@ -26,7 +26,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="operDet">Запись добавляемая в таблицу.</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
-        private static void AddSparePartAvaliability(OperationDetails operDet, string storageAddress, float markup, SQLiteCommand cmd)
+        private static void AddSparePartAvaliability(OperationDetails operDet, string storageAddress, SQLiteCommand cmd)
         {
             /*ERROR!!! лишние параметры */
             var query = "INSERT INTO Avaliability VALUES (@SparePartId, @OperationId, @Price, @Markup, @StorageAdress, @Count);";
@@ -34,11 +34,11 @@ namespace PartsApp
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
-            
+
             cmd.Parameters.AddWithValue("@SparePartId",   operDet.SparePart.SparePartId);
             cmd.Parameters.AddWithValue("@OperationId",   operDet.Operation.OperationId);
             cmd.Parameters.AddWithValue("@Price",         operDet.Price);
-            cmd.Parameters.AddWithValue("@Markup",        markup);
+            cmd.Parameters.AddWithValue("@Markup",        (float)Markup.Types.Retail); //Присваиваем дефолтную наценку.
             cmd.Parameters.AddWithValue("@StorageAdress", storageAddress);
             cmd.Parameters.AddWithValue("@Count",         operDet.Count);
             cmd.ExecuteNonQuery();    
@@ -559,7 +559,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="sale">Информация о приходе.</param>
         /// <returns></returns>
-        public static int AddPurchase(Purchase purchase, string storageAddress, float markup)
+        public static int AddPurchase(Purchase purchase, string storageAddress)
         {
             /*ERROR!!! лишние пар-ры*/
             string message = null;
@@ -579,7 +579,7 @@ namespace PartsApp
                             foreach (OperationDetails operDet in purchase.OperationDetailsList)
                             {                             
                                 AddPurchaseDetail(operDet, cmd);
-                                AddSparePartAvaliability(operDet, storageAddress, markup, cmd);
+                                AddSparePartAvaliability(operDet, storageAddress, cmd);
                             }//foreach
 
                             trans.Commit();                        

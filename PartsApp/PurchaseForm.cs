@@ -1258,7 +1258,7 @@ namespace PartsApp
                     {
                         string storageAddress = String.IsNullOrWhiteSpace(storageAdressTextBox.Text) ? null : storageAdressTextBox.Text.Trim();
 
-                        purchase.OperationId = PartsDAL.AddPurchase(purchase, storageAddress, 100f); /*ERROR!!! markup*/
+                        purchase.OperationId = PartsDAL.AddPurchase(purchase, storageAddress); /*ERROR!!! markup*/
                     }//try
                     catch(Exception)
                     {
