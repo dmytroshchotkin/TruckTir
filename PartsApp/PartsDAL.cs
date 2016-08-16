@@ -971,35 +971,6 @@ namespace PartsApp
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
 
         /// <summary>
-        /// Возвращает единицу товара найденную по заданным параметрам.
-        /// </summary>
-        /// <param name="sparePartId">Ид товара искомой записи</param>
-        /// <param name="saleId">Ид прихода искомой записи</param>
-        /// <returns></returns>
-        public static SparePart FindSparePartAvaliability(int sparePartId, int purchaseId)
-        {
-            SparePart sparePart = new SparePart();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();               
-
-                const string query = "SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId "
-                                   + "AND av.SparePartId = @SparePartId AND PurchaseId = @PurchaseId;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-                cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    sparePart = CreateFullSparePart(dataReader);
-                }//while
-                connection.Close();
-            }//using
-            return sparePart;
-        }//FindSparePartAvaliability
-        /// <summary>
         /// Возвращает количество в наличии заданной единицы товара.
         /// </summary>
         /// <param name="sparePartId">Ид товара искомой записи</param>
@@ -1030,47 +1001,6 @@ namespace PartsApp
         }//FindSparePartAvaliabilityCount
         
        
-        //Возвращает разделенный по приходам список всех товаров в Наличии из ИД переданных SpareParts
-        /// <summary>
-        /// Возвращает разделенный по приходам список всех товаров в Наличии из ИД переданных SpareParts
-        /// </summary>
-        /// <param name="sparePartsId">Список Ид наличие которых надо найти.</param>
-        /// <returns></returns>
-        public static IList<SparePart> FindAvaliabilityBySparePartId(IList<SparePart> sparePartsId)
-        {
-            IList<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "SELECT * FROM Avaliability AS av JOIN SpareParts AS sp " +
-                                     "ON av.SparePartId = sp.SparePartId AND av.SparePartId = @SparePartId;";
-                var cmd = new SQLiteCommand(query, connection);
-
-                var param = new SQLiteParameter();
-                param.ParameterName = "@SparePartId";
-                cmd.Parameters.Add(param);
-
-                for (int i = 0; i < sparePartsId.Count; ++i )
-                {
-                    param.Value = sparePartsId[i].SparePartId;
-
-                    var dataReader = cmd.ExecuteReader();
-                    while (dataReader.Read())
-                    {
-                        SparePart sparePart = CreateFullSparePart(dataReader);
-
-                        spareParts.Add(sparePart);
-                    }//while
-
-                    dataReader.Dispose();
-                }//for
-
-                connection.Close();
-            }//using
-            return spareParts;
-        }//FindAvaliabilityBySparePartId
        
 
 
@@ -2682,24 +2612,8 @@ namespace PartsApp
                 measureUnit    : dataReader["MeasureUnit"] as string             
             );     
         }//CreateSparePart
-        /// <summary>
-        /// /// Возвращает полный объект SparePart созданный из переданного dataReader.
-        /// </summary>
-        /// <param name="dataReader"></param>
-        /// <returns></returns>
-        private static SparePart CreateFullSparePart(SQLiteDataReader dataReader)
-        {
-            return new SparePart
-            (
-                sparePartId: Convert.ToInt32(dataReader["SparePartId"]),
-                photo: dataReader["Photo"] as string,
-                articul: dataReader["Articul"] as string,
-                title: dataReader["Title"] as string,
-                description: (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,
-                manufacturer: (dataReader["ManufacturerId"] == DBNull.Value) ? null : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])),
-                measureUnit: dataReader["MeasureUnit"] as string
-            );
-        }//CreateFullSparePart
+
+
         /// <summary>
         /// Коннект к базе данных.
         /// </summary>

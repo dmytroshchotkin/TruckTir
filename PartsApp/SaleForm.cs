@@ -18,7 +18,7 @@ namespace PartsApp
         //SparePart currentSparePart = new SparePart();
 
         IList<SparePart> searchSparePartsList = new List<SparePart>();
-        IList<SparePart> extCurrentSparePartsList = new List<SparePart>();
+
         bool isCellEditError = false;
         DataGridViewCell lastEditCell;
 
@@ -28,7 +28,6 @@ namespace PartsApp
         string userText;
 
         double inTotal;
-        IList<int> sparePartsId = new List<int>();   //коллекция для хранения Id того товара, что уже есть в таблице.
 
         string fullExtCount, fullSaleCount;    //переменная для запоминания полного количества конкретного прихода в extDGV.
 
@@ -280,10 +279,11 @@ namespace PartsApp
             TextBox textBox = (TextBox)sender;
             if (String.IsNullOrEmpty(textBox.Text) == false)
             {
-                if (lastEditCell.OwningColumn.Name == "Title")
-                    searchSparePartsList = PartsDAL.SearchSparePartsAvaliablityByTitle(textBox.Text, 10, sparePartsId);
-                else if (lastEditCell.OwningColumn.Name == "Articul")
-                    searchSparePartsList = PartsDAL.SearchSparePartsAvaliablityByArticul(textBox.Text, 10, sparePartsId);
+                List<int> sparePartsIdList = sparePartsList.Select(sp => sp.SparePartId).ToList();
+                if (lastEditCell.OwningColumn == Title)
+                    searchSparePartsList = PartsDAL.SearchSparePartsAvaliablityByTitle(textBox.Text, 10, sparePartsIdList);
+                else if (lastEditCell.OwningColumn == Articul)
+                    searchSparePartsList = PartsDAL.SearchSparePartsAvaliablityByArticul(textBox.Text, 10, sparePartsIdList);
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
                 {
@@ -291,9 +291,9 @@ namespace PartsApp
                     string str = null;
                     foreach (var sparePart in searchSparePartsList)
                     {
-                        if (lastEditCell.OwningColumn.Name == "Title")
+                        if (lastEditCell.OwningColumn == Title)
                             str = sparePart.Title + "     " + sparePart.Articul;
-                        else if (lastEditCell.OwningColumn.Name == "Articul")
+                        else if (lastEditCell.OwningColumn == Articul)
                                str = sparePart.Articul + "     " + sparePart.Title;
 
 /*!!!! Ошибка!*/        autoCompleteListBox.Items.Add(str);
@@ -379,18 +379,15 @@ namespace PartsApp
                         
                         //находим из списка нужную запчасть.
                         /*ERROR!!! FirstOrDefault*/
-                        var sparePartsList = searchSparePartsList.Where(sp => sp.Title.Trim() == title.Trim() && sp.Articul.Trim() == articul.Trim()).ToList();
+                        var sparePartsList = searchSparePartsList.Where(sp => sp.Title.Trim() == title.Trim() 
+                                                                     && sp.Articul.Trim() == articul.Trim()).ToList();
                         //Если такой товар найден в вып. списке.
                         if (sparePartsList.Count > 0)
-                        {
-                            //currentSparePart = sparePartsList[0];                            
-
+                        {                           
                             FillTheBothDGV(row, sparePartsList[0]);
 
                             sparePartsList.Add(sparePartsList[0]); //Добавляем в список.
 
-                            //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
-                            sparePartsId.Add(sparePartsList[0].SparePartId);
                             row.Cells[SellingPrice.Index].ReadOnly = row.Cells[Count.Index].ReadOnly   = false;
                             row.Cells[Title.Index].ReadOnly        = row.Cells[Articul.Index].ReadOnly = true;
 
@@ -418,9 +415,6 @@ namespace PartsApp
                                     //currentSparePart = sparePartsList[0];
                                     FillTheBothDGV(row, sparePartsList[0]);
                                     sparePartsList.Add(sparePartsList[0]); //добавляем в список.
-
-                                    //Добавляем Id товара в список добавленных в таблицу, для избежания дальнейшего вывода в вып. списке.
-                                    sparePartsId.Add(sparePartsList[0].SparePartId);
 
                                     row.Cells[SellingPrice.Index].ReadOnly = row.Cells[Count.Index].ReadOnly = false;
                                     row.Cells[Title.Index].ReadOnly = row.Cells[Articul.Index].ReadOnly = true;
@@ -606,8 +600,6 @@ namespace PartsApp
                     //extSpareParts.Clear();
                     searchSparePartsList.Clear(); //надо ли?
 
-                    sparePartsId.Clear();
-
                     //очищаем "Итого".
                     inTotal = 0;
                 }//if
@@ -620,7 +612,6 @@ namespace PartsApp
                     if (sparePartsList[i].SparePartId == sparePartId)
                     {
                         sparePartsList.RemoveAt(i);     /*ERROR!!!! Тут Кроется большая потенциальная ошибка, потому что при удалении уменьшается счетчик в оп-ре for. Работает корректно пока удаляется только один элемент из списка.*/
-                        sparePartsId.RemoveAt(i);
                         break;
                     }//if
 
@@ -682,10 +673,7 @@ namespace PartsApp
 
                     int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
                     SparePart currentSparePart = sparePartsList.First(sp => sp.SparePartId == sparePartId);
-                    //Создаем переменную с информацией о данном конкретном приходе.                    
-                    SparePart extCurrentSparePart  = PartsDAL.FindSparePartAvaliability(currentSparePart.SparePartId, Convert.ToInt32(cell.OwningRow.Cells[extPurchaseId.Name].Value));
-                    ////Очищаем, для запоминания данных введенных поль-лем.
-                    //extCurrentSparePart.VirtCount = extCurrentSparePart.Count = 0;
+
                     //Находим нужную клетку в табл. продаж.
                     var saleCountCell = saleDataGridView.Rows[saleDataGridView.Rows.Count - 2].Cells[Count.Index]; //Находим клетку "количество" предпоследней строки в таблице, потому, что из доп. таблицы изименятся может только она, т.к. все другие будут заблокированны. 
                     //Если содержит скобку то товар с вирт. склада.
@@ -837,19 +825,15 @@ namespace PartsApp
 
         private void FillTheExtDGV(SparePart sparePart)
         {            
-            //Находим все записи товара с табл. Avaliability с данным Id. 
-            //var sparePartsAvaliability = PartsDAL.FindAvaliabilityBySparePartId(sparePartId);
             //Создаем нужное кол-во строк в таблице.
             extDataGridView.Rows.Add(sparePart.AvailabilityList.Count);
-
-            extCurrentSparePartsList.Clear();
 
             foreach (Availability avail in sparePart.AvailabilityList)
             {
                 int rowIndx = extDataGridView.Rows.Add();
                 DataGridViewRow row = extDataGridView.Rows[rowIndx];
 
-                row.Cells[extSupplier.Index].Value  = avail.OperationDetails.Operation.Contragent;
+                row.Cells[extSupplier.Index].Value  = avail.OperationDetails.Operation.Contragent.ContragentName;
                 row.Cells[extTitle.Index].Value     = avail.OperationDetails.SparePart.Title;
                 row.Cells[extArticul.Index].Value   = avail.OperationDetails.SparePart.Articul;
                 row.Cells[extUnit.Index].Value      = avail.OperationDetails.SparePart.MeasureUnit;
