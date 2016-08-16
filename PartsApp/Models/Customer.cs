@@ -22,6 +22,15 @@ namespace PartsApp.Models
         public string Description { get; set; }
 
         public Customer() { }
+        public Customer(int contragentId, string contragentName, string code, string entity, ContactInfo contactInfo, string description)
+        { 
+            ContragentId    = contragentId;
+            ContragentName  = contragentName;
+            Code            = code;
+            Entity          = entity;
+            ContactInfo     = contactInfo;
+            Description     = description;
+        }//      
 
     }//Customer
 
