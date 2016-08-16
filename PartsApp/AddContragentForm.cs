@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PartsApp.Models;
+using PartsApp.SupportClasses;
 
 namespace PartsApp
 {
@@ -217,6 +218,30 @@ namespace PartsApp
 
         }//GetContragentFromForm()
 
+        /// <summary>
+        /// Возвращает true если все обязательные поля корректно заполнены, иначе false.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsRequiredFieldsValid()
+        {
+            ////Находим все BackPanel-контролы на форме. 
+            List<Control> curAccBackControls = this.GetAllControls(typeof(Panel), "BackPanel");
+
+            ////Проверяем все необходимые контролы.
+            //curAccBackControls.ForEach(backPanel => ControlValidation.IsInputControlEmpty(backPanel.Controls[0], toolTip));
+
+            entityComboBox_Leave(null, null);
+            contragentNameTextBox_Leave(null, null);
+            codeMaskedTextBox_Leave(null, null);
+
+            //Если хоть один не прошел валидацию, возв-ем false.
+            if (curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red))
+                return false;
+
+            return true;
+        }//IsRequiredAddingAreaFieldsValid
+
+
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
@@ -234,14 +259,11 @@ namespace PartsApp
         {
             if (e.Button == MouseButtons.Left)
             {
-                entityComboBox_Leave(sender, e);
-                contragentNameTextBox_Leave(sender, e);
-                codeMaskedTextBox_Leave(sender, e);
+                
                 //Если все данные введены корректно
-                if (entityBackPanel.BackColor != Color.Red && contragentNameBackPanel.BackColor != Color.Red
-                    && codeBackPanel.BackColor != Color.Red)
+                if (IsRequiredFieldsValid())
                 {             
-                    /*ERROR!!! Через конструктор сделать. Как? Необх-мо для каждого объекта прописывать */
+                    //Присваиваем объект заполненный данными с формы.
                     _contragent = GetContragentFromForm();
 
                     //Добавляем новую запись в таблицу.
@@ -253,6 +275,7 @@ namespace PartsApp
             }//if
         }//okButton_MouseClick
         
+
     }//AddcontragentForm
 
 }//namespace
