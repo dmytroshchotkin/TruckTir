@@ -195,8 +195,27 @@ namespace PartsApp
             }//foreach
             return false;
         }//isThereContactInfo
-        
 
+
+        /// <summary>
+        /// Возвращает объект заполненный данными с формы.
+        /// </summary>
+        /// <returns></returns>
+        private IContragent GetContragentFromForm()
+        {            
+            //Находим данные с формы.
+            int id               = _contragent.ContragentId;
+            string name          = contragentNameTextBox.Text.Trim();
+            string code          = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
+            string entity        = entityComboBox.Text;
+            string description   = (String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? null : descrRichTextBox.Text.Trim();
+            ContactInfo contInfo = GetContactInfo();
+
+            //возвращаем объект в зависимости от его типа.
+            return (_contragent is Supplier) ? (IContragent) new Supplier(id, name, code, entity, contInfo, description)
+                                             : (IContragent) new Customer(id, name, code, entity, contInfo, description);
+
+        }//GetContragentFromForm()
 
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
@@ -221,13 +240,9 @@ namespace PartsApp
                 //Если все данные введены корректно
                 if (entityBackPanel.BackColor != Color.Red && contragentNameBackPanel.BackColor != Color.Red
                     && codeBackPanel.BackColor != Color.Red)
-                {                                        
-                    /*ERROR!!! Через конструктор сделать.*/
-                    _contragent.Entity = entityComboBox.Text;
-                    _contragent.ContragentName = contragentNameTextBox.Text.Trim();
-                    _contragent.Code = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
-                    _contragent.Description = (String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? null : descrRichTextBox.Text.Trim();
-                    _contragent.ContactInfo = GetContactInfo();
+                {             
+                    /*ERROR!!! Через конструктор сделать. Как? Необх-мо для каждого объекта прописывать */
+                    _contragent = GetContragentFromForm();
 
                     //Добавляем новую запись в таблицу.
                     PartsDAL.AddContragent(_contragent);

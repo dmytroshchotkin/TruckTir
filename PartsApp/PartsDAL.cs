@@ -292,6 +292,10 @@ namespace PartsApp
         #region Модификация таблицы Suppliers и Customers.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
 
+        /// <summary>
+        /// Добавляет переданный объект в БД.
+        /// </summary>
+        /// <param name="contragent">Контрагент.</param>
         public static void AddContragent(IContragent contragent)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
@@ -325,6 +329,11 @@ namespace PartsApp
             }//using connection
         }//AddContragent
 
+        /// <summary>
+        /// Добавляет переданный объект в БД.
+        /// </summary>
+        /// <param name="contragent">Контрагент.</param>
+        /// <param name="cmd"></param>
         private static void AddContragent(IContragent contragent, SQLiteCommand cmd)
         {
             string tableName = (contragent is Supplier) ? "Suppliers" : "Customers";
@@ -636,7 +645,6 @@ namespace PartsApp
         /// <returns></returns>
         public static int AddSale(Sale sale)
         {
-            string message = null;
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
@@ -656,19 +664,18 @@ namespace PartsApp
                             foreach (OperationDetails operDet in sale.OperationDetailsList)
                                 AddSaleDetail(sale.OperationId, operDet, cmd);
 
-                            trans.Commit();
+                            trans.Commit(); //Фиксируем изменения.
                         }//try
                         catch (Exception ex)
-                        {
-                            message = ex.Message;
-                            trans.Rollback();
+                        {                            
+                            trans.Rollback(); //Отменяем изменения.
+                            throw new Exception(ex.Message);
                         }//catch
                     }//using cmd
                 }//using transaction
 
                 connection.Close();
             }//using connection
-            if (message != null) throw new Exception(message);
 
             return sale.OperationId;
         }//AddSale
@@ -692,13 +699,11 @@ namespace PartsApp
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
-
-            cmd.Parameters.AddWithValue("@EmployeeID", sale.Employee.EmployeeId);
-            cmd.Parameters.AddWithValue("@ContragentId", sale.Contragent.ContragentId);
-            cmd.Parameters.AddWithValue("@ContragentEmployee", sale.ContragentEmployee);
-            cmd.Parameters.AddWithValue("@Description", sale.Description);
-
-            cmd.Parameters.AddWithValue("@OperationDate", sale.OperationDate);
+            cmd.Parameters.AddWithValue("@EmployeeID",          sale.Employee.EmployeeId);
+            cmd.Parameters.AddWithValue("@ContragentId",        sale.Contragent.ContragentId);
+            cmd.Parameters.AddWithValue("@ContragentEmployee",  sale.ContragentEmployee);
+            cmd.Parameters.AddWithValue("@Description",         sale.Description);
+            cmd.Parameters.AddWithValue("@OperationDate",       sale.OperationDate);
 
             saleId = Convert.ToInt32(cmd.ExecuteScalar());
 
