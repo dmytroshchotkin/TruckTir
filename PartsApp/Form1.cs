@@ -1205,7 +1205,7 @@ namespace PartsApp
 
         private void addNewSaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new SaleForm().Show(this);
+            new SaleForm2().Show(this);
         }//addNewSaleToolStripMenuItem_Click
 
         private void editSparePartToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1281,7 +1281,7 @@ namespace PartsApp
 
 /*Будущие задачи*/
 //1) Посмотреть способ изменения DataGridView.Rows[x].Cells[y].Value без изменения DataSource.
-//http://stackoverflow.com/questions/1516252/how-to-programmatically-set-cell-value-in-datagridview
+//http://stackoverflow.com/questions/1516252/how-to-programmatically-set-countCell-value-in-datagridview
 //2)Добавить поиск по Manufacturer.
 //3)Сделать запись в БД регистронезависимой (или поиск по БД).
 //4)Сделать чтобы markupComboBox становился доступным при выделении клеток (без клика)

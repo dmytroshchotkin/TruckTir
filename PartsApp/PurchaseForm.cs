@@ -699,7 +699,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает абсолютный location области сразу под позицией клетки из purchaseDataGridView. 
         /// </summary>
-        /// <param name="cell">Клетка под чьей location необходимо вернуть</param>
+        /// <param name="countCell">Клетка под чьей location необходимо вернуть</param>
         /// <returns></returns>
         private Point GetCellBelowLocation(DataGridViewCell cell)
         {

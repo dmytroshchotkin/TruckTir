@@ -14,8 +14,16 @@ namespace PartsApp
 {
     public partial class SaleForm : Form
     {
+        /// <summary>
+        /// Список для хранения общих сведений по операции.
+        /// </summary>
+        List<OperationDetails> operDetList = new List<OperationDetails>();
+        /// <summary>
+        /// Список для хранения деталей операции по приходам. 
+        /// </summary>
+        List<Availability> _availList = new List<Availability>();
+
         List<SparePart> sparePartsList = new List<SparePart>(); /*ERROR!!! убрать поле*/
-        //SparePart currentSparePart = new SparePart();
 
         IList<SparePart> searchSparePartsList = new List<SparePart>();
 
@@ -28,13 +36,16 @@ namespace PartsApp
         string userText;
 
         double inTotal;
-
-        string fullExtCount, fullSaleCount;    //переменная для запоминания полного количества конкретного прихода в extDGV.
+        /// <summary>
+        /// Строка для запоминания количества товара в наличии для конкретного приходе.
+        /// </summary>
+        string fullExtCount;
+        string fullSaleCount;
 
         public SaleForm()
         {
             InitializeComponent();
-        }
+        }//
 
         private void SaleForm_Load(object sender, EventArgs e)
         {           
@@ -136,6 +147,7 @@ namespace PartsApp
                 dataGridView.RowHeadersWidth = 41 + 7; //((i - 1) * 7); //41 - изначальный размер RowHeaders
         }//partsDataGridView_RowPrePaint
 
+        /******/
         private void saleDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             //Эта строка нужна потому что новые столбцы SellingPrice и Count почему то становятся открытыми для записи.
@@ -146,30 +158,34 @@ namespace PartsApp
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /*События идут в порядке их возможного вызова.*/
-
-        // Событие для установки listBox в нужную позицию. //
+        /******/
+        /// <summary>
+        /// Событие для установки listBox в нужную позицию.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param> /******//******/
         private void saleDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             DataGridViewCell cell = (sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex];
             lastEditCell = cell;
-            if (cell.OwningColumn.Name == "Title" || cell.OwningColumn.Name == "Articul")
+            if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
                 //Запрещаем ввод в новую строку, если в предыдущей не были введены кол-во и цена продажи.
                 if (cell.OwningRow.Index != 0)
-                    if (saleDataGridView.Rows[cell.OwningRow.Index - 1].Cells[SellingPrice.Name].Value == null ||
-                        saleDataGridView.Rows[cell.OwningRow.Index - 1].Cells["Count"].Style.ForeColor == Color.Gray)
+                    if (saleDataGridView.Rows[cell.OwningRow.Index - 1].Cells[SellingPrice.Index].Value == null ||
+                        saleDataGridView.Rows[cell.OwningRow.Index - 1].Cells[Count.Index].Style.ForeColor == Color.Gray)
                         e.Cancel = true;
 
                 autoCompleteListBox.Location = GetCellBelowLocation(cell);
 
                 extDataGridView.Columns[extCount.Name].ReadOnly = false; //Разрешаем ввод кол-ва в доп. таблице.
-            }
+            }//if
             //Запрещаем ввод цены, пока не введено кол-во.
-            if (cell.OwningColumn.Name == SellingPrice.Name && cell.OwningRow.Cells["Count"].Style.ForeColor == Color.Gray)
+            if (cell.OwningColumn == SellingPrice && cell.OwningRow.Cells[Count.Index].Style.ForeColor == Color.Gray)
                 e.Cancel = true;
 
             //Обрабатываем ввод Количества.
-            if (cell.OwningColumn.Name == "Count")
+            if (cell.OwningColumn == Count)
             {
                 //Запрещаем ввод кол-ва в данной таблице, если товар только на виртуальном складе. (выбирать в доп. таблице)
                 if ((cell.Value as string).IndexOf('(') == 0)  //корявая проверка на вирт. скл., если нулевой индекс это открывающая скобка, значит товар в наличии только на вирт. скл.
@@ -183,26 +199,29 @@ namespace PartsApp
                 }
             }//if
         }//saleDataGridView_CellBeginEdit
-
-        //Событие для добавления обработчиков на ввод текста в клетку. //
+        /******/
+        /// <summary>
+        /// Событие для добавления обработчиков на ввод текста в клетку.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>/******/
         private void saleDataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {            
             DataGridViewTextBoxCell cell = (DataGridViewTextBoxCell)saleDataGridView.CurrentCell;
 
             //
-            if (cell.OwningColumn.Name == "Title" || cell.OwningColumn.Name == "Articul")
+            if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
                 textBoxCell = e.Control as TextBox;
-                //if (textBoxCell != null) //Нужна ли эта проверка?
                 if (previewKeyDownEvent == false)
                 {
                     previewKeyDownEvent = true;
                     textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
                     textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
-                }
+                }//if
             }//if
         }//saleDataGridView_EditingControlShowing
-
+        /******/
         private void dataGridViewTextBoxCell_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             TextBox textBox = sender as TextBox;
@@ -266,7 +285,7 @@ namespace PartsApp
 
     
         }//dataGridViewTextBoxCell_PreviewKeyDown
-
+        /******/
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
             if (textChangedEvent == false) return;
@@ -306,12 +325,12 @@ namespace PartsApp
             }//if
             else autoCompleteListBox.Visible = false; //Если ничего не введено, убрать вып. список.
         }//dataGridViewTextBoxCell_TextChanged
-
+        /******/
         private void autoCompleteListBox_MouseHover(object sender, EventArgs e)
         {
             isCellEditError = true;            
         }
-
+        /******/
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Clicks == 1)
@@ -331,15 +350,14 @@ namespace PartsApp
                 saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));
             }
         }
-
+        /******/
         private void autoCompleteListBox_SelectedIndexChanged(object sender, EventArgs e)
         {           
             textChangedEvent = false;
             if (autoCompleteListBox.SelectedIndex != -1)
                 textBoxCell.Text = autoCompleteListBox.SelectedItem.ToString();
         }//autoCompleteListBox_SelectedIndexChanged
-
-        //Привести в порядок метод!!!!
+        /******/
         private void saleDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {            
             if (isCellEditError) 
@@ -352,10 +370,11 @@ namespace PartsApp
 
             //Если редактировался Артикул или Название
             #region Articul Or Title
-            if (cell.OwningColumn.Name == "Title" || cell.OwningColumn.Name == "Articul")
+            if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
                 if (cell.Value == null) 
                     return;
+
                 //убираем события с заполненной клетки.
                 if (textBoxCell != null)
                 {
@@ -378,15 +397,14 @@ namespace PartsApp
                         articul = (cell.OwningColumn.Index == Title.Index) ? titleAndArticul[1] : titleAndArticul[0];        
                         
                         //находим из списка нужную запчасть.
-                        /*ERROR!!! FirstOrDefault*/
-                        var sparePartsList = searchSparePartsList.Where(sp => sp.Title.Trim() == title.Trim() 
-                                                                     && sp.Articul.Trim() == articul.Trim()).ToList();
+                        SparePart sparePart = searchSparePartsList.FirstOrDefault(sp => sp.Title   == title.Trim() 
+                                                                                     && sp.Articul == articul.Trim());
                         //Если такой товар найден в вып. списке.
-                        if (sparePartsList.Count > 0)
-                        {                           
-                            FillTheBothDGV(row, sparePartsList[0]);
+                        if (sparePart != null)
+                        {
+                            FillTheBothDGV(row, sparePart);
 
-                            sparePartsList.Add(sparePartsList[0]); //Добавляем в список.
+                            sparePartsList.Add(sparePart); //Добавляем в список.
 
                             row.Cells[SellingPrice.Index].ReadOnly = row.Cells[Count.Index].ReadOnly   = false;
                             row.Cells[Title.Index].ReadOnly        = row.Cells[Articul.Index].ReadOnly = true;
@@ -407,20 +425,19 @@ namespace PartsApp
                         {
                             if (searchSparePartsList.Count == 1) //если этот товар уникален.
                             {
-                                //находим из списка нужную запчасть.
-                                var sparePartsList = searchSparePartsList;
+                                //находим из списка нужную запчасть. /*ERROR Кажется ошибка идентификации введенного товара*/
+                                SparePart sparePart = searchSparePartsList[0];
                                 /*ERROR!!! Скомпановать код!*/
-                                if (sparePartsList.Count > 0) //если введенный товар именно тот что в списке.
-                                {
-                                    //currentSparePart = sparePartsList[0];
-                                    FillTheBothDGV(row, sparePartsList[0]);
-                                    sparePartsList.Add(sparePartsList[0]); //добавляем в список.
+                                //if (sparePartsList.Count > 0) //если введенный товар именно тот что в списке.
+                                //{
+                                FillTheBothDGV(row, sparePart);
+                                sparePartsList.Add(sparePart); //добавляем в список.
 
-                                    row.Cells[SellingPrice.Index].ReadOnly = row.Cells[Count.Index].ReadOnly = false;
-                                    row.Cells[Title.Index].ReadOnly = row.Cells[Articul.Index].ReadOnly = true;
+                                row.Cells[SellingPrice.Index].ReadOnly = row.Cells[Count.Index].ReadOnly = false;
+                                row.Cells[Title.Index].ReadOnly = row.Cells[Articul.Index].ReadOnly = true;
 
-                                    userText = null;
-                                }//if
+                                userText = null;
+                                //}//if
                             }//if (если этот товар уникален)
                             else
                             {
@@ -447,7 +464,7 @@ namespace PartsApp
             //Если редактируется цена
             #region Count Or SellingPrice.
             #region SellingPrice
-            if (cell.OwningColumn.Name == SellingPrice.Name)
+            if (cell.OwningColumn == SellingPrice)
             {
                 if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
                 {
@@ -469,7 +486,7 @@ namespace PartsApp
                             avail.SellingPrice = price;
 
                         ////Если цена вводится в той же строке.
-                        //int sparePartId = Convert.ToInt32(cell.OwningRow.Cells["SparePartId"].Value);
+                        //int sparePartId = Convert.ToInt32(countCell.OwningRow.Cells["SparePartId"].Value);
                         //if (sparePartId != currentSparePart.SparePartId)
                         //{
                         //    foreach (var sparePart in sparePartsList)
@@ -514,7 +531,7 @@ namespace PartsApp
             }//if
             #endregion
             #region Count
-            if (cell.OwningColumn.Name == "Count")
+            if (cell.OwningColumn == Count)
             {
                 try
                 {
@@ -533,7 +550,7 @@ namespace PartsApp
                     //        if (sparePart.SparePartId == sparePartId)
                     //            currentSparePart = sparePart;
                     //}//if
-                    //currentSparePart.AvailabilityList[0].OperationDetails.Count = count;
+                    //currentSparePart.AvailabilityList[0].OperationDetails.Count = sellCount;
                     //Запрещаем изменение кол-ва после первого корректного ввода.
                     row.Cells[Count.Index].ReadOnly = true;
 
@@ -544,11 +561,11 @@ namespace PartsApp
 
                         float price = Convert.ToSingle(row.Cells[Price.Index].Value);
                         double sum = Math.Round((double)(price * count), 2, MidpointRounding.AwayFromZero);
-                        cell.OwningRow.Cells[Sum.Index].Value = sum; //(double)currentSparePart.Price * count;
-                        inTotal += sum; //(double)currentSparePart.Price * count;
+                        cell.OwningRow.Cells[Sum.Index].Value = sum; //(double)currentSparePart.Price * sellCount;
+                        inTotal += sum; //(double)currentSparePart.Price * sellCount;
                         inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
 
-                        //cell.OwningRow.Cells[SellingPrice.Name].ReadOnly = true;//cell.OwningRow.Cells["Count"].ReadOnly = true;
+                        //countCell.OwningRow.Cells[SellingPrice.Name].ReadOnly = true;//countCell.OwningRow.Cells["Count"].ReadOnly = true;
                         //currentSparePart = null;
                     }//if
 
@@ -569,7 +586,7 @@ namespace PartsApp
             #endregion
             #endregion
         }//saleDataGridView_CellEndEdit                                
-
+        /******/
         private void saleDataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (isCellEditError == true)
@@ -587,7 +604,7 @@ namespace PartsApp
                 textBoxCell.SelectionStart = textBoxCell.Text.Length;                
             }//if
         }//saleDataGridView_SelectionChanged
-
+        /******/
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (saleDataGridView.AreAllCellsSelected(false) == true)
@@ -646,10 +663,10 @@ namespace PartsApp
 
         #region Обработка событий работы с дополнительным списком товаров.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        /******/
         private void extDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            if (extDataGridView.Columns[e.ColumnIndex].Name == "extCount")
+            if (e.ColumnIndex == extCount.Index)
             {
                 DataGridViewCell cell = extDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 //if (String.IsNullOrEmpty(fullExtCount))
@@ -659,57 +676,32 @@ namespace PartsApp
                 cell.Style.ForeColor = Color.Black;
             }
         }//extDataGridView_CellBeginEdit
-
+        /******/
         private void extDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             //Если редактировалась колонка "Кол-во". хотя по идее все остальные readOnly.
-            if (extDataGridView.Columns[e.ColumnIndex].Name == extCount.Name)
+            if (extDataGridView.Columns[e.ColumnIndex] == extCount)
             {
-                DataGridViewCell cell = extDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                DataGridViewRow row = extDataGridView.Rows[e.RowIndex];
+                DataGridViewCell cell = row.Cells[e.ColumnIndex];
                 try
                 {
                     double count = TestInputValueInExtDGV(cell);
                     cell.ReadOnly = true;
 
-                    int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
-                    SparePart currentSparePart = sparePartsList.First(sp => sp.SparePartId == sparePartId);
-
-                    //Находим нужную клетку в табл. продаж.
-                    var saleCountCell = saleDataGridView.Rows[saleDataGridView.Rows.Count - 2].Cells[Count.Index]; //Находим клетку "количество" предпоследней строки в таблице, потому, что из доп. таблицы изименятся может только она, т.к. все другие будут заблокированны. 
-                    //Если содержит скобку то товар с вирт. склада.
-                    if (fullExtCount.Contains('('))
-                    {
-                        //currentSparePart.VirtCount += count;
-                        //extCurrentSparePart.VirtCount = count;
-                        //cell.Value = extCurrentSparePart.Avaliability;
-                    }
+                    
+                    //int purchaseId = Convert.ToInt32(row.Cells[extPurchaseId.Index].Value);                    
+                    //SparePart sparePart = sparePartsList.First(sp => sp.SparePartId == sparePartId);
+                    //Availability avail = sparePart.AvailabilityList.First(av => av.OperationDetails.Operation.OperationId == purchaseId);
+                    
+                    //Если товар с вирт. склада.
+                    if (row.Cells[extStorageAdress.Index].Value != null)
+                        cell.Value = String.Format("({0})", count);
                     else
-                    {
-                        //currentSparePart.Count += count;
-                        //extCurrentSparePart.Count = count;
-                    }
+                        cell.Value = count;
 
-                    //extSpareParts.Add(extCurrentSparePart);
-                    //extCurrentSparePartsList.Add(extCurrentSparePart);
-                    ////Обновляем "кол-во" в таблице продаж.
-                    //saleCountCell.ReadOnly = true;
-                    //saleCountCell.Value = currentSparePart.Avaliability;
-                    ////Обновляем содержимое столбца "Сумма" в saleDGV, если цена уже указана.
-                    //if (currentSparePart.Price != null)
-                    //{
-                    //    //Если отпусная цена уже выставленна запоминаем её в выбранном приходе.
-                    //    extCurrentSparePart.SellingPrice = currentSparePart.Price;
-
-                    //    if (saleCountCell.OwningRow.Cells["Sum"].Value != null)
-                    //        inTotal -= Convert.ToDouble((saleCountCell.OwningRow.Cells["Sum"].Value));
-
-                    //    double sum = Math.Round((double)currentSparePart.Price * (currentSparePart.Count + currentSparePart.VirtCount), 2, MidpointRounding.AwayFromZero);
-                    //    saleCountCell.OwningRow.Cells["Sum"].Value = sum; //(double)currentSparePart.SellingPrice * count;
-                    //    inTotal += sum; //(double)currentSparePart.SellingPrice * count;
-                    //    inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
-                    //}//if
-                    //saleCountCell.Style.ForeColor = Color.Black;
-                    //saleCountCell.Style.SelectionForeColor = Color.White;
+                    //Обновляем ячеку 'Кол-во' в таблице продаж.
+                    SaleDGVCountColumnInvalidate(row);
                 }//try
                 catch
                 {
@@ -722,12 +714,50 @@ namespace PartsApp
             }//if            
         }//extDataGridView_CellEndEdit  
 
+        /******/
+        /// <summary>
+        /// Обновляет значение ячейки 'Кол-во' в таблице продаж, после изменений в доп. таблице.
+        /// </summary>
+        /// <param name="extCount">Измененная строка в доп. таблице.</param>/******/
+        private void SaleDGVCountColumnInvalidate(DataGridViewRow extRow)
+        {
+            //Находим нужную клетку в табл. продаж. /*ERROR находить ячейку нормально!*/
+            DataGridViewRow row = saleDataGridView.Rows[saleDataGridView.Rows.Count - 2];
+            var saleCountCell = row.Cells[Count.Index]; //Находим клетку "количество" предпоследней строки в таблице, потому, что из доп. таблицы изименятся может только она, т.к. все другие будут заблокированны. 
 
+            int sparePartId = Convert.ToInt32(saleCountCell.OwningRow.Cells[SparePartId.Index].Value);
+
+            //Обновляем "кол-во" в таблице продаж.
+            saleCountCell.ReadOnly = true;
+            List<Availability> availList = _availList.Where(av => av.OperationDetails.SparePart.SparePartId == sparePartId).ToList();
+            saleCountCell.Value = Availability.GetTotalCount(availList);
+
+            //Обновляем содержимое столбца "Сумма" в saleDGV, если цена уже указана.
+            if (row.Cells[Price.Index] != null)
+            {
+                //Если отпусная цена уже выставленна запоминаем её в выбранном приходе.
+                extRow.Cells[extSellingPrice.Index].Value = row.Cells[SellingPrice.Index].Value;                
+
+                if (saleCountCell.OwningRow.Cells["Sum"].Value != null)
+                    inTotal -= Convert.ToDouble((saleCountCell.OwningRow.Cells["Sum"].Value));
+
+                double price = Convert.ToDouble(row.Cells[SellingPrice.Index].Value);
+                float count = availList.Sum(av => av.OperationDetails.Count);
+                double sum = Math.Round(price * count, 2, MidpointRounding.AwayFromZero);
+                row.Cells[Sum.Index].Value = sum; 
+                inTotal += sum; 
+                inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
+            }//if
+            saleCountCell.Style.ForeColor = Color.Black;
+            saleCountCell.Style.SelectionForeColor = Color.White;
+        
+        }//SaleDGVCountColumnUpdate
+        /******/
         /// <summary>
         /// Возвращает абсолютный location области сразу под позицией клетки из extSaleDataGridView. 
         /// </summary>
-        /// <param name="cell">Клетка под чьей location необходимо вернуть</param>
-        /// <returns></returns>
+        /// <param name="countCell">Клетка под чьей location необходимо вернуть</param>
+        /// <returns></returns>/******/
         private Point GetExtCellBelowLocation(DataGridViewCell cell)
         {
             Point cellLoc = extDataGridView.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
@@ -735,17 +765,17 @@ namespace PartsApp
             Point gbLoc = extGroupBox.Location;
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);
         }//GetCellBelowLocation
-
+        /******/
         /// <summary>
         /// Возвращает число или выбрасывает исключение если value заданной клетки не проходит хоть одну проверку на соответствие допустимому значение количества для данного прихода.
         /// </summary>
-        /// <param name="value">Проверяемое значение</param>
+        /// <param name="value">Проверяемое значение</param>/******/
         private double TestInputValueInExtDGV(DataGridViewCell cell)
         {
             double count = Convert.ToDouble(cell.Value);
             if (count <= 0) throw new Exception();            //ввод нуля или отриц. значения также является ошибкой.
 
-            //проверяем чтобы count было не больше количества на складе.
+            //проверяем чтобы sellCount было не больше количества на складе.
             double countAvaliability = Convert.ToDouble(System.Text.RegularExpressions.Regex.Replace(fullExtCount, @"[^\d]+", "")); //Достаём число из строки, строка возможна типа "(20)", поэтому исп-ся рег. выр.
             if (count > countAvaliability) throw new Exception();
             //Проверяем является ли введенное число корректным для продажи, т.е. соответствует ли оно минимальному 
@@ -754,9 +784,6 @@ namespace PartsApp
                 throw new Exception();
             return count;
         }//TestInputValueInExtDGV
-       
-
-
 
 
 
@@ -782,13 +809,13 @@ namespace PartsApp
         /// <summary>
         /// Возвращает абсолютный location области сразу под позицией клетки из saleDataGridView. 
         /// </summary>
-        /// <param name="cell">Клетка под чьей location необходимо вернуть</param>
+        /// <param name="countCell">Клетка под чьей location необходимо вернуть</param>
         /// <returns></returns>
         private Point GetCellBelowLocation(DataGridViewCell cell)
         {
             Point cellLoc = saleDataGridView.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
-            Point dgvLoc = saleDataGridView.Location;
-            Point gbLoc = saleGroupBox.Location;
+            Point dgvLoc  = saleDataGridView.Location;
+            Point gbLoc   = saleGroupBox.Location;
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);        
         }//GetCellBelowLocation
 
@@ -802,7 +829,7 @@ namespace PartsApp
             //Очищаем таблицу.
             extDataGridView.Rows.Clear();
 
-            FillTheExtDGV(sparePart);                
+            FillTheExtDGV(sparePart.AvailabilityList);                
         }//FillTheBothDGV
 
         private void FillTheSaleDGV(DataGridViewRow row, SparePart sparePart)
@@ -811,24 +838,20 @@ namespace PartsApp
             row.Cells[Title.Index].Value        = sparePart.Title;
             row.Cells[Articul.Index].Value      = sparePart.Articul;
             row.Cells[Unit.Index].Value         = sparePart.MeasureUnit;
-
-            //находим общее кол-во
-            string spAvailability = Availability.GetTotalCount(sparePart.AvailabilityList);
                
             row.Cells[Count.Index].Style.ForeColor = Color.Gray;
             row.Cells[Count.Index].Style.SelectionForeColor = Color.Gray;
-            row.Cells[Count.Index].Value = spAvailability;  
+            row.Cells[Count.Index].Value = Availability.GetTotalCount(sparePart.AvailabilityList); ;  
           
-            ////очищаем "количество" текущей единицы для дальнейшего заполнения поль-лем
-            //currentSparePart.Count = currentSparePart.VirtCount = 0;
         }//FillTheSaleDGV
 
-        private void FillTheExtDGV(SparePart sparePart)
+        /// <summary>
+        /// Заполняет данными таблицу доп. инф-ции.
+        /// </summary>
+        /// <param name="sparePart">Список приходов данного товара в наличии.</param>
+        private void FillTheExtDGV(List<Availability> availList)
         {            
-            //Создаем нужное кол-во строк в таблице.
-            extDataGridView.Rows.Add(sparePart.AvailabilityList.Count);
-
-            foreach (Availability avail in sparePart.AvailabilityList)
+            foreach (Availability avail in availList)
             {
                 int rowIndx = extDataGridView.Rows.Add();
                 DataGridViewRow row = extDataGridView.Rows[rowIndx];
@@ -844,10 +867,7 @@ namespace PartsApp
 
                 row.Cells[extStorageAdress.Index].Value = avail.StorageAddress;
                 row.Cells[extPrice.Index].Value = avail.OperationDetails.Price;
-
-                //Добавляем все приходы данного товара из Avaliability в список и доп. таблицу.
-                
-               // extDataGridView.Rows[i].Cells["extMarkup"].Value = sparePartsAvaliability[i].Markup;
+               
                 row.Cells[extMarkup.Index].Value        = Models.Markup.GetDescription(avail.Markup);
                 row.Cells[extSellingPrice.Index].Value  = avail.SellingPrice;
                 row.Cells[extPurchaseId.Index].Value    = avail.OperationDetails.Operation.OperationId;
@@ -855,11 +875,11 @@ namespace PartsApp
             }//foreach            
             
             //Если отпускная цена у всех приходов одинаковая, выводим её в saleDGV.
-            if(!sparePart.AvailabilityList.Any(av => av.SellingPrice != sparePart.AvailabilityList[0].SellingPrice))
-                lastEditCell.OwningRow.Cells[SellingPrice.Name].Value = sparePart.AvailabilityList[0].SellingPrice;
+            if (!availList.Any(av => av.SellingPrice != availList[0].SellingPrice))
+                lastEditCell.OwningRow.Cells[SellingPrice.Name].Value = availList[0].SellingPrice;
 
             //Сортируем таблицу по дате прихода.
-            extDataGridView.Sort(extDataGridView.Columns[extPurchaseDate.Name], ListSortDirection.Ascending);
+            extDataGridView.Sort(extPurchaseDate, ListSortDirection.Ascending);
             extDataGridView.ClearSelection();
         }//FillTheExtDGV
 
@@ -875,7 +895,7 @@ namespace PartsApp
             if (count <= 0) 
                 throw new Exception(); 
 
-            //Проверяем также чтобы count было не больше количества на  основном складе.
+            //Проверяем также чтобы sellCount было не больше количества на  основном складе.
             double mainStorageCount = 0;
             if (fullSaleCount.Contains('('))
                 mainStorageCount = Convert.ToDouble(fullSaleCount.Substring(0, fullSaleCount.IndexOf('(')));
@@ -918,10 +938,10 @@ namespace PartsApp
 
                 //extSpareParts.Add(extCurrentSparePart);
                 ////Если продаваемое количество больше чем в данном приходе.
-                //if (sellCount > extSellCount)
+                //if (sellCount > extAvailCount)
                 //{
-                //    extCurrentSparePart.Count = extSellCount;
-                //    sellCount -= extSellCount;
+                //    extCurrentSparePart.Count = extAvailCount;
+                //    sellCount -= extAvailCount;
                 //}//if
                 //else
                 //{
@@ -1271,6 +1291,7 @@ namespace PartsApp
             }//catch
         }//markupComboBox_SelectedIndexChanged
 
+        /*****/
         private void saleDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -1292,7 +1313,7 @@ namespace PartsApp
                     location.Y += e.Location.Y;
                     saleContextMenuStrip.Show(saleDataGridView, location, ToolStripDropDownDirection.BelowRight);
                 }//if                
-            }//if (Button.Right)
+            }//if 
         }//saleDataGridView_CellMouseClick        
 
 
@@ -1563,24 +1584,24 @@ namespace PartsApp
 //        /// <summary>
 //        /// Возвращает абсолютный location области сразу под позицией клетки из saleDataGridView. 
 //        /// </summary>
-//        /// <param name="cell">Клетка под чьей location необходимо вернуть</param>
+//        /// <param name="countCell">Клетка под чьей location необходимо вернуть</param>
 //        /// <returns></returns>
-//        private Point GetCellBelowLocation(DataGridViewCell cell)
+//        private Point GetCellBelowLocation(DataGridViewCell countCell)
 //        {
-//            Point cellLoc = saleDataGridView.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
+//            Point cellLoc = saleDataGridView.GetCellDisplayRectangle(countCell.ColumnIndex, countCell.RowIndex, true).Location;
 //            Point dgvLoc = saleDataGridView.Location;
 //            Point gbLoc = saleGroupBox.Location;
-//            return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);
+//            return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + countCell.Size.Height);
 //        }//GetCellBelowLocation
 
 //        /// <summary>
 //        /// Возвращает абсолютный location области на позиции клетки из saleDataGridView. 
 //        /// </summary>
-//        /// <param name="cell">Клетка чей location необходимо вернуть</param>
+//        /// <param name="countCell">Клетка чей location необходимо вернуть</param>
 //        /// <returns></returns>
-//        private Point GetCellLocation(DataGridViewCell cell)
+//        private Point GetCellLocation(DataGridViewCell countCell)
 //        {
-//            Point cellLoc = saleDataGridView.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
+//            Point cellLoc = saleDataGridView.GetCellDisplayRectangle(countCell.ColumnIndex, countCell.RowIndex, true).Location;
 //            Point dgvLoc = saleDataGridView.Location;
 //            Point gbLoc = saleGroupBox.Location;
 //            return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y);

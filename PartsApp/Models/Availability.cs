@@ -56,30 +56,35 @@ namespace PartsApp.Models
         {
             return availabilityList.Max(av => av.SellingPrice);
         }//GetMaxSellingPrice
+
+        //public static string GetTotalCount(IList<Availability> availabilityList)
+        //{
+        //    float mainStorageCount = 0f, virtStorageCount = 0f;
+
+        //    foreach (Availability avail in availabilityList)
+        //    {
+        //        if (avail.StorageAddress == null)
+        //            mainStorageCount += avail.OperationDetails.Count;
+        //        else
+        //            virtStorageCount += avail.OperationDetails.Count;
+        //    }//foreach
+
+        //    //Присваиваем общее кол-во товара в формате "X (Y)", где X - кол-во товара на осн. складе, а Y - на виртуальном.
+        //    if (virtStorageCount == 0)
+        //        return mainStorageCount.ToString();
+        //    else if (mainStorageCount == 0)
+        //        return String.Format("({0})", virtStorageCount);
+        //    else
+        //        return String.Format("{0} ({1})", mainStorageCount, virtStorageCount);
+        //}//GetTotalCount
         /// <summary>
         /// Возвращает общее кол-во товара с основного и виртуального склада.
         /// </summary>
         /// <param name="availabilityList">Список товаров в наличии.</param>
         /// <returns></returns>
-        public static string GetTotalCount(IList<Availability> availabilityList)
+        public static float GetTotalCount(IList<Availability> availabilityList)
         {
-            float mainStorageCount = 0f, virtStorageCount = 0f;
-
-            foreach (Availability avail in availabilityList)
-            {
-                if (avail.StorageAddress == null)
-                    mainStorageCount += avail.OperationDetails.Count;
-                else
-                    virtStorageCount += avail.OperationDetails.Count;
-            }//foreach
-
-            //Присваиваем общее кол-во товара в формате "X (Y)", где X - кол-во товара на осн. складе, а Y - на виртуальном.
-            if (virtStorageCount == 0)
-                return mainStorageCount.ToString();
-            else if (mainStorageCount == 0)
-                return String.Format("({0})", virtStorageCount);
-            else
-                return String.Format("{0} ({1})", mainStorageCount, virtStorageCount);
+            return availabilityList.Sum(av => av.OperationDetails.Count);
         }//GetTotalCount
         /// <summary>
         /// Возвращает список новых объектов созданного на основании переданного списка.

@@ -108,7 +108,7 @@ namespace PartsApp.Models
     //    }//
 
     //    public SparePart(int sparePartId, string photo, string articul, string title, string description,
-    //                     int? manufacturerId, int purchaseId, string measureUnit, string storageAdress, double count,
+    //                     int? manufacturerId, int purchaseId, string measureUnit, string storageAdress, double sellCount,
     //                     double price, double? markup)
     //    {
     //        this.SparePartId = sparePartId;
@@ -121,8 +121,8 @@ namespace PartsApp.Models
     //        this.MeasureUnit = measureUnit;
     //        this.PurchaseId = purchaseId;
     //        this.SupplierName = PartsDAL.FindSupplierByPurchaseId(purchaseId).ContragentName; /*!!!*/
-    //        if (storageAdress == null) this.Count = count;
-    //        else this.VirtCount = count;
+    //        if (storageAdress == null) this.Count = sellCount;
+    //        else this.VirtCount = sellCount;
     //        this.StorageAdress = storageAdress;
     //        this.Price = price;
     //        this.Markup = markup;

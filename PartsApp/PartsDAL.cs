@@ -2255,9 +2255,9 @@ namespace PartsApp
         /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
         /// <param name="withoutIDs">Список Id товара который не должен входить в результирующий список.</param>
         /// <returns></returns>
-        public static IList<SparePart> SearchSparePartsAvaliablityByArticul(string articul, int limit, IList<int> withoutIDs)
+        public static List<SparePart> SearchSparePartsAvaliablityByArticul(string articul, int limit, IList<int> withoutIDs)
         {
-            IList<SparePart> spareParts = new List<SparePart>();
+            List<SparePart> spareParts = new List<SparePart>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -2276,10 +2276,10 @@ namespace PartsApp
                 }//if
 
                 var query = "SELECT av.SparePartId, * FROM Avaliability AS av JOIN SpareParts AS sp "
-                          + "ON av.SparePartId = sp.SparePartId AND sp.Articul LIKE @Articul AND av.SparePartId NOT IN(" + notIn + ")" 
+                          + "ON av.SparePartId = sp.SparePartId AND ToLower(sp.Articul) LIKE @Articul AND av.SparePartId NOT IN(" + notIn + ")" 
                           + "GROUP BY av.SparePartId LIMIT @Limit;";
 
-                cmd.Parameters.AddWithValue("@Articul", articul + "%");
+                cmd.Parameters.AddWithValue("@Articul", articul.ToLower() + "%");
                 cmd.Parameters.AddWithValue("@Limit", limit);
 
                 cmd.CommandText = query;
@@ -2305,9 +2305,9 @@ namespace PartsApp
         /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
         /// <param name="withoutIDs">Список Id товара который не должен входить в результирующий список.</param>
         /// <returns></returns>
-        public static IList<SparePart> SearchSparePartsAvaliablityByTitle(string title, int limit, IList<int> withoutIDs)
+        public static List<SparePart> SearchSparePartsAvaliablityByTitle(string title, int limit, IList<int> withoutIDs)
         {
-            IList<SparePart> spareParts = new List<SparePart>();
+            List<SparePart> spareParts = new List<SparePart>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -2327,10 +2327,10 @@ namespace PartsApp
                 }//if
 
                 var query = "SELECT av.SparePartId, * FROM Avaliability AS av JOIN SpareParts AS sp "
-                          + "ON av.SparePartId = sp.SparePartId AND sp.Title LIKE @Title AND av.SparePartId NOT IN(" + notIn + ")"
+                          + "ON av.SparePartId = sp.SparePartId AND ToLower(sp.Title) LIKE @Title AND av.SparePartId NOT IN(" + notIn + ")"
                           + "GROUP BY av.SparePartId LIMIT @Limit;";
 
-                cmd.Parameters.AddWithValue("@Title", title + "%");
+                cmd.Parameters.AddWithValue("@Title", title.ToLower() + "%");
                 cmd.Parameters.AddWithValue("@Limit", limit);
 
                 cmd.CommandText = query;
