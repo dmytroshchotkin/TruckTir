@@ -28,10 +28,8 @@ namespace PartsApp
         List<SparePart> searchSparePartsList; /*ERROR можно ли убрать?*/
 
         /// <summary>
-        /// Для запоминания редактируемой в данный момент ячейки.
+        /// Последняя редактируемая ячейка.
         /// </summary>
-        TextBox textBoxCell;
-
         DataGridViewCell lastEditCell;
 
         bool isCellEditError     = false;
@@ -105,12 +103,13 @@ namespace PartsApp
                        
             if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
-                textBoxCell = e.Control as TextBox;
+                TextBox textBoxCell =  e.Control as TextBox;
+                cell.Tag = textBoxCell; //Запоминаем editing control в Tag ячейки.
                 if (previewKeyDownEvent == false)
                 {
                     previewKeyDownEvent = true;
                     textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
-                    textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
+                    textBoxCell.TextChanged    += new EventHandler(dataGridViewTextBoxCell_TextChanged);
                 }//if
             }//if
         }//saleDataGridView_EditingControlShowing
@@ -122,8 +121,6 @@ namespace PartsApp
         /// <param name="e"></param>
         private void dataGridViewTextBoxCell_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            TextBox textBox = sender as TextBox; /*ERROR Можно попробовать обойтись без lastEditCell, можно в textBox.Tag присваивать соотв. DataGridViewCell.*/
-
             switch (e.KeyCode)
             { 
                 case Keys.Down:
@@ -201,7 +198,9 @@ namespace PartsApp
                 saleDataGridView.CellBeginEdit += saleDataGridView_CellBeginEdit;
                 saleDataGridView.EditingControlShowing += saleDataGridView_EditingControlShowing;
 
-                textBoxCell.SelectionStart = textBoxCell.Text.Length; //ставим каретку в конец текста.           
+                //ставим каретку в конец текста. 
+                TextBox textBoxCell = lastEditCell.Tag as TextBox;
+                textBoxCell.SelectionStart = textBoxCell.Text.Length;           
             }//if
         }//saleDataGridView_SelectionChanged
 
@@ -265,10 +264,11 @@ namespace PartsApp
                 return;
 
             //убираем события с заполненной клетки.
+            TextBox textBoxCell = cell.Tag as TextBox;
             if (textBoxCell != null)
             {
-                textChangedEvent = previewKeyDownEvent = false;
-                textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;
+                textChangedEvent = previewKeyDownEvent = false; /*ERROR!! Надо ли две переменные*/
+                textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;/*ERROR!! Надо ли убирать подписку. */
                 textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
             }//if
 
