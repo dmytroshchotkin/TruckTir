@@ -76,20 +76,15 @@ namespace PartsApp
         /// <param name="e"></param> 
         private void saleDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            DataGridViewCell cell = (sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex];
+            lastEditCell = saleDataGridView[e.ColumnIndex, e.RowIndex]; //запоминаем текущую ячейку как последнюю редактируемую.
 
-            lastEditCell = cell;
-            if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
-            {
-                autoCompleteListBox.Location = GetCellBelowLocation(cell);
-                /*ERROR убрать*/extDataGridView.Columns[extCount.Name].ReadOnly = false; //Разрешаем ввод кол-ва в доп. таблице.
-            }//if
+            //Обрабатываем ввод в ячейку 'Название' или 'Артикул'.
+            if (lastEditCell.OwningColumn == Title || lastEditCell.OwningColumn == Articul)
+                autoCompleteListBox.Location = GetCellBelowLocation(lastEditCell); //устанавливаем позицию вып. списка.
 
-            //Обрабатываем ввод Количества.
-            if (cell.OwningColumn == Count)
-            {
-                SetCustomValueToCell(cell, null); //очищаем ячейку для ввода значения пользователем.
-            }//if
+            //Обрабатываем ввод в ячейку 'Количествo'.
+            if (lastEditCell.OwningColumn == Count)
+                SetCustomValueToCell(lastEditCell, null); //очищаем ячейку для ввода значения пользователем.
         }//saleDataGridView_CellBeginEdit
 
         /// <summary>
@@ -269,6 +264,7 @@ namespace PartsApp
             TextBox textBoxCell = cell.Tag as TextBox;
             if (textBoxCell != null)
             {
+                cell.Tag = null;
                 textChangedEvent = previewKeyDownEvent = false; /*ERROR!! Надо ли две переменные*/
                 textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;/*ERROR!! Надо ли убирать подписку. */
                 textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
