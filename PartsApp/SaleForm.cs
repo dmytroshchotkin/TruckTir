@@ -806,6 +806,7 @@ namespace PartsApp
 
 
         /////////////////////////////////Вспомогательные методы./////////////////////////
+        /******/
         /// <summary>
         /// Возвращает абсолютный location области сразу под позицией клетки из saleDataGridView. 
         /// </summary>
@@ -818,7 +819,7 @@ namespace PartsApp
             Point gbLoc   = saleGroupBox.Location;
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);        
         }//GetCellBelowLocation
-
+        /******/
         private void FillTheBothDGV(DataGridViewRow row, SparePart sparePart)
         {
             //!!!Сделать ограничение выпадающего списка только по товару имеющимся в наличии.
@@ -831,7 +832,7 @@ namespace PartsApp
 
             FillTheExtDGV(sparePart.AvailabilityList);                
         }//FillTheBothDGV
-
+        /******/
         private void FillTheSaleDGV(DataGridViewRow row, SparePart sparePart)
         {
             row.Cells[SparePartId.Index].Value  = sparePart.SparePartId;
@@ -844,7 +845,7 @@ namespace PartsApp
             row.Cells[Count.Index].Value = Availability.GetTotalCount(sparePart.AvailabilityList); ;  
           
         }//FillTheSaleDGV
-
+        /******/
         /// <summary>
         /// Заполняет данными таблицу доп. инф-ции.
         /// </summary>
@@ -882,7 +883,7 @@ namespace PartsApp
             extDataGridView.Sort(extPurchaseDate, ListSortDirection.Ascending);
             extDataGridView.ClearSelection();
         }//FillTheExtDGV
-
+        /******/
         /// <summary>
         /// Возвращает число или выбрасывает исключение если value заданной клетки не проходит хоть одну проверку на соответствие допустимому значение количества данного товара на основном складе.
         /// </summary>
@@ -911,7 +912,7 @@ namespace PartsApp
 
             return count;            
         }//
-
+        /******/
         /// <summary>
         /// Метод автовыбора прихода с которого осуществляется продажа (Всегда самые старые приходы).
         /// </summary>
