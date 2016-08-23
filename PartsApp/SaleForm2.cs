@@ -127,52 +127,28 @@ namespace PartsApp
         {
             TextBox textBox = sender as TextBox;
 
-            if (e.KeyCode == Keys.Down)
-            {
-                isCellEditError = true;
-                if (searchSparePartsList.Count == 0) return;//может не надо это действие.
-                if (autoCompleteListBox.Items.Count == 0) return; //может не надо это действие.
-                if (autoCompleteListBox.Visible == false) return;
-                //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
-                if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
-                {
-                    autoCompleteListBox.ClearSelected();
-                    return;
-                }//if
+            switch (e.KeyCode)
+            { 
+                case Keys.Down:
+                    KeyDownPress();
+                    break;
+                case Keys.Up:
+                    KeyUpPress();
+                    break;
+                default:
+                    if (textChangedEvent == false)
+                        textChangedEvent = true;
+                    break;
 
-                autoCompleteListBox.SelectedIndex += 1;
-                return;
-            }//if
+            }//switch
 
-            if (e.KeyCode == Keys.Up)
-            {
-                isCellEditError = true;
-                if (searchSparePartsList.Count == 0) return;//может не надо это действие.
-                if (autoCompleteListBox.Items.Count == 0) return;//может не надо это действие.
-                if (autoCompleteListBox.Visible == false) return;
-                //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
-                if (autoCompleteListBox.SelectedIndex == -1)
-                {
-                    autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
-                }//if
-                else
-                {
-                    if (autoCompleteListBox.SelectedIndex == 0)
-                        autoCompleteListBox.ClearSelected();
-                    else
-                        autoCompleteListBox.SelectedIndex -= 1;
-                }//else
-
-                //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставитс в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусствунно и ставим каретку в конец строки.                               
-                if (lastEditCell.OwningRow.Index == 0)
-                    saleDataGridView_SelectionChanged(sender, null);
-
-                return;
-            }//if    
-
-            //Продолжается ввод.
-            if (textChangedEvent == false)
-                textChangedEvent = true;
+            //if (e.KeyCode == Keys.Down)
+            //    KeyDownPress();
+            //else if (e.KeyCode == Keys.Up)
+            //    KeyUpPress(); 
+            ////Продолжается ввод.
+            //else if (textChangedEvent == false)
+            //    textChangedEvent = true;
         }//dataGridViewTextBoxCell_PreviewKeyDown
 
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
@@ -231,19 +207,21 @@ namespace PartsApp
         }//saleDataGridView_CellEndEdit 
 
         private void saleDataGridView_SelectionChanged(object sender, EventArgs e)
-        {
+        {            
+            //Если ошибка редактирования ячейки, то возвращаем фокус обратно на ячейку (фокус теряется при выборе из вып. списка).
             if (isCellEditError == true)
             {
                 isCellEditError = false;
                 saleDataGridView.CurrentCell = lastEditCell;
 
+                //Включаем режим редактирования ячейки, не инициируя при этом соотв. события.
                 saleDataGridView.CellBeginEdit -= saleDataGridView_CellBeginEdit;
                 saleDataGridView.EditingControlShowing -= saleDataGridView_EditingControlShowing;
                 saleDataGridView.BeginEdit(true);
                 saleDataGridView.CellBeginEdit += saleDataGridView_CellBeginEdit;
                 saleDataGridView.EditingControlShowing += saleDataGridView_EditingControlShowing;
 
-                textBoxCell.SelectionStart = textBoxCell.Text.Length;                
+                textBoxCell.SelectionStart = textBoxCell.Text.Length; //ставим каретку в конец текста.           
             }//if
         }//saleDataGridView_SelectionChanged
 
@@ -704,7 +682,42 @@ namespace PartsApp
             cell.Value = value;
         }//SetCustomValueToCell
 
+        /// <summary>
+        /// Выполняет необходимые действия при нажатии юзером Keys.Down.
+        /// </summary>
+        private void KeyDownPress()
+        {
+            isCellEditError = true;
+            //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
+            if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
+                autoCompleteListBox.ClearSelected();
+            else
+                autoCompleteListBox.SelectedIndex += 1;
+        }//KeyDownPress
 
+        /// <summary>
+        /// Выполняет необходимые действия при нажатии юзером Keys.Up.
+        /// </summary>
+        private void KeyUpPress()
+        {
+            isCellEditError = true;
+            //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
+            if (autoCompleteListBox.SelectedIndex == -1)
+            {
+                autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
+            }//if
+            else
+            {
+                if (autoCompleteListBox.SelectedIndex == 0)
+                    autoCompleteListBox.ClearSelected();
+                else
+                    autoCompleteListBox.SelectedIndex -= 1;
+            }//else
+
+            //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставитс в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусствунно и ставим каретку в конец строки.                               
+            if (lastEditCell.OwningRow.Index == 0)
+                saleDataGridView_SelectionChanged(null, null);
+        }//KeyUpPress
 
 
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -712,19 +725,20 @@ namespace PartsApp
 
         #region Методы работы с выпадающим списком.
 
+        /// <summary>
+        /// Обработчик для того, чтобы не срабатывало событие CellEndEdit при клике мышкой по вып. спику.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void autoCompleteListBox_MouseHover(object sender, EventArgs e)
         {
             isCellEditError = true;
         }//autoCompleteListBox_MouseHover
 
+
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Clicks == 1)
-            {
-                saleDataGridView_SelectionChanged(null, null);
-                isCellEditError = true;
-            }//if
-            else
+            if (e.Clicks > 1)
             {
                 isCellEditError = false;
                 saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));
