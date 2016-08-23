@@ -82,7 +82,7 @@ namespace PartsApp
             if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
                 autoCompleteListBox.Location = GetCellBelowLocation(cell);
-                extDataGridView.Columns[extCount.Name].ReadOnly = false; //Разрешаем ввод кол-ва в доп. таблице.
+                /*ERROR убрать*/extDataGridView.Columns[extCount.Name].ReadOnly = false; //Разрешаем ввод кол-ва в доп. таблице.
             }//if
 
             //Обрабатываем ввод Количества.
@@ -104,9 +104,11 @@ namespace PartsApp
             if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
                 TextBox textBoxCell =  e.Control as TextBox;
-                cell.Tag = textBoxCell; //Запоминаем editing control в Tag ячейки.
-                if (previewKeyDownEvent == false)
+
+                //Если ячейка редактируется первый раз, подписываем её на события обработки ввода.
+                if (cell.Tag == null) 
                 {
+                    cell.Tag = textBoxCell; //Запоминаем editing control в Tag ячейки.
                     previewKeyDownEvent = true;
                     textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
                     textBoxCell.TextChanged    += new EventHandler(dataGridViewTextBoxCell_TextChanged);
@@ -715,11 +717,17 @@ namespace PartsApp
             isCellEditError = true;
         }//autoCompleteListBox_MouseHover
 
-
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Clicks > 1)
+            if (e.Clicks == 1)
             {
+                //Возвращаем фокус на ячейку для кот. выводится вып. список.
+                isCellEditError = true;
+                saleDataGridView_SelectionChanged(null, null);
+            }//if
+            else
+            {
+                //Делаем автозаполнение строки, выбранным объектом.
                 isCellEditError = false;
                 saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));
             }//else
