@@ -20,8 +20,6 @@ namespace PartsApp
     //Удалить лишние столбцы из таблиц.
     public partial class SaleForm2 : Form
     {
-        //List<SparePart> sparePartsList = new List<SparePart>();
-
         List<OperationDetails> _operDetList = new List<OperationDetails>();
 
         /// <summary>
@@ -103,9 +101,8 @@ namespace PartsApp
         /// <param name="e"></param>
         private void saleDataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            DataGridViewTextBoxCell cell = (DataGridViewTextBoxCell)saleDataGridView.CurrentCell;
-
-            //
+            DataGridViewCell cell = saleDataGridView.CurrentCell;
+                       
             if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
                 textBoxCell = e.Control as TextBox;
@@ -125,7 +122,7 @@ namespace PartsApp
         /// <param name="e"></param>
         private void dataGridViewTextBoxCell_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
+            TextBox textBox = sender as TextBox; /*ERROR Можно попробовать обойтись без lastEditCell, можно в textBox.Tag присваивать соотв. DataGridViewCell.*/
 
             switch (e.KeyCode)
             { 
@@ -139,28 +136,12 @@ namespace PartsApp
                     if (textChangedEvent == false)
                         textChangedEvent = true;
                     break;
-
             }//switch
-
-            //if (e.KeyCode == Keys.Down)
-            //    KeyDownPress();
-            //else if (e.KeyCode == Keys.Up)
-            //    KeyUpPress(); 
-            ////Продолжается ввод.
-            //else if (textChangedEvent == false)
-            //    textChangedEvent = true;
         }//dataGridViewTextBoxCell_PreviewKeyDown
 
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
             if (textChangedEvent == false) 
-                return;
-
-            /*ERROR!!!*/
-            /* Эта проверка нужна потому что в редких случаях по непонятным причинам TextChanged срабатывает на столбцы Count или др. на которых работать не должен
-                Это случается когда вводишь что-то в столбец Title, а потом стираешь до пустой строки и вводишь что-то в столбец Count.*/
-            /*!!!*/
-            if (lastEditCell.OwningColumn != Title && lastEditCell.OwningColumn != Articul)
                 return;
 
             TextBox textBox = (TextBox)sender;
@@ -177,7 +158,6 @@ namespace PartsApp
                     autoCompleteListBox.Items.Clear();
                     //Заполняем вып. список новыми объектами.
                     searchSparePartsList.ForEach(sp => autoCompleteListBox.Items.Add(sp));                                                                     
-
 
                     autoCompleteListBox.DisplayMember = (lastEditCell.OwningColumn == Title) ? "Title" : "Articul";
                     autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
