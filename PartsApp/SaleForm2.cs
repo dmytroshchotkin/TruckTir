@@ -36,11 +36,6 @@ namespace PartsApp
 
         DataGridViewCell lastEditCell;
 
-        /// <summary>
-        /// Переменная для запоминания изначального ввода.
-        /// </summary>
-        string userText;
-
         bool isCellEditError     = false;
         bool textChangedEvent    = false;
         bool previewKeyDownEvent = false;
@@ -141,13 +136,9 @@ namespace PartsApp
                 //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
                 if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
                 {
-                    textBox.Text = userText;
                     autoCompleteListBox.ClearSelected();
                     return;
                 }//if
-                //Если выбирается первый эл-нт выпадающего списка, запоминаем введенную ранее пользователем строку.
-                if (autoCompleteListBox.SelectedIndex == -1)
-                    userText = textBox.Text;
 
                 autoCompleteListBox.SelectedIndex += 1;
                 return;
@@ -162,16 +153,16 @@ namespace PartsApp
                 //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
                 if (autoCompleteListBox.SelectedIndex == -1)
                 {
-                    userText = textBox.Text;
                     autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
                 }//if
-                //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
-                else if (autoCompleteListBox.SelectedIndex == 0)
+                else
                 {
-                    textBox.Text = userText;
-                    autoCompleteListBox.ClearSelected();
-                }//if
-                else autoCompleteListBox.SelectedIndex -= 1;
+                    if (autoCompleteListBox.SelectedIndex == 0)
+                        autoCompleteListBox.ClearSelected();
+                    else
+                        autoCompleteListBox.SelectedIndex -= 1;
+                }//else
+
                 //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставитс в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусствунно и ставим каретку в конец строки.                               
                 if (lastEditCell.OwningRow.Index == 0)
                     saleDataGridView_SelectionChanged(sender, null);
@@ -189,6 +180,7 @@ namespace PartsApp
             if (textChangedEvent == false) 
                 return;
 
+            /*ERROR!!!*/
             /* Эта проверка нужна потому что в редких случаях по непонятным причинам TextChanged срабатывает на столбцы Count или др. на которых работать не должен
                 Это случается когда вводишь что-то в столбец Title, а потом стираешь до пустой строки и вводишь что-то в столбец Count.*/
             /*!!!*/
@@ -729,24 +721,15 @@ namespace PartsApp
         {
             if (e.Clicks == 1)
             {
-                if (String.IsNullOrEmpty(userText))
-                    userText = textBoxCell.Text;
                 saleDataGridView_SelectionChanged(null, null);
                 isCellEditError = true;
-            }
+            }//if
             else
             {
                 isCellEditError = false;
                 saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));
             }//else
         }//autoCompleteListBox_MouseDown
-
-        private void autoCompleteListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            textChangedEvent = false;
-            if (autoCompleteListBox.SelectedIndex != -1)
-                textBoxCell.Text = autoCompleteListBox.SelectedItem.ToString();
-        }//autoCompleteListBox_SelectedIndexChanged
 
 
         #endregion
