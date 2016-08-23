@@ -259,17 +259,7 @@ namespace PartsApp
         {
             if (cell.Value == null)
                 return;
-
-            //убираем события с заполненной клетки.
-            TextBox textBoxCell = cell.Tag as TextBox;
-            if (textBoxCell != null)
-            {
-                cell.Tag = null;
-                textChangedEvent = previewKeyDownEvent = false; /*ERROR!! Надо ли две переменные*/
-                textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;/*ERROR!! Надо ли убирать подписку. */
-                textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
-            }//if
-
+                                  
             //Если есть такой товар в базе.
             if (searchSparePartsList.Count > 0)
             {
@@ -278,27 +268,17 @@ namespace PartsApp
                 {
                     SparePart sparePart = autoCompleteListBox.SelectedItem as SparePart;                    
                     AutoCompleteRowInfo(cell, sparePart); //Заполняем строку данными о товаре.
+                    //убираем события с заполненной клетки.
+                    TextBox textBoxCell = cell.Tag as TextBox;  
+                    textChangedEvent = previewKeyDownEvent = false; /*ERROR!! Надо ли две переменные*/
+                    textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;/*ERROR!! Надо ли убирать подписку. */
+                    textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
                 }//if
                 else  //если выбор не из вып. списка.
                 {
-                    if (searchSparePartsList.Count == 1) //если этот товар уникален.
-                    {
-                        //находим из списка нужную запчасть. /*ERROR Кажется может быть ошибка идентификации введенного товара*/
-                        SparePart sparePart = searchSparePartsList[0];
-                        AutoCompleteRowInfo(cell, sparePart);
-                    }//if 
-                    else //если в вып. списке > 1 товара.
-                    {
-                        toolTip.Show("Выберите товар из списка.", this, GetCellBelowLocation(cell), 1000);
-                        isCellEditError = true; 
-                        autoCompleteListBox.Visible = true;
-                        if (previewKeyDownEvent == false)
-                        {
-                            previewKeyDownEvent = true;
-                            textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
-                            textBoxCell.TextChanged    += new EventHandler(dataGridViewTextBoxCell_TextChanged);
-                        }//if                                    
-                    }//else  
+                    toolTip.Show("Выберите товар из списка.", this, GetCellBelowLocation(cell), 1000);
+                    isCellEditError = true; 
+                    autoCompleteListBox.Visible = true;                                 
                 }//else
             }//if
             else
