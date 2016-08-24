@@ -33,7 +33,6 @@ namespace PartsApp
         DataGridViewCell lastEditCell;
 
         bool isCellEditError     = false;
-        bool textChangedEvent    = false;
         bool previewKeyDownEvent = false;
 
 
@@ -98,7 +97,6 @@ namespace PartsApp
                        
             if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
-                
                 //Если ячейка редактируется первый раз, подписываем её на события обработки ввода.
                 if (cell.Tag == null) 
                 {
@@ -127,17 +125,11 @@ namespace PartsApp
                 case Keys.Up:
                     KeyUpPress();
                     break;
-                default:
-                    textChangedEvent = true;                    
-                    break;
             }//switch
         }//dataGridViewTextBoxCell_PreviewKeyDown
 
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
-            if (textChangedEvent == false) 
-                return;
-
             TextBox textBox = (TextBox)sender;
             if (!String.IsNullOrWhiteSpace(textBox.Text))
             {
@@ -252,36 +244,42 @@ namespace PartsApp
         /// <param name="extCountCell">Редактируемая ячейка.</param>
         private void TitleOrArticulCellFilled(DataGridViewCell cell)
         {
-            if (cell.Value == null)
-                return;
-            
-            //Если есть такой товар в базе.
-            if (searchSparePartsList.Count > 0)
+            autoCompleteListBox.Visible = false;
+
+            if (cell.Value != null)
             {
-                //если выбор сделан из выпадающего списка.
-                if (autoCompleteListBox.SelectedItem != null)
+                //Если есть такой товар в базе.
+                if (searchSparePartsList.Count > 0)
                 {
-                    SparePart sparePart = autoCompleteListBox.SelectedItem as SparePart;                    
-                    AutoCompleteRowInfo(cell, sparePart); //Заполняем строку данными о товаре.
-                    autoCompleteListBox.Visible = false;  
-                    //убираем события с заполненной клетки. /*ERROR!! Не могу избавиться от отписки от событий. Без этого события почему то срабатывают на ячейках 'Количество' и 'ЦенаПродажи'.*/
-                    TextBox textBoxCell = cell.Tag as TextBox;
-                    textChangedEvent = previewKeyDownEvent = false;
-                    textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
-                    textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;                    
+                    //если выбор сделан из выпадающего списка.
+                    if (autoCompleteListBox.SelectedItem != null)
+                    {
+                        SparePart sparePart = autoCompleteListBox.SelectedItem as SparePart;
+                        AutoCompleteRowInfo(cell, sparePart); //Заполняем строку данными о товаре.                        
+                    }//if
+                    else  //если выбор не из вып. списка.
+                    {
+                        toolTip.Show("Выберите товар из списка.", this, GetCellBelowLocation(cell), 1000);
+                        isCellEditError = true;
+                        autoCompleteListBox.Visible = true;
+                    }//else
                 }//if
-                else  //если выбор не из вып. списка.
+                else
                 {
-                    toolTip.Show("Выберите товар из списка.", this, GetCellBelowLocation(cell), 1000);
-                    isCellEditError = true; 
-                    autoCompleteListBox.Visible = true;                                 
+                    toolTip.Show("Нет такого товара в наличии.", this, GetCellBelowLocation(cell), 1000);
+                    isCellEditError = true;
                 }//else
             }//if
-            else
-            {
-                toolTip.Show("Нет такого товара в наличии.", this, GetCellBelowLocation(cell), 1000);                
-                isCellEditError = true;
-            }//else
+
+            //Если нет ошибки редактирования ячейки, то отписываем editing control от событий обработки ввода.
+            if (!isCellEditError)
+            {                
+                TextBox textBoxCell = cell.Tag as TextBox;
+                previewKeyDownEvent = false;
+                textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;
+                textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
+                cell.Tag = null;
+            }//if
         }//TitleOrArticulCellFilled
 
         /// <summary>
@@ -356,7 +354,6 @@ namespace PartsApp
 
                 cell.OwningRow.Cells[SellingPrice.Index].ReadOnly = cell.OwningRow.Cells[Count.Index].ReadOnly = false;
                 cell.OwningRow.Cells[Title.Index].ReadOnly = cell.OwningRow.Cells[Articul.Index].ReadOnly = true;
-                bool bo2 = Count.ReadOnly;
 
                 #region Увеличение saleGroupBox.
                 //if (saleDataGridView.PreferredSize.Height > saleDataGridView.Size.Height)
