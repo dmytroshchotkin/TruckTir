@@ -208,13 +208,9 @@ namespace PartsApp
                     if (e.RowIndex == -1)
                         saleDataGridView.SelectAll();
                     else
-                    {
-                        //Если строка пустая не делаем ничего.
-                        if (saleDataGridView.Rows[e.RowIndex].Cells[SparePartId.Index].Value == null) 
-                            return;
-
                         saleDataGridView.Rows[e.RowIndex].Selected = true;
-                    }//else
+
+                    //Выводим контекстное меню.
                     Point location = saleDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true).Location;
                     location.X += e.Location.X;
                     location.Y += e.Location.Y;
@@ -225,27 +221,27 @@ namespace PartsApp
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //Выделяем строки всех выделенных ячеек.           
+            saleDataGridView.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
             //Удаляем все выбранные строки и соотв. им объекты.
             foreach (DataGridViewRow row in saleDataGridView.SelectedRows)
             {
-                //Если строка не пустая
-                if (row.Tag != null)
-                {
-                    int sparePartId = Convert.ToInt32(row.Cells[SparePartId.Index].Value);
-                    _operDetList.RemoveAll(od => od.SparePart.SparePartId == sparePartId); //Очищаем список от соотв. объектов.
+                DataGridViewCell sparePartIdCell = row.Cells[SparePartId.Index];
 
-                    saleDataGridView.Rows.Remove(row); //Удаляем строку из таблицы.
+                //Если строка не пустая, очищаем соотв ей список приходов.
+                if (sparePartIdCell.Value != null)
+                    _operDetList.RemoveAll(od => od.SparePart.SparePartId == (int)sparePartIdCell.Value); //Очищаем список от соотв. объектов.
 
-                    //Очищаем доп. таблицу.
-                    extDataGridView.Rows.Clear();
-                }//if
+                //Если это не последняя строка (предназнач. для ввода нового товара в список), удаляем её.
+                if (row.Index != saleDataGridView.Rows.Count-1)
+                    saleDataGridView.Rows.Remove(row);   
             }//foreach
-            
+
+            extDataGridView.Rows.Clear(); //Очищаем доп. таблицу.
             FillTheInTotal(); //Заполняем общую сумму операции.
         }//removeToolStripMenuItem_Click
-
-        /*!!!!!!! Удаление пустых строк кроме последней!!!*/
         
+
         #region Вспомогательные методы.
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
@@ -499,7 +495,6 @@ namespace PartsApp
             Point gbLoc = saleGroupBox.Location;
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);
         }//GetCellBelowLocation
-
 
         /// <summary>
         /// Метод автовыбора прихода с которого осуществляется продажа (Всегда самые старые приходы).
