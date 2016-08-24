@@ -88,6 +88,12 @@
             this.saleContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.endEditLabel = new System.Windows.Forms.Label();
+            this.clicksLabel = new System.Windows.Forms.Label();
+            this.selChangLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).BeginInit();
             this.currencyBackPanel.SuspendLayout();
             this.customerBackPanel.SuspendLayout();
@@ -115,7 +121,7 @@
             this.autoCompleteListBox.Name = "autoCompleteListBox";
             this.autoCompleteListBox.Size = new System.Drawing.Size(105, 30);
             this.autoCompleteListBox.TabIndex = 119;
-            this.autoCompleteListBox.Visible = false;            
+            this.autoCompleteListBox.Visible = false;
             this.autoCompleteListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.autoCompleteListBox_MouseDown);
             this.autoCompleteListBox.MouseHover += new System.EventHandler(this.autoCompleteListBox_MouseHover);
             // 
@@ -659,11 +665,71 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(492, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(49, 13);
+            this.label1.TabIndex = 127;
+            this.label1.Text = "endEdit :";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(492, 74);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.TabIndex = 128;
+            this.label2.Text = "selChang :";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(492, 87);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 13);
+            this.label3.TabIndex = 129;
+            this.label3.Text = "clicks :";
+            // 
+            // endEditLabel
+            // 
+            this.endEditLabel.AutoSize = true;
+            this.endEditLabel.Location = new System.Drawing.Point(549, 61);
+            this.endEditLabel.Name = "endEditLabel";
+            this.endEditLabel.Size = new System.Drawing.Size(13, 13);
+            this.endEditLabel.TabIndex = 130;
+            this.endEditLabel.Text = "0";
+            // 
+            // clicksLabel
+            // 
+            this.clicksLabel.AutoSize = true;
+            this.clicksLabel.Location = new System.Drawing.Point(549, 87);
+            this.clicksLabel.Name = "clicksLabel";
+            this.clicksLabel.Size = new System.Drawing.Size(13, 13);
+            this.clicksLabel.TabIndex = 132;
+            this.clicksLabel.Text = "0";
+            // 
+            // selChangLabel
+            // 
+            this.selChangLabel.AutoSize = true;
+            this.selChangLabel.Location = new System.Drawing.Point(549, 74);
+            this.selChangLabel.Name = "selChangLabel";
+            this.selChangLabel.Size = new System.Drawing.Size(13, 13);
+            this.selChangLabel.TabIndex = 131;
+            this.selChangLabel.Text = "0";
+            // 
             // SaleForm2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(896, 747);
+            this.Controls.Add(this.clicksLabel);
+            this.Controls.Add(this.selChangLabel);
+            this.Controls.Add(this.endEditLabel);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.autoCompleteCustomerListBox);
             this.Controls.Add(this.autoCompleteListBox);
@@ -775,5 +841,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Markup;
         private System.Windows.Forms.DataGridViewTextBoxColumn SellingPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn Sum;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label endEditLabel;
+        private System.Windows.Forms.Label clicksLabel;
+        private System.Windows.Forms.Label selChangLabel;
     }
 }

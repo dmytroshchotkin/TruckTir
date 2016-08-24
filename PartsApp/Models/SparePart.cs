@@ -148,13 +148,13 @@ namespace PartsApp.Models
         public SparePart(int sparePartId, string photo, string manufacturer, string articul,
                          string title, string description, string measureUnit)
         {
-            SparePartId = sparePartId;
-            Photo = photo;
+            SparePartId  = sparePartId;
+            Photo        = photo;
             Manufacturer = manufacturer;
-            Articul = articul;
-            Title = title;
-            Description = description;
-            MeasureUnit = measureUnit;
+            Articul      = articul;
+            Title        = title;
+            Description  = description;
+            MeasureUnit  = measureUnit;
 
             _availabilityList = new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(this));
         }//

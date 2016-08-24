@@ -130,6 +130,7 @@ namespace PartsApp
 
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
+            autoCompleteListBox.Visible = false;
             TextBox textBox = (TextBox)sender;
             if (!String.IsNullOrWhiteSpace(textBox.Text))
             {
@@ -149,30 +150,32 @@ namespace PartsApp
                     autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
                     autoCompleteListBox.Visible = true;
                 }//if
-                else 
-                    autoCompleteListBox.Visible = false; //Если ничего не найдено, убрать вып. список.
             }//if
-            else 
-                autoCompleteListBox.Visible = false; //Если ничего не введено, убрать вып. список.
         }//dataGridViewTextBoxCell_TextChanged
 
         private void saleDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (isCellEditError)
-                return;
+            endEditLabel.Text = ((++endEdit).ToString());
+            str.Append("endEdit " + endEdit + "\tIsCellEditError - " + isCellEditError);
 
-            DataGridViewCell cell = saleDataGridView[e.ColumnIndex, e.RowIndex];
+            if (!isCellEditError)
+            {
+                DataGridViewCell cell = saleDataGridView[e.ColumnIndex, e.RowIndex];
 
-            if (cell.OwningColumn == Title || cell.OwningColumn == Articul) //Если редактируется артикул или название товара. 
-                TitleOrArticulCellFilled(cell);
-            else if (cell.OwningColumn == Count)                            //Если редактируется кол-во. 
-                CountCellFilled(cell);
-            else if (cell.OwningColumn == SellingPrice)                     //Если редактируется цена продажи. 
-                SellingPriceCellFilled(cell);                 
+                if (cell.OwningColumn == Title || cell.OwningColumn == Articul) //Если редактируется артикул или название товара. 
+                    TitleOrArticulCellFilled(cell);
+                else if (cell.OwningColumn == Count)                            //Если редактируется кол-во. 
+                    CountCellFilled(cell);
+                else if (cell.OwningColumn == SellingPrice)                     //Если редактируется цена продажи. 
+                    SellingPriceCellFilled(cell);
+            }//if
+            str.Append("  \t" + isCellEditError + "\n");
         }//saleDataGridView_CellEndEdit 
 
         private void saleDataGridView_SelectionChanged(object sender, EventArgs e)
         {
+            selChangLabel.Text = ((++selChang).ToString());
+            str.Append("selChang " + selChang + "\tIsCellEditError - " + isCellEditError);
             //Если ошибка редактирования ячейки 'Title' или 'Articul', то возвращаем фокус обратно на ячейку (фокус теряется при выборе из вып. списка).
             if (isCellEditError == true)
             {
@@ -190,6 +193,8 @@ namespace PartsApp
                 TextBox textBoxCell = lastEditCell.Tag as TextBox;
                 textBoxCell.SelectionStart = textBoxCell.Text.Length;
             }//if
+
+            str.Append("  \t" + isCellEditError + "\n");
         }//saleDataGridView_SelectionChanged
 
         private void saleDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -692,20 +697,29 @@ namespace PartsApp
             isCellEditError = true;
         }//autoCompleteListBox_MouseHover
 
+        StringBuilder str = new StringBuilder();
+        int endEdit = 0;
+        int selChang = 0;
+        int clicks = 0;
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Clicks == 1)
             {
-                //Возвращаем фокус на ячейку для кот. выводится вып. список.
-                isCellEditError = true;
+                clicksLabel.Text = ((++clicks).ToString());
+                str.Append("clicks " + clicks + "\tIsCellEditError - " + isCellEditError);
+                //Возвращаем фокус на ячейку для кот. выводится вып. список.                
                 saleDataGridView_SelectionChanged(null, null);
+                isCellEditError = true;
             }//if
             else
             {
-                //Делаем автозаполнение строки, выбранным объектом.
+                str.Append("manyClicks \tIsCellEditError - " + isCellEditError);
+                //Делаем автозаполнение строки, выбранным объектом.   
                 isCellEditError = false;
-                saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));
+                saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));                
             }//else
+
+            str.Append("  \t" + isCellEditError + "\n"); 
         }//autoCompleteListBox_MouseDown
 
 
@@ -827,19 +841,18 @@ namespace PartsApp
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
-
         private void button1_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
             foreach (var operDet in _operDetList)
             {
-                string str = String.Format("{0} -- {1} :  {2}", operDet.SparePart.SparePartId, operDet.Operation.OperationId, operDet.Count);
-                sb.Append(str);
+                string str1 = String.Format("{0} -- {1} :  {2}", operDet.SparePart.SparePartId, operDet.Operation.OperationId, operDet.Count);
+                sb.Append(str1);
                 sb.Append("\n");
             }//foreach
 
-            MessageBox.Show(sb.ToString());
-        }
+            MessageBox.Show(str.ToString());
+        }//
 
         
     }//Form2
