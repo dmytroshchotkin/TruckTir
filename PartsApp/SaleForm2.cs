@@ -33,7 +33,6 @@ namespace PartsApp
         DataGridViewCell lastEditCell;
 
         bool isCellEditError     = false;
-        bool previewKeyDownEvent = false;
 
 
         public SaleForm2()
@@ -102,7 +101,6 @@ namespace PartsApp
                 {
                     TextBox textBoxCell = e.Control as TextBox;
                     cell.Tag = textBoxCell; //Запоминаем editing control в Tag ячейки.
-                    previewKeyDownEvent = true;
 
                     textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
                     textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
@@ -280,7 +278,6 @@ namespace PartsApp
             if (!isCellEditError)
             {                
                 TextBox textBoxCell = cell.Tag as TextBox;
-                previewKeyDownEvent = false;
                 textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;
                 textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
                 cell.Tag = null;
