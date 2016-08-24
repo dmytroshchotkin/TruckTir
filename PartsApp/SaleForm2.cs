@@ -23,11 +23,6 @@ namespace PartsApp
         List<OperationDetails> _operDetList = new List<OperationDetails>();
 
         /// <summary>
-        /// Список найденных в базе товаров по последнему запросу.
-        /// </summary>
-        List<SparePart> searchSparePartsList; /*ERROR можно ли убрать?*/
-
-        /// <summary>
         /// Последняя редактируемая ячейка.
         /// </summary>
         DataGridViewCell lastEditCell;
@@ -134,8 +129,9 @@ namespace PartsApp
             {
                 //Находим подходящий по вводу товар.                
                 List<int> sparePartsIdList = saleDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (int)r.Cells[SparePartId.Index].Value).ToList(); //Id-ки уже введенного товара.
-                searchSparePartsList = (lastEditCell.OwningColumn == Title) ? PartsDAL.SearchSparePartsAvaliablityByTitle(textBox.Text.Trim(), 10, sparePartsIdList)
-                                                                            : PartsDAL.SearchSparePartsAvaliablityByArticul(textBox.Text.Trim(), 10, sparePartsIdList);
+                List<SparePart>  searchSparePartsList = (lastEditCell.OwningColumn == Title) 
+                                    ? PartsDAL.SearchSparePartsAvaliablityByTitle(textBox.Text.Trim(), 10, sparePartsIdList)
+                                    : PartsDAL.SearchSparePartsAvaliablityByArticul(textBox.Text.Trim(), 10, sparePartsIdList);
 
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
@@ -252,7 +248,7 @@ namespace PartsApp
             if (cell.Value != null)
             {
                 //Если есть такой товар в базе.
-                if (searchSparePartsList.Count > 0)
+                if (autoCompleteListBox.Items.Count > 0)
                 {
                     //если выбор сделан из выпадающего списка.
                     if (autoCompleteListBox.SelectedItem != null)
