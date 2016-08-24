@@ -98,14 +98,16 @@ namespace PartsApp
                        
             if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
-                TextBox textBoxCell =  e.Control as TextBox;
+                
                 //Если ячейка редактируется первый раз, подписываем её на события обработки ввода.
                 if (cell.Tag == null) 
                 {
+                    TextBox textBoxCell = e.Control as TextBox;
                     cell.Tag = textBoxCell; //Запоминаем editing control в Tag ячейки.
                     previewKeyDownEvent = true;
+
                     textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
-                    textBoxCell.TextChanged    += new EventHandler(dataGridViewTextBoxCell_TextChanged);
+                    textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
                 }//if
             }//if
         }//saleDataGridView_EditingControlShowing
@@ -126,8 +128,7 @@ namespace PartsApp
                     KeyUpPress();
                     break;
                 default:
-                    if (textChangedEvent == false)
-                        textChangedEvent = true;
+                    textChangedEvent = true;                    
                     break;
             }//switch
         }//dataGridViewTextBoxCell_PreviewKeyDown
