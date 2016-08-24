@@ -99,7 +99,6 @@ namespace PartsApp
             if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
                 TextBox textBoxCell =  e.Control as TextBox;
-
                 //Если ячейка редактируется первый раз, подписываем её на события обработки ввода.
                 if (cell.Tag == null) 
                 {
@@ -169,8 +168,7 @@ namespace PartsApp
             if (isCellEditError)
                 return;
 
-            autoCompleteListBox.Visible = false;          
-            DataGridViewCell cell = saleDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            DataGridViewCell cell = saleDataGridView[e.ColumnIndex, e.RowIndex];
 
             if (cell.OwningColumn == Title || cell.OwningColumn == Articul) //Если редактируется артикул или название товара. 
                 TitleOrArticulCellFilled(cell);
@@ -181,8 +179,8 @@ namespace PartsApp
         }//saleDataGridView_CellEndEdit 
 
         private void saleDataGridView_SelectionChanged(object sender, EventArgs e)
-        {            
-            //Если ошибка редактирования ячейки, то возвращаем фокус обратно на ячейку (фокус теряется при выборе из вып. списка).
+        {
+            //Если ошибка редактирования ячейки 'Title' или 'Articul', то возвращаем фокус обратно на ячейку (фокус теряется при выборе из вып. списка).
             if (isCellEditError == true)
             {
                 isCellEditError = false;
@@ -197,7 +195,7 @@ namespace PartsApp
 
                 //ставим каретку в конец текста. 
                 TextBox textBoxCell = lastEditCell.Tag as TextBox;
-                textBoxCell.SelectionStart = textBoxCell.Text.Length;           
+                textBoxCell.SelectionStart = textBoxCell.Text.Length;
             }//if
         }//saleDataGridView_SelectionChanged
 
@@ -246,7 +244,7 @@ namespace PartsApp
             FillTheInTotal(); //Заполняем общую сумму операции.
         }//removeToolStripMenuItem_Click
 
-        
+        /*!!!!!!! Удаление пустых строк кроме последней!!!*/
         
         #region Вспомогательные методы.
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -259,7 +257,7 @@ namespace PartsApp
         {
             if (cell.Value == null)
                 return;
-                                  
+            
             //Если есть такой товар в базе.
             if (searchSparePartsList.Count > 0)
             {
@@ -268,11 +266,12 @@ namespace PartsApp
                 {
                     SparePart sparePart = autoCompleteListBox.SelectedItem as SparePart;                    
                     AutoCompleteRowInfo(cell, sparePart); //Заполняем строку данными о товаре.
-                    //убираем события с заполненной клетки.
-                    TextBox textBoxCell = cell.Tag as TextBox;  
-                    textChangedEvent = previewKeyDownEvent = false; /*ERROR!! Надо ли две переменные*/
-                    textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;/*ERROR!! Надо ли убирать подписку. */
-                    textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
+                    autoCompleteListBox.Visible = false;  
+                    //убираем события с заполненной клетки. /*ERROR!! Не могу избавиться от отписки от событий. Без этого события почему то срабатывают на ячейках 'Количество' и 'ЦенаПродажи'.*/
+                    TextBox textBoxCell = cell.Tag as TextBox;
+                    textChangedEvent = previewKeyDownEvent = false;
+                    textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
+                    textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;                    
                 }//if
                 else  //если выбор не из вып. списка.
                 {
@@ -283,8 +282,7 @@ namespace PartsApp
             }//if
             else
             {
-                toolTip.Show("Нет такого товара в наличии.", this, GetCellBelowLocation(lastEditCell), 1000);
-                lastEditCell.Value = null;
+                toolTip.Show("Нет такого товара в наличии.", this, GetCellBelowLocation(cell), 1000);                
                 isCellEditError = true;
             }//else
         }//TitleOrArticulCellFilled
@@ -305,14 +303,9 @@ namespace PartsApp
             {
                 toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.
                 SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
-                lastEditCell = cell; /*ERROR!!! надо ли?*/
+
                 //Возвращаем дефолтные значения во всех строках доп. таблицы.
-                foreach (DataGridViewRow extRow in extDataGridView.Rows)
-                {
-                    SetDefaultValueToCell(extRow.Cells[extCount.Index]);
-                    int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
-                    FillTheOperDetList(sparePartId, extRow.Cells[extCount.Index]); //Запоминаем изменение в список.    
-                }//if
+                SetDefaultValuesToExtDataGridView(Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value));
             }//else
             FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
         }//CountCellFilled
@@ -618,6 +611,19 @@ namespace PartsApp
             //Заполняем InTotalLabel расчитанным значением.
             inTotalNumberLabel.Text = String.Format("{0}(руб)", Math.Round(inTotal, 2, MidpointRounding.AwayFromZero));
         }//FillTheInTotal
+
+        /// <summary>
+        /// Возвращает дефолтные значения во все ячейки столбца 'Кол-во' доп. таблицы.
+        /// </summary>
+        /// <param name="sparePartId">Ид товара.</param>
+        private void SetDefaultValuesToExtDataGridView(int sparePartId)
+        {
+            foreach (DataGridViewRow extRow in extDataGridView.Rows)
+            {
+                SetDefaultValueToCell(extRow.Cells[extCount.Index]);           //Записываем дефолтное значение в ячейку.
+                FillTheOperDetList(sparePartId, extRow.Cells[extCount.Index]); //Запоминаем изменение в список.    
+            }//foreach
+        }//SetDefaultValuesToExtDataGridView
 
         /// <summary>
         /// Записывает дефолтное значения в переданную ячейку.
