@@ -161,6 +161,8 @@
             this.markupComboBox.Size = new System.Drawing.Size(121, 21);
             this.markupComboBox.TabIndex = 121;
             this.markupComboBox.ValueMember = "Key";
+            this.markupComboBox.SelectedIndexChanged += new System.EventHandler(this.markupComboBox_SelectedIndexChanged);
+            this.markupComboBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.markupComboBox_PreviewKeyDown);
             // 
             // excRateNumericUpDown
             // 
@@ -230,6 +232,7 @@
             this.customerTextBox.Size = new System.Drawing.Size(196, 20);
             this.customerTextBox.TabIndex = 0;
             this.customerTextBox.Leave += new System.EventHandler(this.customerTextBox_Leave);
+            this.customerTextBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.customerTextBox_PreviewKeyDown);
             // 
             // sellerBackPanel
             // 
@@ -333,6 +336,7 @@
             this.saleDataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.saleDataGridView_CellMouseClick);
             this.saleDataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.saleDataGridView_EditingControlShowing);
             this.saleDataGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.saleDataGridView_RowEnter);
+            this.saleDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.saleDataGridView_RowPrePaint);
             this.saleDataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.saleDataGridView_RowsAdded);
             this.saleDataGridView.SelectionChanged += new System.EventHandler(this.saleDataGridView_SelectionChanged);
             // 
@@ -496,6 +500,7 @@
             this.extDataGridView.TabIndex = 0;
             this.extDataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.extDataGridView_CellBeginEdit);
             this.extDataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extDataGridView_CellEndEdit);
+            this.extDataGridView.SelectionChanged += new System.EventHandler(this.extDataGridView_SelectionChanged);
             // 
             // extSupplier
             // 

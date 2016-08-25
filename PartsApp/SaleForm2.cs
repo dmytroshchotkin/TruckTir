@@ -63,6 +63,15 @@ namespace PartsApp
         #region Валидация вводимых данных.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        private void customerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                customerTextBox_Leave(sender, null);
+                saleDataGridView.Select(); //переводим фокус на таблицу продаж.
+            }//if
+        }//SellerTextBox_PreviewKeyDown
+
         private void customerTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(customerTextBox.Text))
@@ -70,31 +79,15 @@ namespace PartsApp
                 customerBackPanel.BackColor = customerStarLabel.ForeColor = Color.Red;
                 customerTextBox.Clear();
                 toolTip.Show("Введите имя/название клиента", this, customerBackPanel.Location, 2000);
-                return;
             }//if
-            if (customerTextBox.AutoCompleteCustomSource.Contains(customerTextBox.Text)) //Если есть такой клиент в базе
+            else
             {
                 customerStarLabel.ForeColor = Color.Black;
                 customerBackPanel.BackColor = SystemColors.Control;
-                //receiverTextBox.Focus();
-                sellerLabel.Focus(); //убираем фокус с customerTextBox контрола.
-            }//if
-            else //если такой поставщик в базе отсутствует.
-            {
-                customerBackPanel.BackColor = customerStarLabel.ForeColor = Color.Red;
-                if (MessageBox.Show("Добавить нового клиента?", "Такого клиента нет в базе!", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    IContragent customer = new Customer();
-                    if (new AddContragentForm(customer).ShowDialog() == DialogResult.OK)
-                    {
-                        //неэкономно обновляем список клиентов.
-                        customerTextBox.Leave -= customerTextBox_Leave;
-/*!!!*/                 customerTextBox.AutoCompleteCustomSource.Add(customer.ContragentName);
-                        customerTextBox.Text = customer.ContragentName;
-                        customerTextBox.Leave += customerTextBox_Leave;
-                    }//if
-                }//if
-            }//else
+                //если такой клиен в базе отсутствует, выводим сообщение об этом.
+                if (!customerTextBox.AutoCompleteCustomSource.Contains(customerTextBox.Text.Trim()))
+                    toolTip.Show("Такого клиента нет в базе! Он будет добавлен.", this, customerBackPanel.Location, 2000);
+            }//else            
         }//customerTextBox_Leave
 
         private void sellerTextBox_Leave(object sender, EventArgs e)
@@ -122,7 +115,28 @@ namespace PartsApp
 
         #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-       
+
+        private void saleDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            //Нумерация строк.
+            DataGridView dgv = sender as DataGridView;
+
+            //Если RowHeadersCell не заполнена или индекс строки изменен, присваиваем новый номер строке.
+            string rowNumber = (e.RowIndex + 1).ToString();      
+            object headerCellValue = dgv.Rows[e.RowIndex].HeaderCell.Value;
+            if (headerCellValue == null || headerCellValue.ToString() != rowNumber)
+            {
+                dgv.Rows[e.RowIndex].HeaderCell.Value = rowNumber;
+
+                //Если необходимо меняем ширину RowHeaders в зависимости от кол-ва строк в таблице.
+                int defaultRowHeadersWidth = 41;
+                int oneDigitWidth = 7; //Ширина одного разряда числа (определена методом тыка).
+                int newRowHeadersWidth = defaultRowHeadersWidth + (oneDigitWidth * (dgv.Rows.Count.ToString().Length - 1));
+                if (dgv.RowHeadersWidth != newRowHeadersWidth) //Проверка необходима, потому что изменение RowHeadersWidth приводит к инициированию события OnPaint, а сл-но к бесконечному циклу. 
+                    dgv.RowHeadersWidth = newRowHeadersWidth;
+            }//if
+        }//saleDataGridView_RowPrePaint
+
         #region Методы работы с осн. таблицей.
 //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
@@ -848,9 +862,15 @@ namespace PartsApp
             }//if       
         }//extDataGridView_CellEndEdit  
 
+        private void extDataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            markupComboBox.Enabled = (extDataGridView.SelectedCells.Count > 0); //Если есть выделенные клетки делаем доступной изменение наценки.
+        }//extDataGridView_SelectionChanged
 
-
-
+        private void extGroupBox_Click(object sender, EventArgs e)
+        {
+            extDataGridView.ClearSelection();
+        }//extGroupBox_Click
 
 
         /// <summary>
@@ -889,7 +909,54 @@ namespace PartsApp
 
 
 
+        #region Методы связанные с изменением наценки.
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
+        private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                markupComboBox_SelectedIndexChanged(sender, e);
+        }//markupComboBox_PreviewKeyDown
+
+
+        private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Если нет выделенных строк, то выходим.
+            if (extDataGridView.SelectedCells.Count == 0) 
+                return;
+
+            //выделяем строки всех выделенных клеток.
+            extDataGridView.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
+            
+            try
+            {
+                //узнаем процент заданной наценки.
+                float markupValue = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
+                string markupType = Models.Markup.GetDescription(markupValue);
+
+                //Обновляем таблицу.
+                foreach (DataGridViewRow row in extDataGridView.SelectedRows)
+                {
+                    row.Cells[extMarkup.Index].Value = markupType;
+
+                    float price     = (float)row.Cells[extPrice.Index].Value;
+                    float sellPrice = (float)Math.Round(price + (price * markupValue / 100), 2, MidpointRounding.AwayFromZero);
+                    row.Cells[extSellingPrice.Index].Value = sellPrice;
+                }//foreach
+            }//try
+            catch
+            {
+                toolTip.Show("Введено некорректное значение.", this, markupComboBox.Location, 2000);
+            }//catch
+        }//markupComboBox_SelectedIndexChanged
+
+
+
+
+
+
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        #endregion
 
 
 
@@ -920,7 +987,9 @@ namespace PartsApp
             }//foreach
 
             MessageBox.Show(str.ToString());
-        }//
+        }
+
+        
 
         
     }//Form2

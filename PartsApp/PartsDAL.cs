@@ -330,15 +330,16 @@ namespace PartsApp
         }//AddContragent
 
         /// <summary>
-        /// Добавляет переданный объект в БД.
+        /// Добавляет переданный объект в БД и возращает его Id.
         /// </summary>
         /// <param name="contragent">Контрагент.</param>
         /// <param name="cmd"></param>
-        private static void AddContragent(IContragent contragent, SQLiteCommand cmd)
+        private static int AddContragent(IContragent contragent, SQLiteCommand cmd)
         {
             string tableName = (contragent is Supplier) ? "Suppliers" : "Customers";
             cmd.CommandText = "INSERT INTO " + tableName + " (ContragentName, Code, Entity, ContactInfoId, Description) "
-                            + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description);";
+                            + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description); "
+                            + "SELECT last_insert_rowid();";
 
             cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@ContragentName", contragent.ContragentName);
@@ -347,7 +348,7 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@ContactInfoId", (contragent.ContactInfo != null) ? contragent.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description",    contragent.Description);
 
-            cmd.ExecuteNonQuery();
+            return (int)cmd.ExecuteScalar();
         }//AddContragent
 
 
@@ -514,6 +515,9 @@ namespace PartsApp
                     {
                         try
                         { 
+                            //Если такого контрагента нет в базе, то добавляем.
+                            if (purchase.Contragent.ContragentId == 0)
+                                purchase.Contragent.ContragentId = AddContragent(purchase.Contragent, cmd);
                             //вставляем запись в таблицу Operation.
                             purchase.OperationId = AddPurchase(purchase, cmd);
                             //вставляем записи в PurchaseDetails и Avaliability.
@@ -655,6 +659,9 @@ namespace PartsApp
                     {
                         try
                         {
+                            //Добавляем контрагента, если такого нет в базе.
+                            if (sale.Contragent.ContragentId == 0)
+                                sale.Contragent.ContragentId =  AddContragent(sale.Contragent, cmd);
                             //вставляем запись в таблицу Sales.
                             sale.OperationId = AddSale(sale, cmd);
                             //вставляем записи в SaleDetails.

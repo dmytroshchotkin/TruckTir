@@ -81,6 +81,7 @@ namespace PartsApp
             if (e.KeyCode == Keys.Enter)
             {
                 supplierTextBox_Leave(sender, null);
+                purchaseDataGridView.Select(); //переводим фокус на таблицу приходов.
             }//if
         }//supplierTextBox_PreviewKeyDown
 
@@ -90,32 +91,17 @@ namespace PartsApp
             {
                 supplierBackPanel.BackColor = supplierStarLabel.ForeColor = Color.Red;
                 supplierTextBox.Clear();
-                return;
+                toolTip.Show("Введите имя/название поставщика", this, supplierBackPanel.Location, 2000);
             }//if
-            if (supplierTextBox.AutoCompleteCustomSource.Contains(supplierTextBox.Text)) //Если есть такой поставщик в базе
+            else
             {
                 supplierStarLabel.ForeColor = Color.Black;
                 supplierBackPanel.BackColor = SystemColors.Control;
-                //receiverTextBox.Focus();
-                supplierLabel.Focus(); //убираем фокус с supplierTextBox контрола.
-            }//if
-            else //если такой поставщик в базе отсутствует.
-            {
-                supplierBackPanel.BackColor = supplierStarLabel.ForeColor = Color.Red;
-                if (MessageBox.Show("Добавить нового поставщика?", "Такого поставщика нет в базе!", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    IContragent supplier = new Supplier();
-                    if (new AddContragentForm(supplier).ShowDialog() == DialogResult.OK)
-                    {
-
-                        supplierTextBox.Leave -= supplierTextBox_Leave;
-                        supplierTextBox.AutoCompleteCustomSource.Add(supplier.ContragentName);
-                        supplierTextBox.Text = supplier.ContragentName;
-                        supplierTextBox.Leave += supplierTextBox_Leave;
-                    }//if
-                }//if
-            }//else
-        }
+                //если такой клиен в базе отсутствует, выводим сообщение об этом.
+                if (!supplierTextBox.AutoCompleteCustomSource.Contains(supplierTextBox.Text.Trim()))
+                    toolTip.Show("Такого поставщика нет в базе! Он будет добавлен.", this, supplierBackPanel.Location, 2000);
+            }//else  
+        }//supplierTextBox_Leave
 
         private void buyerTextBox_Leave(object sender, EventArgs e)
         {
@@ -138,6 +124,7 @@ namespace PartsApp
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
+
         /*Нумерация строк purchaseDataGridView*/
         private void partsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
@@ -1187,7 +1174,8 @@ namespace PartsApp
         /// </summary>
         /// <returns></returns>
         public Purchase CreatePurchaseFromForm()
-        { 
+        {
+            Purchase purchase = null;
             List<OperationDetails> operDetList = new List<OperationDetails>();
 
             foreach (DataGridViewRow row in purchaseDataGridView.Rows)
@@ -1200,19 +1188,23 @@ namespace PartsApp
                     float price = Convert.ToSingle(row.Cells[Price.Index].Value);
 
                     SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
-                    OperationDetails od = new OperationDetails(sparePart, null, count, price);
+                    OperationDetails od = new OperationDetails(sparePart, purchase, count, price);
                     operDetList.Add(od);
                 }//if
             }//foreach
 
-            Purchase purchase =  new Purchase
+            //Находим контрагента. Если такого ещё нет в базе, то создаем новый объект.
+            IContragent supplier = PartsDAL.FindSuppliers(supplierTextBox.Text.Trim());
+            supplier = (supplier == null) ? new Supplier(0, supplierTextBox.Text.Trim(), null, null, null, null) : supplier;
+
+            purchase =  new Purchase
             (
-                employee    : Form1.CurEmployee,
-                contragent  : PartsDAL.FindSuppliers().First(s => s.ContragentName == supplierTextBox.Text), /*!!!ERROR!!!*/
-                contragentEmployee: (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null,
-                operationDate: purchaseDateTimePicker.Value,
-                description : (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
-                operDetList : operDetList                                                
+                employee           : Form1.CurEmployee,
+                contragent         : supplier,
+                contragentEmployee : (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null,
+                operationDate      : purchaseDateTimePicker.Value,
+                description        : (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
+                operDetList        : operDetList                                                
             );
 
             operDetList.ForEach(od => od.Operation = purchase); //Присваиваем 'Операцию' для каждого OperationDetails.
@@ -1293,7 +1285,7 @@ namespace PartsApp
 
 /*Будущие задачи*/
 //1)Сделать нормальную обработку неправильного ввода в dataGridViewCell, а именно возврат курсора в очищенную клетку.
-//2)Выпадающий список(listBox) в dataGridView в первый раз принимает неправильный размер.
+//2)Выпадающий список(listBox) в dgv в первый раз принимает неправильный размер.
 //3)Посмотреть модификацию вып. списков с DisplayMember и ValueMember.
 //4)Чтобы при изменении валюты в inTotalNumberLabel сразу изменялось обозначение (руб) на выбранное. 
 //5)Добавить возможность вариации валюты.

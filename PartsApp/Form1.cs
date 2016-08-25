@@ -1035,7 +1035,7 @@ namespace PartsApp
         }//SetMaxValueToSellingPriceColumn
 
         /// <summary>
-        /// Метод изменения источника данных для обоих dataGridView.
+        /// Метод изменения источника данных для обоих dgv.
         /// </summary>
         /// <param name="availabilityList">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)

@@ -1233,17 +1233,18 @@ namespace PartsApp
 
         #endregion
 
+        /******/
         private void extDataGridView_SelectionChanged(object sender, EventArgs e)
         {
             //Если есть выделенные клетки делаем доступной изменение наценки.
             markupComboBox.Enabled = (extDataGridView.SelectedCells.Count > 0);
         }//extDataGridView_SelectionChanged
-
+        /******/
         private void extGroupBox_Click(object sender, EventArgs e)
         {
             extDataGridView.ClearSelection();
         }//extGroupBox_Click
-
+        /******/
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -1269,7 +1270,7 @@ namespace PartsApp
             }
             //markupCheckBox.Enabled = true;
         }//currencyComboBox_SelectedIndexChanged
-         
+        /******/
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
