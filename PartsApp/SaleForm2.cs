@@ -20,26 +20,105 @@ namespace PartsApp
     //Удалить лишние столбцы из таблиц.
     public partial class SaleForm2 : Form
     {
+        /// <summary>
+        /// Список продаваемого товара, по конкретным приходам.
+        /// </summary>
         List<OperationDetails> _operDetList = new List<OperationDetails>();
 
         /// <summary>
         /// Последняя редактируемая ячейка.
         /// </summary>
         DataGridViewCell lastEditCell;
+        /// <summary>
+        /// Переменная для хранения инф-ции о том была ли ошибка редактирования ячейки.
+        /// </summary>
+        bool isCellEditError = false;
 
-        bool isCellEditError     = false;
+        StringBuilder str = new StringBuilder();
+        int endEdit = 0;
+        int selChang = 0;
+        int clicks = 0;
 
 
         public SaleForm2()
         {
             InitializeComponent();
-        }
+        }//
 
         private void SaleForm2_Load(object sender, EventArgs e)
         {
+            //Устанавливаем даты для DateTimePicker.
+            saleDateTimePicker.MaxDate = DateTime.Now.Date.AddDays(7);
+            saleDateTimePicker.MinDate = saleDateTimePicker.Value = DateTime.Now;
 
-        }//
+            customerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindCustomers().Select(c => c.ContragentName).ToArray());
 
+            //Вносим все типы наценок в markupComboBox             
+            markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
+
+            sellerAgentTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);
+        }//SaleForm2_Load
+
+
+        #region Валидация вводимых данных.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void customerTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(customerTextBox.Text))
+            {
+                customerBackPanel.BackColor = customerStarLabel.ForeColor = Color.Red;
+                customerTextBox.Clear();
+                toolTip.Show("Введите имя/название клиента", this, customerBackPanel.Location, 2000);
+                return;
+            }//if
+            if (customerTextBox.AutoCompleteCustomSource.Contains(customerTextBox.Text)) //Если есть такой клиент в базе
+            {
+                customerStarLabel.ForeColor = Color.Black;
+                customerBackPanel.BackColor = SystemColors.Control;
+                //receiverTextBox.Focus();
+                sellerLabel.Focus(); //убираем фокус с customerTextBox контрола.
+            }//if
+            else //если такой поставщик в базе отсутствует.
+            {
+                customerBackPanel.BackColor = customerStarLabel.ForeColor = Color.Red;
+                if (MessageBox.Show("Добавить нового клиента?", "Такого клиента нет в базе!", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    IContragent customer = new Customer();
+                    if (new AddContragentForm(customer).ShowDialog() == DialogResult.OK)
+                    {
+                        //неэкономно обновляем список клиентов.
+                        customerTextBox.Leave -= customerTextBox_Leave;
+/*!!!*/                 customerTextBox.AutoCompleteCustomSource.Add(customer.ContragentName);
+                        customerTextBox.Text = customer.ContragentName;
+                        customerTextBox.Leave += customerTextBox_Leave;
+                    }//if
+                }//if
+            }//else
+        }//customerTextBox_Leave
+
+        private void sellerTextBox_Leave(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(sellerTextBox.Text))
+            {
+                sellerBackPanel.BackColor = sellerStarLabel.ForeColor = Color.Red;
+                sellerTextBox.Clear();
+                toolTip.Show("Введите имя/название продавца", this, sellerBackPanel.Location, 2000);
+            }//if
+            else
+            {
+                sellerStarLabel.ForeColor = Color.Black;
+                sellerBackPanel.BackColor = SystemColors.Control;
+            }//else
+        }//sellerTextBox_Leave
+
+        
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
 
         #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -669,7 +748,7 @@ namespace PartsApp
                     autoCompleteListBox.SelectedIndex -= 1;
             }//else
 
-            //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставитс в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусствунно и ставим каретку в конец строки.                               
+            //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставится в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусственно и ставим каретку в конец строки.                               
             if (lastEditCell.OwningRow.Index == 0)
                 saleDataGridView_SelectionChanged(null, null);
         }//KeyUpPress
@@ -690,10 +769,6 @@ namespace PartsApp
             isCellEditError = true;
         }//autoCompleteListBox_MouseHover
 
-        StringBuilder str = new StringBuilder();
-        int endEdit = 0;
-        int selChang = 0;
-        int clicks = 0;
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Clicks == 1)

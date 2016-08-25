@@ -42,11 +42,13 @@ namespace PartsApp
         string fullExtCount;
         string fullSaleCount;
 
+        /*****/
         public SaleForm()
         {
             InitializeComponent();
         }//
 
+        /*****/
         private void SaleForm_Load(object sender, EventArgs e)
         {           
             //Устанавливаем даты для DateTimePicker.
@@ -63,9 +65,11 @@ namespace PartsApp
             sellerAgentTextBox.ReadOnly = true;
         }//saleForm_Load
 
+        /*****/
         #region Валидация вводимых данных.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        /*****/
         private void customerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -74,6 +78,7 @@ namespace PartsApp
             }//if
         }//SellerTextBox_PreviewKeyDown
 
+        /****/
         private void customerTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(customerTextBox.Text))
@@ -107,7 +112,8 @@ namespace PartsApp
                 }//if
             }//else
         }//customerTextBox_Leave
-
+        
+        /****/
         private void sellerTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(sellerTextBox.Text))

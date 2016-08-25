@@ -124,22 +124,6 @@ namespace PartsApp
             }
         }//codeMaskedTextBox_Leave
 
-        private void entityComboBox_Leave(object sender, EventArgs e)
-        {
-            if (entityComboBox.SelectedIndex == -1)
-            {
-                entityStarLabel.ForeColor = entityBackPanel.BackColor = Color.Red;
-
-                toolTip.SetToolTip(entityComboBox, "Необходимо выбрать Юр. или Физ. лицо");
-                toolTip.Show("Необходимо выбрать Юр. или Физ. лицо", this, entityBackPanel.Location, 5000);
-            }
-            else //если название введено правильно
-            {
-                entityStarLabel.ForeColor = Color.Black;
-                entityBackPanel.BackColor = SystemColors.Control;
-                toolTip.SetToolTip(entityComboBox, String.Empty);
-            }//else
-        }//entityComboBox_Leave
 
 
 
@@ -208,7 +192,7 @@ namespace PartsApp
             int id               = _contragent.ContragentId;
             string name          = contragentNameTextBox.Text.Trim();
             string code          = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
-            string entity        = entityComboBox.Text;
+            string entity        = (entityComboBox.SelectedItem != null) ? entityComboBox.Text : null;
             string description   = (String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? null : descrRichTextBox.Text.Trim();
             ContactInfo contInfo = GetContactInfo();
 
@@ -230,7 +214,6 @@ namespace PartsApp
             ////Проверяем все необходимые контролы.
             //curAccBackControls.ForEach(backPanel => ControlValidation.IsInputControlEmpty(backPanel.Controls[0], toolTip));
 
-            entityComboBox_Leave(null, null);
             contragentNameTextBox_Leave(null, null);
             codeMaskedTextBox_Leave(null, null);
 

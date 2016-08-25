@@ -33,9 +33,7 @@
             this.entityLabel = new System.Windows.Forms.Label();
             this.contragentNameLabel = new System.Windows.Forms.Label();
             this.codeLabel = new System.Windows.Forms.Label();
-            this.entityStarLabel = new System.Windows.Forms.Label();
             this.contragentNameStarLabel = new System.Windows.Forms.Label();
-            this.entityBackPanel = new System.Windows.Forms.Panel();
             this.contragentNameBackPanel = new System.Windows.Forms.Panel();
             this.contragentNameTextBox = new System.Windows.Forms.TextBox();
             this.codeBackPanel = new System.Windows.Forms.Panel();
@@ -68,7 +66,6 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.bottomPanel = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.entityBackPanel.SuspendLayout();
             this.contragentNameBackPanel.SuspendLayout();
             this.codeBackPanel.SuspendLayout();
             this.contactInfoPanel.SuspendLayout();
@@ -82,11 +79,10 @@
             this.entityComboBox.Items.AddRange(new object[] {
             "Физ. лицо",
             "Юр.  лицо"});
-            this.entityComboBox.Location = new System.Drawing.Point(2, 2);
+            this.entityComboBox.Location = new System.Drawing.Point(143, 20);
             this.entityComboBox.Name = "entityComboBox";
             this.entityComboBox.Size = new System.Drawing.Size(88, 21);
             this.entityComboBox.TabIndex = 0;
-            this.entityComboBox.Leave += new System.EventHandler(this.entityComboBox_Leave);
             // 
             // entityLabel
             // 
@@ -115,16 +111,6 @@
             this.codeLabel.TabIndex = 3;
             this.codeLabel.Text = "ИНН/ОКПО :";
             // 
-            // entityStarLabel
-            // 
-            this.entityStarLabel.AutoSize = true;
-            this.entityStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.entityStarLabel.Location = new System.Drawing.Point(16, 15);
-            this.entityStarLabel.Name = "entityStarLabel";
-            this.entityStarLabel.Size = new System.Drawing.Size(20, 25);
-            this.entityStarLabel.TabIndex = 58;
-            this.entityStarLabel.Text = "*";
-            // 
             // contragentNameStarLabel
             // 
             this.contragentNameStarLabel.AutoSize = true;
@@ -134,14 +120,6 @@
             this.contragentNameStarLabel.Size = new System.Drawing.Size(20, 25);
             this.contragentNameStarLabel.TabIndex = 59;
             this.contragentNameStarLabel.Text = "*";
-            // 
-            // entityBackPanel
-            // 
-            this.entityBackPanel.Controls.Add(this.entityComboBox);
-            this.entityBackPanel.Location = new System.Drawing.Point(141, 15);
-            this.entityBackPanel.Name = "entityBackPanel";
-            this.entityBackPanel.Size = new System.Drawing.Size(92, 25);
-            this.entityBackPanel.TabIndex = 60;
             // 
             // contragentNameBackPanel
             // 
@@ -433,23 +411,21 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(533, 565);
+            this.Controls.Add(this.entityComboBox);
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.contactInfoPanel);
             this.Controls.Add(this.addContactInfoButton);
             this.Controls.Add(this.codeBackPanel);
             this.Controls.Add(this.contragentNameBackPanel);
-            this.Controls.Add(this.entityBackPanel);
             this.Controls.Add(this.codeLabel);
             this.Controls.Add(this.contragentNameLabel);
             this.Controls.Add(this.entityLabel);
-            this.Controls.Add(this.entityStarLabel);
             this.Controls.Add(this.contragentNameStarLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "AddContragentForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Load += new System.EventHandler(this.AddcontragentForm_Load);
-            this.entityBackPanel.ResumeLayout(false);
             this.contragentNameBackPanel.ResumeLayout(false);
             this.contragentNameBackPanel.PerformLayout();
             this.codeBackPanel.ResumeLayout(false);
@@ -469,9 +445,7 @@
         private System.Windows.Forms.Label entityLabel;
         private System.Windows.Forms.Label contragentNameLabel;
         private System.Windows.Forms.Label codeLabel;
-        private System.Windows.Forms.Label entityStarLabel;
         private System.Windows.Forms.Label contragentNameStarLabel;
-        private System.Windows.Forms.Panel entityBackPanel;
         private System.Windows.Forms.Panel contragentNameBackPanel;
         private System.Windows.Forms.Panel codeBackPanel;
         private System.Windows.Forms.TextBox contragentNameTextBox;

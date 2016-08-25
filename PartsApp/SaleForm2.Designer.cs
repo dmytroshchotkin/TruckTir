@@ -229,6 +229,7 @@
             this.customerTextBox.Name = "customerTextBox";
             this.customerTextBox.Size = new System.Drawing.Size(196, 20);
             this.customerTextBox.TabIndex = 0;
+            this.customerTextBox.Leave += new System.EventHandler(this.customerTextBox_Leave);
             // 
             // sellerBackPanel
             // 
@@ -250,6 +251,7 @@
             this.sellerTextBox.Size = new System.Drawing.Size(196, 20);
             this.sellerTextBox.TabIndex = 0;
             this.sellerTextBox.Text = "Truck Tir";
+            this.sellerTextBox.Leave += new System.EventHandler(this.sellerTextBox_Leave);
             // 
             // saleDateTimePicker
             // 
@@ -620,6 +622,7 @@
             // 
             this.sellerAgentTextBox.Location = new System.Drawing.Point(187, 684);
             this.sellerAgentTextBox.Name = "sellerAgentTextBox";
+            this.sellerAgentTextBox.ReadOnly = true;
             this.sellerAgentTextBox.Size = new System.Drawing.Size(237, 20);
             this.sellerAgentTextBox.TabIndex = 98;
             // 
