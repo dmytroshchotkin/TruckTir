@@ -51,10 +51,10 @@ namespace PartsApp
             //    SparePart operDet = operat.OperationDetailsList.First(sp => sp.SparePartId == sparePartId);
             //    row.Cells[UnitCol.Index].Value = operDet.MeasureUnit;
             //    row.Cells[CountCol.Index].Value = operDet.Count;
-            //    //double? price = (operat.GetType() == typeof(Sale)) ? avail.SellingPrice : avail.Price;
-            //    double? price = operDet.Price;
-            //    row.Cells[PriceCol.Index].Value = price;
-            //    row.Cells[SumCol.Index].Value = price * operDet.Count;
+            //    //double? sellPrice = (operat.GetType() == typeof(Sale)) ? avail.SellingPrice : avail.Price;
+            //    double? sellPrice = operDet.Price;
+            //    row.Cells[PriceCol.Index].Value = sellPrice;
+            //    row.Cells[SumCol.Index].Value = sellPrice * operDet.Count;
 
             //    //Выводим название и артикул запчасти.
             //    ArticulLabel.Text = operDet.Articul;

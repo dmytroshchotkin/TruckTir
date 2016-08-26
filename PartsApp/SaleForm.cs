@@ -159,7 +159,7 @@ namespace PartsApp
             //Эта строка нужна потому что новые столбцы SellingPrice и Count почему то становятся открытыми для записи.
 /*!!!*/      saleDataGridView.Rows[e.RowIndex].Cells[SellingPrice.Name].ReadOnly = saleDataGridView.Rows[e.RowIndex].Cells["Count"].ReadOnly = true;
         }//saleDataGridView_RowsAdded
-
+        /******/
         #region Обработка событий добавления товара в списки.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -502,9 +502,9 @@ namespace PartsApp
 
                         //Округляем Price до 2-х десятичных знаков.
                         price = (float)Math.Round(price, 2, MidpointRounding.AwayFromZero);
-                        //currentSparePart.Price = price; //Запоминаем цену в Price, т.к. SellingPrice не заполнится, потому что Price == null (см. SparePart.SellingPrice.Set()).
+                        //currentSparePart.Price = sellPrice; //Запоминаем цену в Price, т.к. SellingPrice не заполнится, потому что Price == null (см. SparePart.SellingPrice.Set()).
                         //foreach (var sp in extCurrentSparePartsList)
-                        //    sp.SellingPrice = price;
+                        //    sp.SellingPrice = sellPrice;
 
                         cell.Value = String.Format("{0:N2}", price);
 
@@ -516,8 +516,8 @@ namespace PartsApp
 
                             float totalCount = sparePart.AvailabilityList.Sum(av => av.OperationDetails.Count);
                             double sum = Math.Round(price * totalCount, 2, MidpointRounding.AwayFromZero);
-                            cell.OwningRow.Cells["Sum"].Value = String.Format("{0:N2}", sum);//sum; //price * currentSparePart.Count;
-                            inTotal += sum; //price * currentSparePart.Count;
+                            cell.OwningRow.Cells["Sum"].Value = String.Format("{0:N2}", sum);//sum; //sellPrice * currentSparePart.Count;
+                            inTotal += sum; //sellPrice * currentSparePart.Count;
                             inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
 
                             cell.OwningRow.Cells[SellingPrice.Name].ReadOnly = cell.OwningRow.Cells["Count"].ReadOnly = true;
@@ -966,6 +966,7 @@ namespace PartsApp
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
+        /******/
         #region Методы вывода инф-ции в Excel.
 
         private void BeginLoadSaleToExcelFile(object sale)
@@ -1325,7 +1326,7 @@ namespace PartsApp
         }//saleDataGridView_CellMouseClick        
 
 
-
+        /******/
         /// <summary>
         /// Возвращает объект типа Sale, созданный из данных формы.
         /// </summary>
@@ -1359,7 +1360,7 @@ namespace PartsApp
 
             return sale;
         }//CreateSaleFromForm
-
+        /******/
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -1370,7 +1371,7 @@ namespace PartsApp
                 }
             }//if
         }//cancelButton_MouseClick
-
+        /******/
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -1395,7 +1396,7 @@ namespace PartsApp
                     
                     try
                     {
-                        sale.OperationId = PartsDAL.AddSale(sale);
+                        //sale.OperationId = PartsDAL.AddSale(sale);
                     }//try
                     catch(Exception)
                     {

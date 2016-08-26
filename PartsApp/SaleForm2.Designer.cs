@@ -87,13 +87,6 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saleContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.endEditLabel = new System.Windows.Forms.Label();
-            this.clicksLabel = new System.Windows.Forms.Label();
-            this.selChangLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).BeginInit();
             this.currencyBackPanel.SuspendLayout();
             this.customerBackPanel.SuspendLayout();
@@ -182,6 +175,7 @@
             this.excRateNumericUpDown.Name = "excRateNumericUpDown";
             this.excRateNumericUpDown.Size = new System.Drawing.Size(46, 20);
             this.excRateNumericUpDown.TabIndex = 117;
+            this.excRateNumericUpDown.Visible = false;
             // 
             // currencyBackPanel
             // 
@@ -190,6 +184,7 @@
             this.currencyBackPanel.Name = "currencyBackPanel";
             this.currencyBackPanel.Size = new System.Drawing.Size(54, 25);
             this.currencyBackPanel.TabIndex = 120;
+            this.currencyBackPanel.Visible = false;
             // 
             // currencyComboBox
             // 
@@ -290,6 +285,7 @@
             this.excRateLabel.Size = new System.Drawing.Size(104, 13);
             this.excRateLabel.TabIndex = 109;
             this.excRateLabel.Text = "Курс к рос. рублю :";
+            this.excRateLabel.Visible = false;
             // 
             // currencyLabel
             // 
@@ -299,6 +295,7 @@
             this.currencyLabel.Size = new System.Drawing.Size(51, 13);
             this.currencyLabel.TabIndex = 108;
             this.currencyLabel.Text = "Валюта :";
+            this.currencyLabel.Visible = false;
             // 
             // saleGroupBox
             // 
@@ -500,6 +497,7 @@
             this.extDataGridView.TabIndex = 0;
             this.extDataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.extDataGridView_CellBeginEdit);
             this.extDataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extDataGridView_CellEndEdit);
+            this.extDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.saleDataGridView_RowPrePaint);
             this.extDataGridView.SelectionChanged += new System.EventHandler(this.extDataGridView_SelectionChanged);
             // 
             // extSupplier
@@ -606,6 +604,7 @@
             this.cancelButton.TabIndex = 101;
             this.cancelButton.Text = "Отмена";
             this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.cancelButton_MouseClick);
             // 
             // okButton
             // 
@@ -615,6 +614,7 @@
             this.okButton.TabIndex = 100;
             this.okButton.Text = "Ок";
             this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.okButton_MouseClick);
             // 
             // customerAgentTextBox
             // 
@@ -663,82 +663,11 @@
             this.removeToolStripMenuItem.Text = "Удалить";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(618, 99);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 126;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(492, 61);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 13);
-            this.label1.TabIndex = 127;
-            this.label1.Text = "endEdit :";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(492, 74);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 128;
-            this.label2.Text = "selChang :";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(492, 87);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(40, 13);
-            this.label3.TabIndex = 129;
-            this.label3.Text = "clicks :";
-            // 
-            // endEditLabel
-            // 
-            this.endEditLabel.AutoSize = true;
-            this.endEditLabel.Location = new System.Drawing.Point(549, 61);
-            this.endEditLabel.Name = "endEditLabel";
-            this.endEditLabel.Size = new System.Drawing.Size(13, 13);
-            this.endEditLabel.TabIndex = 130;
-            this.endEditLabel.Text = "0";
-            // 
-            // clicksLabel
-            // 
-            this.clicksLabel.AutoSize = true;
-            this.clicksLabel.Location = new System.Drawing.Point(549, 87);
-            this.clicksLabel.Name = "clicksLabel";
-            this.clicksLabel.Size = new System.Drawing.Size(13, 13);
-            this.clicksLabel.TabIndex = 132;
-            this.clicksLabel.Text = "0";
-            // 
-            // selChangLabel
-            // 
-            this.selChangLabel.AutoSize = true;
-            this.selChangLabel.Location = new System.Drawing.Point(549, 74);
-            this.selChangLabel.Name = "selChangLabel";
-            this.selChangLabel.Size = new System.Drawing.Size(13, 13);
-            this.selChangLabel.TabIndex = 131;
-            this.selChangLabel.Text = "0";
-            // 
             // SaleForm2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(896, 747);
-            this.Controls.Add(this.clicksLabel);
-            this.Controls.Add(this.selChangLabel);
-            this.Controls.Add(this.endEditLabel);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.autoCompleteCustomerListBox);
             this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.descriptionLabel);
@@ -839,7 +768,6 @@
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.ContextMenuStrip saleContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridViewTextBoxColumn SparePartId;
         private System.Windows.Forms.DataGridViewTextBoxColumn Articul;
         private System.Windows.Forms.DataGridViewTextBoxColumn Title;
@@ -849,11 +777,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Markup;
         private System.Windows.Forms.DataGridViewTextBoxColumn SellingPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn Sum;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label endEditLabel;
-        private System.Windows.Forms.Label clicksLabel;
-        private System.Windows.Forms.Label selChangLabel;
     }
 }

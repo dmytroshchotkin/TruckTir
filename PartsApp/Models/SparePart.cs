@@ -109,7 +109,7 @@ namespace PartsApp.Models
 
     //    public SparePart(int sparePartId, string photo, string articul, string title, string description,
     //                     int? manufacturerId, int purchaseId, string measureUnit, string storageAdress, double sellCount,
-    //                     double price, double? markup)
+    //                     double sellPrice, double? markup)
     //    {
     //        this.SparePartId = sparePartId;
     //        this.Photo = photo;
@@ -124,7 +124,7 @@ namespace PartsApp.Models
     //        if (storageAdress == null) this.Count = sellCount;
     //        else this.VirtCount = sellCount;
     //        this.StorageAdress = storageAdress;
-    //        this.Price = price;
+    //        this.Price = sellPrice;
     //        this.Markup = markup;
     //        this.MarkupType = (markup == null) ? null : Models.Markup.GetDescription((float)markup);
     //    }//

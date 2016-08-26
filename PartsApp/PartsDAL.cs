@@ -639,7 +639,6 @@ namespace PartsApp
         #region Модификация таблицы Sales.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*!!! Возможно можно убрать параметр IList<SparePart> передавая его св-вом объекта класса Operation, PurchaseDetails. Надобность класса PurchaseDetail вообще под вопросом, ведь его можно спокойно заменить объектом уже созданного класса SparePart либо же класс SparePart нужно модифицировать в сторону разбиения на большее кол-во классов!*/
         /// <summary>
         /// Осуществляет полный цикл продажи товара, вставляя записи в таблицы Sales, Avaliability и SaleDetails.
         /// Возвращает Id вставленной записи в табл. Sale.
@@ -647,7 +646,7 @@ namespace PartsApp
         /// <param name="availabilityList">Список продаваемого товара.</param>
         /// <param name="sale">Информация о продаже.</param>
         /// <returns></returns>
-        public static int AddSale(Sale sale)
+        public static int AddSale(Sale sale, List<OperationDetails> operDetList)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -665,7 +664,7 @@ namespace PartsApp
                             //вставляем запись в таблицу Sales.
                             sale.OperationId = AddSale(sale, cmd);
                             //вставляем записи в SaleDetails.
-                            foreach (OperationDetails operDet in sale.OperationDetailsList)
+                            foreach (OperationDetails operDet in operDetList)
                                 SaleSparePartAvaliability(operDet, cmd);
                             // и модифицируем Avaliability.
                             foreach (OperationDetails operDet in sale.OperationDetailsList)
@@ -739,7 +738,7 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@OperationId", saleId);
             cmd.Parameters.AddWithValue("@SparePartId", operDet.SparePart.SparePartId);
             cmd.Parameters.AddWithValue("@Quantity", operDet.Count);
-            cmd.Parameters.AddWithValue("@SellingPrice", operDet.Operation);
+            cmd.Parameters.AddWithValue("@SellingPrice", operDet.Price);
             
             cmd.ExecuteNonQuery();
         }//AddSaleDetail
@@ -1828,6 +1827,7 @@ namespace PartsApp
                                    + "WHERE SparePartId = @SparePartId);";
 
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
 
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {

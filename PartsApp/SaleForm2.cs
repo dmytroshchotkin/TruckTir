@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PartsApp.Models;
 using PartsApp.SupportClasses;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace PartsApp
 {
@@ -18,6 +19,8 @@ namespace PartsApp
     //Убрать столбец extPrice из доп. таблицы.
     //Задать форматы столбцов через дизайнер.
     //Удалить лишние столбцы из таблиц.
+    //Передавать inTotal в метод распечатки в Excel.
+
     public partial class SaleForm2 : Form
     {
         /// <summary>
@@ -33,11 +36,6 @@ namespace PartsApp
         /// Переменная для хранения инф-ции о том была ли ошибка редактирования ячейки.
         /// </summary>
         bool isCellEditError = false;
-
-        StringBuilder str = new StringBuilder();
-        int endEdit = 0;
-        int selChang = 0;
-        int clicks = 0;
 
 
         public SaleForm2()
@@ -116,6 +114,11 @@ namespace PartsApp
         #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Нумерация строк в таблице.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void saleDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             //Нумерация строк.
@@ -242,9 +245,6 @@ namespace PartsApp
 
         private void saleDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            endEditLabel.Text = ((++endEdit).ToString());
-            str.Append("endEdit " + endEdit + "\tIsCellEditError - " + isCellEditError);
-
             if (!isCellEditError)
             {
                 DataGridViewCell cell = saleDataGridView[e.ColumnIndex, e.RowIndex];
@@ -256,13 +256,10 @@ namespace PartsApp
                 else if (cell.OwningColumn == SellingPrice)                     //Если редактируется цена продажи. 
                     SellingPriceCellFilled(cell);
             }//if
-            str.Append("  \t" + isCellEditError + "\n");
         }//saleDataGridView_CellEndEdit 
 
         private void saleDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            selChangLabel.Text = ((++selChang).ToString());
-            str.Append("selChang " + selChang + "\tIsCellEditError - " + isCellEditError);
             //Если ошибка редактирования ячейки 'Title' или 'Articul', то возвращаем фокус обратно на ячейку (фокус теряется при выборе из вып. списка).
             if (isCellEditError == true)
             {
@@ -280,8 +277,6 @@ namespace PartsApp
                 TextBox textBoxCell = lastEditCell.Tag as TextBox;
                 textBoxCell.SelectionStart = textBoxCell.Text.Length;
             }//if
-
-            str.Append("  \t" + isCellEditError + "\n");
         }//saleDataGridView_SelectionChanged
 
         private void saleDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -411,7 +406,7 @@ namespace PartsApp
                         throw new Exception();  //ввод нуля также является ошибкой.
 
                     int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
-                    SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => (int)r.Cells[SparePartId.Index].Value == sparePartId).Tag as SparePart;
+                    SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (int)r.Cells[SparePartId.Index].Value == sparePartId).Tag as SparePart;
                     //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
                     if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= price))
                         if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
@@ -419,12 +414,9 @@ namespace PartsApp
                 }//try
                 catch
                 {
-                    //выводим всплывающее окно с сообщением об ошибке.
+                    //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
                     toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
-                    //Очищаем ввод.
                     cell.Value = null;
-                    isCellEditError = true;
-                    lastEditCell = cell;
                 }//catch
 
                 FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
@@ -638,7 +630,7 @@ namespace PartsApp
             {
                 if (sellCount > 0)
                 {
-                    SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => (int)r.Cells[SparePartId.Index].Value == sparePartId).Tag as SparePart;                   
+                    SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (int)r.Cells[SparePartId.Index].Value == sparePartId).Tag as SparePart;                   
                     IOperation purch = sparePart.AvailabilityList.First(av => av.OperationDetails.Operation.OperationId == purchaseId).OperationDetails.Operation;
                     
                     _operDetList.Add(new OperationDetails(sparePart, purch, sellCount, 0));
@@ -787,21 +779,16 @@ namespace PartsApp
         {
             if (e.Clicks == 1)
             {
-                clicksLabel.Text = ((++clicks).ToString());
-                str.Append("clicks " + clicks + "\tIsCellEditError - " + isCellEditError);
                 //Возвращаем фокус на ячейку для кот. выводится вып. список.                
                 saleDataGridView_SelectionChanged(null, null);
                 isCellEditError = true;
             }//if
             else
             {
-                str.Append("manyClicks \tIsCellEditError - " + isCellEditError);
                 //Делаем автозаполнение строки, выбранным объектом.   
                 isCellEditError = false;
                 saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));                
             }//else
-
-            str.Append("  \t" + isCellEditError + "\n"); 
         }//autoCompleteListBox_MouseDown
 
 
@@ -976,20 +963,387 @@ namespace PartsApp
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
-        private void button1_Click(object sender, EventArgs e)
+        #region Методы вывода инф-ции в Excel.
+
+        private void BeginLoadSaleToExcelFile(object sale)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (var operDet in _operDetList)
+            if (sale is Sale)
+                LoadSaleToExcelFile(sale as Sale);
+        }//BeginLoadsaleToExcelFile
+
+        /// <summary>
+        /// Метод вывода расходной информации в Excel-файл.
+        /// </summary>
+        /// <param name="sale">Информация о расходе.</param>
+        /// <param name="availabilityList">Список проданного товара.</param>
+        private void LoadSaleToExcelFile(Sale sale)
+        {
+            IList<OperationDetails> operDetList = sale.OperationDetailsList;
+
+            Excel.Application ExcelApp = new Excel.Application();
+            Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
+            Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
+
+            //Настраиваем горизонтальные и вертикальные границы области печати.
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin = 7;
+            ExcelWorkSheet.PageSetup.TopMargin = ExcelWorkSheet.PageSetup.BottomMargin = 10;
+
+            int row = 1, column = 1;
+            //Выводим Id и Дату. 
+            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
+            excelCells.Merge(true);
+            excelCells.Font.Bold = true;
+            excelCells.Font.Underline = true;
+            excelCells.Font.Size = 18;
+            excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            excelCells.Value = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
+
+            //Выводим поставщика и покупателя.
+            row += 2;
+            ExcelApp.Cells[row, column].Font.Name = "Consolas";
+            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-40}{1}",
+                                                         sellerLabel.Text + " " + sellerTextBox.Text,
+                                                         customerLabel.Text + " " + customerTextBox.Text);
+
+            #region Вывод таблицы товаров.
+
+            row += 2;
+            //Выводим заголовок.
+            ExcelApp.Cells[row, column] = "Произв.";
+            ExcelApp.Cells[row, column + 1] = "Артикул";
+            ExcelApp.Cells[row, column + 2] = "Название";
+            ExcelApp.Cells[row, column + 3] = "Ед. изм.";
+            ExcelApp.Cells[row, column + 4] = "Кол-во";
+            ExcelApp.Cells[row, column + 5] = "Цена";
+            ExcelApp.Cells[row, column + 6] = "Сумма";
+
+            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
+            excelCells.VerticalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            excelCells.Font.Bold = true;
+            excelCells.Font.Size = 12;
+            //Уменьшаем ширину колонки "Ед. изм."
+            (ExcelApp.Cells[row, column + 3] as Excel.Range).Cells.VerticalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+            (ExcelApp.Cells[row, column + 3] as Excel.Range).Columns.ColumnWidth = 5;
+            //Обводим заголовки таблицы рамкой. 
+            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+            //Устанавливаем стиль и толщину линии
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+
+            //Устанавливаем ширину первой Колонок
+            double titleColWidth = 30; // -- Взято методом тыка.  
+            int articulColWidth = 20;
+            //int manufColWidth = 15, minManufColWidth = 8; //  15 -- Взято методом тыка.
+
+            SetColumnsWidth(operDetList, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
+
+            //Выводим список товаров.
+            foreach (OperationDetails operDet in operDetList)
             {
-                string str1 = String.Format("{0} -- {1} :  {2}", operDet.SparePart.SparePartId, operDet.Operation.OperationId, operDet.Count);
-                sb.Append(str1);
-                sb.Append("\n");
+                ++row;
+                ExcelApp.Cells[row, column + 2] = operDet.SparePart.Title;
+                ExcelApp.Cells[row, column + 1] = operDet.SparePart.Articul;
+                //Выравнивание диапазона строк.
+                ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
+                ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+
+                //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
+                if (operDet.SparePart.Articul.Length > articulColWidth || operDet.SparePart.Title.Length > titleColWidth)
+                {
+                    ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+                    //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
+                    if (operDet.SparePart.Articul.Length > articulColWidth && operDet.SparePart.Title.Length <= titleColWidth)
+                        (ExcelApp.Cells[row, column + 2] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                    if (operDet.SparePart.Articul.Length <= articulColWidth && operDet.SparePart.Title.Length > titleColWidth)
+                        (ExcelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                }//if
+
+                ExcelApp.Cells[row, column] = operDet.SparePart.Manufacturer;
+
+                ExcelApp.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
+                float count = operDet.Count;
+                float price = operDet.Price;
+                ExcelApp.Cells[row, column + 4] = count;
+                ExcelApp.Cells[row, column + 5] = price;
+                ExcelApp.Cells[row, column + 6] = price * count;
             }//foreach
 
-            MessageBox.Show(str.ToString());
-        }
+            //Обводим талицу рамкой. 
+            excelCells = ExcelWorkSheet.get_Range("A" + (row - operDetList.Count + 1).ToString(), "G" + row.ToString());
+            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
 
+            //Выводим "Итого".
+            ++row;
+            //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
+            int indent = 0; //отступ
+            if (inTotalNumberLabel.Text.Length <= 9)
+                indent = 1;
+
+            ExcelApp.Cells[row, column + 4 + indent] = inTotalLabel.Text;
+            ExcelApp.Cells[row, column + 5 + indent] = inTotalNumberLabel.Text;
+            (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Underline = true;
+            (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Size = 12;
+            (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Bold = true;
+
+            #endregion
+
+            //Выводим имена агентов.
+            row += 2;
+            ExcelApp.Cells[row, column].Font.Name = "Consolas";
+            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-40}{1}",
+                                                         sellerAgentLabel.Text + " " + sellerAgentTextBox.Text,
+                                                         customerAgentLabel.Text + " " + customerAgentTextBox.Text);
+
+            //Делаем визуальное отделение информации от заметки, с помощью линии.
+            row += 2;
+            //ширина подобрана методом тыка.
+            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                    ";//longEmptyString.ToString();
+            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
+            //Выводим заметку
+            row++;
+            // объединим область ячеек  строки "вместе"
+            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
+            excelCells.Merge(true);
+            excelCells.WrapText = true;
+            excelCells.Value = sale.Description;//descriptionRichTextBox.Text;
+            AutoFitMergedCellRowHeight((ExcelApp.Cells[row, column] as Excel.Range));
+
+            //Вызываем нашу созданную эксельку.
+            ExcelApp.Visible = true;
+            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
+            ExcelApp.UserControl = true;
+
+            this.Close();
+        }//LoadSaleToExcelFile  
+
+        private void AutoFitMergedCellRowHeight(Excel.Range rng)
+        {
+            double mergedCellRgWidth = 0;
+            double rngWidth, possNewRowHeight;
+
+            if (rng.MergeCells)
+            {
+                // здесь использована самописная функция перевода стиля R1C1 в A1                
+                if (xlRCtoA1(rng.Row, rng.Column) == xlRCtoA1(rng.Range["A1"].Row, rng.Range["A1"].Column))
+                {
+                    rng = rng.MergeArea;
+                    if (rng.Rows.Count == 1 && rng.WrapText == true)
+                    {
+                        (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = false;
+                        rngWidth = rng.Cells.Item[1, 1].ColumnWidth;
+                        mergedCellRgWidth = GetRangeWidth(rng);
+                        rng.MergeCells = false;
+                        rng.Cells.Item[1, 1].ColumnWidth = mergedCellRgWidth;
+                        rng.EntireRow.AutoFit();
+                        possNewRowHeight = rng.RowHeight;
+                        rng.Cells.Item[1, 1].ColumnWidth = rngWidth;
+                        rng.MergeCells = true;
+                        rng.RowHeight = possNewRowHeight;
+                        (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = true;
+                    }//if
+                }//if                
+            }//if
+        }//AutoFitMergedCellRowHeight
+
+        /// <summary>
+        /// Устанавливает ширину столбцов.
+        /// </summary>
+        /// <param name="availabilityList">Коллекция эл-тов заполняюхий таблицу</param>
+        /// <param name="titleCol">Столбец "Название".</param>
+        /// <param name="articulCol">Столбец "Артикул".</param>
+        /// <param name="manufCol">Столбец "Производитель".</param>
+        private void SetColumnsWidth(IList<OperationDetails> operDetList, Excel.Range titleCol, Excel.Range articulCol, Excel.Range manufCol)
+        {
+            //Устанавливаем ширину первой Колонок
+            double titleColWidth = 30; // -- Взято методом тыка.  
+            int articulColWidth = 20;
+            int manufColWidth = 15, minManufColWidth = 8; //  -- Взято методом тыка.
+
+            //Проверяем по факту максимальную длину колонки Manufacturer и если она меньше заявленной длины, дополняем лишнее в Title
+            int maxManufLenght = 0;
+            var sparePartsManufacturers = operDetList.Select(od => od.SparePart.Manufacturer).Where(man => man != null);
+            if (sparePartsManufacturers.Count() > 0)
+                maxManufLenght = sparePartsManufacturers.Max(man => man.Length);
+
+            if (maxManufLenght < manufColWidth)
+            {
+                int different = manufColWidth - maxManufLenght; //разница между дефолтной шириной столбца и фактической.
+                titleColWidth += (manufColWidth - different < minManufColWidth) ? minManufColWidth : different;
+                manufColWidth = (manufColWidth - different < minManufColWidth) ? minManufColWidth : manufColWidth - different;
+            }//if
+
+            manufCol.Columns.ColumnWidth = manufColWidth;
+            articulCol.Columns.ColumnWidth = articulColWidth;
+            titleCol.Columns.ColumnWidth = titleColWidth;
+        }//SetColumnsWidth
+
+        /// <summary>
+        /// Возвращает ширину заданной области.
+        /// </summary>
+        /// <param name="rng">Область ширина которой считается.</param>
+        /// <returns></returns>
+        private double GetRangeWidth(Excel.Range rng)
+        {
+            double rngWidth = 0;
+            for (int i = 1; i <= rng.Columns.Count; ++i)
+            {
+                rngWidth += rng.Cells.Item[1, i].ColumnWidth;
+            }//for
+            return rngWidth;
+        }//GetRangeWidth
+
+        private string xlRCtoA1(int ARow, int ACol, bool RowAbsolute = false, bool ColAbsolute = false)
+        {
+            int A1 = 'A' - 1;  // номер "A" минус 1 (65 - 1 = 64)
+            int AZ = 'Z' - A1; // кол-во букв в англ. алфавите (90 - 64 = 26)
+
+            int t, m;
+            string S;
+
+            t = ACol / AZ; // целая часть
+            m = (ACol % AZ); // остаток?
+            if (m == 0)
+                t--;
+            if (t > 0)
+                S = Convert.ToString((char)(A1 + t));
+            else S = String.Empty;
+
+            if (m == 0)
+                t = AZ;
+            else t = m;
+
+            S = S + (char)(A1 + t);
+
+            //весь адрес.
+            if (ColAbsolute) S = '$' + S;
+            if (RowAbsolute) S = S + '$';
+
+            S = S + ARow.ToString();
+            return S;
+        }//xlRCtoA1
+
+
+
+
+
+
+
+
+        #endregion
+
+        /// <summary>
+        /// Возвращает объект типа Sale, созданный из данных формы.
+        /// </summary>
+        /// <returns></returns>
+        private Sale CreateSaleFromForm()
+        {
+            //Находим контрагента. Если такого ещё нет в базе, то создаем новый объект.
+            IContragent customer = PartsDAL.FindCustomers(customerTextBox.Text.Trim());
+            customer = (customer == null) ? new Supplier(0, customerTextBox.Text.Trim(), null, null, null, null) : customer;
+
+             Sale sale = new Sale
+            (
+                employee            : Form1.CurEmployee,
+                contragent          : customer,
+                contragentEmployee  : (!String.IsNullOrWhiteSpace(customerAgentTextBox.Text)) ? customerAgentTextBox.Text.Trim() : null,
+                operationDate       : saleDateTimePicker.Value,
+                description         : (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
+                operDetList         : CreateOperationDetailsListFromForm()
+            );
+            //Присваиваем 'Операцию' для каждого OperationDetails.
+            sale.OperationDetailsList.ToList().ForEach(od => od.Operation = sale); 
+            
+            return sale;
+        }//CreateSaleFromForm
+
+        /// <summary>
+        /// Возвращает список объектов типа OperationDetails, созданный из данных таблицы продаж.
+        /// </summary>
+        /// <returns></returns>
+        private List<OperationDetails> CreateOperationDetailsListFromForm()
+        {
+            List<OperationDetails> operDetList = new List<OperationDetails>();
+            foreach (DataGridViewRow row in saleDataGridView.Rows)
+            {
+                //Если строка не пустая.
+                if (row.Tag != null)
+                {
+                    float count = Convert.ToSingle(row.Cells[Count.Index].Value);
+                    float sellPrice = Convert.ToSingle(row.Cells[SellingPrice.Index].Value);
+
+                    SparePart sparePart = row.Tag as SparePart;
+                    operDetList.Add(new OperationDetails(sparePart, null, count, sellPrice));
+                }//if
+            }//foreach
+
+            return operDetList;
+        }//CreateOperationDetailsListFromForm
+
+        /// <summary>
+        /// Возвращает true если все обязательные поля корректно заполнены, иначе false.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsRequiredFieldsValid()
+        {
+            //Находим все BackPanel-контролы на форме. 
+            List<Control> curAccBackControls = this.GetAllControls(typeof(Panel), "BackPanel");
+
+            customerTextBox_Leave(null, null);
+            sellerTextBox_Leave(null, null);
+
+            //Если хоть один контрол не прошел валидацию, возв-ем false.
+            if (curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red))
+                return false;
+
+            //Если таблица не заполнена или не везде указана цена или кол-во.
+            if (_operDetList.Count == 0 || saleDataGridView.Rows.Cast<DataGridViewRow>().Any(r => r.Tag != null && (r.Cells[SellingPrice.Index].Value == null || r.Cells[Count.Index].Style.ForeColor == Color.Gray)))
+            {
+                toolTip.Show("Таблица не заполнена или не везде указана цена или количество товара", this, okButton.Location, 3000);
+                return false;
+            }//if
+
+            return true;            
+        }//IsRequiredAddingAreaFieldsValid
+
+
+
+
+        private void cancelButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    this.Close();
+            }//if
+        }//cancelButton_MouseClick
         
+        private void okButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                //Если всё заполненно корректно.
+                if (IsRequiredFieldsValid())
+                {
+                    Sale sale = CreateSaleFromForm();
+
+                    try
+                    {
+                        sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
+                    }//try
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                        return;
+                    }//catch 
+
+                    //LoadsaleToExcelFile(sale, availabilityList);
+                    /*!!!*/
+                    new System.Threading.Thread(BeginLoadSaleToExcelFile).Start(sale); //Сделать по нормальному вызов с потоком.
+
+                    this.Visible = false;
+                    //this.Close();
+                }//if
+            }//if
+        }//
 
         
     }//Form2

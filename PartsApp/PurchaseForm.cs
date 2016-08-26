@@ -545,7 +545,7 @@ namespace PartsApp
 
                         //Округляем Price до 2-х десятичных знаков.
                         price = (float)Math.Round(price, 2, MidpointRounding.AwayFromZero);
-                        //currentSparePart.Price = price;
+                        //currentSparePart.Price = sellPrice;
                         cell.Value = String.Format("{0:N2}", price);
 
                         amountCalculation(cell.OwningRow);
@@ -1010,9 +1010,9 @@ namespace PartsApp
             //    if (row.Cells["Price"].Value != null)
             //    {
             //        row.Cells["Price"].Value = Math.Round(((double)row.Cells["Price"].Value * (double)excRateNumericUpDown.Value), 2, MidpointRounding.AwayFromZero);                                                           
-            //        double price = Convert.ToDouble(row.Cells["Price"].Value);
+            //        double sellPrice = Convert.ToDouble(row.Cells["Price"].Value);
             //        double excRate = (double)excRateNumericUpDown.Value;
-            //        double newPrice = Math.Round(price * excRate, 2, MidpointRounding.AwayFromZero);
+            //        double newPrice = Math.Round(sellPrice * excRate, 2, MidpointRounding.AwayFromZero);
             //        row.Cells["Price"].Value = newPrice;
             //        if (row.Cells["Count"].Value != null)
             //        {
@@ -1175,7 +1175,6 @@ namespace PartsApp
         /// <returns></returns>
         public Purchase CreatePurchaseFromForm()
         {
-            Purchase purchase = null;
             List<OperationDetails> operDetList = new List<OperationDetails>();
 
             foreach (DataGridViewRow row in purchaseDataGridView.Rows)
@@ -1188,7 +1187,7 @@ namespace PartsApp
                     float price = Convert.ToSingle(row.Cells[Price.Index].Value);
 
                     SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
-                    OperationDetails od = new OperationDetails(sparePart, purchase, count, price);
+                    OperationDetails od = new OperationDetails(sparePart, null, count, price);
                     operDetList.Add(od);
                 }//if
             }//foreach
@@ -1197,7 +1196,7 @@ namespace PartsApp
             IContragent supplier = PartsDAL.FindSuppliers(supplierTextBox.Text.Trim());
             supplier = (supplier == null) ? new Supplier(0, supplierTextBox.Text.Trim(), null, null, null, null) : supplier;
 
-            purchase =  new Purchase
+            Purchase purchase = new Purchase
             (
                 employee           : Form1.CurEmployee,
                 contragent         : supplier,
