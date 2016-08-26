@@ -1205,7 +1205,7 @@ namespace PartsApp
 
         private void addNewSaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new SaleForm2().Show(this);
+            new SaleForm().Show(this);
         }//addNewSaleToolStripMenuItem_Click
 
         private void editSparePartToolStripMenuItem_Click(object sender, EventArgs e)

@@ -21,7 +21,7 @@ namespace PartsApp
     //Удалить лишние столбцы из таблиц.
     //Передавать inTotal в метод распечатки в Excel.
 
-    public partial class SaleForm2 : Form
+    public partial class SaleForm : Form
     {
         /// <summary>
         /// Список продаваемого товара, по конкретным приходам.
@@ -38,12 +38,12 @@ namespace PartsApp
         bool isCellEditError = false;
 
 
-        public SaleForm2()
+        public SaleForm()
         {
             InitializeComponent();
         }//
 
-        private void SaleForm2_Load(object sender, EventArgs e)
+        private void SaleForm_Load(object sender, EventArgs e)
         {
             //Устанавливаем даты для DateTimePicker.
             saleDateTimePicker.MaxDate = DateTime.Now.Date.AddDays(7);
@@ -55,7 +55,7 @@ namespace PartsApp
             markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
 
             sellerAgentTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);
-        }//SaleForm2_Load
+        }//SaleForm_Load
 
 
         #region Валидация вводимых данных.

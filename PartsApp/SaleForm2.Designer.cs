@@ -1,6 +1,6 @@
 ﻿namespace PartsApp
 {
-    partial class SaleForm2
+    partial class SaleForm
     {
         /// <summary>
         /// Required designer variable.
@@ -663,7 +663,7 @@
             this.removeToolStripMenuItem.Text = "Удалить";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
-            // SaleForm2
+            // SaleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -700,7 +700,7 @@
             this.Controls.Add(this.sellerAgentLabel);
             this.Name = "SaleForm2";
             this.Text = "SaleForm2";
-            this.Load += new System.EventHandler(this.SaleForm2_Load);
+            this.Load += new System.EventHandler(this.SaleForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).EndInit();
             this.currencyBackPanel.ResumeLayout(false);
             this.customerBackPanel.ResumeLayout(false);
