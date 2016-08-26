@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.autoCompleteCustomerListBox = new System.Windows.Forms.ListBox();
             this.autoCompleteListBox = new System.Windows.Forms.ListBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
@@ -97,15 +96,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.extDataGridView)).BeginInit();
             this.saleContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // autoCompleteCustomerListBox
-            // 
-            this.autoCompleteCustomerListBox.FormattingEnabled = true;
-            this.autoCompleteCustomerListBox.Location = new System.Drawing.Point(109, 117);
-            this.autoCompleteCustomerListBox.Name = "autoCompleteCustomerListBox";
-            this.autoCompleteCustomerListBox.Size = new System.Drawing.Size(198, 17);
-            this.autoCompleteCustomerListBox.TabIndex = 125;
-            this.autoCompleteCustomerListBox.Visible = false;
             // 
             // autoCompleteListBox
             // 
@@ -668,7 +658,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(896, 747);
-            this.Controls.Add(this.autoCompleteCustomerListBox);
             this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.descriptionRichTextBox);
@@ -698,7 +687,9 @@
             this.Controls.Add(this.sellerAgentTextBox);
             this.Controls.Add(this.customerAgentLabel);
             this.Controls.Add(this.sellerAgentLabel);
-            this.Name = "SaleForm2";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.Name = "SaleForm";
             this.Text = "SaleForm2";
             this.Load += new System.EventHandler(this.SaleForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).EndInit();
@@ -719,7 +710,6 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox autoCompleteCustomerListBox;
         private System.Windows.Forms.ListBox autoCompleteListBox;
         private System.Windows.Forms.Label descriptionLabel;
         private System.Windows.Forms.RichTextBox descriptionRichTextBox;
