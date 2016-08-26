@@ -690,7 +690,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "SaleForm";
-            this.Text = "SaleForm2";
+            this.Text = "Форма продаж.";
             this.Load += new System.EventHandler(this.SaleForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).EndInit();
             this.currencyBackPanel.ResumeLayout(false);
