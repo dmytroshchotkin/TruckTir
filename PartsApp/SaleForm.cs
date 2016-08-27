@@ -14,11 +14,8 @@ using Excel = Microsoft.Office.Interop.Excel;
 namespace PartsApp
 {
     /*Задания*/
-    //Заменить имена полей, чтобы начинались с подчеркивания.
-    //Убрать заполнения ячейки Арткикул или Название при пролистывании вып. списка.
     //Убрать столбец extPrice из доп. таблицы.
     //Задать форматы столбцов через дизайнер.
-    //Удалить лишние столбцы из таблиц.
     //Передавать inTotal в метод распечатки в Excel.
 
     public partial class SaleForm : Form
@@ -27,7 +24,6 @@ namespace PartsApp
         /// Список продаваемого товара, по конкретным приходам.
         /// </summary>
         List<OperationDetails> _operDetList = new List<OperationDetails>();
-
         /// <summary>
         /// Последняя редактируемая ячейка.
         /// </summary>
@@ -494,9 +490,9 @@ namespace PartsApp
         {
             row.Tag = sparePart;
 
-            row.Cells[Title.Index].Value = sparePart.Title;
-            row.Cells[Articul.Index].Value = sparePart.Articul;
-            row.Cells[Unit.Index].Value = sparePart.MeasureUnit;
+            row.Cells[Title.Index].Value    = sparePart.Title;
+            row.Cells[Articul.Index].Value  = sparePart.Articul;
+            row.Cells[Unit.Index].Value     = sparePart.MeasureUnit;
 
             row.Cells[Count.Index].Tag = Availability.GetTotalCount(sparePart.AvailabilityList); //Заполняем кол-во и запоминаем в Tag.
             SetDefaultValueToCell(row.Cells[Count.Index]); //Задаем серый цвет и дефолтное значение данной ячейке.
@@ -506,57 +502,6 @@ namespace PartsApp
                 if (!sparePart.AvailabilityList.Any(av => av.SellingPrice != sparePart.AvailabilityList[0].SellingPrice))
                     row.Cells[SellingPrice.Name].Value = sparePart.AvailabilityList[0].SellingPrice;
         }//FillTheSaleDGV
-
-        /// <summary>
-        /// Заполняет данными таблицу доп. инф-ции.
-        /// </summary>
-        /// <param name="availList">Список приходов данного товара в наличии.</param>
-        private void FillTheExtDGV(List<Availability> availList)
-        {
-            //Очищаем предварительно таблицу.
-            extDataGridView.Rows.Clear();
-            extStorageAdress.Visible = false;
-            //Заполняем таблицу новыми данными.
-            foreach (Availability avail in availList)
-            {
-                int rowIndx = extDataGridView.Rows.Add();
-                DataGridViewRow row = extDataGridView.Rows[rowIndx];
-
-                row.Cells[extSupplier.Index].Value      = avail.OperationDetails.Operation.Contragent.ContragentName;
-                row.Cells[extUnit.Index].Value          = avail.OperationDetails.SparePart.MeasureUnit;
-                row.Cells[extStorageAdress.Index].Value = avail.StorageAddress;
-                row.Cells[extPrice.Index].Value         = avail.OperationDetails.Price;
-                row.Cells[extMarkup.Index].Value        = Models.Markup.GetDescription(avail.Markup);
-                row.Cells[extSellingPrice.Index].Value  = avail.SellingPrice;
-                row.Cells[extPurchaseId.Index].Value    = avail.OperationDetails.Operation.OperationId;
-                row.Cells[extPurchaseDate.Index].Value  = avail.OperationDetails.Operation.OperationDate;
-
-                //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.                
-                if (avail.StorageAddress != null)
-                    extStorageAdress.Visible = true;
-                //if (avail.OperationDetails.Operation.Description != null)
-                //    NoteExtCol.Visible = true;
-
-                //Заполняем ячейку 'Кол-во' либо ранее установленным значением, иначе общим кол-вом по данному приходу в наличии. 
-                OperationDetails operDet = _operDetList.FirstOrDefault(od => od.SparePart.SparePartId == avail.OperationDetails.SparePart.SparePartId
-                                                                    && od.Operation.OperationId == avail.OperationDetails.Operation.OperationId);
-
-                DataGridViewCell extCountCell = row.Cells[extCount.Index];
-                extCountCell.Tag = avail.OperationDetails.Count; //заполняем ячейку значением и запоминаем это дефолтное значение в Tag.
-                if (operDet == null)
-                {
-                    SetDefaultValueToCell(extCountCell); //Задаем серый цвет и дефолтное значение данной ячейке.
-                }//if
-                else
-                {
-                    SetCustomValueToCell(extCountCell, operDet.Count); //Задаем значение ячейки.
-                }//else
-            }//foreach            
-
-            //Сортируем таблицу по дате прихода.
-            extDataGridView.Sort(extPurchaseDate, ListSortDirection.Ascending);
-            extDataGridView.ClearSelection();
-        }//FillTheExtDGV
 
 
         /// <summary>
@@ -854,6 +799,58 @@ namespace PartsApp
             extDataGridView.ClearSelection();
         }//extGroupBox_Click
 
+        /// <summary>
+        /// Заполняет данными таблицу доп. инф-ции.
+        /// </summary>
+        /// <param name="availList">Список приходов данного товара в наличии.</param>
+        private void FillTheExtDGV(List<Availability> availList)
+        {
+            //Очищаем предварительно таблицу.
+            extDataGridView.Rows.Clear();
+            extStorageAdress.Visible = NoteExtCol.Visible = false;
+            //Заполняем таблицу новыми данными.
+            foreach (Availability avail in availList)
+            {
+                int rowIndx = extDataGridView.Rows.Add();
+                DataGridViewRow row = extDataGridView.Rows[rowIndx];
+
+                row.Cells[extSupplier.Index].Value      = avail.OperationDetails.Operation.Contragent.ContragentName;
+                row.Cells[extUnit.Index].Value          = avail.OperationDetails.SparePart.MeasureUnit;
+                row.Cells[extStorageAdress.Index].Value = avail.StorageAddress;
+                row.Cells[extPrice.Index].Value         = avail.OperationDetails.Price;
+                row.Cells[extMarkup.Index].Value        = Models.Markup.GetDescription(avail.Markup);
+                row.Cells[extSellingPrice.Index].Value  = avail.SellingPrice;
+                row.Cells[extPurchaseId.Index].Value    = avail.OperationDetails.Operation.OperationId;
+                row.Cells[extPurchaseDate.Index].Value  = avail.OperationDetails.Operation.OperationDate;
+                row.Cells[NoteExtCol.Index].Value       = avail.OperationDetails.Operation.Description;
+
+                //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.                
+                if (avail.StorageAddress != null)
+                    extStorageAdress.Visible = true;
+
+                if (avail.OperationDetails.Operation.Description != null)
+                    NoteExtCol.Visible = true;
+
+                //Заполняем ячейку 'Кол-во' либо ранее установленным значением, иначе общим кол-вом по данному приходу в наличии. 
+                OperationDetails operDet = _operDetList.FirstOrDefault(od => od.SparePart.SparePartId == avail.OperationDetails.SparePart.SparePartId
+                                                                    && od.Operation.OperationId == avail.OperationDetails.Operation.OperationId);
+
+                DataGridViewCell extCountCell = row.Cells[extCount.Index];
+                extCountCell.Tag = avail.OperationDetails.Count; //заполняем ячейку значением и запоминаем это дефолтное значение в Tag.
+                if (operDet == null)
+                {
+                    SetDefaultValueToCell(extCountCell); //Задаем серый цвет и дефолтное значение данной ячейке.
+                }//if
+                else
+                {
+                    SetCustomValueToCell(extCountCell, operDet.Count); //Задаем значение ячейки.
+                }//else
+            }//foreach            
+
+            //Сортируем таблицу по дате прихода.
+            extDataGridView.Sort(extPurchaseDate, ListSortDirection.Ascending);
+            extDataGridView.ClearSelection();
+        }//FillTheExtDGV
 
         /// <summary>
         /// Обновляет значение ячейки 'Кол-во' в таблице продаж, после изменений в доп. таблице.
