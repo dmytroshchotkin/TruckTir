@@ -91,6 +91,16 @@
             this.partsStatusStripPanel = new System.Windows.Forms.Panel();
             this.extPartsGroupBox = new System.Windows.Forms.GroupBox();
             this.extPartsDataGridView = new System.Windows.Forms.DataGridView();
+            this.SupplierExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PurchaseIdExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArticulExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PurchaseDateExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StorageAddressExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MeasureUnitExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AvailabilityExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MarkupCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SellingPriceExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NoteExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.extPartsStatusStrip = new System.Windows.Forms.StatusStrip();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
@@ -102,16 +112,6 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SupplierExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PurchaseIdExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ArticulExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PurchaseDateExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StorageAddressExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MeasureUnitExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AvailabilityExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MarkupCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SellingPriceExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NoteExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -182,7 +182,7 @@
             this.rowsCountLabel});
             this.partsStatusStrip.Location = new System.Drawing.Point(0, 1);
             this.partsStatusStrip.Name = "partsStatusStrip";
-            this.partsStatusStrip.Size = new System.Drawing.Size(971, 22);
+            this.partsStatusStrip.Size = new System.Drawing.Size(979, 22);
             this.partsStatusStrip.TabIndex = 0;
             this.partsStatusStrip.Text = "statusStrip1";
             this.partsStatusStrip.Click += new System.EventHandler(this.partsStatusStrip_Click);
@@ -211,7 +211,7 @@
             this.saleToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(971, 24);
+            this.menuStrip.Size = new System.Drawing.Size(979, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip";
             this.menuStrip.Click += new System.EventHandler(this.menuStrip_Click);
@@ -360,7 +360,7 @@
             this.componentPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.componentPanel.Location = new System.Drawing.Point(0, 24);
             this.componentPanel.Name = "componentPanel";
-            this.componentPanel.Size = new System.Drawing.Size(971, 30);
+            this.componentPanel.Size = new System.Drawing.Size(979, 30);
             this.componentPanel.TabIndex = 5;
             this.componentPanel.Click += new System.EventHandler(this.componentPanel_Click);
             // 
@@ -516,7 +516,7 @@
             this.dataSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.dataSplitContainer.Panel2.Controls.Add(this.extPartsGroupBox);
             this.dataSplitContainer.Panel2.Controls.Add(this.extPartsStatusStrip);
-            this.dataSplitContainer.Size = new System.Drawing.Size(971, 679);
+            this.dataSplitContainer.Size = new System.Drawing.Size(979, 679);
             this.dataSplitContainer.SplitterDistance = 484;
             this.dataSplitContainer.SplitterWidth = 5;
             this.dataSplitContainer.TabIndex = 6;
@@ -529,7 +529,7 @@
             this.partsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.partsPanel.Location = new System.Drawing.Point(0, 0);
             this.partsPanel.Name = "partsPanel";
-            this.partsPanel.Size = new System.Drawing.Size(971, 461);
+            this.partsPanel.Size = new System.Drawing.Size(979, 461);
             this.partsPanel.TabIndex = 3;
             // 
             // autoCompleteListBox
@@ -565,7 +565,7 @@
             this.partsDataGridView.Location = new System.Drawing.Point(0, 0);
             this.partsDataGridView.Name = "partsDataGridView";
             this.partsDataGridView.ReadOnly = true;
-            this.partsDataGridView.Size = new System.Drawing.Size(971, 461);
+            this.partsDataGridView.Size = new System.Drawing.Size(979, 461);
             this.partsDataGridView.TabIndex = 0;
             this.partsDataGridView.DataSourceChanged += new System.EventHandler(this.partsDataGridView_DataSourceChanged);
             this.partsDataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.partsDataGridView_CellMouseClick);
@@ -667,7 +667,7 @@
             this.partsStatusStripPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.partsStatusStripPanel.Location = new System.Drawing.Point(0, 461);
             this.partsStatusStripPanel.Name = "partsStatusStripPanel";
-            this.partsStatusStripPanel.Size = new System.Drawing.Size(971, 23);
+            this.partsStatusStripPanel.Size = new System.Drawing.Size(979, 23);
             this.partsStatusStripPanel.TabIndex = 2;
             // 
             // extPartsGroupBox
@@ -677,7 +677,7 @@
             this.extPartsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extPartsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.extPartsGroupBox.Name = "extPartsGroupBox";
-            this.extPartsGroupBox.Size = new System.Drawing.Size(971, 168);
+            this.extPartsGroupBox.Size = new System.Drawing.Size(979, 168);
             this.extPartsGroupBox.TabIndex = 1;
             this.extPartsGroupBox.TabStop = false;
             this.extPartsGroupBox.Text = "Доп. информ.";
@@ -704,98 +704,12 @@
             this.extPartsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extPartsDataGridView.Location = new System.Drawing.Point(3, 16);
             this.extPartsDataGridView.Name = "extPartsDataGridView";
-            this.extPartsDataGridView.Size = new System.Drawing.Size(965, 149);
+            this.extPartsDataGridView.Size = new System.Drawing.Size(973, 149);
             this.extPartsDataGridView.TabIndex = 2;
             this.extPartsDataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extPartsDataGridView_CellEndEdit);
             this.extPartsDataGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.extPartsDataGridView_CellFormatting);
             this.extPartsDataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.extPartsDataGridView_DataBindingComplete);
             this.extPartsDataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.extPartsDataGridView_RowsAdded);
-            // 
-            // extPartsStatusStrip
-            // 
-            this.extPartsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.progressBar});
-            this.extPartsStatusStrip.Location = new System.Drawing.Point(0, 168);
-            this.extPartsStatusStrip.Name = "extPartsStatusStrip";
-            this.extPartsStatusStrip.Size = new System.Drawing.Size(971, 22);
-            this.extPartsStatusStrip.TabIndex = 0;
-            this.extPartsStatusStrip.Text = "statusStrip1";
-            this.extPartsStatusStrip.Click += new System.EventHandler(this.extPartsStatusStrip_Click);
-            // 
-            // progressBar
-            // 
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(100, 16);
-            // 
-            // toolStripContainer1
-            // 
-            // 
-            // toolStripContainer1.ContentPanel
-            // 
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(150, 175);
-            this.toolStripContainer1.LeftToolStripPanelVisible = false;
-            this.toolStripContainer1.Location = new System.Drawing.Point(349, 182);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(150, 175);
-            this.toolStripContainer1.TabIndex = 0;
-            this.toolStripContainer1.Text = "toolStripContainer1";
-            this.toolStripContainer1.TopToolStripPanelVisible = false;
-            // 
-            // partsDGVContextMenuStrip
-            // 
-            this.partsDGVContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editSparePartToolStripMenuItem,
-            this.распечататьЦенникToolStripMenuItem,
-            this.посмотретьПередвижениеТовараToolStripMenuItem});
-            this.partsDGVContextMenuStrip.Name = "partsDGVContextMenuStrip";
-            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(265, 70);
-            // 
-            // editSparePartToolStripMenuItem
-            // 
-            this.editSparePartToolStripMenuItem.Name = "editSparePartToolStripMenuItem";
-            this.editSparePartToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
-            this.editSparePartToolStripMenuItem.Text = "Редактировать ";
-            this.editSparePartToolStripMenuItem.Click += new System.EventHandler(this.editSparePartToolStripMenuItem_Click);
-            // 
-            // распечататьЦенникToolStripMenuItem
-            // 
-            this.распечататьЦенникToolStripMenuItem.Name = "распечататьЦенникToolStripMenuItem";
-            this.распечататьЦенникToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
-            this.распечататьЦенникToolStripMenuItem.Text = "Распечатать ценник";
-            this.распечататьЦенникToolStripMenuItem.Click += new System.EventHandler(this.SpPriceListToExcelToolStripMenuItem_Click);
-            // 
-            // посмотретьПередвижениеТовараToolStripMenuItem
-            // 
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Name = "посмотретьПередвижениеТовараToolStripMenuItem";
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Text = "Посмотреть передвижение товара";
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Click += new System.EventHandler(this.посмотретьПередвижениеТовараToolStripMenuItem_Click);
-            // 
-            // userNameLabel
-            // 
-            this.userNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.userNameLabel.AutoSize = true;
-            this.userNameLabel.ContextMenuStrip = this.userContextMenuStrip;
-            this.userNameLabel.Location = new System.Drawing.Point(724, 0);
-            this.userNameLabel.Name = "userNameLabel";
-            this.userNameLabel.Size = new System.Drawing.Size(87, 13);
-            this.userNameLabel.TabIndex = 12;
-            this.userNameLabel.Text = "ФИ сотрудника";
-            // 
-            // userContextMenuStrip
-            // 
-            this.userContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editEmployeeToolStripMenuItem});
-            this.userContextMenuStrip.Name = "userContextMenuStrip";
-            this.userContextMenuStrip.Size = new System.Drawing.Size(173, 26);
-            // 
-            // editEmployeeToolStripMenuItem
-            // 
-            this.editEmployeeToolStripMenuItem.Name = "editEmployeeToolStripMenuItem";
-            this.editEmployeeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
-            this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
             // SupplierExtCol
             // 
@@ -902,12 +816,98 @@
             this.NoteExtCol.ReadOnly = true;
             this.NoteExtCol.Width = 104;
             // 
+            // extPartsStatusStrip
+            // 
+            this.extPartsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.progressBar});
+            this.extPartsStatusStrip.Location = new System.Drawing.Point(0, 168);
+            this.extPartsStatusStrip.Name = "extPartsStatusStrip";
+            this.extPartsStatusStrip.Size = new System.Drawing.Size(979, 22);
+            this.extPartsStatusStrip.TabIndex = 0;
+            this.extPartsStatusStrip.Text = "statusStrip1";
+            this.extPartsStatusStrip.Click += new System.EventHandler(this.extPartsStatusStrip_Click);
+            // 
+            // progressBar
+            // 
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(100, 16);
+            // 
+            // toolStripContainer1
+            // 
+            // 
+            // toolStripContainer1.ContentPanel
+            // 
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(150, 175);
+            this.toolStripContainer1.LeftToolStripPanelVisible = false;
+            this.toolStripContainer1.Location = new System.Drawing.Point(349, 182);
+            this.toolStripContainer1.Name = "toolStripContainer1";
+            this.toolStripContainer1.RightToolStripPanelVisible = false;
+            this.toolStripContainer1.Size = new System.Drawing.Size(150, 175);
+            this.toolStripContainer1.TabIndex = 0;
+            this.toolStripContainer1.Text = "toolStripContainer1";
+            this.toolStripContainer1.TopToolStripPanelVisible = false;
+            // 
+            // partsDGVContextMenuStrip
+            // 
+            this.partsDGVContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editSparePartToolStripMenuItem,
+            this.распечататьЦенникToolStripMenuItem,
+            this.посмотретьПередвижениеТовараToolStripMenuItem});
+            this.partsDGVContextMenuStrip.Name = "partsDGVContextMenuStrip";
+            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(265, 70);
+            // 
+            // editSparePartToolStripMenuItem
+            // 
+            this.editSparePartToolStripMenuItem.Name = "editSparePartToolStripMenuItem";
+            this.editSparePartToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.editSparePartToolStripMenuItem.Text = "Редактировать ";
+            this.editSparePartToolStripMenuItem.Click += new System.EventHandler(this.editSparePartToolStripMenuItem_Click);
+            // 
+            // распечататьЦенникToolStripMenuItem
+            // 
+            this.распечататьЦенникToolStripMenuItem.Name = "распечататьЦенникToolStripMenuItem";
+            this.распечататьЦенникToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.распечататьЦенникToolStripMenuItem.Text = "Распечатать ценник";
+            this.распечататьЦенникToolStripMenuItem.Click += new System.EventHandler(this.SpPriceListToExcelToolStripMenuItem_Click);
+            // 
+            // посмотретьПередвижениеТовараToolStripMenuItem
+            // 
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Name = "посмотретьПередвижениеТовараToolStripMenuItem";
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Text = "Посмотреть передвижение товара";
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Click += new System.EventHandler(this.посмотретьПередвижениеТовараToolStripMenuItem_Click);
+            // 
+            // userNameLabel
+            // 
+            this.userNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.userNameLabel.AutoSize = true;
+            this.userNameLabel.ContextMenuStrip = this.userContextMenuStrip;
+            this.userNameLabel.Location = new System.Drawing.Point(732, 0);
+            this.userNameLabel.Name = "userNameLabel";
+            this.userNameLabel.Size = new System.Drawing.Size(87, 13);
+            this.userNameLabel.TabIndex = 12;
+            this.userNameLabel.Text = "ФИ сотрудника";
+            // 
+            // userContextMenuStrip
+            // 
+            this.userContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editEmployeeToolStripMenuItem});
+            this.userContextMenuStrip.Name = "userContextMenuStrip";
+            this.userContextMenuStrip.Size = new System.Drawing.Size(173, 26);
+            // 
+            // editEmployeeToolStripMenuItem
+            // 
+            this.editEmployeeToolStripMenuItem.Name = "editEmployeeToolStripMenuItem";
+            this.editEmployeeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
+            this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(971, 733);
+            this.ClientSize = new System.Drawing.Size(979, 733);
             this.Controls.Add(this.userNameLabel);
             this.Controls.Add(this.dataSplitContainer);
             this.Controls.Add(this.componentPanel);

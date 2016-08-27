@@ -40,7 +40,7 @@ namespace PartsApp.Models
                 return 1;//(int)Types.Kgs;
 
             if (measureUnit == Types.Liter.ToDescription())
-                return 1;//(int)Types.Liter;
+                return 0.5f;//(int)Types.Liter;
 
             if (measureUnit == Types.Set.ToDescription())
                 return 1;//(int)Types.Set;

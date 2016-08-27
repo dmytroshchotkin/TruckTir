@@ -236,9 +236,9 @@ namespace PartsApp
                     //Заполняем вып. список новыми объектами.
                     searchSparePartsList.ForEach(sp => autoCompleteListBox.Items.Add(sp));                                                                     
 
-                    autoCompleteListBox.DisplayMember = (lastEditCell.OwningColumn == Title) ? "Title" : "Articul";
-                    autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
+                    autoCompleteListBox.DisplayMember = (lastEditCell.OwningColumn == Title) ? "Title" : "Articul";                    
                     autoCompleteListBox.Visible = true;
+                    autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
                 }//if
             }//if
         }//dataGridViewTextBoxCell_TextChanged

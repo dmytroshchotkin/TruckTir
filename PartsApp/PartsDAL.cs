@@ -348,7 +348,7 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@ContactInfoId", (contragent.ContactInfo != null) ? contragent.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description",    contragent.Description);
 
-            return (int)cmd.ExecuteScalar();
+            return Convert.ToInt32(cmd.ExecuteScalar());
         }//AddContragent
 
 

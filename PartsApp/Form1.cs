@@ -621,7 +621,6 @@ namespace PartsApp
                 //Если выделены только строки в partsDataGridView.
                 if (extPartsDataGridView.SelectedRows.Count == 0)
                     partsDataGridViewMarkupChange(markup);
-
                 else
                     extPartsDataGridViewMarkupChange(markup); //Если есть выделенные строки в extPartsDataGridView.
 
@@ -705,8 +704,18 @@ namespace PartsApp
             //Находим все SP с изменяемой наценкой. 
             foreach (DataGridViewRow row in extPartsDataGridView.SelectedRows)
             {
+                //SparePart sp1      = partsDataGridView.SelectedRows[0].DataBoundItem as SparePart;
+                //Availability availab = extPartsDataGridView.SelectedRows[0].DataBoundItem as Availability;
+
+                //if (sp1 == availab.OperationDetails.SparePart)
+                //{
+                //    MessageBox.Show("Yes");
+                //}//if
+
+                /*ERROR!!! Почему avail получается другой объект чем SparePart.Avail из осн. таблицы??*/
                 Availability avail = row.DataBoundItem as Availability;
                 avail.Markup = markup;
+
                 row.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
                 //Заполняем столбец 'Цена продажи' в главной таблице.
                 SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
@@ -946,6 +955,11 @@ namespace PartsApp
             extPartsDataGridView.ClearSelection();
         }//extPartsDataGridView_DataSourceChanged
 
+        /// <summary>
+        /// Метод для корректной binding-привязки вложенных эл-тов объекта.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void extPartsDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             DataGridView grid = (DataGridView)sender;
@@ -1040,7 +1054,7 @@ namespace PartsApp
         /// <param name="availabilityList">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
-            SpList = new SortableBindingList<SparePart>(SparePart.GetNewSparePartsList(spareParts));// SparePart.GetNewSparePartsList(spareParts);
+            SpList = new SortableBindingList<SparePart>(SparePart.GetNewSparePartsList(spareParts));
             origSpList = spareParts;
 
             BindingSource binding = new BindingSource();

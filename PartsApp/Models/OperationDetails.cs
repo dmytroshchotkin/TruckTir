@@ -24,6 +24,6 @@ namespace PartsApp.Models
             Price     = price;
         }//
 
-    }//OperationDetailsList
+    }//OperationDetails
 
 }//namespace
