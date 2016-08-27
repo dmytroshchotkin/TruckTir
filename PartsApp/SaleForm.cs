@@ -31,11 +31,11 @@ namespace PartsApp
         /// <summary>
         /// Последняя редактируемая ячейка.
         /// </summary>
-        DataGridViewCell lastEditCell;
+        DataGridViewCell _lastEditCell;
         /// <summary>
         /// Переменная для хранения инф-ции о том была ли ошибка редактирования ячейки.
         /// </summary>
-        bool isCellEditError = false;
+        bool _isCellEditError = false;
 
 
         public SaleForm()
@@ -165,15 +165,15 @@ namespace PartsApp
         /// <param name="e"></param> 
         private void saleDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            lastEditCell = saleDataGridView[e.ColumnIndex, e.RowIndex]; //запоминаем текущую ячейку как последнюю редактируемую.
+            _lastEditCell = saleDataGridView[e.ColumnIndex, e.RowIndex]; //запоминаем текущую ячейку как последнюю редактируемую.
 
             //Обрабатываем ввод в ячейку 'Название' или 'Артикул'.
-            if (lastEditCell.OwningColumn == Title || lastEditCell.OwningColumn == Articul)
-                autoCompleteListBox.Location = GetCellBelowLocation(lastEditCell); //устанавливаем позицию вып. списка.
+            if (_lastEditCell.OwningColumn == Title || _lastEditCell.OwningColumn == Articul)
+                autoCompleteListBox.Location = GetCellBelowLocation(_lastEditCell); //устанавливаем позицию вып. списка.
 
             //Обрабатываем ввод в ячейку 'Количествo'.
-            if (lastEditCell.OwningColumn == Count)
-                SetCustomValueToCell(lastEditCell, null); //очищаем ячейку для ввода значения пользователем.
+            if (_lastEditCell.OwningColumn == Count)
+                SetCustomValueToCell(_lastEditCell, null); //очищаем ячейку для ввода значения пользователем.
         }//saleDataGridView_CellBeginEdit
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace PartsApp
             {
                 //Находим подходящий по вводу товар.                
                 List<int> sparePartsIdList = saleDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (r.Tag as SparePart).SparePartId).ToList(); //Id-ки уже введенного товара.
-                List<SparePart>  searchSparePartsList = (lastEditCell.OwningColumn == Title) 
+                List<SparePart>  searchSparePartsList = (_lastEditCell.OwningColumn == Title) 
                                     ? PartsDAL.SearchSparePartsAvaliablityByTitle(textBox.Text.Trim(), 10, sparePartsIdList)
                                     : PartsDAL.SearchSparePartsAvaliablityByArticul(textBox.Text.Trim(), 10, sparePartsIdList);
 
@@ -236,7 +236,7 @@ namespace PartsApp
                     //Заполняем вып. список новыми объектами.
                     searchSparePartsList.ForEach(sp => autoCompleteListBox.Items.Add(sp));                                                                     
 
-                    autoCompleteListBox.DisplayMember = (lastEditCell.OwningColumn == Title) ? "Title" : "Articul";                    
+                    autoCompleteListBox.DisplayMember = (_lastEditCell.OwningColumn == Title) ? "Title" : "Articul";                    
                     autoCompleteListBox.Visible = true;
                     autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
                 }//if
@@ -245,7 +245,7 @@ namespace PartsApp
 
         private void saleDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (!isCellEditError)
+            if (!_isCellEditError)
             {
                 DataGridViewCell cell = saleDataGridView[e.ColumnIndex, e.RowIndex];
 
@@ -261,10 +261,10 @@ namespace PartsApp
         private void saleDataGridView_SelectionChanged(object sender, EventArgs e)
         {
             //Если ошибка редактирования ячейки 'Title' или 'Articul', то возвращаем фокус обратно на ячейку (фокус теряется при выборе из вып. списка).
-            if (isCellEditError == true)
+            if (_isCellEditError == true)
             {
-                isCellEditError = false;
-                saleDataGridView.CurrentCell = lastEditCell;
+                _isCellEditError = false;
+                saleDataGridView.CurrentCell = _lastEditCell;
 
                 //Включаем режим редактирования ячейки, не инициируя при этом соотв. события.
                 saleDataGridView.CellBeginEdit -= saleDataGridView_CellBeginEdit;
@@ -274,7 +274,7 @@ namespace PartsApp
                 saleDataGridView.EditingControlShowing += saleDataGridView_EditingControlShowing;
 
                 //ставим каретку в конец текста. 
-                TextBox textBoxCell = lastEditCell.Tag as TextBox;
+                TextBox textBoxCell = _lastEditCell.Tag as TextBox;
                 textBoxCell.SelectionStart = textBoxCell.Text.Length;
             }//if
         }//saleDataGridView_SelectionChanged
@@ -345,19 +345,19 @@ namespace PartsApp
                     else  //если выбор не из вып. списка.
                     {
                         toolTip.Show("Выберите товар из списка.", this, GetCellBelowLocation(cell), 1000);
-                        isCellEditError = true;
+                        _isCellEditError = true;
                         autoCompleteListBox.Visible = true;
                     }//else
                 }//if
                 else
                 {
                     toolTip.Show("Нет такого товара в наличии.", this, GetCellBelowLocation(cell), 1000);
-                    isCellEditError = true;
+                    _isCellEditError = true;
                 }//else
             }//if
 
             //Если нет ошибки редактирования ячейки, то отписываем editing control от событий обработки ввода.
-            if (!isCellEditError)
+            if (!_isCellEditError)
             {                
                 TextBox textBoxCell = cell.Tag as TextBox;
                 textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;
@@ -722,7 +722,7 @@ namespace PartsApp
         /// </summary>
         private void KeyDownPress()
         {
-            isCellEditError = true;
+            _isCellEditError = true;
             //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
             if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
                 autoCompleteListBox.ClearSelected();
@@ -735,7 +735,7 @@ namespace PartsApp
         /// </summary>
         private void KeyUpPress()
         {
-            isCellEditError = true;
+            _isCellEditError = true;
             //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
             if (autoCompleteListBox.SelectedIndex == -1)
             {
@@ -750,7 +750,7 @@ namespace PartsApp
             }//else
 
             //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставится в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусственно и ставим каретку в конец строки.                               
-            if (lastEditCell.OwningRow.Index == 0)
+            if (_lastEditCell.OwningRow.Index == 0)
                 saleDataGridView_SelectionChanged(null, null);
         }//KeyUpPress
 
@@ -767,7 +767,7 @@ namespace PartsApp
         /// <param name="e"></param>
         private void autoCompleteListBox_MouseHover(object sender, EventArgs e)
         {
-            isCellEditError = true;
+            _isCellEditError = true;
         }//autoCompleteListBox_MouseHover
 
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
@@ -776,13 +776,13 @@ namespace PartsApp
             {
                 //Возвращаем фокус на ячейку для кот. выводится вып. список.                
                 saleDataGridView_SelectionChanged(null, null);
-                isCellEditError = true;
+                _isCellEditError = true;
             }//if
             else
             {
                 //Делаем автозаполнение строки, выбранным объектом.   
-                isCellEditError = false;
-                saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));                
+                _isCellEditError = false;
+                saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));                
             }//else
         }//autoCompleteListBox_MouseDown
 
@@ -884,8 +884,8 @@ namespace PartsApp
         private Point GetExtCellBelowLocation(DataGridViewCell cell)
         {
             Point cellLoc = extDataGridView.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
-            Point dgvLoc = extDataGridView.Location;
-            Point gbLoc = extGroupBox.Location;
+            Point dgvLoc  = extDataGridView.Location;
+            Point gbLoc   = extGroupBox.Location;
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);
         }//GetCellBelowLocation
 

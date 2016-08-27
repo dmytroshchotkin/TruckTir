@@ -307,7 +307,7 @@ namespace PartsApp
             //    textChangedEvent = true; 
                 isCellEditError = false; 
                 //dataGridViewTextBoxCell_PreviewKeyDown(textBoxCell, new PreviewKeyDownEventArgs(Keys.Enter));
-                //purchaseDataGridView.Rows[lastEditCell.RowIndex + 1].Cells["Title"].Selected = true;
+                //purchaseDataGridView.Rows[_lastEditCell.RowIndex + 1].Cells["Title"].Selected = true;
                 purchaseDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));
             }
         }
@@ -628,7 +628,7 @@ namespace PartsApp
             {
                 isCellEditError = false;
                 purchaseDataGridView.CurrentCell = lastEditCell;                
-                //if (lastEditCell.ReadOnly) lastEditCell.ReadOnly = false;
+                //if (_lastEditCell.ReadOnly) _lastEditCell.ReadOnly = false;
 
                 purchaseDataGridView.CellBeginEdit -= purchaseDataGridView_CellBeginEdit;
                 purchaseDataGridView.EditingControlShowing -= purchaseDataGridView_EditingControlShowing;
