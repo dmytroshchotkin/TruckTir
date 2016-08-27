@@ -827,7 +827,7 @@ namespace PartsApp
             //Если редактировалась колонка "Кол-во". хотя по идее все остальные readOnly.
             if (extDataGridView.Columns[e.ColumnIndex] == extCount)
             {
-                DataGridViewRow row = lastEditCell.OwningRow;
+                DataGridViewRow row = saleDataGridView.CurrentRow;
                 DataGridViewCell extCountCell = extDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 DataGridViewCell countCell = row.Cells[Count.Index];
                 //Проверяем корректность ввода.
