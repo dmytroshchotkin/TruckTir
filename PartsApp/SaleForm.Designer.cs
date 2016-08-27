@@ -82,7 +82,6 @@
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Markup = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SellingPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).BeginInit();
@@ -308,7 +307,6 @@
             this.Title,
             this.Unit,
             this.Count,
-            this.Markup,
             this.SellingPrice,
             this.Sum});
             this.saleDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -620,14 +618,6 @@
             this.Count.ToolTipText = "Количество";
             this.Count.Width = 66;
             // 
-            // Markup
-            // 
-            this.Markup.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Markup.HeaderText = "Наценка";
-            this.Markup.Name = "Markup";
-            this.Markup.Visible = false;
-            this.Markup.Width = 76;
-            // 
             // SellingPrice
             // 
             this.SellingPrice.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
@@ -755,7 +745,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Title;
         private System.Windows.Forms.DataGridViewTextBoxColumn Unit;
         private System.Windows.Forms.DataGridViewTextBoxColumn Count;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Markup;
         private System.Windows.Forms.DataGridViewTextBoxColumn SellingPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn Sum;
     }
