@@ -523,8 +523,6 @@ namespace PartsApp
                 DataGridViewRow row = extDataGridView.Rows[rowIndx];
 
                 row.Cells[extSupplier.Index].Value      = avail.OperationDetails.Operation.Contragent.ContragentName;
-                row.Cells[extTitle.Index].Value         = avail.OperationDetails.SparePart.Title;
-                row.Cells[extArticul.Index].Value       = avail.OperationDetails.SparePart.Articul;
                 row.Cells[extUnit.Index].Value          = avail.OperationDetails.SparePart.MeasureUnit;
                 row.Cells[extStorageAdress.Index].Value = avail.StorageAddress;
                 row.Cells[extPrice.Index].Value         = avail.OperationDetails.Price;
