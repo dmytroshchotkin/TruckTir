@@ -224,7 +224,7 @@ namespace PartsApp
             if (!String.IsNullOrWhiteSpace(textBox.Text))
             {
                 //Находим подходящий по вводу товар.                
-                List<int> sparePartsIdList = saleDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (int)r.Cells[SparePartId.Index].Value).ToList(); //Id-ки уже введенного товара.
+                List<int> sparePartsIdList = saleDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (r.Tag as SparePart).SparePartId).ToList(); //Id-ки уже введенного товара.
                 List<SparePart>  searchSparePartsList = (lastEditCell.OwningColumn == Title) 
                                     ? PartsDAL.SearchSparePartsAvaliablityByTitle(textBox.Text.Trim(), 10, sparePartsIdList)
                                     : PartsDAL.SearchSparePartsAvaliablityByArticul(textBox.Text.Trim(), 10, sparePartsIdList);
@@ -306,11 +306,9 @@ namespace PartsApp
             //Удаляем все выбранные строки и соотв. им объекты.
             foreach (DataGridViewRow row in saleDataGridView.SelectedRows)
             {
-                DataGridViewCell sparePartIdCell = row.Cells[SparePartId.Index];
-
                 //Если строка не пустая, очищаем соотв ей список приходов.
-                if (sparePartIdCell.Value != null)
-                    _operDetList.RemoveAll(od => od.SparePart.SparePartId == (int)sparePartIdCell.Value); //Очищаем список от соотв. объектов.
+                if (row.Tag != null)
+                    _operDetList.RemoveAll(od => od.SparePart.SparePartId == (row.Tag as SparePart).SparePartId); //Очищаем список от соотв. объектов.
 
                 //Если это не последняя строка (предназнач. для ввода нового товара в список), удаляем её.
                 if (row.Index != saleDataGridView.Rows.Count-1)
@@ -386,7 +384,7 @@ namespace PartsApp
                 SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
 
                 //Возвращаем дефолтные значения во всех строках доп. таблицы.
-                SetDefaultValuesToExtDataGridView(Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value));
+                SetDefaultValuesToExtDataGridView((cell.OwningRow.Tag as SparePart).SparePartId);
             }//else
             FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
         }//CountCellFilled
@@ -405,8 +403,8 @@ namespace PartsApp
                     if (price == 0) 
                         throw new Exception();  //ввод нуля также является ошибкой.
 
-                    int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
-                    SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (int)r.Cells[SparePartId.Index].Value == sparePartId).Tag as SparePart;
+                    int sparePartId = (cell.OwningRow.Tag as SparePart).SparePartId;
+                    SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (r.Tag as SparePart).SparePartId == sparePartId).Tag as SparePart;
                     //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
                     if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= price))
                         if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
@@ -496,7 +494,6 @@ namespace PartsApp
         {
             row.Tag = sparePart;
 
-            row.Cells[SparePartId.Index].Value = sparePart.SparePartId;
             row.Cells[Title.Index].Value = sparePart.Title;
             row.Cells[Articul.Index].Value = sparePart.Articul;
             row.Cells[Unit.Index].Value = sparePart.MeasureUnit;
@@ -585,7 +582,7 @@ namespace PartsApp
         {
             //Узнаем введенное кол-во в saleDGV.
             float sellCount = Convert.ToSingle(cell.Value);
-            int sparePartId = Convert.ToInt32(cell.OwningRow.Cells[SparePartId.Index].Value);
+            int sparePartId = (cell.OwningRow.Tag as SparePart).SparePartId;
             //Очищаем все записи с соотв. SparePartId из списка приходов.
             _operDetList.RemoveAll(od => od.SparePart.SparePartId == sparePartId);
             
@@ -630,7 +627,7 @@ namespace PartsApp
             {
                 if (sellCount > 0)
                 {
-                    SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (int)r.Cells[SparePartId.Index].Value == sparePartId).Tag as SparePart;                   
+                    SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (r.Tag as SparePart).SparePartId == sparePartId).Tag as SparePart;                   
                     IOperation purch = sparePart.AvailabilityList.First(av => av.OperationDetails.Operation.OperationId == purchaseId).OperationDetails.Operation;
                     
                     _operDetList.Add(new OperationDetails(sparePart, purch, sellCount, 0));
@@ -831,7 +828,7 @@ namespace PartsApp
                 DataGridViewCell extCountCell = extDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 DataGridViewCell countCell = row.Cells[Count.Index];
                 //Проверяем корректность ввода.
-                int sparePartId = Convert.ToInt32(row.Cells[SparePartId.Index].Value);
+                int sparePartId = (row.Tag as SparePart).SparePartId;
                 string measureUnit = extCountCell.OwningRow.Cells[extUnit.Index].Value.ToString();                
                 if (IsCountCellValueCorrect(extCountCell, measureUnit))
                 {

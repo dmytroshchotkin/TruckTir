@@ -77,7 +77,6 @@
             this.extPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.extMarkup = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.extSellingPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SparePartId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Articul = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -302,7 +301,6 @@
             this.saleDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.saleDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.saleDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.SparePartId,
             this.Articul,
             this.Title,
             this.Unit,
@@ -581,12 +579,6 @@
             this.extSellingPrice.ReadOnly = true;
             this.extSellingPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // SparePartId
-            // 
-            this.SparePartId.HeaderText = "Ид";
-            this.SparePartId.Name = "SparePartId";
-            this.SparePartId.Visible = false;
-            // 
             // Articul
             // 
             this.Articul.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
@@ -740,7 +732,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn extPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn extMarkup;
         private System.Windows.Forms.DataGridViewTextBoxColumn extSellingPrice;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SparePartId;
         private System.Windows.Forms.DataGridViewTextBoxColumn Articul;
         private System.Windows.Forms.DataGridViewTextBoxColumn Title;
         private System.Windows.Forms.DataGridViewTextBoxColumn Unit;
