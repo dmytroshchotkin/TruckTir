@@ -67,7 +67,7 @@ namespace PartsApp
         }//SellerTextBox_PreviewKeyDown
 
         private void customerTextBox_Leave(object sender, EventArgs e)
-        {
+        {            
             if (String.IsNullOrWhiteSpace(customerTextBox.Text))
             {
                 customerBackPanel.BackColor = customerStarLabel.ForeColor = Color.Red;
@@ -78,9 +78,13 @@ namespace PartsApp
             {
                 customerStarLabel.ForeColor = Color.Black;
                 customerBackPanel.BackColor = SystemColors.Control;
-                //если такой клиен в базе отсутствует, выводим сообщение об этом.
-                if (!customerTextBox.AutoCompleteCustomSource.Contains(customerTextBox.Text.Trim()))
+                                
+                //Если такой клиен в базе отсутствует, выводим сообщение об этом.
+                string customer = customerTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == customerTextBox.Text.Trim().ToLower());
+                if (customer == null)
                     toolTip.Show("Такого клиента нет в базе! Он будет добавлен.", this, customerBackPanel.Location, 2000);
+                else
+                    customerTextBox.Text = customer; //Выводим корректное имя контрагента. 
             }//else            
         }//customerTextBox_Leave
 
@@ -99,7 +103,6 @@ namespace PartsApp
             }//else
         }//sellerTextBox_Leave
 
-        
 
 
 
