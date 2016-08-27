@@ -404,7 +404,9 @@ namespace PartsApp
                     //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
                     if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= price))
                         if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
-                            throw new Exception();                    
+                            throw new Exception();
+
+                    cell.Value = price; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
                 }//try
                 catch
                 {
