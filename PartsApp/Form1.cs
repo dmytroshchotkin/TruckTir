@@ -924,7 +924,7 @@ namespace PartsApp
             object header = dataGridView.Rows[index].HeaderCell.Value;
             if (header == null || !header.Equals(indexStr))
                 dataGridView.Rows[index].HeaderCell.Value = indexStr;
-        }//partsDataGridView_RowPrePaint
+        }//purchaseDataGridView_RowPrePaint
 
         private void partsDataGridView_Sorted(object sender, EventArgs e)
         {

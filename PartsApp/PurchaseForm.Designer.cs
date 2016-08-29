@@ -182,7 +182,7 @@
             this.purchaseDataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.purchaseDataGridView_CellEndEdit);
             this.purchaseDataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.purchaseDataGridView_CellMouseClick);
             this.purchaseDataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.purchaseDataGridView_EditingControlShowing);
-            this.purchaseDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.partsDataGridView_RowPrePaint);
+            this.purchaseDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.purchaseDataGridView_RowPrePaint);
             this.purchaseDataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.purchaseDataGridView_RowsAdded);
             this.purchaseDataGridView.SelectionChanged += new System.EventHandler(this.purchaseDataGridView_SelectionChanged);
             // 

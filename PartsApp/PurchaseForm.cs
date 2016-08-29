@@ -135,20 +135,26 @@ namespace PartsApp
         #endregion
 
         /*Нумерация строк purchaseDataGridView*/
-        private void partsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        private void purchaseDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
-            DataGridView dataGridView = sender as DataGridView;
-            int index = e.RowIndex;
-            string indexStr = (index + 1).ToString();
-            object header = dataGridView.Rows[index].HeaderCell.Value;
-            if (header == null || !header.Equals(indexStr))
-                dataGridView.Rows[index].HeaderCell.Value = indexStr;
+            //Нумерация строк.
+            DataGridView dgv = sender as DataGridView;
 
-             
+            //Если RowHeadersCell не заполнена или индекс строки изменен, присваиваем новый номер строке.
+            string rowNumber = (e.RowIndex + 1).ToString();
+            object headerCellValue = dgv.Rows[e.RowIndex].HeaderCell.Value;
+            if (headerCellValue == null || headerCellValue.ToString() != rowNumber)
+            {
+                dgv.Rows[e.RowIndex].HeaderCell.Value = rowNumber;
 
-/*!!!*/      if (index+1 == 10)    //предусмотрен вариант расширения столбца нумерации строк только до 2 цифр!
-                purchaseDataGridView.RowHeadersWidth = 41 + 7; //((i - 1) * 7); //41 - изначальный размер RowHeaders
-        }//partsDataGridView_RowPrePaint
+                //Если необходимо меняем ширину RowHeaders в зависимости от кол-ва строк в таблице.
+                int defaultRowHeadersWidth = 41;
+                int oneDigitWidth = 7; //Ширина одного разряда числа (определена методом тыка).
+                int newRowHeadersWidth = defaultRowHeadersWidth + (oneDigitWidth * (dgv.Rows.Count.ToString().Length - 1));
+                if (dgv.RowHeadersWidth != newRowHeadersWidth) //Проверка необходима, потому что изменение RowHeadersWidth приводит к инициированию события OnPaint, а сл-но к бесконечному циклу. 
+                    dgv.RowHeadersWidth = newRowHeadersWidth;
+            }//if
+        }//purchaseDataGridView_RowPrePaint
 
         #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
