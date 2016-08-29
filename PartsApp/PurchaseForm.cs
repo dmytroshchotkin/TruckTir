@@ -178,19 +178,19 @@ namespace PartsApp
         //Событие для добавления обработчиков на ввод текста в клетку. //
         private void purchaseDataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {            
-            DataGridViewTextBoxCell cell = (DataGridViewTextBoxCell)purchaseDataGridView.CurrentCell;
+            DataGridViewCell cell = purchaseDataGridView.CurrentCell;
 
-            //
-            if (cell.OwningColumn.Name == "Title" || cell.OwningColumn.Name == "Articul")
+            if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
             {
-                textBoxCell = e.Control as TextBox;
-                //if (textBoxCell != null) //Нужна ли эта проверка?
-                if (previewKeyDownEvent == false)
+                //Если ячейка редактируется первый раз, подписываем её на события обработки ввода.
+                if (cell.Tag == null)
                 {
-                    previewKeyDownEvent = true;
+                    TextBox textBoxCell = e.Control as TextBox;
+                    cell.Tag = textBoxCell; //Запоминаем editing control в Tag ячейки.
+
                     textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
-                    textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
-                }
+                    textBoxCell.TextChanged    += new EventHandler(dataGridViewTextBoxCell_TextChanged);
+                }//if
             }//if
         }//purchaseDataGridView_EditingControlShowing
 
