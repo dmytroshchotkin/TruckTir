@@ -97,9 +97,13 @@ namespace PartsApp
             {
                 supplierStarLabel.ForeColor = Color.Black;
                 supplierBackPanel.BackColor = SystemColors.Control;
-                //если такой клиен в базе отсутствует, выводим сообщение об этом.
-                if (!supplierTextBox.AutoCompleteCustomSource.Contains(supplierTextBox.Text.Trim()))
-                    toolTip.Show("Такого поставщика нет в базе! Он будет добавлен.", this, supplierBackPanel.Location, 2000);
+
+                //Если такой контрагент в базе отсутствует, выводим сообщение об этом.
+                string supplier = supplierTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == supplierTextBox.Text.Trim().ToLower());
+                if (supplier == null)
+                    toolTip.Show("Такого клиента нет в базе! Он будет добавлен.", this, supplierBackPanel.Location, 2000);
+                else
+                    supplierTextBox.Text = supplier; //Выводим корректное имя контрагента.
             }//else  
         }//supplierTextBox_Leave
 

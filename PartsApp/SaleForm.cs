@@ -78,7 +78,7 @@ namespace PartsApp
             {
                 customerStarLabel.ForeColor = Color.Black;
                 customerBackPanel.BackColor = SystemColors.Control;
-                                
+      
                 //Если такой клиен в базе отсутствует, выводим сообщение об этом.
                 string customer = customerTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == customerTextBox.Text.Trim().ToLower());
                 if (customer == null)
