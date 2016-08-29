@@ -12,13 +12,18 @@ using PartsApp.Models;
 
 namespace PartsApp
 {
+    /*Задания*/
+    //Убрать столбец extPrice из доп. таблицы.
+    //Задать форматы столбцов через дизайнер.
+    //Передавать inTotal в метод распечатки в Excel.
+
     public partial class PurchaseForm : Form
     {
         IList<SparePart> spareParts = new List<SparePart>();
 
         IList<SparePart> searchSparePartsList = new List<SparePart>();
         bool isCellEditError = false;
-        DataGridViewCell lastEditCell;
+        DataGridViewCell _lastEditCell;
 
         TextBox textBoxCell;
         bool textChangedEvent = false;
@@ -151,20 +156,23 @@ namespace PartsApp
 /*!!!*/      purchaseDataGridView.Rows[e.RowIndex].Cells["Price"].ReadOnly = purchaseDataGridView.Rows[e.RowIndex].Cells["Count"].ReadOnly = true;
         }//purchaseDataGridView_RowsAdded
 
-        #region Обработка событий добавления товара в список.
+        #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /*События идут в порядке их возможного вызова.*/
 
-        // Событие для установки listBox в нужную позицию. //
+        /// <summary>
+        /// Событие для установки listBox в нужную позицию.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void purchaseDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            DataGridViewCell cell = (sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex];
-            lastEditCell = cell;
-            if (cell.OwningColumn.Name == "Title" || cell.OwningColumn.Name == "Articul")
-            {
-                autoCompleteListBox.Location = GetCellBelowLocation(cell);               
-            }                    
+            _lastEditCell = purchaseDataGridView[e.ColumnIndex, e.RowIndex]; //запоминаем текущую ячейку как последнюю редактируемую.
+
+            //Обрабатываем ввод в ячейку 'Название' или 'Артикул'.
+            if (_lastEditCell.OwningColumn == Title || _lastEditCell.OwningColumn == Articul)
+                autoCompleteListBox.Location = GetCellBelowLocation(_lastEditCell); //устанавливаем позицию вып. списка.
         }//purchaseDataGridView_CellBeginEdit
 
         //Событие для добавления обработчиков на ввод текста в клетку. //
@@ -231,7 +239,7 @@ namespace PartsApp
                 }//if
                 else autoCompleteListBox.SelectedIndex -= 1;
                 //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставитс в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусствунно и ставим каретку в конец строки.                               
-                if (lastEditCell.OwningRow.Index == 0) 
+                if (_lastEditCell.OwningRow.Index == 0) 
                     purchaseDataGridView_SelectionChanged(sender, null); 
 
                 return;
@@ -257,16 +265,16 @@ namespace PartsApp
             /* Эта проверка нужна потому что в редких случаях по непонятным причинам TextChanged срабатывает на столбцы Count или др. на которых работать не должен
                 Это случается когда вводишь что-то в столбец Title, а потом стираешь до пустой строки и вводишь что-то в столбец Count.*/
             /*!!!*/
-            if (lastEditCell.OwningColumn.Index != Title.Index && lastEditCell.OwningColumn.Index != Articul.Index)
+            if (_lastEditCell.OwningColumn.Index != Title.Index && _lastEditCell.OwningColumn.Index != Articul.Index)
                     return;
             
             TextBox textBox = (TextBox)sender;
             if (String.IsNullOrEmpty(textBox.Text) == false)
             {
                 IList<int> sparePartsIdList = spareParts.Select(sp => sp.SparePartId).ToList(); //Находим список всех уже введенных в таблицу Id товаров.
-                if (lastEditCell.OwningColumn.Index == Title.Index)
+                if (_lastEditCell.OwningColumn.Index == Title.Index)
                     searchSparePartsList = PartsDAL.SearchSparePartsByTitle(textBox.Text, 10, sparePartsIdList);
-                else if (lastEditCell.OwningColumn.Index == Articul.Index)
+                else if (_lastEditCell.OwningColumn.Index == Articul.Index)
                     searchSparePartsList = PartsDAL.SearchSparePartsByArticul(textBox.Text, 10, sparePartsIdList);
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
@@ -275,9 +283,9 @@ namespace PartsApp
                     string str = null;
                     foreach (var sparePart in searchSparePartsList)
                     {
-                        if (lastEditCell.OwningColumn.Index == Title.Index)
+                        if (_lastEditCell.OwningColumn.Index == Title.Index)
                             str = sparePart.Title + "     " + sparePart.Articul;
-                        else if (lastEditCell.OwningColumn.Index == Articul.Index)
+                        else if (_lastEditCell.OwningColumn.Index == Articul.Index)
                                str = sparePart.Articul + "     " + sparePart.Title;
 
 /*!!!! Ошибка!*/        autoCompleteListBox.Items.Add(str);
@@ -312,7 +320,7 @@ namespace PartsApp
                 isCellEditError = false; 
                 //dataGridViewTextBoxCell_PreviewKeyDown(textBoxCell, new PreviewKeyDownEventArgs(Keys.Enter));
                 //purchaseDataGridView.Rows[_lastEditCell.RowIndex + 1].Cells["Title"].Selected = true;
-                purchaseDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(lastEditCell.ColumnIndex, lastEditCell.RowIndex));
+                purchaseDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));
             }
         }
 
@@ -426,7 +434,7 @@ namespace PartsApp
                                         if (DialogResult.OK == new AddSparePartForm().ShowDialog(this))
                                         {
                                             //Если единица товара добавлена в базу.
-                                            lastEditCell.Value = null;
+                                            _lastEditCell.Value = null;
                                             isCellEditError = true;
                                             return;
                                         }//if
@@ -466,7 +474,7 @@ namespace PartsApp
                                     {
                                         //Если единица товара добавлена в базу.
                                         autoCompleteListBox.Visible = true;
-                                        lastEditCell.Value = null;
+                                        _lastEditCell.Value = null;
                                         isCellEditError = true;
                                         if (previewKeyDownEvent == false)
                                         {
@@ -510,7 +518,7 @@ namespace PartsApp
                         if (DialogResult.OK == new AddSparePartForm().ShowDialog(this))
                         {
                             //Если единица товара добавлена в базу.
-                            lastEditCell.Value = null;
+                            _lastEditCell.Value = null;
                             isCellEditError = true;
                             return;
                         }
@@ -518,7 +526,7 @@ namespace PartsApp
                         {
                             // Если единица товара не добавлена в базу.
                             //textBoxCell.Clear();
-                            lastEditCell.Value = null;
+                            _lastEditCell.Value = null;
                             isCellEditError = true;
                             return;
                         }
@@ -528,7 +536,7 @@ namespace PartsApp
                     {
                         //Если выбран вариант не добавлять единицу товара в базу данных.
                         //textBoxCell.Clear();
-                        lastEditCell.Value = null;
+                        _lastEditCell.Value = null;
                         isCellEditError = true;
                         return;
                     }                
@@ -584,7 +592,7 @@ namespace PartsApp
                 //Очищаем ввод.
                 cell.Value = null;
                 isCellEditError = true;
-                lastEditCell = cell;
+                _lastEditCell = cell;
             }//catch
             #endregion
             //Если ред-ся цена продажи.
@@ -631,7 +639,7 @@ namespace PartsApp
             if (isCellEditError == true)
             {
                 isCellEditError = false;
-                purchaseDataGridView.CurrentCell = lastEditCell;                
+                purchaseDataGridView.CurrentCell = _lastEditCell;                
                 //if (_lastEditCell.ReadOnly) _lastEditCell.ReadOnly = false;
 
                 purchaseDataGridView.CellBeginEdit -= purchaseDataGridView_CellBeginEdit;
@@ -660,14 +668,14 @@ namespace PartsApp
             }//if
             else
             {
-                int sparePartId = Convert.ToInt32(lastEditCell.OwningRow.Cells[SparePartId.Index].Value);
+                int sparePartId = Convert.ToInt32(_lastEditCell.OwningRow.Cells[SparePartId.Index].Value);
                 spareParts.Remove(spareParts.First(sp => sp.SparePartId == sparePartId)); //Удаляем объект из списка.                
                 //исправляем "Итого".
-                if (lastEditCell.OwningRow.Cells[Sum.Index].Value != null)
-                    inTotal -= Convert.ToDouble((lastEditCell.OwningRow.Cells[Sum.Index].Value));
+                if (_lastEditCell.OwningRow.Cells[Sum.Index].Value != null)
+                    inTotal -= Convert.ToDouble((_lastEditCell.OwningRow.Cells[Sum.Index].Value));
 
                 //Удаляем строку.
-                purchaseDataGridView.Rows.Remove(lastEditCell.OwningRow);
+                purchaseDataGridView.Rows.Remove(_lastEditCell.OwningRow);
             }//else
 
             //Выводим "Итого".
@@ -1157,12 +1165,12 @@ namespace PartsApp
                         purchaseDataGridView.SelectAll();
                     else
                     {
-                        lastEditCell = purchaseDataGridView.Rows[e.RowIndex].HeaderCell;
+                        _lastEditCell = purchaseDataGridView.Rows[e.RowIndex].HeaderCell;
                         //Если строка пустая не делаем ничего.
-                        if (lastEditCell.OwningRow.Cells[SparePartId.Index].Value == null) 
+                        if (_lastEditCell.OwningRow.Cells[SparePartId.Index].Value == null) 
                             return;
 
-                        lastEditCell.OwningRow.Selected = true;
+                        _lastEditCell.OwningRow.Selected = true;
                     }//else
 
                     Point location = purchaseDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true).Location;

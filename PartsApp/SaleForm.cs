@@ -15,7 +15,6 @@ namespace PartsApp
 {
     /*Задания*/
     //Убрать столбец extPrice из доп. таблицы.
-    //Задать форматы столбцов через дизайнер.
     //Передавать inTotal в метод распечатки в Excel.
 
     public partial class SaleForm : Form
@@ -1226,6 +1225,7 @@ namespace PartsApp
 
 
         #endregion
+
 
         /// <summary>
         /// Возвращает объект типа Sale, созданный из данных формы.
