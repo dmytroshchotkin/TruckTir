@@ -218,43 +218,27 @@ namespace PartsApp
 
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
-            if (textChangedEvent == false) return;
-
-            /* Эта проверка нужна потому что в редких случаях по непонятным причинам TextChanged срабатывает на столбцы Count или др. на которых работать не должен
-                Это случается когда вводишь что-то в столбец Title, а потом стираешь до пустой строки и вводишь что-то в столбец Count.*/
-            /*!!!*/
-            if (_lastEditCell.OwningColumn.Index != Title.Index && _lastEditCell.OwningColumn.Index != Articul.Index)
-                    return;
-            
             TextBox textBox = (TextBox)sender;
             if (String.IsNullOrEmpty(textBox.Text) == false)
             {
-                IList<int> sparePartsIdList = spareParts.Select(sp => sp.SparePartId).ToList(); //Находим список всех уже введенных в таблицу Id товаров.
-                if (_lastEditCell.OwningColumn.Index == Title.Index)
-                    searchSparePartsList = PartsDAL.SearchSparePartsByTitle(textBox.Text, 10, sparePartsIdList);
-                else if (_lastEditCell.OwningColumn.Index == Articul.Index)
-                    searchSparePartsList = PartsDAL.SearchSparePartsByArticul(textBox.Text, 10, sparePartsIdList);
+                //Находим подходящий по вводу товар.
+                List<int> existingSparePartsIdsList = purchaseDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (r.Tag as SparePart).SparePartId).ToList(); //Id-ки уже введенного товара.
+                List<SparePart>  searchSparePartsList = (_lastEditCell.OwningColumn == Title) 
+                    ? searchSparePartsList = PartsDAL.SearchSparePartsByTitle(textBox.Text, 10, existingSparePartsIdsList)
+                    : searchSparePartsList = PartsDAL.SearchSparePartsByArticul(textBox.Text, 10, existingSparePartsIdsList);
+
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
                 {
                     autoCompleteListBox.Items.Clear();
-                    string str = null;
-                    foreach (var sparePart in searchSparePartsList)
-                    {
-                        if (_lastEditCell.OwningColumn.Index == Title.Index)
-                            str = sparePart.Title + "     " + sparePart.Articul;
-                        else if (_lastEditCell.OwningColumn.Index == Articul.Index)
-                               str = sparePart.Articul + "     " + sparePart.Title;
+                    //Заполняем вып. список новыми объектами.
+                    searchSparePartsList.ForEach(sp => autoCompleteListBox.Items.Add(sp));
 
-/*!!!! Ошибка!*/        autoCompleteListBox.Items.Add(str);
-                    }//foreach                                                                        
-
-                    autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
+                    autoCompleteListBox.DisplayMember = (_lastEditCell.OwningColumn == Title) ? "Title" : "Articul";
                     autoCompleteListBox.Visible = true;
+                    autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
                 }//if
-                else autoCompleteListBox.Visible = false; //Если ничего не найдено, убрать вып. список.
             }//if
-            else autoCompleteListBox.Visible = false; //Если ничего не введено, убрать вып. список.
         }//dataGridViewTextBoxCell_TextChanged
 
         private void autoCompleteListBox_MouseHover(object sender, EventArgs e)

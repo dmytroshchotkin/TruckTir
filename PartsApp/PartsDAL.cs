@@ -2478,9 +2478,9 @@ namespace PartsApp
         /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
         /// <param name="withoutIDs">Список Id товара который не должен входить в результирующий список.</param>
         /// <returns></returns>
-        public static IList<SparePart> SearchSparePartsByTitle(string title, int limit, IList<int> withoutIDs)
+        public static List<SparePart> SearchSparePartsByTitle(string title, int limit, IList<int> withoutIDs)
         {
-            IList<SparePart> spareParts = new List<SparePart>();
+            List<SparePart> spareParts = new List<SparePart>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -2525,9 +2525,9 @@ namespace PartsApp
         /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
         /// <param name="withoutIDs">Список Id товара который не должен входить в результирующий список.</param>
         /// <returns></returns>
-        public static IList<SparePart> SearchSparePartsByArticul(string articul, int limit, IList<int> withoutIDs)
+        public static List<SparePart> SearchSparePartsByArticul(string articul, int limit, IList<int> withoutIDs)
         {
-            IList<SparePart> spareParts = new List<SparePart>();
+            List<SparePart> spareParts = new List<SparePart>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {

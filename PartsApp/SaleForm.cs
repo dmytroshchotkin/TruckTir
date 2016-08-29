@@ -14,6 +14,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 namespace PartsApp
 {
     /*Задания*/
+    //Изменить имена столбцов.
     //Убрать столбец extPrice из доп. таблицы.
     //Передавать inTotal в метод распечатки в Excel.
 
@@ -222,10 +223,10 @@ namespace PartsApp
             if (!String.IsNullOrWhiteSpace(textBox.Text))
             {
                 //Находим подходящий по вводу товар.                
-                List<int> sparePartsIdList = saleDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (r.Tag as SparePart).SparePartId).ToList(); //Id-ки уже введенного товара.
+                List<int> existingSparePartsIdsList = saleDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (r.Tag as SparePart).SparePartId).ToList(); //Id-ки уже введенного товара.
                 List<SparePart>  searchSparePartsList = (_lastEditCell.OwningColumn == Title) 
-                                    ? PartsDAL.SearchSparePartsAvaliablityByTitle(textBox.Text.Trim(), 10, sparePartsIdList)
-                                    : PartsDAL.SearchSparePartsAvaliablityByArticul(textBox.Text.Trim(), 10, sparePartsIdList);
+                                    ? PartsDAL.SearchSparePartsAvaliablityByTitle(textBox.Text.Trim(), 10, existingSparePartsIdsList)
+                                    : PartsDAL.SearchSparePartsAvaliablityByArticul(textBox.Text.Trim(), 10, existingSparePartsIdsList);
 
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
