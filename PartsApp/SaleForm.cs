@@ -144,8 +144,8 @@ namespace PartsApp
 //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         private void saleDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            saleDataGridView.Rows[e.RowIndex].Cells[SellingPrice.Index].ReadOnly = saleDataGridView.Rows[e.RowIndex].Cells[Count.Index].ReadOnly = true;            
+        {            
+            saleDataGridView[SellingPrice.Index, e.RowIndex].ReadOnly = saleDataGridView[Count.Index, e.RowIndex].ReadOnly = true;
         }//saleDataGridView_RowsAdded
 
         private void saleDataGridView_RowEnter(object sender, DataGridViewCellEventArgs e)

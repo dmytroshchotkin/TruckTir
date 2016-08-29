@@ -432,7 +432,6 @@
             this.autoCompleteListBox.Size = new System.Drawing.Size(105, 30);
             this.autoCompleteListBox.TabIndex = 29;
             this.autoCompleteListBox.Visible = false;
-            this.autoCompleteListBox.SelectedIndexChanged += new System.EventHandler(this.autoCompleteListBox_SelectedIndexChanged);
             this.autoCompleteListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.autoCompleteListBox_MouseDown);
             this.autoCompleteListBox.MouseHover += new System.EventHandler(this.autoCompleteListBox_MouseHover);
             // 

@@ -150,16 +150,16 @@ namespace PartsApp
                 purchaseDataGridView.RowHeadersWidth = 41 + 7; //((i - 1) * 7); //41 - изначальный размер RowHeaders
         }//partsDataGridView_RowPrePaint
 
-        private void purchaseDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            //Эта строка нужна потому что новые столбцы Price и Count почему то становятся открытыми для записи.
-/*!!!*/      purchaseDataGridView.Rows[e.RowIndex].Cells["Price"].ReadOnly = purchaseDataGridView.Rows[e.RowIndex].Cells["Count"].ReadOnly = true;
-        }//purchaseDataGridView_RowsAdded
-
         #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /*События идут в порядке их возможного вызова.*/
+
+        private void purchaseDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+            dgv[SellingPrice.Index, e.RowIndex].ReadOnly = dgv[Count.Index, e.RowIndex].ReadOnly = dgv[Price.Index, e.RowIndex].ReadOnly = true;
+        }//purchaseDataGridView_RowsAdded
 
         /// <summary>
         /// Событие для установки listBox в нужную позицию.
@@ -240,38 +240,6 @@ namespace PartsApp
                 }//if
             }//if
         }//dataGridViewTextBoxCell_TextChanged
-
-        private void autoCompleteListBox_MouseHover(object sender, EventArgs e)
-        {
-            _isCellEditError = true;            
-        }
-
-        private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Clicks == 1)
-            {
-                if (String.IsNullOrEmpty(_userText))
-                    _userText = textBoxCell.Text;
-                purchaseDataGridView_SelectionChanged(null, null);
-                _isCellEditError = true; 
-            }
-            else 
-            { 
-            //    textBoxCell.Text = autoCompleteListBox.SelectedItem.ToString();
-            //    textChangedEvent = true; 
-                _isCellEditError = false; 
-                //dataGridViewTextBoxCell_PreviewKeyDown(textBoxCell, new PreviewKeyDownEventArgs(Keys.Enter));
-                //purchaseDataGridView.Rows[_lastEditCell.RowIndex + 1].Cells["Title"].Selected = true;
-                purchaseDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));
-            }
-        }
-
-        private void autoCompleteListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {           
-            textChangedEvent = false;
-            if (autoCompleteListBox.SelectedIndex != -1)
-                textBoxCell.Text = autoCompleteListBox.SelectedItem.ToString();
-        }//autoCompleteListBox_SelectedIndexChanged
 
         private void purchaseDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -609,7 +577,36 @@ namespace PartsApp
 //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
 
+        #region Методы работы с выпадающим списком.
 
+        /// <summary>
+        /// Обработчик для того, чтобы не срабатывало событие CellEndEdit при клике мышкой по вып. спику.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void autoCompleteListBox_MouseHover(object sender, EventArgs e)
+        {
+            _isCellEditError = true;
+        }//autoCompleteListBox_MouseHover
+
+        private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks == 1)
+            {
+                //Возвращаем фокус на ячейку для кот. выводится вып. список.                
+                purchaseDataGridView_SelectionChanged(null, null);
+                _isCellEditError = true;
+            }//if
+            else
+            {
+                //Делаем автозаполнение строки, выбранным объектом.   
+                _isCellEditError = false;
+                purchaseDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));
+            }//else
+        }//autoCompleteListBox_MouseDown
+
+
+        #endregion
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
