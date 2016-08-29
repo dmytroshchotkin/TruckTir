@@ -273,280 +273,19 @@ namespace PartsApp
                 textBoxCell.Text = autoCompleteListBox.SelectedItem.ToString();
         }//autoCompleteListBox_SelectedIndexChanged
 
-        //Привести в порядок метод!!!!
         private void purchaseDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (_isCellEditError) 
-                return;
-
-            autoCompleteListBox.Visible = false;
-            //autoCompleteListBox.Items.Clear();
-            DataGridViewRow row = purchaseDataGridView.Rows[e.RowIndex];
-            DataGridViewCell cell = row.Cells[e.ColumnIndex];
-
-            if (cell.Value == null)
-                return;
-
-            //Если редактировался Артикул или Название
-            #region Articul Or Title
-            if (cell.OwningColumn.Index == Title.Index || cell.OwningColumn.Index == Articul.Index)
+            if (!_isCellEditError)
             {
-                //убираем события с заполненной клетки.
-                if (textBoxCell != null)
-                {
-                    textChangedEvent = previewKeyDownEvent = false;
-                     
-                    textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
-                    textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
-                }
-                //Если есть такой товар в базе.
-                if (searchSparePartsList.Count > 0)
-                {
-                    string[] titleAndArticul = (cell.Value as string).Split(new string[] { "     " }, StringSplitOptions.RemoveEmptyEntries);
-                    string title, articul;
-                    //если выбор сделан из выпадающего списка.
-                    if (titleAndArticul.Length == 2)
-                    {
+                DataGridViewCell cell = purchaseDataGridView[e.ColumnIndex, e.RowIndex];
 
-                        title   = (cell.ColumnIndex == Title.Index) ? titleAndArticul[0] : titleAndArticul[1];
-                        articul = (cell.ColumnIndex == Title.Index) ? titleAndArticul[1] : titleAndArticul[0];        
-                        
-                        //находим из списка нужную запчасть.
-                        SparePart sparePart = searchSparePartsList.FirstOrDefault(sp => sp.Title == title.Trim() 
-                                                                                     && sp.Articul == articul.Trim());
-
-                        //Если такой товар найден в вып. списке.
-                        if (sparePart != null)
-                        {
-                            spareParts.Add(sparePart);
-
-                            row.Cells[SparePartId.Index].Value  = sparePart.SparePartId;
-                            row.Cells[Title.Index].Value        = sparePart.Title;
-                            row.Cells[Articul.Index].Value      = sparePart.Articul;
-                            row.Cells[Unit.Index].Value         = sparePart.MeasureUnit;
-
-                            //Запрещаем изменение 'Hазвания' и 'Aртикула', разрешаем заполнение 'Кол-ва' и 'Цены'.
-                            cell.OwningRow.Cells[Price.Index].ReadOnly = cell.OwningRow.Cells[Count.Index].ReadOnly = false;
-                            cell.OwningRow.Cells[Title.Index].ReadOnly = cell.OwningRow.Cells[Articul.Index].ReadOnly = true;
-
-                            _userText = null;
-                            #region Увеличение PurchaseGroupBox.
-                            //if (purchaseDataGridView.PreferredSize.Height > purchaseDataGridView.Size.Height)
-                            //{
-                            //    MessageBox.Show("bigger");
-                            //    int height = purchaseDataGridView.Rows[0].Cells["Title"].Size.Height;
-                            //    purchaseGroupBox.Size = new Size(purchaseGroupBox.Width, purchaseGroupBox.Height + height);
-                            //}
-                            #endregion
-                        }//if
-                        /*ERROR!!! Может ли тут быть ветка else?*/
-                    }//if
-                    else  //если выбор не из вып. списка.
-                        if (titleAndArticul.Length == 1)
-                        {
-                            if (searchSparePartsList.Count == 1) //если этот товар уникален.
-                            {
-                                //находим из списка нужную запчасть.
-                                SparePart sparePart = searchSparePartsList.FirstOrDefault(sp => sp.Title == titleAndArticul[0] 
-                                                                                           || sp.Articul == titleAndArticul[0]);
-
-                                if (sparePart != null) //если введенный товар именно тот что в списке.
-                                {
-                                    spareParts.Add(sparePart);
-
-                                    row.Cells[SparePartId.Index].Value  = sparePart.SparePartId;
-                                    row.Cells[Title.Index].Value        = sparePart.Title;
-                                    row.Cells[Articul.Index].Value      = sparePart.Articul;
-                                    row.Cells[Unit.Index].Value         = sparePart.MeasureUnit;
-
-                                    //Запрещаем изменение 'Hазвания' и 'Aртикула', разрешаем заполнение 'Кол-ва' и 'Цены'.
-                                    cell.OwningRow.Cells[Price.Index].ReadOnly = cell.OwningRow.Cells[Count.Index].ReadOnly = false;
-                                    cell.OwningRow.Cells[Title.Index].ReadOnly = cell.OwningRow.Cells[Articul.Index].ReadOnly = true;
-
-                                    _userText = null;
-                                }//if
-                                else
-                                { 
-                                    //Если в вып. списке есть единственный вариант, но совпадения с ним нет.
-                                    if (DialogResult.Yes == MessageBox.Show("Добавить новую единицу товара в базу?",
-                                                    "Выберите из списка или добавьте новую единицу в базу!",
-                                                    MessageBoxButtons.YesNo))
-                                    {
-                                        //Если выбран вариант добавить единицу товара в базу данных.
-                                        if (DialogResult.OK == new AddSparePartForm().ShowDialog(this))
-                                        {
-                                            //Если единица товара добавлена в базу.
-                                            _lastEditCell.Value = null;
-                                            _isCellEditError = true;
-                                            return;
-                                        }//if
-                                        else
-                                        {
-                                            // Если единица товара не добавлена в базу.
-                                            _isCellEditError = true; autoCompleteListBox.Visible = true;
-                                            if (previewKeyDownEvent == false)
-                                            {
-                                                previewKeyDownEvent = true;
-                                                textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
-                                                textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
-                                            }//if
-                                        }//else
-                                    }//if
-                                    else
-                                    {
-                                        _isCellEditError = true; autoCompleteListBox.Visible = true;
-                                        if (previewKeyDownEvent == false)
-                                        {
-                                            previewKeyDownEvent = true;
-                                            textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
-                                            textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
-                                        }//if
-                                    }//else
-                                }//else
-                            }//if (если этот товар уникален)
-                            else
-                            {
-                                //Если в вып. списке есть единственный вариант, но совпадения с ним нет.
-                                if (DialogResult.Yes == MessageBox.Show("Добавить новую единицу товара в базу?",
-                                                "Выберите из списка или добавьте новую единицу в базу!",
-                                                MessageBoxButtons.YesNo))
-                                {
-                                    //Если выбран вариант добавить единицу товара в базу данных.
-                                    if (DialogResult.OK == new AddSparePartForm().ShowDialog(this))
-                                    {
-                                        //Если единица товара добавлена в базу.
-                                        autoCompleteListBox.Visible = true;
-                                        _lastEditCell.Value = null;
-                                        _isCellEditError = true;
-                                        if (previewKeyDownEvent == false)
-                                        {
-                                            previewKeyDownEvent = true;
-                                            textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
-                                            textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
-                                        }//if
-                                        return;
-                                    }//if
-                                    else
-                                    {
-                                        // Если единица товара не добавлена в базу.
-                                        _isCellEditError = true; autoCompleteListBox.Visible = true;
-                                        if (previewKeyDownEvent == false)
-                                        {
-                                            previewKeyDownEvent = true;
-                                            textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
-                                            textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
-                                        }//if
-                                    }//else
-                                }//if 
-                                else 
-                                {
-                                    _isCellEditError = true; autoCompleteListBox.Visible = true;
-                                    if (previewKeyDownEvent == false)
-                                    {
-                                        previewKeyDownEvent = true;
-                                        textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
-                                        textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
-                                    }//if
-                                }
-                            }//else  
-                        }//if
-                }//if
-                else
-                {
-                    if (DialogResult.Yes == MessageBox.Show("Нет такого товара в базе, добавить новую единицу в базу?", 
-                                                            "Товар не найден", MessageBoxButtons.YesNo))
-                    {
-                        //Если выбран вариант добавить единицу товара в базу данных.
-                        if (DialogResult.OK == new AddSparePartForm().ShowDialog(this))
-                        {
-                            //Если единица товара добавлена в базу.
-                            _lastEditCell.Value = null;
-                            _isCellEditError = true;
-                            return;
-                        }
-                        else
-                        {
-                            // Если единица товара не добавлена в базу.
-                            //textBoxCell.Clear();
-                            _lastEditCell.Value = null;
-                            _isCellEditError = true;
-                            return;
-                        }
-
-                    }
-                    else
-                    {
-                        //Если выбран вариант не добавлять единицу товара в базу данных.
-                        //textBoxCell.Clear();
-                        _lastEditCell.Value = null;
-                        _isCellEditError = true;
-                        return;
-                    }                
-                }//else
+                if (cell.OwningColumn == Title || cell.OwningColumn == Articul) //Если редактируется артикул или название товара. 
+                    TitleOrArticulCellFilled(cell);
+                else if (cell.OwningColumn == Count)                            //Если редактируется кол-во. 
+                    CountCellFilled(cell);
+                else if (cell.OwningColumn == SellingPrice)                     //Если редактируется цена продажи. 
+                    SellingPriceCellFilled(cell);
             }//if
-            #endregion
-            //Если редактируется цена
-            #region Count Or Price.
-            try
-            {
-                if (cell.OwningColumn.Index == Price.Index)
-                {
-                    if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
-                    {
-                        float price = Convert.ToSingle(cell.Value);
-                        if (price == 0)
-                            throw new Exception(); //ввод нуля также является ошибкой.
-
-                        //Округляем Price до 2-х десятичных знаков.
-                        price = (float)Math.Round(price, 2, MidpointRounding.AwayFromZero);
-                        //currentSparePart.Price = sellPrice;
-                        cell.Value = String.Format("{0:N2}", price);
-
-                        amountCalculation(cell.OwningRow);
-
-                        //Присваиваем автоматическую наценку равную розничной цене. 
-                        /*!!!*/
-                        RowMarkupChanges(row);//, markup); //!!!Костыль! Необх-мо пометить какую-то запись в табл. Markups как дефолтную и присваивать её здесь.
-                    }//if                
-                }//if
-                if (cell.OwningColumn.Index == Count.Index)
-                {
-                    if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
-                    {
-                        float count = Convert.ToSingle(cell.Value);
-                        if (count == 0) 
-                            throw new Exception(); //ввод нуля также является ошибкой.
-
-                        //Проверяем что введенное число кратно минимально возможной единице.
-                        string unitOfMeasure = cell.OwningRow.Cells[Unit.Index].Value as string;
-                        if (count % Models.MeasureUnit.GetMinUnitSale(unitOfMeasure) != 0)
-                            throw new Exception();
-
-                        amountCalculation(cell.OwningRow);
-                        RowMarkupChanges(row); //расчитывае ЦенуПродажи и выводим её и Наценку.                        
-                    }//if            
-                }//if
-            }//try
-            catch
-            {
-                //выводим всплывающее окно с сообщением об ошибке.
-                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
-                //Очищаем ввод.
-                cell.Value = null;
-                _isCellEditError = true;
-                _lastEditCell = cell;
-            }//catch
-            #endregion
-            //Если ред-ся цена продажи.
-            #region SellingPrice.
-            if (cell.OwningColumn.Name == SellingPrice.Name)
-            {
-               ////////////         
-            
-            }//if (SellingPrice)
-
-
-            #endregion
         }//purchaseDataGridView_CellEndEdit    
                         
         /// <summary>
@@ -628,14 +367,6 @@ namespace PartsApp
 
 
 
-
-
-
-
-
-
-
-
         #region Вспомогательные методы.
 //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
@@ -675,7 +406,207 @@ namespace PartsApp
             if (_lastEditCell.OwningRow.Index == 0)
                 purchaseDataGridView_SelectionChanged(null, null);
         }//KeyUpPress
-        
+
+
+        /// <summary>
+        /// Производит необх. действия при окончании редактирования ячейки столбца 'Артикул' и 'Название'.
+        /// </summary>
+        /// <param name="extCountCell">Редактируемая ячейка.</param>
+        private void TitleOrArticulCellFilled(DataGridViewCell cell)
+        {
+            autoCompleteListBox.Visible = false;
+
+            if (cell.Value != null)
+            {
+                //Если есть такой товар в базе.
+                if (autoCompleteListBox.Items.Count > 0)
+                {
+                    //если выбор сделан из выпадающего списка.
+                    if (autoCompleteListBox.SelectedItem != null)
+                    {
+                        SparePart sparePart = autoCompleteListBox.SelectedItem as SparePart;
+                        AutoCompleteRowInfo(cell, sparePart); //Заполняем строку данными о товаре.                        
+                    }//if
+                    else  //если выбор не из вып. списка.
+                    {
+                        toolTip.Show("Выберите товар из списка.", this, GetCellBelowLocation(cell), 1000);
+                        _isCellEditError = true;
+                        autoCompleteListBox.Visible = true;
+                    }//else
+                }//if
+                else
+                {
+                    toolTip.Show("Нет такого товара в наличии.", this, GetCellBelowLocation(cell), 1000);
+                    _isCellEditError = true;
+                }//else
+            }//if
+
+            //Если нет ошибки редактирования ячейки, то отписываем editing control от событий обработки ввода.
+            if (!_isCellEditError)
+            {
+                TextBox textBoxCell = cell.Tag as TextBox;
+                textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
+                textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
+                cell.Tag = null;
+            }//if
+        }//TitleOrArticulCellFilled
+
+        /// <summary>
+        /// Производит необх. действия при окончании редактирования ячейки столбца 'Количество'.
+        /// </summary>
+        /// <param name="extCountCell">Редактируемая ячейка.</param>
+        private void CountCellFilled(DataGridViewCell cell)
+        {
+            //Проверяем корректность ввода.
+            string measureUnit = cell.OwningRow.Cells[Unit.Index].Value.ToString();
+            if (!IsCountCellValueCorrect(cell, measureUnit))
+            {
+                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.
+                cell.Value = null;
+            }//if            
+
+            FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
+        }//CountCellFilled
+
+        /// <summary>
+        /// Производит необх. действия при окончании редактирования ячейки столбца 'Цена продажи'.
+        /// </summary>
+        /// <param name="extCountCell">Редактируемая ячейка.</param>
+        private void SellingPriceCellFilled(DataGridViewCell cell)
+        {
+            if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
+            {
+                try
+                {
+                    float sellingPrice = Convert.ToSingle(cell.Value);
+                    if (sellingPrice <= 0)
+                        throw new Exception();  //ввод значения не более 0 также является ошибкой.
+                   
+                    //Если цена продажи меньше или равна закупочной, требуем подтверждения.
+                    float price = Convert.ToSingle(cell.OwningRow.Cells[Price.Index].Value);
+                    if (sellingPrice <= price)
+                        if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
+                            throw new Exception();
+
+                    cell.Value = sellingPrice; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
+                }//try
+                catch
+                {
+                    //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
+                    toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
+                    cell.Value = null;
+                }//catch
+
+                FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
+            }//if     
+        }//SellingPriceCellFilled
+
+
+        /// <summary>
+        /// Автозаполнение строки соотв. инф-цией.
+        /// </summary>
+        /// <param name="countCell">Заполняемая ячейка.</param>
+        /// <param name="titleAndArticul">Массив строк с артикулом и названием.</param>
+        private void AutoCompleteRowInfo(DataGridViewCell cell, SparePart sparePart)
+        {
+            //Если такой товар найден в вып. списке.
+            if (sparePart != null)
+            {
+                FillThePurchaseDGV(cell.OwningRow, sparePart);
+
+                cell.OwningRow.Cells[SellingPrice.Index].ReadOnly = cell.OwningRow.Cells[Count.Index].ReadOnly = false;
+                cell.OwningRow.Cells[Title.Index].ReadOnly = cell.OwningRow.Cells[Articul.Index].ReadOnly = true;
+
+                #region Увеличение purchaseGroupBox.
+                //if (saleDataGridView.PreferredSize.Height > saleDataGridView.Size.Height)
+                //{
+                //    MessageBox.Show("bigger");
+                //    int height = saleDataGridView.Rows[0].Cells["Title"].Size.Height;
+                //    saleGroupBox.Size = new Size(saleGroupBox.Width, saleGroupBox.Height + height);
+                //}
+                #endregion
+            }//if
+        }//AutoCompleteRowInfo
+
+        /// <summary>
+        /// Заполняет осн. таблицу данными.
+        /// </summary>
+        /// <param name="row">Заполняемая строка.</param>
+        /// <param name="sparePart">Данные для заполнения строки.</param>
+        private void FillThePurchaseDGV(DataGridViewRow row, SparePart sparePart)
+        {
+            row.Tag = sparePart;
+
+            row.Cells[Title.Index].Value    = sparePart.Title;
+            row.Cells[Articul.Index].Value  = sparePart.Articul;
+            row.Cells[Unit.Index].Value     = sparePart.MeasureUnit;
+        }//FillThePurchaseDGV
+
+        /// <summary>
+        /// Возвращает число или генерирует исключение если введенное значение в ячейку 'Кол-во' некорректно.
+        /// </summary>
+        /// <param name="countCell">Ячейка столбца 'Кол-во'.</param>
+        /// <returns></returns>
+        private bool IsCountCellValueCorrect(DataGridViewCell countCell, string measureUnit)
+        {
+            float count;
+            //Если введено не числовое значение, это ошибка.
+            if (countCell.Value == null || (Single.TryParse(countCell.Value.ToString(), out count) == false))
+                return false;
+
+            //Ввод значения не более 0, является ошибкой. 
+            if (count <= 0)
+                return false;
+
+            //Проверяем является ли введенное число корректным для продажи, т.е. кратно ли оно минимальной единице продажи.     
+            if (count % Models.MeasureUnit.GetMinUnitSale(measureUnit) != 0)
+                return false;
+
+            return true;
+        }//IsCountCellValueCorrect
+
+        /// <summary>
+        /// Заполняет ячейку 'Сумма' заданной строки и общую сумму.
+        /// </summary>
+        /// <param name="row">Строка дял которой производятся вычисления и заполнение.</param>
+        private void FillTheSumCell(DataGridViewRow row)
+        {
+            if (row.Cells[Count.Index].Style.ForeColor == Color.Black && row.Cells[SellingPrice.Index].Value != null)
+            {
+                float price = Convert.ToSingle(row.Cells[SellingPrice.Index].Value);
+                float sellCount = Convert.ToSingle(row.Cells[Count.Index].Value);
+
+                row.Cells[Sum.Index].Value = price * sellCount;
+            }//if
+            else
+            {
+                row.Cells[Sum.Index].Value = null;//очищаем ячейку. 
+            }//else
+
+            FillTheInTotal(); //Заполняем общую сумму операции.
+        }//FillTheSumCell
+
+        /// <summary>
+        /// Заполняет InTotalLabel корретным значением.
+        /// </summary>
+        private void FillTheInTotal()
+        {
+            float inTotal = 0;
+            foreach (DataGridViewRow row in purchaseDataGridView.Rows)
+            {
+                //Если в строке указана и цена и количестов.
+                if (row.Cells[Sum.Index].Value != null)
+                {
+                    float price     = Convert.ToSingle(row.Cells[SellingPrice.Index].Value);
+                    float sellCount = Convert.ToSingle(row.Cells[Count.Index].Value);
+                    inTotal += price * sellCount;
+                }//if
+            }//foreach
+
+            //Заполняем InTotalLabel расчитанным значением.
+            inTotalNumberLabel.Text = String.Format("{0}(руб)", Math.Round(inTotal, 2, MidpointRounding.AwayFromZero));
+        }//FillTheInTotal
+
 
         /// <summary>
         /// Возвращает абсолютный location области сразу под позицией клетки из purchaseDataGridView. 

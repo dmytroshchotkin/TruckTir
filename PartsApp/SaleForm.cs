@@ -17,6 +17,7 @@ namespace PartsApp
     //Изменить имена столбцов.
     //Убрать столбец extPrice из доп. таблицы.
     //Передавать inTotal в метод распечатки в Excel.
+    //Добавить столбец 'Производитель'? и поиск по нему.
 
     public partial class SaleForm : Form
     {
@@ -460,7 +461,7 @@ namespace PartsApp
             if (countCell.Value == null || (Single.TryParse(countCell.Value.ToString(), out count) == false))
                 return false;
 
-            //Ввод значения меньше 1, или больше чем есть в наличии является ошибкой. 
+            //Ввод значения не более 0, или больше чем есть в наличии является ошибкой. 
             float totalCount = Convert.ToSingle(countCell.Tag);
             if (count <= 0 || count > totalCount)
                 return false;
