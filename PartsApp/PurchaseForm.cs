@@ -22,7 +22,7 @@ namespace PartsApp
         IList<SparePart> spareParts = new List<SparePart>();
 
         IList<SparePart> searchSparePartsList = new List<SparePart>();
-        bool isCellEditError = false;
+        bool _isCellEditError = false;
         DataGridViewCell _lastEditCell;
 
         TextBox textBoxCell;
@@ -175,7 +175,11 @@ namespace PartsApp
                 autoCompleteListBox.Location = GetCellBelowLocation(_lastEditCell); //устанавливаем позицию вып. списка.
         }//purchaseDataGridView_CellBeginEdit
 
-        //Событие для добавления обработчиков на ввод текста в клетку. //
+        /// <summary>
+        /// Событие для добавления обработчиков на ввод текста в ячейку.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void purchaseDataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {            
             DataGridViewCell cell = purchaseDataGridView.CurrentCell;
@@ -194,68 +198,22 @@ namespace PartsApp
             }//if
         }//purchaseDataGridView_EditingControlShowing
 
+        /// <summary>
+        /// Метод обработки нажатия клавиш в ячейках осн. таблицы.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGridViewTextBoxCell_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-
-            if (e.KeyCode == Keys.Down)
-            {                                                
-                isCellEditError = true;
-                if (searchSparePartsList.Count == 0) return;//может не надо это действие.
-                if (autoCompleteListBox.Items.Count == 0) return; //может не надо это действие.
-                if (autoCompleteListBox.Visible == false) return;
-                //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
-                if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
-                {
-                    textBox.Text = _userText;
-                    autoCompleteListBox.ClearSelected();
-                    return;
-                }
-                //Если выбирается первый эл-нт выпадающего списка, запоминаем введенную ранее пользователем строку.
-                if (autoCompleteListBox.SelectedIndex == -1)
-                    _userText = textBox.Text;
-
-                autoCompleteListBox.SelectedIndex += 1;
-                return;
-            }//if
-
-            if (e.KeyCode == Keys.Up)
-            {
-                isCellEditError = true;
-                if (searchSparePartsList.Count == 0) return;//может не надо это действие.
-                if (autoCompleteListBox.Items.Count == 0) return;//может не надо это действие.
-                if (autoCompleteListBox.Visible == false) return;
-                //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
-                if (autoCompleteListBox.SelectedIndex == -1)
-                {
-                    _userText = textBox.Text;
-                    autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
-                }
-                //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
-                else if (autoCompleteListBox.SelectedIndex == 0)
-                {
-                    textBox.Text = _userText;
-                    autoCompleteListBox.ClearSelected();
-                }//if
-                else autoCompleteListBox.SelectedIndex -= 1;
-                //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставитс в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусствунно и ставим каретку в конец строки.                               
-                if (_lastEditCell.OwningRow.Index == 0) 
-                    purchaseDataGridView_SelectionChanged(sender, null); 
-
-                return;
-            }//if    
-
-            //Если ввод условия поиска завершен.
-
-            //Продолжается ввод.
-            if (textChangedEvent == false)
-            {
-                //textBox.TextChanged += dataGridViewTextBoxCell_TextChanged;
-                textChangedEvent = true;
-            }
-
-
-    
+            switch (e.KeyCode)
+            { 
+                case Keys.Down:
+                    KeyDownPress();
+                    break;
+                case Keys.Up:
+                    KeyUpPress();
+                    break;
+            }//switch
         }//dataGridViewTextBoxCell_PreviewKeyDown
 
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
@@ -301,7 +259,7 @@ namespace PartsApp
 
         private void autoCompleteListBox_MouseHover(object sender, EventArgs e)
         {
-            isCellEditError = true;            
+            _isCellEditError = true;            
         }
 
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
@@ -311,13 +269,13 @@ namespace PartsApp
                 if (String.IsNullOrEmpty(_userText))
                     _userText = textBoxCell.Text;
                 purchaseDataGridView_SelectionChanged(null, null);
-                isCellEditError = true; 
+                _isCellEditError = true; 
             }
             else 
             { 
             //    textBoxCell.Text = autoCompleteListBox.SelectedItem.ToString();
             //    textChangedEvent = true; 
-                isCellEditError = false; 
+                _isCellEditError = false; 
                 //dataGridViewTextBoxCell_PreviewKeyDown(textBoxCell, new PreviewKeyDownEventArgs(Keys.Enter));
                 //purchaseDataGridView.Rows[_lastEditCell.RowIndex + 1].Cells["Title"].Selected = true;
                 purchaseDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));
@@ -334,7 +292,7 @@ namespace PartsApp
         //Привести в порядок метод!!!!
         private void purchaseDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (isCellEditError) 
+            if (_isCellEditError) 
                 return;
 
             autoCompleteListBox.Visible = false;
@@ -435,13 +393,13 @@ namespace PartsApp
                                         {
                                             //Если единица товара добавлена в базу.
                                             _lastEditCell.Value = null;
-                                            isCellEditError = true;
+                                            _isCellEditError = true;
                                             return;
                                         }//if
                                         else
                                         {
                                             // Если единица товара не добавлена в базу.
-                                            isCellEditError = true; autoCompleteListBox.Visible = true;
+                                            _isCellEditError = true; autoCompleteListBox.Visible = true;
                                             if (previewKeyDownEvent == false)
                                             {
                                                 previewKeyDownEvent = true;
@@ -452,7 +410,7 @@ namespace PartsApp
                                     }//if
                                     else
                                     {
-                                        isCellEditError = true; autoCompleteListBox.Visible = true;
+                                        _isCellEditError = true; autoCompleteListBox.Visible = true;
                                         if (previewKeyDownEvent == false)
                                         {
                                             previewKeyDownEvent = true;
@@ -475,7 +433,7 @@ namespace PartsApp
                                         //Если единица товара добавлена в базу.
                                         autoCompleteListBox.Visible = true;
                                         _lastEditCell.Value = null;
-                                        isCellEditError = true;
+                                        _isCellEditError = true;
                                         if (previewKeyDownEvent == false)
                                         {
                                             previewKeyDownEvent = true;
@@ -487,7 +445,7 @@ namespace PartsApp
                                     else
                                     {
                                         // Если единица товара не добавлена в базу.
-                                        isCellEditError = true; autoCompleteListBox.Visible = true;
+                                        _isCellEditError = true; autoCompleteListBox.Visible = true;
                                         if (previewKeyDownEvent == false)
                                         {
                                             previewKeyDownEvent = true;
@@ -498,7 +456,7 @@ namespace PartsApp
                                 }//if 
                                 else 
                                 {
-                                    isCellEditError = true; autoCompleteListBox.Visible = true;
+                                    _isCellEditError = true; autoCompleteListBox.Visible = true;
                                     if (previewKeyDownEvent == false)
                                     {
                                         previewKeyDownEvent = true;
@@ -519,7 +477,7 @@ namespace PartsApp
                         {
                             //Если единица товара добавлена в базу.
                             _lastEditCell.Value = null;
-                            isCellEditError = true;
+                            _isCellEditError = true;
                             return;
                         }
                         else
@@ -527,7 +485,7 @@ namespace PartsApp
                             // Если единица товара не добавлена в базу.
                             //textBoxCell.Clear();
                             _lastEditCell.Value = null;
-                            isCellEditError = true;
+                            _isCellEditError = true;
                             return;
                         }
 
@@ -537,7 +495,7 @@ namespace PartsApp
                         //Если выбран вариант не добавлять единицу товара в базу данных.
                         //textBoxCell.Clear();
                         _lastEditCell.Value = null;
-                        isCellEditError = true;
+                        _isCellEditError = true;
                         return;
                     }                
                 }//else
@@ -591,7 +549,7 @@ namespace PartsApp
                 toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
                 //Очищаем ввод.
                 cell.Value = null;
-                isCellEditError = true;
+                _isCellEditError = true;
                 _lastEditCell = cell;
             }//catch
             #endregion
@@ -636,9 +594,9 @@ namespace PartsApp
 
         private void purchaseDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            if (isCellEditError == true)
+            if (_isCellEditError == true)
             {
-                isCellEditError = false;
+                _isCellEditError = false;
                 purchaseDataGridView.CurrentCell = _lastEditCell;                
                 //if (_lastEditCell.ReadOnly) _lastEditCell.ReadOnly = false;
 
@@ -694,7 +652,47 @@ namespace PartsApp
 
 
 
-        /////////////////////////////////Вспомогательные методы./////////////////////////
+        #region Вспомогательные методы.
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+        /// <summary>
+        /// Выполняет необходимые действия при нажатии юзером Keys.Down.
+        /// </summary>
+        private void KeyDownPress()
+        {
+            _isCellEditError = true;
+            //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
+            if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
+                autoCompleteListBox.ClearSelected();
+            else
+                autoCompleteListBox.SelectedIndex += 1;
+        }//KeyDownPress
+
+        /// <summary>
+        /// Выполняет необходимые действия при нажатии юзером Keys.Up.
+        /// </summary>
+        private void KeyUpPress()
+        {
+            _isCellEditError = true;
+            //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
+            if (autoCompleteListBox.SelectedIndex == -1)
+            {
+                autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
+            }//if
+            else
+            {
+                if (autoCompleteListBox.SelectedIndex == 0)
+                    autoCompleteListBox.ClearSelected();
+                else
+                    autoCompleteListBox.SelectedIndex -= 1;
+            }//else
+
+            //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставится в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусственно и ставим каретку в конец строки.                               
+            if (_lastEditCell.OwningRow.Index == 0)
+                purchaseDataGridView_SelectionChanged(null, null);
+        }//KeyUpPress
+        
+
         /// <summary>
         /// Возвращает абсолютный location области сразу под позицией клетки из purchaseDataGridView. 
         /// </summary>
@@ -712,6 +710,12 @@ namespace PartsApp
 
 
 
+
+
+
+
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        #endregion
 
 
 
