@@ -331,32 +331,13 @@ namespace PartsApp
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (purchaseDataGridView.AreAllCellsSelected(false) == true)
-            {
-                if (DialogResult.Yes == MessageBox.Show("Вы хотите полностью очистить список?", "", MessageBoxButtons.YesNo))
-                {
-                    purchaseDataGridView.Rows.Clear();
-                    spareParts.Clear();
-                    searchSparePartsList.Clear(); //надо ли?
+            //Выделяем строки всех выделенных ячеек.           
+            purchaseDataGridView.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
+            //Удаляем все выбранные строки, eсли это не последняя строка (предназнач. для ввода нового товара в список), удаляем её.
+            int lastRowIndx = purchaseDataGridView.Rows.Count - 1;
+            purchaseDataGridView.SelectedRows.Cast<DataGridViewRow>().Where(r => r.Index != lastRowIndx).ToList().ForEach(r => purchaseDataGridView.Rows.Remove(r));
 
-                    //очищаем "Итого".
-                    inTotal = 0;
-                }//if
-            }//if
-            else
-            {
-                int sparePartId = Convert.ToInt32(_lastEditCell.OwningRow.Cells[SparePartId.Index].Value);
-                spareParts.Remove(spareParts.First(sp => sp.SparePartId == sparePartId)); //Удаляем объект из списка.                
-                //исправляем "Итого".
-                if (_lastEditCell.OwningRow.Cells[Sum.Index].Value != null)
-                    inTotal -= Convert.ToDouble((_lastEditCell.OwningRow.Cells[Sum.Index].Value));
-
-                //Удаляем строку.
-                purchaseDataGridView.Rows.Remove(_lastEditCell.OwningRow);
-            }//else
-
-            //Выводим "Итого".
-            inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
+            FillTheInTotal(); //Заполняем общую сумму операции.
         }//removeToolStripMenuItem_Click
 
 
