@@ -309,6 +309,26 @@ namespace PartsApp
             }//if
         }//purchaseDataGridView_SelectionChanged
 
+        private void purchaseDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.ColumnIndex == -1)
+                {
+                    if (e.RowIndex == -1)
+                        purchaseDataGridView.SelectAll();
+                    else
+                        purchaseDataGridView.Rows[e.RowIndex].Selected = true;
+
+                    //Выводим контекстное меню.
+                    Point location = purchaseDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true).Location;
+                    location.X += e.Location.X;
+                    location.Y += e.Location.Y;
+                    purchaseContextMenuStrip.Show(purchaseDataGridView, location, ToolStripDropDownDirection.BelowRight);
+                }//if                
+            }//if 
+        }//purchaseDataGridView_CellMouseClick        
+
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (purchaseDataGridView.AreAllCellsSelected(false) == true)
@@ -1049,32 +1069,7 @@ namespace PartsApp
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
-
-        private void purchaseDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                if (e.ColumnIndex == -1)
-                {
-                    if (e.RowIndex == -1)
-                        purchaseDataGridView.SelectAll();
-                    else
-                    {
-                        _lastEditCell = purchaseDataGridView.Rows[e.RowIndex].HeaderCell;
-                        //Если строка пустая не делаем ничего.
-                        if (_lastEditCell.OwningRow.Cells[SparePartId.Index].Value == null) 
-                            return;
-
-                        _lastEditCell.OwningRow.Selected = true;
-                    }//else
-
-                    Point location = purchaseDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true).Location;
-                    location.X += e.Location.X;
-                    location.Y += e.Location.Y;
-                    purchaseContextMenuStrip.Show(purchaseDataGridView, location, ToolStripDropDownDirection.BelowRight);
-                }//if                
-            }//if
-        }//purchaseDataGridView_CellMouseClick        
+      
 
         /// <summary>
         /// Возвращает объект типа Operation, созданный из данных формы.
