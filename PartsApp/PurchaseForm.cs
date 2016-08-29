@@ -286,50 +286,26 @@ namespace PartsApp
                 else if (cell.OwningColumn == SellingPrice)                     //Если редактируется цена продажи. 
                     SellingPriceCellFilled(cell);
             }//if
-        }//purchaseDataGridView_CellEndEdit    
-                        
-        /// <summary>
-        /// Метод расчета суммы в передаваемой строке.
-        /// </summary>
-        /// <param name="row">Строка, в которой требуется рассчитать сумму</param>
-        private void amountCalculation(DataGridViewRow row)
-        {
-            if (row.Cells[Price.Index].Value != null && row.Cells[Count.Index].Value != null )
-            {
-                //Узнаем была ли уже до этого введена цена, для изменения строки "итого".
-                if (row.Cells[Sum.Name].Value != null)
-                    inTotal -= Convert.ToDouble((row.Cells[Sum.Name].Value));
-
-                //Рассчитываем сумму и отображаем в таблице.
-                float price = Convert.ToSingle(row.Cells[Price.Index].Value);
-                float count = Convert.ToSingle(row.Cells[Count.Index].Value);
-                double sum = Math.Round(price * count, 2, MidpointRounding.AwayFromZero);
-                row.Cells[Sum.Name].Value = String.Format("{0:N2}", sum);
-
-                //Меняем значение "Итого".
-                inTotal += sum;
-                inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
-
-                //Запрещаем дальнейшее редактирование кол-ва и цены.
-                row.Cells[Price.Index].ReadOnly = row.Cells[Count.Index].ReadOnly = true;
-            }//if        
-        }//amountCalculation
+        }//purchaseDataGridView_CellEndEdit                            
 
         private void purchaseDataGridView_SelectionChanged(object sender, EventArgs e)
         {
+            //Если ошибка редактирования ячейки 'Title' или 'Articul', то возвращаем фокус обратно на ячейку (фокус теряется при выборе из вып. списка).
             if (_isCellEditError == true)
             {
                 _isCellEditError = false;
-                purchaseDataGridView.CurrentCell = _lastEditCell;                
-                //if (_lastEditCell.ReadOnly) _lastEditCell.ReadOnly = false;
+                purchaseDataGridView.CurrentCell = _lastEditCell;
 
-                purchaseDataGridView.CellBeginEdit -= purchaseDataGridView_CellBeginEdit;
+                //Включаем режим редактирования ячейки, не инициируя при этом соотв. события.
+                purchaseDataGridView.CellBeginEdit         -= purchaseDataGridView_CellBeginEdit;
                 purchaseDataGridView.EditingControlShowing -= purchaseDataGridView_EditingControlShowing;
                 purchaseDataGridView.BeginEdit(true);
-                purchaseDataGridView.CellBeginEdit += purchaseDataGridView_CellBeginEdit;
+                purchaseDataGridView.CellBeginEdit         += purchaseDataGridView_CellBeginEdit;
                 purchaseDataGridView.EditingControlShowing += purchaseDataGridView_EditingControlShowing;
 
-                textBoxCell.SelectionStart = textBoxCell.Text.Length;                
+                //ставим каретку в конец текста. 
+                TextBox textBoxCell = _lastEditCell.Tag as TextBox;
+                textBoxCell.SelectionStart = textBoxCell.Text.Length;
             }//if
         }//purchaseDataGridView_SelectionChanged
 
