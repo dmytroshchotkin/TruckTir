@@ -724,7 +724,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="saleId">Ид продажи</param>
         /// <param name="sparePartId">Ид товара</param>
-        /// <param name="sellPrice">Отпускная цена товара</param>
+        /// <param name="price">Отпускная цена товара</param>
         /// <param name="quantity">Кол-во товара</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         private static void AddSaleDetail(int saleId, OperationDetails operDet, SQLiteCommand cmd)

@@ -945,9 +945,9 @@ namespace PartsApp
             //    if (row.Cells["Price"].Value != null)
             //    {
             //        row.Cells["Price"].Value = Math.Round(((double)row.Cells["Price"].Value * (double)excRateNumericUpDown.Value), 2, MidpointRounding.AwayFromZero);                                                           
-            //        double sellPrice = Convert.ToDouble(row.Cells["Price"].Value);
+            //        double price = Convert.ToDouble(row.Cells["Price"].Value);
             //        double excRate = (double)excRateNumericUpDown.Value;
-            //        double newPrice = Math.Round(sellPrice * excRate, 2, MidpointRounding.AwayFromZero);
+            //        double newPrice = Math.Round(price * excRate, 2, MidpointRounding.AwayFromZero);
             //        row.Cells["Price"].Value = newPrice;
             //        if (row.Cells["Count"].Value != null)
             //        {
@@ -1042,23 +1042,6 @@ namespace PartsApp
         /// <returns></returns>
         public Purchase CreatePurchaseFromForm()
         {
-            List<OperationDetails> operDetList = new List<OperationDetails>();
-
-            foreach (DataGridViewRow row in purchaseDataGridView.Rows)
-            {
-                int sparePartId = Convert.ToInt32(row.Cells[SparePartId.Index].Value);
-                //Если строка не пустая, заполняем объект.
-                if (sparePartId != 0)
-                {
-                    float count = Convert.ToSingle(row.Cells[Count.Index].Value);
-                    float price = Convert.ToSingle(row.Cells[Price.Index].Value);
-
-                    SparePart sparePart = spareParts.First(sp => sp.SparePartId == sparePartId);
-                    OperationDetails od = new OperationDetails(sparePart, null, count, price);
-                    operDetList.Add(od);
-                }//if
-            }//foreach
-
             //Находим контрагента. Если такого ещё нет в базе, то создаем новый объект.
             IContragent supplier = PartsDAL.FindSuppliers(supplierTextBox.Text.Trim());
             supplier = (supplier == null) ? new Supplier(0, supplierTextBox.Text.Trim(), null, null, null, null) : supplier;
@@ -1070,13 +1053,40 @@ namespace PartsApp
                 contragentEmployee : (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null,
                 operationDate      : purchaseDateTimePicker.Value,
                 description        : (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
-                operDetList        : operDetList                                                
+                operDetList        : CreateOperationDetailsListFromForm()                                                
             );
 
-            operDetList.ForEach(od => od.Operation = purchase); //Присваиваем 'Операцию' для каждого OperationDetails.
+            purchase.OperationDetailsList.ToList().ForEach(od => od.Operation = purchase); //Присваиваем 'Операцию' для каждого OperationDetails.
 
             return purchase;
         }//CreatePurchaseFromForm
+
+        /// <summary>
+        /// Возвращает список объектов типа OperationDetails, созданный из данных таблицы продаж.
+        /// </summary>
+        /// <returns></returns>
+        private List<OperationDetails> CreateOperationDetailsListFromForm()
+        {
+            List<OperationDetails> operDetList = new List<OperationDetails>();
+            foreach (DataGridViewRow row in purchaseDataGridView.Rows)
+            {
+                //Если строка не пустая.
+                if (row.Tag != null)
+                {
+                    float count = Convert.ToSingle(row.Cells[Count.Index].Value);
+                    float price = Convert.ToSingle(row.Cells[Price.Index].Value);
+
+                    SparePart sparePart = row.Tag as SparePart;
+                    operDetList.Add(new OperationDetails(sparePart, null, count, price));
+                }//if
+            }//foreach
+
+            return operDetList;
+        }//CreateOperationDetailsListFromForm
+
+
+
+
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {

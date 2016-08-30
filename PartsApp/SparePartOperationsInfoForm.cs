@@ -51,7 +51,7 @@ namespace PartsApp
                 OperationDetails operDet = operat.OperationDetailsList.First(sp => sp.SparePart.SparePartId == sparePartId);
                 row.Cells[UnitCol.Index].Value = operDet.SparePart.MeasureUnit;
                 row.Cells[CountCol.Index].Value = operDet.Count;
-                //double? sellPrice = (operat.GetType() == typeof(Sale)) ? avail.SellingPrice : avail.Price;
+                //double? price = (operat.GetType() == typeof(Sale)) ? avail.SellingPrice : avail.Price;
                 float sellPrice = operDet.Price;
                 row.Cells[PriceCol.Index].Value = sellPrice;
                 row.Cells[SumCol.Index].Value = sellPrice * operDet.Count;
