@@ -24,9 +24,9 @@ namespace PartsApp
         /// <summary>
         /// Добавляет запись в таблицу Avaliability.
         /// </summary>
-        /// <param name="operDet">Запись добавляемая в таблицу.</param>
+        /// <param name="avail">Запись добавляемая в таблицу.</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
-        private static void AddSparePartAvaliability(OperationDetails operDet, string storageAddress, SQLiteCommand cmd)
+        private static void AddSparePartAvaliability(Availability avail, SQLiteCommand cmd)
         {
             /*ERROR!!! лишние параметры */
             var query = "INSERT INTO Avaliability VALUES (@SparePartId, @OperationId, @Price, @Markup, @StorageAdress, @Count);";
@@ -34,15 +34,16 @@ namespace PartsApp
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
-
-            cmd.Parameters.AddWithValue("@SparePartId",   operDet.SparePart.SparePartId);
-            cmd.Parameters.AddWithValue("@OperationId",   operDet.Operation.OperationId);
-            cmd.Parameters.AddWithValue("@Price",         operDet.Price);
-            cmd.Parameters.AddWithValue("@Markup",        (float)Markup.Types.Retail); //Присваиваем дефолтную наценку.
-            cmd.Parameters.AddWithValue("@StorageAdress", storageAddress);
-            cmd.Parameters.AddWithValue("@Count",         operDet.Count);
+            
+            cmd.Parameters.AddWithValue("@SparePartId",   avail.OperationDetails.SparePart.SparePartId);
+            cmd.Parameters.AddWithValue("@OperationId",   avail.OperationDetails.Operation.OperationId);
+            cmd.Parameters.AddWithValue("@Price",         avail.OperationDetails.Price);            
+            cmd.Parameters.AddWithValue("@Markup",        avail.Markup);
+            cmd.Parameters.AddWithValue("@StorageAdress", avail.StorageAddress);
+            cmd.Parameters.AddWithValue("@Count",         avail.OperationDetails.Count);
             cmd.ExecuteNonQuery();    
-        }//AddSparePartAvaliability         
+        }//AddSparePartAvaliability 
+       
         /// <summary>
         /// Обновляет количество в заданной записи таблицы Avaliability.
         /// </summary>
@@ -499,12 +500,12 @@ namespace PartsApp
         /// Осуществляет полный цикл приходования товара, вставляя записи в таблицы Purchases, Avaliability и PurchaseDetails.
         /// Возвращает Id вставленной записи в табл. Operation.
         /// </summary>
-        /// <param name="sale">Информация о приходе.</param>
+        /// <param name="availList">Список приходуемого товара.</param>
         /// <returns></returns>
-        public static int AddPurchase(Purchase purchase, string storageAddress)
+        public static int AddPurchase(List<Availability> availList)
         {
-            /*ERROR!!! лишние пар-ры*/
-            string message = null;
+            Purchase purchase = availList[0].OperationDetails.Operation as Purchase;
+
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
@@ -514,33 +515,31 @@ namespace PartsApp
                     using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
                     {
                         try
-                        { 
+                        {                            
                             //Если такого контрагента нет в базе, то добавляем.
                             if (purchase.Contragent.ContragentId == 0)
                                 purchase.Contragent.ContragentId = AddContragent(purchase.Contragent, cmd);
                             //вставляем запись в таблицу Operation.
                             purchase.OperationId = AddPurchase(purchase, cmd);
                             //вставляем записи в PurchaseDetails и Avaliability.
-                            foreach (OperationDetails operDet in purchase.OperationDetailsList)
-                            {                             
-                                AddPurchaseDetail(operDet, cmd);
-                                AddSparePartAvaliability(operDet, storageAddress, cmd);
+                            foreach (Availability avail in availList)
+                            {
+                                AddPurchaseDetail(avail.OperationDetails, cmd);
+                                AddSparePartAvaliability(avail, cmd);
                             }//foreach
 
                             trans.Commit();                        
                         }//try
                         catch(Exception ex)
-                        {
-                            message = ex.Message;
-                            trans.Rollback();                        
+                        {                             
+                            trans.Rollback();
+                            throw new Exception(ex.Message);
                         }//catch
                     }//using cmd
                 }//using transaction
 
                 connection.Close();
-            }//using connectio
-            if (message != null) 
-                throw new Exception(message);
+            }//using connection
 
             return purchase.OperationId;    
         }//AddPurchase
@@ -562,16 +561,13 @@ namespace PartsApp
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
-            cmd.Parameters.AddWithValue("@EmployeeID", purchase.Employee.EmployeeId);
-            cmd.Parameters.AddWithValue("@ContragentId", purchase.Contragent.ContragentId);
+            cmd.Parameters.AddWithValue("@EmployeeID",         purchase.Employee.EmployeeId);
+            cmd.Parameters.AddWithValue("@ContragentId",       purchase.Contragent.ContragentId);
             cmd.Parameters.AddWithValue("@ContragentEmployee", purchase.ContragentEmployee);
+            cmd.Parameters.AddWithValue("@Description",        purchase.Description);
+            cmd.Parameters.AddWithValue("@OperationDate",      purchase.OperationDate);
 
-            cmd.Parameters.AddWithValue("@Description", purchase.Description);
-            cmd.Parameters.AddWithValue("@OperationDate", purchase.OperationDate);
-
-            purchaseId = Convert.ToInt32(cmd.ExecuteScalar());     
-                   
-            return purchaseId;
+            return Convert.ToInt32(cmd.ExecuteScalar());       
         }//AddPurchase
 
         #region Модификация таблицы PurchaseDetails
@@ -584,14 +580,14 @@ namespace PartsApp
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         private static void AddPurchaseDetail(OperationDetails purchaseDetails, SQLiteCommand cmd)
         {
-            string query = "INSERT INTO PurchaseDetails VALUES (@OperationId, @SparePartId, @Quantity, @Price);";
+            string query = "INSERT INTO PurchaseDetails VALUES (@OperationId, @SparePartId, @Count, @Price);";
 
             cmd.CommandText = query;
 
             cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@OperationId", purchaseDetails.Operation.OperationId);
             cmd.Parameters.AddWithValue("@SparePartId", purchaseDetails.SparePart.SparePartId);
-            cmd.Parameters.AddWithValue("@Quantity",    purchaseDetails.Count);
+            cmd.Parameters.AddWithValue("@Count", purchaseDetails.Count);
             cmd.Parameters.AddWithValue("@Price",       purchaseDetails.Price);
 
             cmd.ExecuteNonQuery();

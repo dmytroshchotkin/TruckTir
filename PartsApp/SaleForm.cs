@@ -397,32 +397,29 @@ namespace PartsApp
         /// <param name="extCountCell">Редактируемая ячейка.</param>
         private void SellingPriceCellFilled(DataGridViewCell cell)
         {
-            if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
+            try
             {
-                try
-                {
-                    float sellPrice = Convert.ToSingle(cell.Value);
-                    if (sellPrice == 0) 
-                        throw new Exception();  //ввод нуля также является ошибкой.
+                float sellPrice = Convert.ToSingle(cell.Value);
+                if (sellPrice == 0) 
+                    throw new Exception();  //ввод нуля также является ошибкой.
 
-                    int sparePartId = (cell.OwningRow.Tag as SparePart).SparePartId;
-                    SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (r.Tag as SparePart).SparePartId == sparePartId).Tag as SparePart;
-                    //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
-                    if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= sellPrice))
-                        if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
-                            throw new Exception();
+                int sparePartId = (cell.OwningRow.Tag as SparePart).SparePartId;
+                SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (r.Tag as SparePart).SparePartId == sparePartId).Tag as SparePart;
+                //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
+                if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= sellPrice))
+                    if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
+                        throw new Exception();
 
-                    cell.Value = sellPrice; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
-                }//try
-                catch
-                {
-                    //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
-                    toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
-                    cell.Value = null;
-                }//catch
+                cell.Value = sellPrice; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
+            }//try
+            catch
+            {
+                //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
+                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
+                cell.Value = null;
+            }//catch
 
-                FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
-            }//if     
+            FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'. 
         }//SellingPriceCellFilled
 
         /// <summary>
@@ -1277,7 +1274,7 @@ namespace PartsApp
             }//foreach
 
             return operDetList;
-        }//CreateOperationDetailsListFromForm
+        }//CreateAvailabilityListFromForm
 
         /// <summary>
         /// Возвращает true если все обязательные поля корректно заполнены, иначе false.

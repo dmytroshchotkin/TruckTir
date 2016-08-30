@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using PartsApp.Models;
+using PartsApp.SupportClasses;
 
 namespace PartsApp
 {
@@ -19,9 +20,6 @@ namespace PartsApp
 
     public partial class PurchaseForm : Form
     {
-        IList<SparePart> spareParts = new List<SparePart>();
-
-        IList<SparePart> searchSparePartsList = new List<SparePart>();
         bool _isCellEditError = false;
         DataGridViewCell _lastEditCell;
 
@@ -424,25 +422,27 @@ namespace PartsApp
         /// <param name="cell">Редактируемая ячейка.</param>
         private void PriceCellFilled(DataGridViewCell cell)
         {
-            if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
+            try
             {
-                try
-                {
-                    float price = Convert.ToSingle(cell.Value);
-                    if (price <= 0)
-                        throw new Exception();  //ввод значения не более 0 также является ошибкой.
+                float price = Convert.ToSingle(cell.Value);
+                if (price <= 0)
+                    throw new Exception();  //ввод значения не более 0 также является ошибкой.
 
-                    cell.Value = price; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
-                }//try
-                catch
-                {
-                    //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
-                    toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
-                    cell.Value = null;
-                }//catch
+                cell.Value = price; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
+            }//try
+            catch
+            {
+                //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
+                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
+                cell.Value = null;
+                //Убираем 'ЦенуПродажи' и 'Наценку'.
+                cell.Value = null;
+                
+            }//catch
 
-                FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
-            }//if  
+            SetMarkupAndSellingPriceCells(cell); //Записываем значения в ячейки 'Наценка' и 'ЦенаПродажи'.
+            cell.OwningRow.Cells[SellingPrice.Index].ReadOnly = (cell.Value == null);//Задаём уровень доступа для ячейки 'ЦенаПродажи', в зависимости от корректности записи в ячейку 'Цена'.
+            FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
         }//PriceCellFilled
 
         /// <summary>
@@ -450,32 +450,53 @@ namespace PartsApp
         /// </summary>
         /// <param name="extCountCell">Редактируемая ячейка.</param>
         private void SellingPriceCellFilled(DataGridViewCell cell)
-        {
-            if (cell.Value != null) //Если строка не пустая, проверить корректность ввода.
+        {            
+            try
             {
-                try
-                {
-                    float sellingPrice = Convert.ToSingle(cell.Value);
-                    if (sellingPrice <= 0)
-                        throw new Exception();  //ввод значения не более 0 также является ошибкой.
+                float sellingPrice = Convert.ToSingle(cell.Value);
+                if (sellingPrice <= 0)
+                    throw new Exception();  //ввод значения не более 0 также является ошибкой.
                    
-                    //Если цена продажи меньше или равна закупочной, требуем подтверждения.
-                    float price = Convert.ToSingle(cell.OwningRow.Cells[Price.Index].Value);
-                    if (sellingPrice <= price)
-                        if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
-                            throw new Exception();
+                //Если цена продажи меньше или равна закупочной, требуем подтверждения.
+                float price = Convert.ToSingle(cell.OwningRow.Cells[Price.Index].Value);
+                if (sellingPrice <= price)
+                    if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
+                        throw new Exception();
+            }//try
+            catch
+            {
+                //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
+                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
+                cell.Value = null;
+            }//catch    
 
-                    cell.Value = sellingPrice; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
-                }//try
-                catch
-                {
-                    //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
-                    toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
-                    cell.Value = null;
-                }//catch
-            }//if     
+            SetMarkupAndSellingPriceCells(cell.OwningRow.Cells[Price.Index]); //Записываем значения в ячейки 'Наценка' и 'ЦенаПродажи'.
         }//SellingPriceCellFilled
 
+        private void  SetMarkupAndSellingPriceCells(DataGridViewCell priceCell)
+        {
+            DataGridViewCell markupCell = priceCell.OwningRow.Cells[Markup.Index];
+            DataGridViewCell sellPriceCell = priceCell.OwningRow.Cells[SellingPrice.Index];
+            if (priceCell.Value != null)
+            {
+                float price = (float)priceCell.Value;                
+                float markup = (float)Models.Markup.Types.Retail; //запоминаем дефолтнцю наценку.
+                if (sellPriceCell.Value == null)
+                {
+                    sellPriceCell.Value = price + (price * markup / 100);     //рассчитываем цену продажи.
+                }//if
+                else //Если 'ЦенаПродажи' установлена юзером, то расчитываем наценку.
+                {
+                    sellPriceCell.Value = Convert.ToSingle(sellPriceCell.Value);   //Перезаписываем цену продажи для форматированного вывода.
+                    markup = ((float)sellPriceCell.Value * 100 / price) - 100;     //расчитываем наценку исходя из установленной цены продажи.                    
+                }//else
+
+                markupCell.Value = Models.Markup.GetDescription(markup);  //выводим тип наценки.
+                markupCell.Tag = markup;                                  //запоминаем числовое значение наценки.
+            }//if
+            else //если цена не установлена, обнуляем значения наценки и цены продажи.
+                markupCell.Value = markupCell.Tag = sellPriceCell.Value = null;  
+        }//SetMarkupAndSellingPriceCells
 
         /// <summary>
         /// Автозаполнение строки соотв. инф-цией.
@@ -644,10 +665,9 @@ namespace PartsApp
 
         #region Методы вывода инф-ции в Excel.
 
-        private void BeginLoadPurchaseToExcelFile(object purchase)
+        private void BeginLoadPurchaseToExcelFile(object availList)
         {
-            if (purchase is Purchase)
-                LoadPurchaseToExcelFile(purchase as Purchase);
+            LoadPurchaseToExcelFile(availList as List<Availability>);
         }//BeginLoadPurchaseToExcelFile
      
         /// <summary>
@@ -655,8 +675,10 @@ namespace PartsApp
         /// </summary>
         /// <param name="sale">Информация о приходе.</param>
         /// <param name="availabilityList">Список оприходованных товаров.</param>
-        private void LoadPurchaseToExcelFile(Purchase purchase)
+        private void LoadPurchaseToExcelFile(List<Availability> availList)
         {
+            Purchase purchase = availList[0].OperationDetails.Operation as Purchase;
+            List<SparePart> sparePartsList = availList.Select(av => av.OperationDetails.SparePart).ToList();
             Excel.Application ExcelApp = new Excel.Application();
             Excel.Workbook ExcelWorkBook;
             Excel.Worksheet ExcelWorkSheet;
@@ -718,12 +740,12 @@ namespace PartsApp
             int articulColWidth = 20;
             //int manufColWidth = 15, minManufColWidth = 8; //  15 -- Взято методом тыка.
 
-            SetColumnsWidth(spareParts, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
+            SetColumnsWidth(sparePartsList, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
             //Выводим список товаров.
-            foreach (OperationDetails operDet in purchase.OperationDetailsList)            
+            foreach (Availability avail in availList)            
             {
                 ++row;
-                string title = operDet.SparePart.Title, articul = operDet.SparePart.Articul;
+                string title = avail.OperationDetails.SparePart.Title, articul = avail.OperationDetails.SparePart.Articul;
                 ExcelApp.Cells[row, column + 1] = articul;
                 ExcelApp.Cells[row, column + 2] = title;
                 
@@ -742,17 +764,17 @@ namespace PartsApp
                         (ExcelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
                 }//if
 
-                ExcelApp.Cells[row, column] = operDet.SparePart.Manufacturer;
+                ExcelApp.Cells[row, column] = avail.OperationDetails.SparePart.Manufacturer;
 
-                ExcelApp.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
+                ExcelApp.Cells[row, column + 3] = avail.OperationDetails.SparePart.MeasureUnit;
 
-                ExcelApp.Cells[row, column + 4] = operDet.Count;
-                ExcelApp.Cells[row, column + 5] = operDet.Price;
-                ExcelApp.Cells[row, column + 6] = operDet.Price * operDet.Count;
-            }//for
+                ExcelApp.Cells[row, column + 4] = avail.OperationDetails.Count;
+                ExcelApp.Cells[row, column + 5] = avail.OperationDetails.Price;
+                ExcelApp.Cells[row, column + 6] = avail.OperationDetails.Price * avail.OperationDetails.Count;
+            }//foreach
 
             //Обводим талицу рамкой. 
-            excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "G" + row.ToString());
+            excelCells = ExcelWorkSheet.get_Range("A" + (row - sparePartsList.Count + 1).ToString(), "G" + row.ToString());
             excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
 
             //Выводим "Итого".
@@ -1015,11 +1037,14 @@ namespace PartsApp
                     if (row.Cells[Price.Index].Value != null)
                     {
                         row.Cells[Markup.Index].Value = markupType;
+                        row.Cells[Markup.Index].Tag = markupValue;
 
                         float price = (float)row.Cells[Price.Index].Value;
-                        float sellPrice = (float)Math.Round(price + (price * markupValue / 100), 2, MidpointRounding.AwayFromZero);
+                        float sellPrice = price + (price * markupValue / 100);
                         row.Cells[SellingPrice.Index].Value = sellPrice;
+                        //SetMarkupAndSellingPriceCells(sellPrice, row.Cells[SellingPrice.Index]);
                     }//if
+                    
                 }//foreach
             }//try
             catch
@@ -1034,7 +1059,6 @@ namespace PartsApp
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
-      
 
         /// <summary>
         /// Возвращает объект типа Operation, созданный из данных формы.
@@ -1053,10 +1077,8 @@ namespace PartsApp
                 contragentEmployee : (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null,
                 operationDate      : purchaseDateTimePicker.Value,
                 description        : (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
-                operDetList        : CreateOperationDetailsListFromForm()                                                
+                operDetList        : null                                               
             );
-
-            purchase.OperationDetailsList.ToList().ForEach(od => od.Operation = purchase); //Присваиваем 'Операцию' для каждого OperationDetails.
 
             return purchase;
         }//CreatePurchaseFromForm
@@ -1065,10 +1087,11 @@ namespace PartsApp
         /// Возвращает список объектов типа OperationDetails, созданный из данных таблицы продаж.
         /// </summary>
         /// <returns></returns>
-        private List<OperationDetails> CreateOperationDetailsListFromForm()
+        private List<Availability> CreateAvailabilityListFromForm()
         {
-            List<OperationDetails> operDetList = new List<OperationDetails>();
-            foreach (DataGridViewRow row in purchaseDataGridView.Rows)
+            List<Availability> availList = new List<Availability>();
+            Purchase purchase = CreatePurchaseFromForm();
+            foreach(DataGridViewRow row in purchaseDataGridView.Rows)
             {
                 //Если строка не пустая.
                 if (row.Tag != null)
@@ -1076,14 +1099,48 @@ namespace PartsApp
                     float count = Convert.ToSingle(row.Cells[Count.Index].Value);
                     float price = Convert.ToSingle(row.Cells[Price.Index].Value);
 
-                    SparePart sparePart = row.Tag as SparePart;
-                    operDetList.Add(new OperationDetails(sparePart, null, count, price));
+
+                    SparePart sparePart = row.Tag as SparePart;                    
+                    OperationDetails operDet = new OperationDetails(sparePart, purchase, count, price);
+
+                    Availability avail = new Availability
+                    (
+                        operationDetails : operDet,
+                        storageAddress   : (String.IsNullOrWhiteSpace(storageAdressTextBox.Text)) ? null : storageAdressTextBox.Text.Trim(),
+                        markup           : (row.Cells[Markup.Index].Tag != null) ? Convert.ToSingle(row.Cells[Markup.Index].Tag) : 0
+                    );
+                    availList.Add(avail);
                 }//if
             }//foreach
 
-            return operDetList;
-        }//CreateOperationDetailsListFromForm
+            return availList;
+        }//CreateAvailabilityListFromForm
 
+        /// <summary>
+        /// Возвращает true если все обязательные поля корректно заполнены, иначе false.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsRequiredFieldsValid()
+        {
+            //Находим все BackPanel-контролы на форме. 
+            List<Control> curAccBackControls = this.GetAllControls(typeof(Panel), "BackPanel");
+
+            supplierTextBox_Leave(null, null);
+            buyerTextBox_Leave(null, null);
+
+            //Если хоть один контрол не прошел валидацию, возв-ем false.
+            if (curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red))
+                return false;
+
+            //Если таблица не заполнена или не везде указана цена или кол-во.
+            if (purchaseDataGridView.Rows.Cast<DataGridViewRow>().All(r => r.Tag == null) || purchaseDataGridView.Rows.Cast<DataGridViewRow>().Any(r => r.Tag != null && (r.Cells[Price.Index].Value == null || r.Cells[Count.Index].Value == null)))
+            {
+                toolTip.Show("Таблица не заполнена или не везде указана цена или количество товара", this, okButton.Location, 3000);
+                return false;
+            }//if
+
+            return true;
+        }//IsRequiredAddingAreaFieldsValid
 
 
 
@@ -1103,44 +1160,30 @@ namespace PartsApp
         {
             if (e.Button == MouseButtons.Left)
             {
-                supplierTextBox_Leave(null, null);
-                storageAdressTextBox_Leave(null, null);
-                storageAdressTextBox_Leave(null, null);
-
-                if (supplierBackPanel.BackColor != Color.Red && buyerBackPanel.BackColor != Color.Red
-                    && spareParts.Count != 0 && storageAdressBackPanel.BackColor != Color.Red)
-                {   
-                    //Проверяем везде ли установлена цена и кол-во. 
-                    foreach (DataGridViewRow row in purchaseDataGridView.Rows)
-                    {
-                        if (row.Cells[SparePartId.Index].Value != null && (row.Cells[Price.Index].Value == null || row.Cells[Count.Index].Value == null))
-                        {                           
-                            toolTip.Show("Не везде указана цена или количество товара", this, okButton.Location, 3000);
-                            return;
-                        }//if
-                    }//foreach
-
-                    Purchase purchase = CreatePurchaseFromForm();
+                //Если всё заполненно корректно.
+                if (IsRequiredFieldsValid())
+                {
+                    List<Availability> availList = CreateAvailabilityListFromForm();
 
                     try
-                    {
-                        string storageAddress = String.IsNullOrWhiteSpace(storageAdressTextBox.Text) ? null : storageAdressTextBox.Text.Trim();
-
-                        purchase.OperationId = PartsDAL.AddPurchase(purchase, storageAddress); /*ERROR!!! markup*/
+                    {                        
+                        availList[0].OperationDetails.Operation.OperationId = PartsDAL.AddPurchase(availList);
                     }//try
-                    catch(Exception)
+                    catch (Exception)
                     {
                         MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
                         return;
                     }//catch 
 
-                    //LoadPurchaseToExcelFile(sale, availabilityList);
-/*!!!*/             new System.Threading.Thread(BeginLoadPurchaseToExcelFile).Start(purchase); //Сделать по нормальному вызов с потоком.
+                    //LoadsaleToExcelFile(availList, availabilityList);
+                    /*!!!*/
+                    new System.Threading.Thread(BeginLoadPurchaseToExcelFile).Start(availList); //Сделать по нормальному вызов с потоком.
 
                     this.Visible = false;
+                    //this.Close();
                 }//if
             }//if
-        }
+        }//
 
         
 
