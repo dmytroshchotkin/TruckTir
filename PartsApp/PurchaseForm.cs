@@ -157,7 +157,7 @@ namespace PartsApp
         {
             DataGridView dgv = sender as DataGridView;
             //Делаем ReadOnly ячейки 'Цена', 'Кол-во' и 'Цена Продажи'.
-            dgv[SellingPrice.Index, e.RowIndex].ReadOnly = dgv[Count.Index, e.RowIndex].ReadOnly = dgv[Price.Index, e.RowIndex].ReadOnly = true;
+            dgv[SellingPriceCol.Index, e.RowIndex].ReadOnly = dgv[CountCol.Index, e.RowIndex].ReadOnly = dgv[PriceCol.Index, e.RowIndex].ReadOnly = true;
         }//purchaseDataGridView_RowsAdded
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace PartsApp
             _lastEditCell = purchaseDataGridView[e.ColumnIndex, e.RowIndex]; //запоминаем текущую ячейку как последнюю редактируемую.
 
             //Обрабатываем ввод в ячейку 'Название' или 'Артикул'.
-            if (_lastEditCell.OwningColumn == Title || _lastEditCell.OwningColumn == Articul)
+            if (_lastEditCell.OwningColumn == TitleCol || _lastEditCell.OwningColumn == ArticulCol)
                 autoCompleteListBox.Location = GetCellBelowLocation(_lastEditCell); //устанавливаем позицию вып. списка.
         }//purchaseDataGridView_CellBeginEdit
 
@@ -183,7 +183,7 @@ namespace PartsApp
         {            
             DataGridViewCell cell = purchaseDataGridView.CurrentCell;
 
-            if (cell.OwningColumn == Title || cell.OwningColumn == Articul)
+            if (cell.OwningColumn == TitleCol || cell.OwningColumn == ArticulCol)
             {
                 //Если ячейка редактируется первый раз, подписываем её на события обработки ввода.
                 if (cell.Tag == null)
@@ -225,7 +225,7 @@ namespace PartsApp
             {
                 //Находим подходящий по вводу товар.
                 List<int> existingSparePartsIdsList = purchaseDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (r.Tag as SparePart).SparePartId).ToList(); //Id-ки уже введенного товара.
-                List<SparePart>  searchSparePartsList = (_lastEditCell.OwningColumn == Title) 
+                List<SparePart> searchSparePartsList = (_lastEditCell.OwningColumn == TitleCol) 
                     ? searchSparePartsList = PartsDAL.SearchSparePartsByTitle(textBox.Text, 10, existingSparePartsIdsList)
                     : searchSparePartsList = PartsDAL.SearchSparePartsByArticul(textBox.Text, 10, existingSparePartsIdsList);
 
@@ -235,7 +235,7 @@ namespace PartsApp
                     //Заполняем вып. список новыми объектами.
                     searchSparePartsList.ForEach(sp => autoCompleteListBox.Items.Add(sp));
 
-                    autoCompleteListBox.DisplayMember = (_lastEditCell.OwningColumn == Title) ? "Title" : "Articul";
+                    autoCompleteListBox.DisplayMember = (_lastEditCell.OwningColumn == TitleCol) ? "Title" : "Articul";
                     autoCompleteListBox.Visible = true;
                     autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
                 }//if
@@ -248,13 +248,13 @@ namespace PartsApp
             {
                 DataGridViewCell cell = purchaseDataGridView[e.ColumnIndex, e.RowIndex];
 
-                if (cell.OwningColumn == Title || cell.OwningColumn == Articul) //Если редактируется артикул или название товара. 
+                if (cell.OwningColumn == TitleCol || cell.OwningColumn == ArticulCol) //Если редактируется артикул или название товара. 
                     TitleOrArticulCellFilled(cell);
-                else if (cell.OwningColumn == Count)                            //Если редактируется кол-во. 
+                else if (cell.OwningColumn == CountCol)                            //Если редактируется кол-во. 
                     CountCellFilled(cell);
-                else if (cell.OwningColumn == Price)
+                else if (cell.OwningColumn == PriceCol)
                     PriceCellFilled(cell);
-                else if (cell.OwningColumn == SellingPrice)                     //Если редактируется цена продажи. 
+                else if (cell.OwningColumn == SellingPriceCol)                     //Если редактируется цена продажи. 
                     SellingPriceCellFilled(cell);
             }//if
         }//purchaseDataGridView_CellEndEdit                            
@@ -406,7 +406,7 @@ namespace PartsApp
         private void CountCellFilled(DataGridViewCell cell)
         {
             //Проверяем корректность ввода.
-            string measureUnit = cell.OwningRow.Cells[Unit.Index].Value.ToString();
+            string measureUnit = cell.OwningRow.Cells[MeasureUnitCol.Index].Value.ToString();
             if (!IsCountCellValueCorrect(cell, measureUnit))
             {
                 toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.
@@ -441,7 +441,7 @@ namespace PartsApp
             }//catch
 
             SetMarkupAndSellingPriceCells(cell); //Записываем значения в ячейки 'Наценка' и 'ЦенаПродажи'.
-            cell.OwningRow.Cells[SellingPrice.Index].ReadOnly = (cell.Value == null);//Задаём уровень доступа для ячейки 'ЦенаПродажи', в зависимости от корректности записи в ячейку 'Цена'.
+            cell.OwningRow.Cells[SellingPriceCol.Index].ReadOnly = (cell.Value == null);//Задаём уровень доступа для ячейки 'ЦенаПродажи', в зависимости от корректности записи в ячейку 'Цена'.
             FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
         }//PriceCellFilled
 
@@ -458,7 +458,7 @@ namespace PartsApp
                     throw new Exception();  //ввод значения не более 0 также является ошибкой.
                    
                 //Если цена продажи меньше или равна закупочной, требуем подтверждения.
-                float price = Convert.ToSingle(cell.OwningRow.Cells[Price.Index].Value);
+                float price = Convert.ToSingle(cell.OwningRow.Cells[PriceCol.Index].Value);
                 if (sellingPrice <= price)
                     if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
                         throw new Exception();
@@ -470,13 +470,13 @@ namespace PartsApp
                 cell.Value = null;
             }//catch    
 
-            SetMarkupAndSellingPriceCells(cell.OwningRow.Cells[Price.Index]); //Записываем значения в ячейки 'Наценка' и 'ЦенаПродажи'.
+            SetMarkupAndSellingPriceCells(cell.OwningRow.Cells[PriceCol.Index]); //Записываем значения в ячейки 'Наценка' и 'ЦенаПродажи'.
         }//SellingPriceCellFilled
 
         private void  SetMarkupAndSellingPriceCells(DataGridViewCell priceCell)
         {
-            DataGridViewCell markupCell = priceCell.OwningRow.Cells[Markup.Index];
-            DataGridViewCell sellPriceCell = priceCell.OwningRow.Cells[SellingPrice.Index];
+            DataGridViewCell markupCell = priceCell.OwningRow.Cells[MarkupCol.Index];
+            DataGridViewCell sellPriceCell = priceCell.OwningRow.Cells[SellingPriceCol.Index];
             if (priceCell.Value != null)
             {
                 float price = (float)priceCell.Value;                
@@ -510,8 +510,8 @@ namespace PartsApp
             {
                 FillThePurchaseDGV(cell.OwningRow, sparePart);
 
-                cell.OwningRow.Cells[Price.Index].ReadOnly = cell.OwningRow.Cells[SellingPrice.Index].ReadOnly = cell.OwningRow.Cells[Count.Index].ReadOnly = false;
-                cell.OwningRow.Cells[Title.Index].ReadOnly = cell.OwningRow.Cells[Articul.Index].ReadOnly = true;
+                cell.OwningRow.Cells[PriceCol.Index].ReadOnly = cell.OwningRow.Cells[SellingPriceCol.Index].ReadOnly = cell.OwningRow.Cells[CountCol.Index].ReadOnly = false;
+                cell.OwningRow.Cells[TitleCol.Index].ReadOnly = cell.OwningRow.Cells[ArticulCol.Index].ReadOnly = true;
 
                 #region Увеличение purchaseGroupBox.
                 //if (saleDataGridView.PreferredSize.Height > saleDataGridView.Size.Height)
@@ -533,9 +533,9 @@ namespace PartsApp
         {
             row.Tag = sparePart;
 
-            row.Cells[Title.Index].Value    = sparePart.Title;
-            row.Cells[Articul.Index].Value  = sparePart.Articul;
-            row.Cells[Unit.Index].Value     = sparePart.MeasureUnit;
+            row.Cells[TitleCol.Index].Value = sparePart.Title;
+            row.Cells[ArticulCol.Index].Value = sparePart.Articul;
+            row.Cells[MeasureUnitCol.Index].Value = sparePart.MeasureUnit;
         }//FillThePurchaseDGV
 
         /// <summary>
@@ -567,16 +567,16 @@ namespace PartsApp
         /// <param name="row">Строка дял которой производятся вычисления и заполнение.</param>
         private void FillTheSumCell(DataGridViewRow row)
         {
-            if (row.Cells[Count.Index].Value != null && row.Cells[Price.Index].Value != null)
+            if (row.Cells[CountCol.Index].Value != null && row.Cells[PriceCol.Index].Value != null)
             {
-                float price = Convert.ToSingle(row.Cells[Price.Index].Value);
-                float count = Convert.ToSingle(row.Cells[Count.Index].Value);
+                float price = Convert.ToSingle(row.Cells[PriceCol.Index].Value);
+                float count = Convert.ToSingle(row.Cells[CountCol.Index].Value);
 
-                row.Cells[Sum.Index].Value = price * count;
+                row.Cells[SumCol.Index].Value = price * count;
             }//if
             else
             {
-                row.Cells[Sum.Index].Value = null;//очищаем ячейку. 
+                row.Cells[SumCol.Index].Value = null;//очищаем ячейку. 
             }//else
 
             FillTheInTotal(); //Заполняем общую сумму операции.
@@ -591,10 +591,10 @@ namespace PartsApp
             foreach (DataGridViewRow row in purchaseDataGridView.Rows)
             {
                 //Если в строке указана и цена и количестов.
-                if (row.Cells[Sum.Index].Value != null)
+                if (row.Cells[SumCol.Index].Value != null)
                 {
-                    float price     = Convert.ToSingle(row.Cells[Price.Index].Value);
-                    float count = Convert.ToSingle(row.Cells[Count.Index].Value);
+                    float price = Convert.ToSingle(row.Cells[PriceCol.Index].Value);
+                    float count = Convert.ToSingle(row.Cells[CountCol.Index].Value);
                     inTotal += price * count;
                 }//if
             }//foreach
@@ -1006,7 +1006,7 @@ namespace PartsApp
         private void markupCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             //Задаем видимость столбцов 'ТипНаценки' и 'ЦенаПродажи' в зависимости от состояния checkedBox.
-            Markup.Visible = SellingPrice.Visible = markupComboBox.Visible  = markupCheckBox.Checked;                 
+            MarkupCol.Visible = SellingPriceCol.Visible = markupComboBox.Visible = markupCheckBox.Checked;                 
         }//markupCheckBox_CheckedChanged     
 
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -1034,14 +1034,14 @@ namespace PartsApp
                 foreach (DataGridViewRow row in purchaseDataGridView.SelectedRows)
                 {
                     //Если указана цена.
-                    if (row.Cells[Price.Index].Value != null)
+                    if (row.Cells[PriceCol.Index].Value != null)
                     {
-                        row.Cells[Markup.Index].Value = markupType;
-                        row.Cells[Markup.Index].Tag = markupValue;
+                        row.Cells[MarkupCol.Index].Value = markupType;
+                        row.Cells[MarkupCol.Index].Tag = markupValue;
 
-                        float price = (float)row.Cells[Price.Index].Value;
+                        float price = (float)row.Cells[PriceCol.Index].Value;
                         float sellPrice = price + (price * markupValue / 100);
-                        row.Cells[SellingPrice.Index].Value = sellPrice;
+                        row.Cells[SellingPriceCol.Index].Value = sellPrice;
                         //SetMarkupAndSellingPriceCells(sellPrice, row.Cells[SellingPrice.Index]);
                     }//if
                     
@@ -1096,8 +1096,8 @@ namespace PartsApp
                 //Если строка не пустая.
                 if (row.Tag != null)
                 {
-                    float count = Convert.ToSingle(row.Cells[Count.Index].Value);
-                    float price = Convert.ToSingle(row.Cells[Price.Index].Value);
+                    float count = Convert.ToSingle(row.Cells[CountCol.Index].Value);
+                    float price = Convert.ToSingle(row.Cells[PriceCol.Index].Value);
 
 
                     SparePart sparePart = row.Tag as SparePart;                    
@@ -1107,7 +1107,7 @@ namespace PartsApp
                     (
                         operationDetails : operDet,
                         storageAddress   : (String.IsNullOrWhiteSpace(storageAdressTextBox.Text)) ? null : storageAdressTextBox.Text.Trim(),
-                        markup           : (row.Cells[Markup.Index].Tag != null) ? Convert.ToSingle(row.Cells[Markup.Index].Tag) : 0
+                        markup: (row.Cells[MarkupCol.Index].Tag != null) ? Convert.ToSingle(row.Cells[MarkupCol.Index].Tag) : 0
                     );
                     availList.Add(avail);
                 }//if
@@ -1133,7 +1133,7 @@ namespace PartsApp
                 return false;
 
             //Если таблица не заполнена или не везде указана цена или кол-во.
-            if (purchaseDataGridView.Rows.Cast<DataGridViewRow>().All(r => r.Tag == null) || purchaseDataGridView.Rows.Cast<DataGridViewRow>().Any(r => r.Tag != null && (r.Cells[Price.Index].Value == null || r.Cells[Count.Index].Value == null)))
+            if (purchaseDataGridView.Rows.Cast<DataGridViewRow>().All(r => r.Tag == null) || purchaseDataGridView.Rows.Cast<DataGridViewRow>().Any(r => r.Tag != null && (r.Cells[PriceCol.Index].Value == null || r.Cells[CountCol.Index].Value == null)))
             {
                 toolTip.Show("Таблица не заполнена или не везде указана цена или количество товара", this, okButton.Location, 3000);
                 return false;
