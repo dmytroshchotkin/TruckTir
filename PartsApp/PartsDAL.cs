@@ -552,8 +552,6 @@ namespace PartsApp
         /// <returns></returns>
         private static int AddPurchase(Purchase purchase, SQLiteCommand cmd)
         {
-            int purchaseId = 0;
-
             string query = "INSERT INTO Purchases (EmployeeID, ContragentId, ContragentEmployee, OperationDate, Description) "
                          + "VALUES (@EmployeeID, @ContragentId, @ContragentEmployee, strftime('%s', @OperationDate), @Description); "
                          + "SELECT OperationId FROM Purchases WHERE rowid = last_insert_rowid();";
