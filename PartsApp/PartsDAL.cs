@@ -724,7 +724,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="saleId">Ид продажи</param>
         /// <param name="sparePartId">Ид товара</param>
-        /// <param name="sellingPrice">Отпускная цена товара</param>
+        /// <param name="sellPrice">Отпускная цена товара</param>
         /// <param name="quantity">Кол-во товара</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         private static void AddSaleDetail(int saleId, OperationDetails operDet, SQLiteCommand cmd)
@@ -1323,32 +1323,6 @@ namespace PartsApp
         }//FindAllSuppliers
 
         /// <summary>
-        /// Возвращает массив строк состоящий из всех имен поставщиков. 
-        /// </summary>
-        /// <returns></returns>
-        public static string[] FindAllSuppliersName()
-        {
-            IList<string> suppliersNameList = new List<string>();
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT ContragentName FROM Suppliers;", connection);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    suppliersNameList.Add(dataReader["ContragentName"] as string);                    
-                }//while
-
-                connection.Close();
-            }//using
-            string[] suppliersName = new string[suppliersNameList.Count];
-            for (int i = 0; i < suppliersName.Length; ++i)
-                suppliersName[i] = suppliersNameList[i];
-
-            return suppliersName;
-        }//FindAllSuppliersName
-        /// <summary>
         /// Возвращает объект типа Contragent по заданному Id.
         /// </summary>
         /// <param name="supplierId">Id поставщика, которого надо найти.</param>
@@ -1583,34 +1557,6 @@ namespace PartsApp
             return customer; 
 
         }//FindCustomers
-
-        /// <summary>
-        /// Возвращает массив строк состоящий из всех имен клиентов. 
-        /// </summary>
-        /// <returns></returns>
-        public static string[] FindAllCustomersName()
-        {
-            IList<string> customersNameList = new List<string>();
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                SQLiteCommand cmd = new SQLiteCommand("SELECT ContragentName FROM Customers;", connection);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    string name = dataReader["ContragentName"] as string;
-                    customersNameList.Add(name);
-                }//while
-
-                connection.Close();
-            }//using
-            string[] customersName = new string[customersNameList.Count];
-            for (int i = 0; i < customersName.Length; ++i)
-                customersName[i] = customersNameList[i];
-
-            return customersName;
-        }//FindAllCustomersName
 
         /// <summary>
         /// Возвращает объект типа Customer найденный по заданному Id.
@@ -2498,9 +2444,9 @@ namespace PartsApp
                     notIn.Remove(notIn.Length - 2, 2);
                 }
 
-                var query = "SELECT * FROM SpareParts WHERE Title LIKE @Title AND SparePartId NOT IN(" + notIn + ") LIMIT @Limit;";
+                var query = "SELECT * FROM SpareParts WHERE ToLower(Title) LIKE @Title AND SparePartId NOT IN(" + notIn + ") LIMIT @Limit;";
                 
-                cmd.Parameters.AddWithValue("@Title", title + "%");
+                cmd.Parameters.AddWithValue("@Title", title.ToLower() + "%");
                 cmd.Parameters.AddWithValue("@Limit", limit);
 
                 cmd.CommandText = query;
@@ -2545,9 +2491,9 @@ namespace PartsApp
                     notIn.Remove(notIn.Length - 2, 2);
                 }
 
-                var query = "SELECT * FROM  SpareParts WHERE Articul LIKE @Articul AND SparePartId NOT IN(" + notIn + ") LIMIT @Limit;";
+                var query = "SELECT * FROM  SpareParts WHERE ToLower(Articul) LIKE @Articul AND SparePartId NOT IN(" + notIn + ") LIMIT @Limit;";
 
-                cmd.Parameters.AddWithValue("@Articul", articul + "%");
+                cmd.Parameters.AddWithValue("@Articul", articul.ToLower() + "%");
                 cmd.Parameters.AddWithValue("@Limit", limit);
 
                 cmd.CommandText = query;

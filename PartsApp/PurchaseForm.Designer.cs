@@ -39,6 +39,15 @@
             this.storageAdressLabel = new System.Windows.Forms.Label();
             this.purchaseGroupBox = new System.Windows.Forms.GroupBox();
             this.purchaseDataGridView = new System.Windows.Forms.DataGridView();
+            this.SparePartId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Articul = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Price = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Markup = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SellingPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.currencyLabel = new System.Windows.Forms.Label();
             this.excRateLabel = new System.Windows.Forms.Label();
             this.inTotalLabel = new System.Windows.Forms.Label();
@@ -73,15 +82,6 @@
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
-            this.SparePartId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Articul = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Title = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Sum = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Markup = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SellingPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.purchaseGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.purchaseDataGridView)).BeginInit();
             this.supplierBackPanel.SuspendLayout();
@@ -186,6 +186,84 @@
             this.purchaseDataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.purchaseDataGridView_RowsAdded);
             this.purchaseDataGridView.SelectionChanged += new System.EventHandler(this.purchaseDataGridView_SelectionChanged);
             // 
+            // SparePartId
+            // 
+            this.SparePartId.HeaderText = "Ид";
+            this.SparePartId.Name = "SparePartId";
+            this.SparePartId.Visible = false;
+            // 
+            // Articul
+            // 
+            this.Articul.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Articul.HeaderText = "Артикул";
+            this.Articul.MinimumWidth = 130;
+            this.Articul.Name = "Articul";
+            this.Articul.Width = 130;
+            // 
+            // Title
+            // 
+            this.Title.HeaderText = "Название";
+            this.Title.Name = "Title";
+            // 
+            // Unit
+            // 
+            this.Unit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Unit.DefaultCellStyle = dataGridViewCellStyle3;
+            this.Unit.HeaderText = "Ед. изм.";
+            this.Unit.MinimumWidth = 35;
+            this.Unit.Name = "Unit";
+            this.Unit.ReadOnly = true;
+            this.Unit.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Unit.ToolTipText = "Единица измерения";
+            this.Unit.Width = 35;
+            // 
+            // Count
+            // 
+            this.Count.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Count.HeaderText = "Кол-во";
+            this.Count.Name = "Count";
+            this.Count.ReadOnly = true;
+            this.Count.ToolTipText = "Количество";
+            this.Count.Width = 66;
+            // 
+            // Price
+            // 
+            this.Price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Price.HeaderText = "Цена";
+            this.Price.MinimumWidth = 100;
+            this.Price.Name = "Price";
+            this.Price.ReadOnly = true;
+            // 
+            // Sum
+            // 
+            this.Sum.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.Sum.HeaderText = "Сумма";
+            this.Sum.MinimumWidth = 100;
+            this.Sum.Name = "Sum";
+            this.Sum.ReadOnly = true;
+            // 
+            // Markup
+            // 
+            this.Markup.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.Markup.HeaderText = "Наценка";
+            this.Markup.Name = "Markup";
+            this.Markup.ReadOnly = true;
+            this.Markup.Visible = false;
+            // 
+            // SellingPrice
+            // 
+            this.SellingPrice.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "C2";
+            dataGridViewCellStyle4.NullValue = null;
+            this.SellingPrice.DefaultCellStyle = dataGridViewCellStyle4;
+            this.SellingPrice.HeaderText = "Цена продажи (руб)";
+            this.SellingPrice.MinimumWidth = 100;
+            this.SellingPrice.Name = "SellingPrice";
+            this.SellingPrice.ReadOnly = true;
+            this.SellingPrice.Visible = false;
+            // 
             // currencyLabel
             // 
             this.currencyLabel.AutoSize = true;
@@ -204,6 +282,7 @@
             this.excRateLabel.TabIndex = 8;
             this.excRateLabel.Text = "Курс к рос. рублю :";
             this.toolTip.SetToolTip(this.excRateLabel, "Курс по отношению к российскому рублю");
+            this.excRateLabel.Visible = false;
             // 
             // inTotalLabel
             // 
@@ -368,6 +447,7 @@
             // 
             this.buyerAgentTextBox.Location = new System.Drawing.Point(562, 531);
             this.buyerAgentTextBox.Name = "buyerAgentTextBox";
+            this.buyerAgentTextBox.ReadOnly = true;
             this.buyerAgentTextBox.Size = new System.Drawing.Size(232, 20);
             this.buyerAgentTextBox.TabIndex = 24;
             // 
@@ -421,7 +501,6 @@
             this.markupCheckBox.TabIndex = 1;
             this.markupCheckBox.Text = "установить наценку";
             this.markupCheckBox.UseVisualStyleBackColor = true;
-            this.markupCheckBox.Visible = false;
             this.markupCheckBox.CheckedChanged += new System.EventHandler(this.markupCheckBox_CheckedChanged);
             // 
             // autoCompleteListBox
@@ -461,6 +540,7 @@
             this.excRateNumericUpDown.Name = "excRateNumericUpDown";
             this.excRateNumericUpDown.Size = new System.Drawing.Size(46, 20);
             this.excRateNumericUpDown.TabIndex = 21;
+            this.excRateNumericUpDown.Visible = false;
             this.excRateNumericUpDown.ValueChanged += new System.EventHandler(this.excRateNumericUpDown_ValueChanged);
             this.excRateNumericUpDown.Leave += new System.EventHandler(this.excRateNumericUpDown_Leave);
             // 
@@ -517,86 +597,6 @@
             this.descriptionLabel.Size = new System.Drawing.Size(83, 13);
             this.descriptionLabel.TabIndex = 34;
             this.descriptionLabel.Text = "Комментарий :";
-            // 
-            // SparePartId
-            // 
-            this.SparePartId.HeaderText = "Ид";
-            this.SparePartId.Name = "SparePartId";
-            this.SparePartId.Visible = false;
-            // 
-            // Articul
-            // 
-            this.Articul.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Articul.HeaderText = "Артикул";
-            this.Articul.MinimumWidth = 130;
-            this.Articul.Name = "Articul";
-            this.Articul.Width = 130;
-            // 
-            // Title
-            // 
-            this.Title.HeaderText = "Название";
-            this.Title.Name = "Title";
-            // 
-            // Unit
-            // 
-            this.Unit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Unit.DefaultCellStyle = dataGridViewCellStyle3;
-            this.Unit.HeaderText = "Ед. изм.";
-            this.Unit.MinimumWidth = 35;
-            this.Unit.Name = "Unit";
-            this.Unit.ReadOnly = true;
-            this.Unit.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Unit.ToolTipText = "Единица измерения";
-            this.Unit.Width = 35;
-            // 
-            // Count
-            // 
-            this.Count.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Count.HeaderText = "Кол-во";
-            this.Count.Name = "Count";
-            this.Count.ReadOnly = true;
-            this.Count.ToolTipText = "Количество";
-            this.Count.Width = 66;
-            // 
-            // Price
-            // 
-            this.Price.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Price.HeaderText = "Цена";
-            this.Price.MinimumWidth = 100;
-            this.Price.Name = "Price";
-            this.Price.ReadOnly = true;
-            // 
-            // Sum
-            // 
-            this.Sum.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.Sum.HeaderText = "Сумма";
-            this.Sum.MinimumWidth = 100;
-            this.Sum.Name = "Sum";
-            this.Sum.ReadOnly = true;
-            // 
-            // Markup
-            // 
-            this.Markup.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Markup.HeaderText = "Наценка";
-            this.Markup.Name = "Markup";
-            this.Markup.ReadOnly = true;
-            this.Markup.Visible = false;
-            this.Markup.Width = 76;
-            // 
-            // SellingPrice
-            // 
-            this.SellingPrice.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "C2";
-            dataGridViewCellStyle4.NullValue = null;
-            this.SellingPrice.DefaultCellStyle = dataGridViewCellStyle4;
-            this.SellingPrice.HeaderText = "Цена продажи (руб)";
-            this.SellingPrice.MinimumWidth = 100;
-            this.SellingPrice.Name = "SellingPrice";
-            this.SellingPrice.ReadOnly = true;
-            this.SellingPrice.Visible = false;
-            this.SellingPrice.Width = 120;
             // 
             // PurchaseForm
             // 

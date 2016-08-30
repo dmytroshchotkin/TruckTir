@@ -46,6 +46,7 @@ namespace PartsApp
             saleDateTimePicker.MaxDate = DateTime.Now.Date.AddDays(7);
             saleDateTimePicker.MinDate = saleDateTimePicker.Value = DateTime.Now;
 
+            //Заполняем список автоподстановки для ввода контрагента.
             customerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindCustomers().Select(c => c.ContragentName).ToArray());
 
             //Вносим все типы наценок в markupComboBox             
@@ -220,6 +221,8 @@ namespace PartsApp
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
             autoCompleteListBox.Visible = false;
+            autoCompleteListBox.Items.Clear();
+
             TextBox textBox = (TextBox)sender;
             if (!String.IsNullOrWhiteSpace(textBox.Text))
             {
@@ -231,8 +234,7 @@ namespace PartsApp
 
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
-                {
-                    autoCompleteListBox.Items.Clear();
+                {                    
                     //Заполняем вып. список новыми объектами.
                     searchSparePartsList.ForEach(sp => autoCompleteListBox.Items.Add(sp));                                                                     
 
@@ -399,18 +401,18 @@ namespace PartsApp
             {
                 try
                 {
-                    float price = Convert.ToSingle(cell.Value);
-                    if (price == 0) 
+                    float sellPrice = Convert.ToSingle(cell.Value);
+                    if (sellPrice == 0) 
                         throw new Exception();  //ввод нуля также является ошибкой.
 
                     int sparePartId = (cell.OwningRow.Tag as SparePart).SparePartId;
                     SparePart sparePart = saleDataGridView.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (r.Tag as SparePart).SparePartId == sparePartId).Tag as SparePart;
                     //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
-                    if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= price))
+                    if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= sellPrice))
                         if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
                             throw new Exception();
 
-                    cell.Value = price; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
+                    cell.Value = sellPrice; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
                 }//try
                 catch
                 {
@@ -600,10 +602,10 @@ namespace PartsApp
         {
             if (row.Cells[Count.Index].Style.ForeColor == Color.Black && row.Cells[SellingPrice.Index].Value != null)
             {
-                float price = Convert.ToSingle(row.Cells[SellingPrice.Index].Value);
+                float sellPrice = Convert.ToSingle(row.Cells[SellingPrice.Index].Value);
                 float sellCount = Convert.ToSingle(row.Cells[Count.Index].Value);
 
-                row.Cells[Sum.Index].Value = price * sellCount;                
+                row.Cells[Sum.Index].Value = sellPrice * sellCount;                
             }//if
             else
             {
@@ -624,9 +626,9 @@ namespace PartsApp
                 //Если в строке указана и цена и количестов.
                 if (row.Cells[Sum.Index].Value != null)
                 {
-                    float price = Convert.ToSingle(row.Cells[SellingPrice.Index].Value);
+                    float sellPrice = Convert.ToSingle(row.Cells[SellingPrice.Index].Value);
                     float sellCount = Convert.ToSingle(row.Cells[Count.Index].Value);
-                    inTotal += price * sellCount;
+                    inTotal += sellPrice * sellCount;
                 }//if
             }//foreach
 
