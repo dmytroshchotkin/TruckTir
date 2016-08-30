@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.autoCompleteListBox = new System.Windows.Forms.ListBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
@@ -65,16 +65,6 @@
             this.customerStarLabel = new System.Windows.Forms.Label();
             this.extGroupBox = new System.Windows.Forms.GroupBox();
             this.extDataGridView = new System.Windows.Forms.DataGridView();
-            this.extSupplier = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.extPurchaseDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.extPurchaseId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.extStorageAdress = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.extUnit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.extCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.extPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.extMarkup = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.extSellingPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NoteExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.customerAgentTextBox = new System.Windows.Forms.TextBox();
@@ -90,6 +80,16 @@
             this.CountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SellingPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtSupplierCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtPurchaseDateCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtPurchaseIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtStorageAdressCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtMeasureUnitCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtCountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtMarkupCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtSellingPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExtNoteCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).BeginInit();
             this.currencyBackPanel.SuspendLayout();
             this.customerBackPanel.SuspendLayout();
@@ -400,16 +400,16 @@
             this.extDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.extDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.extDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.extSupplier,
-            this.extPurchaseDate,
-            this.extPurchaseId,
-            this.extStorageAdress,
-            this.extUnit,
-            this.extCount,
-            this.extPrice,
-            this.extMarkup,
-            this.extSellingPrice,
-            this.NoteExtCol});
+            this.ExtSupplierCol,
+            this.ExtPurchaseDateCol,
+            this.ExtPurchaseIdCol,
+            this.ExtStorageAdressCol,
+            this.ExtMeasureUnitCol,
+            this.ExtCountCol,
+            this.ExtPriceCol,
+            this.ExtMarkupCol,
+            this.ExtSellingPriceCol,
+            this.ExtNoteCol});
             this.extDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extDataGridView.Location = new System.Drawing.Point(3, 16);
             this.extDataGridView.Name = "extDataGridView";
@@ -419,107 +419,6 @@
             this.extDataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extDataGridView_CellEndEdit);
             this.extDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.saleDataGridView_RowPrePaint);
             this.extDataGridView.SelectionChanged += new System.EventHandler(this.extDataGridView_SelectionChanged);
-            // 
-            // extSupplier
-            // 
-            this.extSupplier.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.extSupplier.HeaderText = "Поставщик";
-            this.extSupplier.Name = "extSupplier";
-            this.extSupplier.ReadOnly = true;
-            // 
-            // extPurchaseDate
-            // 
-            this.extPurchaseDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle5.Format = "dd.MM.yyyy \'г.\'   HH:mm";
-            this.extPurchaseDate.DefaultCellStyle = dataGridViewCellStyle5;
-            this.extPurchaseDate.HeaderText = "Дата прихода";
-            this.extPurchaseDate.Name = "extPurchaseDate";
-            this.extPurchaseDate.ReadOnly = true;
-            this.extPurchaseDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.extPurchaseDate.Width = 80;
-            // 
-            // extPurchaseId
-            // 
-            this.extPurchaseId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.extPurchaseId.HeaderText = "Номер прихода";
-            this.extPurchaseId.Name = "extPurchaseId";
-            this.extPurchaseId.ReadOnly = true;
-            this.extPurchaseId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.extPurchaseId.Visible = false;
-            // 
-            // extStorageAdress
-            // 
-            this.extStorageAdress.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.extStorageAdress.HeaderText = "Адресс хранилища";
-            this.extStorageAdress.MinimumWidth = 100;
-            this.extStorageAdress.Name = "extStorageAdress";
-            this.extStorageAdress.ReadOnly = true;
-            this.extStorageAdress.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // extUnit
-            // 
-            this.extUnit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.extUnit.DefaultCellStyle = dataGridViewCellStyle6;
-            this.extUnit.HeaderText = "Ед. изм.";
-            this.extUnit.MinimumWidth = 35;
-            this.extUnit.Name = "extUnit";
-            this.extUnit.ReadOnly = true;
-            this.extUnit.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.extUnit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.extUnit.ToolTipText = "Единица измерения";
-            this.extUnit.Width = 35;
-            // 
-            // extCount
-            // 
-            this.extCount.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.extCount.DefaultCellStyle = dataGridViewCellStyle7;
-            this.extCount.HeaderText = "Кол-во";
-            this.extCount.MinimumWidth = 100;
-            this.extCount.Name = "extCount";
-            this.extCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.extCount.ToolTipText = "Количество";
-            // 
-            // extPrice
-            // 
-            this.extPrice.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.extPrice.HeaderText = "Цена";
-            this.extPrice.MinimumWidth = 100;
-            this.extPrice.Name = "extPrice";
-            this.extPrice.ReadOnly = true;
-            this.extPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.extPrice.ToolTipText = "Цена закупки";
-            this.extPrice.Visible = false;
-            // 
-            // extMarkup
-            // 
-            this.extMarkup.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.extMarkup.HeaderText = "Наценка";
-            this.extMarkup.MinimumWidth = 100;
-            this.extMarkup.Name = "extMarkup";
-            this.extMarkup.ReadOnly = true;
-            this.extMarkup.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // extSellingPrice
-            // 
-            this.extSellingPrice.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "C2";
-            dataGridViewCellStyle8.NullValue = null;
-            this.extSellingPrice.DefaultCellStyle = dataGridViewCellStyle8;
-            this.extSellingPrice.HeaderText = "Цена продажи";
-            this.extSellingPrice.MinimumWidth = 100;
-            this.extSellingPrice.Name = "extSellingPrice";
-            this.extSellingPrice.ReadOnly = true;
-            this.extSellingPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // NoteExtCol
-            // 
-            this.NoteExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.NoteExtCol.HeaderText = "Примечание по поставке";
-            this.NoteExtCol.Name = "NoteExtCol";
-            this.NoteExtCol.ReadOnly = true;
             // 
             // cancelButton
             // 
@@ -653,6 +552,108 @@
             this.SumCol.ReadOnly = true;
             this.SumCol.Width = 66;
             // 
+            // ExtSupplierCol
+            // 
+            this.ExtSupplierCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ExtSupplierCol.HeaderText = "Поставщик";
+            this.ExtSupplierCol.Name = "ExtSupplierCol";
+            this.ExtSupplierCol.ReadOnly = true;
+            // 
+            // ExtPurchaseDateCol
+            // 
+            this.ExtPurchaseDateCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle5.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            this.ExtPurchaseDateCol.DefaultCellStyle = dataGridViewCellStyle5;
+            this.ExtPurchaseDateCol.HeaderText = "Дата прихода";
+            this.ExtPurchaseDateCol.Name = "ExtPurchaseDateCol";
+            this.ExtPurchaseDateCol.ReadOnly = true;
+            this.ExtPurchaseDateCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ExtPurchaseDateCol.Width = 80;
+            // 
+            // ExtPurchaseIdCol
+            // 
+            this.ExtPurchaseIdCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.ExtPurchaseIdCol.HeaderText = "Номер прихода";
+            this.ExtPurchaseIdCol.Name = "ExtPurchaseIdCol";
+            this.ExtPurchaseIdCol.ReadOnly = true;
+            this.ExtPurchaseIdCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ExtPurchaseIdCol.Visible = false;
+            this.ExtPurchaseIdCol.Width = 82;
+            // 
+            // ExtStorageAdressCol
+            // 
+            this.ExtStorageAdressCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.ExtStorageAdressCol.HeaderText = "Адресс хранилища";
+            this.ExtStorageAdressCol.MinimumWidth = 100;
+            this.ExtStorageAdressCol.Name = "ExtStorageAdressCol";
+            this.ExtStorageAdressCol.ReadOnly = true;
+            this.ExtStorageAdressCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // ExtMeasureUnitCol
+            // 
+            this.ExtMeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ExtMeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle6;
+            this.ExtMeasureUnitCol.HeaderText = "Ед. изм.";
+            this.ExtMeasureUnitCol.MinimumWidth = 35;
+            this.ExtMeasureUnitCol.Name = "ExtMeasureUnitCol";
+            this.ExtMeasureUnitCol.ReadOnly = true;
+            this.ExtMeasureUnitCol.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ExtMeasureUnitCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ExtMeasureUnitCol.ToolTipText = "Единица измерения";
+            this.ExtMeasureUnitCol.Width = 35;
+            // 
+            // ExtCountCol
+            // 
+            this.ExtCountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ExtCountCol.DefaultCellStyle = dataGridViewCellStyle7;
+            this.ExtCountCol.HeaderText = "Кол-во";
+            this.ExtCountCol.MinimumWidth = 100;
+            this.ExtCountCol.Name = "ExtCountCol";
+            this.ExtCountCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ExtCountCol.ToolTipText = "Количество";
+            // 
+            // ExtPriceCol
+            // 
+            this.ExtPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.ExtPriceCol.HeaderText = "Цена";
+            this.ExtPriceCol.MinimumWidth = 100;
+            this.ExtPriceCol.Name = "ExtPriceCol";
+            this.ExtPriceCol.ReadOnly = true;
+            this.ExtPriceCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ExtPriceCol.ToolTipText = "Цена закупки";
+            this.ExtPriceCol.Visible = false;
+            // 
+            // ExtMarkupCol
+            // 
+            this.ExtMarkupCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.ExtMarkupCol.HeaderText = "Наценка";
+            this.ExtMarkupCol.MinimumWidth = 100;
+            this.ExtMarkupCol.Name = "ExtMarkupCol";
+            this.ExtMarkupCol.ReadOnly = true;
+            this.ExtMarkupCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // ExtSellingPriceCol
+            // 
+            this.ExtSellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "C2";
+            dataGridViewCellStyle8.NullValue = null;
+            this.ExtSellingPriceCol.DefaultCellStyle = dataGridViewCellStyle8;
+            this.ExtSellingPriceCol.HeaderText = "Цена продажи";
+            this.ExtSellingPriceCol.MinimumWidth = 100;
+            this.ExtSellingPriceCol.Name = "ExtSellingPriceCol";
+            this.ExtSellingPriceCol.ReadOnly = true;
+            this.ExtSellingPriceCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // ExtNoteCol
+            // 
+            this.ExtNoteCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.ExtNoteCol.HeaderText = "Примечание по поставке";
+            this.ExtNoteCol.Name = "ExtNoteCol";
+            this.ExtNoteCol.ReadOnly = true;
+            // 
             // SaleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -747,21 +748,21 @@
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.ContextMenuStrip saleContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extSupplier;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extPurchaseDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extPurchaseId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extStorageAdress;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extUnit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extCount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extPrice;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extMarkup;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extSellingPrice;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NoteExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ArticulCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TitleCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn MeasureUnitCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn CountCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SellingPriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtSupplierCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtPurchaseDateCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtPurchaseIdCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtStorageAdressCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtMeasureUnitCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtCountCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtPriceCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtMarkupCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtSellingPriceCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExtNoteCol;
     }
 }

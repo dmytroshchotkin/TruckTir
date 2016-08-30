@@ -538,21 +538,21 @@ namespace PartsApp
             //Перебираем по строкам из extDGV.
             foreach (DataGridViewRow row in extDataGridView.Rows)
             {
-                float extAvailCount = Convert.ToSingle(row.Cells[extCount.Index].Tag); //количество в наличии в данном приходе.                
+                float extAvailCount = Convert.ToSingle(row.Cells[ExtCountCol.Index].Tag); //количество в наличии в данном приходе.                
                 
                 if (sellCount > 0)
                 {
-                    int purchaseId = Convert.ToInt32(row.Cells[extPurchaseId.Index].Value);
+                    int purchaseId = Convert.ToInt32(row.Cells[ExtPurchaseIdCol.Index].Value);
                     float curSellValue = (sellCount > extAvailCount) ? extAvailCount  : sellCount;
 
-                    DataGridViewCell extCountCell = row.Cells[extCount.Index];
+                    DataGridViewCell extCountCell = row.Cells[ExtCountCol.Index];
                     SetCustomValueToCell(extCountCell, curSellValue); //задаём значение для ячейки.
                     FillTheOperDetList(sparePartId, extCountCell);     
                     sellCount -= extAvailCount;                   
                 }//if
                 else
                 {
-                    SetDefaultValueToCell(row.Cells[extCount.Index]); //Возвращаем серый цвет и дефолтное значение данной ячейке.
+                    SetDefaultValueToCell(row.Cells[ExtCountCol.Index]); //Возвращаем серый цвет и дефолтное значение данной ячейке.
                 }//else
             }//foreach
         }//AutoChoisePurchases
@@ -564,7 +564,7 @@ namespace PartsApp
         /// <param name="extCountCell">Ячейка стобца 'Кол-во' доп. таблицы.</param>
         private void FillTheOperDetList(int sparePartId, DataGridViewCell extCountCell)
         {
-            int purchaseId = Convert.ToInt32(extCountCell.OwningRow.Cells[extPurchaseId.Index].Value);
+            int purchaseId = Convert.ToInt32(extCountCell.OwningRow.Cells[ExtPurchaseIdCol.Index].Value);
             float sellCount = (extCountCell.Style.ForeColor == Color.Black) ? Convert.ToSingle(extCountCell.Value) : 0; 
             //Находим, если есть соотв. объект в списке.
             OperationDetails operDet = _operDetList.FirstOrDefault(od => od.SparePart.SparePartId == sparePartId
@@ -641,8 +641,8 @@ namespace PartsApp
         {
             foreach (DataGridViewRow extRow in extDataGridView.Rows)
             {
-                SetDefaultValueToCell(extRow.Cells[extCount.Index]);           //Записываем дефолтное значение в ячейку.
-                FillTheOperDetList(sparePartId, extRow.Cells[extCount.Index]); //Запоминаем изменение в список.    
+                SetDefaultValueToCell(extRow.Cells[ExtCountCol.Index]);           //Записываем дефолтное значение в ячейку.
+                FillTheOperDetList(sparePartId, extRow.Cells[ExtCountCol.Index]); //Запоминаем изменение в список.    
             }//foreach
         }//SetDefaultValuesToExtDataGridView
 
@@ -760,7 +760,7 @@ namespace PartsApp
 
         private void extDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            if (e.ColumnIndex == extCount.Index)
+            if (e.ColumnIndex == ExtCountCol.Index)
             {
                 DataGridViewCell cell = extDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 SetCustomValueToCell(cell, null); //Очищаем ячейку для ввода знвчения поль-лем.
@@ -770,14 +770,14 @@ namespace PartsApp
         private void extDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             //Если редактировалась колонка "Кол-во". хотя по идее все остальные readOnly.
-            if (extDataGridView.Columns[e.ColumnIndex] == extCount)
+            if (extDataGridView.Columns[e.ColumnIndex] == ExtCountCol)
             {
                 DataGridViewRow row = saleDataGridView.CurrentRow;
                 DataGridViewCell extCountCell = extDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 DataGridViewCell countCell = row.Cells[CountCol.Index];
                 //Проверяем корректность ввода.
                 int sparePartId = (row.Tag as SparePart).SparePartId;
-                string measureUnit = extCountCell.OwningRow.Cells[extUnit.Index].Value.ToString();                
+                string measureUnit = extCountCell.OwningRow.Cells[ExtMeasureUnitCol.Index].Value.ToString();                
                 if (IsCountCellValueCorrect(extCountCell, measureUnit))
                 {
                     SaleDGVCountColumnUpdate(countCell); //Обновляем ячеку 'Кол-во' в таблице продаж.                                      
@@ -812,35 +812,35 @@ namespace PartsApp
         {
             //Очищаем предварительно таблицу.
             extDataGridView.Rows.Clear();
-            extStorageAdress.Visible = NoteExtCol.Visible = false;
+            ExtStorageAdressCol.Visible = ExtNoteCol.Visible = false;
             //Заполняем таблицу новыми данными.
             foreach (Availability avail in availList)
             {
                 int rowIndx = extDataGridView.Rows.Add();
                 DataGridViewRow row = extDataGridView.Rows[rowIndx];
 
-                row.Cells[extSupplier.Index].Value      = avail.OperationDetails.Operation.Contragent.ContragentName;
-                row.Cells[extUnit.Index].Value          = avail.OperationDetails.SparePart.MeasureUnit;
-                row.Cells[extStorageAdress.Index].Value = avail.StorageAddress;
-                row.Cells[extPrice.Index].Value         = avail.OperationDetails.Price;
-                row.Cells[extMarkup.Index].Value        = Models.Markup.GetDescription(avail.Markup);
-                row.Cells[extSellingPrice.Index].Value  = avail.SellingPrice;
-                row.Cells[extPurchaseId.Index].Value    = avail.OperationDetails.Operation.OperationId;
-                row.Cells[extPurchaseDate.Index].Value  = avail.OperationDetails.Operation.OperationDate;
-                row.Cells[NoteExtCol.Index].Value       = avail.OperationDetails.Operation.Description;
+                row.Cells[ExtSupplierCol.Index].Value       = avail.OperationDetails.Operation.Contragent.ContragentName;
+                row.Cells[ExtMeasureUnitCol.Index].Value    = avail.OperationDetails.SparePart.MeasureUnit;
+                row.Cells[ExtStorageAdressCol.Index].Value  = avail.StorageAddress;
+                row.Cells[ExtPriceCol.Index].Value          = avail.OperationDetails.Price;
+                row.Cells[ExtMarkupCol.Index].Value         = Models.Markup.GetDescription(avail.Markup);
+                row.Cells[ExtSellingPriceCol.Index].Value   = avail.SellingPrice;
+                row.Cells[ExtPurchaseIdCol.Index].Value     = avail.OperationDetails.Operation.OperationId;
+                row.Cells[ExtPurchaseDateCol.Index].Value   = avail.OperationDetails.Operation.OperationDate;
+                row.Cells[ExtNoteCol.Index].Value           = avail.OperationDetails.Operation.Description;
 
                 //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.                
                 if (avail.StorageAddress != null)
-                    extStorageAdress.Visible = true;
+                    ExtStorageAdressCol.Visible = true;
 
                 if (avail.OperationDetails.Operation.Description != null)
-                    NoteExtCol.Visible = true;
+                    ExtNoteCol.Visible = true;
 
                 //Заполняем ячейку 'Кол-во' либо ранее установленным значением, иначе общим кол-вом по данному приходу в наличии. 
                 OperationDetails operDet = _operDetList.FirstOrDefault(od => od.SparePart.SparePartId == avail.OperationDetails.SparePart.SparePartId
                                                                     && od.Operation.OperationId == avail.OperationDetails.Operation.OperationId);
 
-                DataGridViewCell extCountCell = row.Cells[extCount.Index];
+                DataGridViewCell extCountCell = row.Cells[ExtCountCol.Index];
                 extCountCell.Tag = avail.OperationDetails.Count; //заполняем ячейку значением и запоминаем это дефолтное значение в Tag.
                 if (operDet == null)
                 {
@@ -853,7 +853,7 @@ namespace PartsApp
             }//foreach            
 
             //Сортируем таблицу по дате прихода.
-            extDataGridView.Sort(extPurchaseDate, ListSortDirection.Ascending);
+            extDataGridView.Sort(ExtPurchaseDateCol, ListSortDirection.Ascending);
             extDataGridView.ClearSelection();
         }//FillTheExtDGV
 
@@ -867,8 +867,8 @@ namespace PartsApp
             float extSellCount = 0;
             foreach (DataGridViewRow extRow in extDataGridView.Rows)
             {
-                if (extRow.Cells[extCount.Index].Style.ForeColor == Color.Black)
-                    extSellCount += Convert.ToSingle(extRow.Cells[extCount.Index].Value);
+                if (extRow.Cells[ExtCountCol.Index].Style.ForeColor == Color.Black)
+                    extSellCount += Convert.ToSingle(extRow.Cells[ExtCountCol.Index].Value);
             }//foreach
                             
             //Если есть кастомный ввод.
@@ -921,11 +921,11 @@ namespace PartsApp
                 //Обновляем таблицу.
                 foreach (DataGridViewRow row in extDataGridView.SelectedRows)
                 {
-                    row.Cells[extMarkup.Index].Value = markupType;
+                    row.Cells[ExtMarkupCol.Index].Value = markupType;
 
-                    float price     = (float)row.Cells[extPrice.Index].Value;
+                    float price = (float)row.Cells[ExtPriceCol.Index].Value;
                     float sellPrice = (float)Math.Round(price + (price * markupValue / 100), 2, MidpointRounding.AwayFromZero);
-                    row.Cells[extSellingPrice.Index].Value = sellPrice;
+                    row.Cells[ExtSellingPriceCol.Index].Value = sellPrice;
                 }//foreach
             }//try
             catch
