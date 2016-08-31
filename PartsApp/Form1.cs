@@ -536,26 +536,23 @@ namespace PartsApp
             autoCompleteListBox.Items.Clear();
             //Форматируем вывод.
             //Находим максимальную ширину каждого параметра.
-            int articulMaxLenght = spList.Select(sp => sp.Articul).Max(art => art.Length);
-            int titlelMaxLenght  = spList.Select(sp => sp.Title).Max(title => title.Length);
-            int manufMaxLenght = 0;
-            var sparePartsManufacturers = spList.Select(sp => sp.Manufacturer).Where(manuf => manuf != null);
-            if (sparePartsManufacturers.Count() > 0)
-                manufMaxLenght = sparePartsManufacturers.Max(man => man.Length);
+            int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
+            int titlelMaxLenght  = spList.Max(sp => sp.Title.Length);
+            int manufMaxLenght   = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
+
             //Задаём нужный формат для выводимых строк.
             string artCol   = String.Format("{{0, {0}}}", -articulMaxLenght);
             string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
             string manufCol = String.Format("{{2, {0}}}", -manufMaxLenght);
 
-            string searchSparePart;
             for (int i = 0; i < spList.Count; ++i)
             {
-                searchSparePart = String.Format(artCol + "   " + titleCol + "   " + manufCol, spList[i].Articul, spList[i].Title, spList[i].Manufacturer);
+                string searchSparePart = String.Format(artCol + "   " + titleCol + "   " + manufCol, spList[i].Articul, spList[i].Title, spList[i].Manufacturer);
                 autoCompleteListBox.Items.Add(searchSparePart);
             }//for
-            autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
-            autoCompleteListBox.Visible = true;
 
+            autoCompleteListBox.Visible = true;
+            autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
         }//OutputFormattedDropDownList
 
 
@@ -591,6 +588,7 @@ namespace PartsApp
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
+
         #region Методы связанные с изменением Наценки.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
