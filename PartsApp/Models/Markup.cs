@@ -29,23 +29,24 @@ namespace PartsApp.Models
             if (markup <= 0)
                 return "Уценка";
 
-            switch ((int)markup)
-            {
-                case (int)Types.Retail:
-                    return Types.Retail.ToDescription();
+            int errorMargin = 5; //погрешность от значения Markup.Types.
+            //Если 'Розница'.
+            if (markup >= (int)Types.Retail - errorMargin && markup <= (int)Types.Retail + errorMargin)
+                return Types.Retail.ToDescription();
 
-                case (int)Types.SmallWholesale:
-                    return Types.SmallWholesale.ToDescription();
+            //Если 'Малый опт'.
+            if (markup >= (int)Types.SmallWholesale - errorMargin && markup <= (int)Types.SmallWholesale + errorMargin)
+                return Types.SmallWholesale.ToDescription();
 
-                case (int)Types.AverageWholesale:
-                    return Types.AverageWholesale.ToDescription();
+            //Если 'Средний опт'.
+            if (markup >= (int)Types.AverageWholesale - errorMargin && markup <= (int)Types.AverageWholesale + errorMargin)
+                return Types.AverageWholesale.ToDescription();
 
-                case (int)Types.LargeWholesale:
-                    return Types.LargeWholesale.ToDescription();
+            //Если 'Крупный опт'.
+            if (markup >= (int)Types.LargeWholesale - errorMargin && markup <= (int)Types.LargeWholesale + errorMargin)
+                return Types.LargeWholesale.ToDescription();
 
-                default:
-                    return "Другая наценка";
-            }//switch
+            return "Другая наценка";
         }//GetDescription
 
         public static IEnumerable<KeyValuePair<int, string>> GetValues()

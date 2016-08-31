@@ -11,6 +11,9 @@ using PartsApp.Models;
 
 namespace PartsApp
 {
+    /*Задания*/
+    //Нумерация строк.
+    //Вывод общего кол-ва строк в таблице.
     public partial class ContragentOperationsInfoForm : Form
     {
         /// <summary>

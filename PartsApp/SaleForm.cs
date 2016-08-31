@@ -14,8 +14,6 @@ using Excel = Microsoft.Office.Interop.Excel;
 namespace PartsApp
 {
     /*Задания*/
-    //Изменить имена столбцов.
-    //Убрать столбец extPrice из доп. таблицы.
     //Передавать inTotal в метод распечатки в Excel.
     //Добавить столбец 'Производитель'? и поиск по нему.
 
@@ -505,8 +503,8 @@ namespace PartsApp
             //Если отпускная цена не указана поль-лем и если у всех приходов она одинаковая, выводим её в saleDGV.
             if (row.Cells[SellingPriceCol.Index].Value == null)
                 if (!sparePart.AvailabilityList.Any(av => av.SellingPrice != sparePart.AvailabilityList[0].SellingPrice))
-                    row.Cells[SellingPriceCol.Index].Value = sparePart.AvailabilityList[0].SellingPrice;
-        }//FillTheSaleDGV
+                    row.Cells[SellingPriceCol.Index].Value = Math.Ceiling(sparePart.AvailabilityList[0].SellingPrice / 0.5) * 0.5; //Округляем в большую сторону с точностью до 0,5. //ERROR округление станет лишним, после того как полностью обновится список товара в наличии. //sparePart.AvailabilityList[0].SellingPrice
+        }//FillTheSaleDG
 
 
         /// <summary>

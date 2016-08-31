@@ -14,8 +14,6 @@ using PartsApp.SupportClasses;
 namespace PartsApp
 {
     /*Задания*/
-    //Убрать столбец extPrice из доп. таблицы.
-    //Задать форматы столбцов через дизайнер.
     //Передавать inTotal в метод распечатки в Excel.
 
     public partial class PurchaseForm : Form
@@ -429,15 +427,13 @@ namespace PartsApp
                     throw new Exception();  //ввод значения не более 0 также является ошибкой.
 
                 cell.Value = price; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
+                cell.OwningRow.Cells[SellingPriceCol.Index].Value = null; //очищаем цену продажи для дальнейшей установки дефолтного значения.
             }//try
             catch
             {
                 //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
                 toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
-                cell.Value = null;
-                //Убираем 'ЦенуПродажи' и 'Наценку'.
-                cell.Value = null;
-                
+                cell.Value = null;                
             }//catch
 
             SetMarkupAndSellingPriceCells(cell); //Записываем значения в ячейки 'Наценка' и 'ЦенаПродажи'.
@@ -473,29 +469,29 @@ namespace PartsApp
             SetMarkupAndSellingPriceCells(cell.OwningRow.Cells[PriceCol.Index]); //Записываем значения в ячейки 'Наценка' и 'ЦенаПродажи'.
         }//SellingPriceCellFilled
 
+        /// <summary>
+        /// Задает значения в ячейки 'Наценка' и 'ЦенаПродажи'. 
+        /// </summary>
+        /// <param name="priceCell">Ячейка столбца 'Цена'.</param>
         private void  SetMarkupAndSellingPriceCells(DataGridViewCell priceCell)
         {
+            /*ERROR!!! Можно ли сделать метод проще?*/
             DataGridViewCell markupCell = priceCell.OwningRow.Cells[MarkupCol.Index];
-            DataGridViewCell sellPriceCell = priceCell.OwningRow.Cells[SellingPriceCol.Index];
+            DataGridViewCell sellPriceCell = priceCell.OwningRow.Cells[SellingPriceCol.Index];            
             if (priceCell.Value != null)
             {
-                float price = (float)priceCell.Value;                
-                float markup = (float)Models.Markup.Types.Retail; //запоминаем дефолтнцю наценку.
-                if (sellPriceCell.Value == null)
-                {
-                    sellPriceCell.Value = price + (price * markup / 100);     //рассчитываем цену продажи.
-                }//if
-                else //Если 'ЦенаПродажи' установлена юзером, то расчитываем наценку.
-                {
-                    sellPriceCell.Value = Convert.ToSingle(sellPriceCell.Value);   //Перезаписываем цену продажи для форматированного вывода.
-                    markup = ((float)sellPriceCell.Value * 100 / price) - 100;     //расчитываем наценку исходя из установленной цены продажи.                    
-                }//else
+                float price  = (float)priceCell.Value;
+                float markup = (markupCell.Tag != null) ? (float)markupCell.Tag : (float)Markup.Types.Retail; //Присваиваем дефолтную наценку, если она не установлена ранее.
+                //рассчитываем цену продажи.
+                float sellPrice = (sellPriceCell.Value == null) ? price + (price * markup / 100) : Convert.ToSingle(sellPriceCell.Value);
 
-                markupCell.Value = Models.Markup.GetDescription(markup);  //выводим тип наценки.
-                markupCell.Tag = markup;                                  //запоминаем числовое значение наценки.
+                sellPriceCell.Value = (float)(Math.Ceiling(sellPrice / 0.5) * 0.5); //Округляем в большую сторону с точностью до 0,5.                             
+                markup = ((float)sellPriceCell.Value * 100 / price) - 100;  //расчитываем наценку исходя из установленной цены продажи.                    
+                markupCell.Value = Models.Markup.GetDescription(markup);    //выводим тип наценки.
+                markupCell.Tag = markup;                                    //запоминаем числовое значение наценки.
             }//if
-            else //если цена не установлена, обнуляем значения наценки и цены продажи.
-                markupCell.Value = markupCell.Tag = sellPriceCell.Value = null;  
+            else
+                markupCell.Value = markupCell.Tag = sellPriceCell.Value = null;   //если цена не установлена, обнуляем значения наценки и цены продажи.
         }//SetMarkupAndSellingPriceCells
 
         /// <summary>
@@ -510,7 +506,7 @@ namespace PartsApp
             {
                 FillThePurchaseDGV(cell.OwningRow, sparePart);
 
-                cell.OwningRow.Cells[PriceCol.Index].ReadOnly = cell.OwningRow.Cells[SellingPriceCol.Index].ReadOnly = cell.OwningRow.Cells[CountCol.Index].ReadOnly = false;
+                cell.OwningRow.Cells[PriceCol.Index].ReadOnly = cell.OwningRow.Cells[CountCol.Index].ReadOnly = false;
                 cell.OwningRow.Cells[TitleCol.Index].ReadOnly = cell.OwningRow.Cells[ArticulCol.Index].ReadOnly = true;
 
                 #region Увеличение purchaseGroupBox.
@@ -1035,16 +1031,12 @@ namespace PartsApp
                 {
                     //Если указана цена.
                     if (row.Cells[PriceCol.Index].Value != null)
-                    {
-                        row.Cells[MarkupCol.Index].Value = markupType;
+                    {                        
+                        row.Cells[SellingPriceCol.Index].Value = null; //Очищаем цену продажи для корректного заполнения. 
                         row.Cells[MarkupCol.Index].Tag = markupValue;
-
-                        float price = (float)row.Cells[PriceCol.Index].Value;
-                        float sellPrice = price + (price * markupValue / 100);
-                        row.Cells[SellingPriceCol.Index].Value = sellPrice;
-                        //SetMarkupAndSellingPriceCells(sellPrice, row.Cells[SellingPrice.Index]);
-                    }//if
-                    
+                        //Выставляем значенияб округленные с точностью 0,5 наценки и цены продажи. 
+                        SetMarkupAndSellingPriceCells(row.Cells[PriceCol.Index]);
+                    }//if                    
                 }//foreach
             }//try
             catch
