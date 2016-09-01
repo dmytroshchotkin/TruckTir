@@ -218,7 +218,6 @@ namespace PartsApp
 
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
-            autoCompleteListBox.Visible = false;
             autoCompleteListBox.DataSource = null;
 
             TextBox textBox = (TextBox)sender;
@@ -327,8 +326,6 @@ namespace PartsApp
         /// <param name="extCountCell">Редактируемая ячейка.</param>
         private void TitleOrArticulCellFilled(DataGridViewCell cell)
         {
-            autoCompleteListBox.Visible = false;
-
             if (cell.Value != null)
             {
                 //Если есть такой товар в базе.
@@ -338,13 +335,13 @@ namespace PartsApp
                     if (autoCompleteListBox.SelectedItem != null)
                     {
                         SparePart sparePart = autoCompleteListBox.SelectedItem as SparePart;
-                        AutoCompleteRowInfo(cell, sparePart); //Заполняем строку данными о товаре.                        
+                        AutoCompleteRowInfo(cell, sparePart); //Заполняем строку данными о товаре.
+                        //autoCompleteListBox.Visible = false;
                     }//if
                     else  //если выбор не из вып. списка.
                     {
                         toolTip.Show("Выберите товар из списка.", this, GetCellBelowLocation(cell), 1000);
                         _isCellEditError = true;
-                        autoCompleteListBox.Visible = true;
                     }//else
                 }//if
                 else
@@ -425,23 +422,21 @@ namespace PartsApp
         /// <param name="titleAndArticul">Массив строк с артикулом и названием.</param>
         private void AutoCompleteRowInfo(DataGridViewCell cell, SparePart sparePart)
         {
-            //Если такой товар найден в вып. списке.
-            if (sparePart != null)
-            {
-                FillTheBothDGV(cell.OwningRow, sparePart);
+            FillTheBothDGV(cell.OwningRow, sparePart);
 
-                cell.OwningRow.Cells[SellingPriceCol.Index].ReadOnly = cell.OwningRow.Cells[CountCol.Index].ReadOnly = false;
-                cell.OwningRow.Cells[TitleCol.Index].ReadOnly = cell.OwningRow.Cells[ArticulCol.Index].ReadOnly = true;
+            cell.OwningRow.Cells[SellingPriceCol.Index].ReadOnly = cell.OwningRow.Cells[CountCol.Index].ReadOnly = false;
+            cell.OwningRow.Cells[TitleCol.Index].ReadOnly = cell.OwningRow.Cells[ArticulCol.Index].ReadOnly = true;
 
-                #region Увеличение saleGroupBox.
-                //if (saleDataGridView.PreferredSize.Height > saleDataGridView.Size.Height)
-                //{
-                //    MessageBox.Show("bigger");
-                //    int height = saleDataGridView.Rows[0].Cells["Title"].Size.Height;
-                //    saleGroupBox.Size = new Size(saleGroupBox.Width, saleGroupBox.Height + height);
-                //}
-                #endregion
-            }//if
+            autoCompleteListBox.Visible = false;
+
+            #region Увеличение saleGroupBox.
+            //if (saleDataGridView.PreferredSize.Height > saleDataGridView.Size.Height)
+            //{
+            //    MessageBox.Show("bigger");
+            //    int height = saleDataGridView.Rows[0].Cells["Title"].Size.Height;
+            //    saleGroupBox.Size = new Size(saleGroupBox.Width, saleGroupBox.Height + height);
+            //}
+            #endregion
         }//AutoCompleteRowInfo
 
         /// <summary>
@@ -748,6 +743,8 @@ namespace PartsApp
 
                 autoCompleteListBox.Visible = true;
             }//if
+            else
+                autoCompleteListBox.Visible = false;
         }//autoCompleteListBox_DataSourceChanged
 
         private void autoCompleteListBox_Format(object sender, ListControlConvertEventArgs e)
