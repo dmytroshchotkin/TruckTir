@@ -215,8 +215,7 @@ namespace PartsApp
 
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
-            autoCompleteListBox.Visible = false;
-            autoCompleteListBox.Items.Clear();
+            autoCompleteListBox.DataSource = null;
 
             TextBox textBox = (TextBox)sender;
             if (String.IsNullOrEmpty(textBox.Text) == false)
@@ -231,11 +230,9 @@ namespace PartsApp
                 if (searchSparePartsList.Count > 0)
                 {
                     //Заполняем вып. список новыми объектами.
-                    searchSparePartsList.ForEach(sp => autoCompleteListBox.Items.Add(sp));
-
-                    autoCompleteListBox.DisplayMember = (_lastEditCell.OwningColumn == TitleCol) ? "Title" : "Articul";
-                    autoCompleteListBox.Visible = true;
+                    autoCompleteListBox.DataSource = searchSparePartsList;
                     autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
+                    autoCompleteListBox.ClearSelected();
                 }//if
             }//if
         }//dataGridViewTextBoxCell_TextChanged
@@ -360,8 +357,6 @@ namespace PartsApp
         /// <param name="extCountCell">Редактируемая ячейка.</param>
         private void TitleOrArticulCellFilled(DataGridViewCell cell)
         {
-            autoCompleteListBox.Visible = false;
-
             if (cell.Value != null)
             {
                 //Если есть такой товар в базе.
@@ -369,16 +364,9 @@ namespace PartsApp
                 {
                     //если выбор сделан из выпадающего списка.
                     if (autoCompleteListBox.SelectedItem != null)
-                    {
-                        SparePart sparePart = autoCompleteListBox.SelectedItem as SparePart;
-                        AutoCompleteRowInfo(cell, sparePart); //Заполняем строку данными о товаре.                        
-                    }//if
+                        AutoCompleteRowInfo(cell, autoCompleteListBox.SelectedItem as SparePart); //Заполняем строку данными о товаре.                        
                     else  //если выбор не из вып. списка.
-                    {
-                        toolTip.Show("Выберите товар из списка.", this, GetCellBelowLocation(cell), 1000);
-                        _isCellEditError = true;
-                        autoCompleteListBox.Visible = true;
-                    }//else
+                        CellEndEditWrong(cell, "Выберите товар из списка.");
                 }//if
                 else
                 {
@@ -390,14 +378,9 @@ namespace PartsApp
                 }//else
             }//if
 
-            //Если нет ошибки редактирования ячейки, то отписываем editing control от событий обработки ввода.
+            //Если нет ошибки завершения редактирования ячейки, производим необх. действия.
             if (!_isCellEditError)
-            {
-                TextBox textBoxCell = cell.Tag as TextBox;
-                textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
-                textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
-                cell.Tag = null;
-            }//if
+                CellEndEditCorrect(cell);
         }//TitleOrArticulCellFilled
 
         /// <summary>
@@ -504,24 +487,46 @@ namespace PartsApp
         /// <param name="titleAndArticul">Массив строк с артикулом и названием.</param>
         private void AutoCompleteRowInfo(DataGridViewCell cell, SparePart sparePart)
         {
-            //Если такой товар найден в вып. списке.
-            if (sparePart != null)
-            {
-                FillThePurchaseDGV(cell.OwningRow, sparePart);
+            FillThePurchaseDGV(cell.OwningRow, sparePart);
 
-                cell.OwningRow.Cells[PriceCol.Index].ReadOnly = cell.OwningRow.Cells[CountCol.Index].ReadOnly = false;
-                cell.OwningRow.Cells[TitleCol.Index].ReadOnly = cell.OwningRow.Cells[ArticulCol.Index].ReadOnly = true;
+            cell.OwningRow.Cells[PriceCol.Index].ReadOnly = cell.OwningRow.Cells[CountCol.Index].ReadOnly = false;
+            cell.OwningRow.Cells[TitleCol.Index].ReadOnly = cell.OwningRow.Cells[ArticulCol.Index].ReadOnly = true;
 
-                #region Увеличение purchaseGroupBox.
-                //if (saleDataGridView.PreferredSize.Height > saleDataGridView.Size.Height)
-                //{
-                //    MessageBox.Show("bigger");
-                //    int height = saleDataGridView.Rows[0].Cells["Title"].Size.Height;
-                //    saleGroupBox.Size = new Size(saleGroupBox.Width, saleGroupBox.Height + height);
-                //}
-                #endregion
-            }//if
+            autoCompleteListBox.Visible = false;
+
+            #region Увеличение purchaseGroupBox.
+            //if (saleDataGridView.PreferredSize.Height > saleDataGridView.Size.Height)
+            //{
+            //    MessageBox.Show("bigger");
+            //    int height = saleDataGridView.Rows[0].Cells["Title"].Size.Height;
+            //    saleGroupBox.Size = new Size(saleGroupBox.Width, saleGroupBox.Height + height);
+            //}
+            #endregion
         }//AutoCompleteRowInfo
+
+        /// <summary>
+        /// Действия при некорректном завершении редактирования ячейки.
+        /// </summary>
+        /// <param name="cell">Ячейка</param>
+        /// <param name="toolTipText">Текст всплывающей подсказки</param>
+        private void CellEndEditWrong(DataGridViewCell cell, string toolTipText)
+        {
+            toolTip.Show(toolTipText, this, GetCellBelowLocation(cell), 1000);
+            _isCellEditError = true;
+        }//CellEndEditWrong
+
+        /// <summary>
+        /// Действия при корректном завершении редактирования ячейки.
+        /// </summary>
+        /// <param name="cell">Ячейка</param>
+        private void CellEndEditCorrect(DataGridViewCell cell)
+        {
+            //Отписываем editing control от событий обработки ввода.
+            TextBox textBoxCell = cell.Tag as TextBox;
+            textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;
+            textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
+            cell.Tag = null;
+        }//CellEndEditCorrect
 
         /// <summary>
         /// Заполняет осн. таблицу данными.
@@ -655,6 +660,39 @@ namespace PartsApp
             }//else
         }//autoCompleteListBox_MouseDown
 
+        private void autoCompleteListBox_DataSourceChanged(object sender, EventArgs e)
+        {
+            if (autoCompleteListBox.DataSource != null)
+            {
+                List<SparePart> spList = autoCompleteListBox.DataSource as List<SparePart>;
+                //Форматируем вывод.
+                //Находим максимальную ширину каждого параметра.
+                int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
+                int titlelMaxLenght  = spList.Max(sp => sp.Title.Length);
+
+                //Запоминаем ширину всех столбцов.
+                autoCompleteListBox.Tag = new Tuple<int, int>(articulMaxLenght, titlelMaxLenght);
+
+                autoCompleteListBox.Visible = true;
+            }//if
+            else
+                autoCompleteListBox.Visible = false;
+        }//autoCompleteListBox_DataSourceChanged
+
+        private void autoCompleteListBox_Format(object sender, ListControlConvertEventArgs e)
+        {
+            //Находим максимальную ширину каждого параметра.            
+            Tuple<int, int> columnsWidth = autoCompleteListBox.Tag as Tuple<int, int>;
+            int articulMaxLenght = columnsWidth.Item1;
+            int titlelMaxLenght  = columnsWidth.Item2;
+
+            //Задаём нужный формат для выводимых строк.
+            string artCol   = String.Format("{{0, {0}}}", -articulMaxLenght);
+            string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
+
+            SparePart sparePart = e.ListItem as SparePart;
+            e.Value = String.Format(artCol + "   " + titleCol, sparePart.Articul, sparePart.Title);
+        }//autoCompleteListBox_Format
 
         #endregion
 
@@ -1179,6 +1217,8 @@ namespace PartsApp
                 }//if
             }//if
         }//
+
+
 
         
 

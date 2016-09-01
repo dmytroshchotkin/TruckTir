@@ -747,7 +747,7 @@ namespace PartsApp
                 //Форматируем вывод.
                 //Находим максимальную ширину каждого параметра.
                 int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
-                int titlelMaxLenght = spList.Max(sp => sp.Title.Length);
+                int titlelMaxLenght  = spList.Max(sp => sp.Title.Length);
 
                 //Запоминаем ширину всех столбцов.
                 autoCompleteListBox.Tag = new Tuple<int, int>(articulMaxLenght, titlelMaxLenght);
@@ -763,10 +763,10 @@ namespace PartsApp
             //Находим максимальную ширину каждого параметра.            
             Tuple<int, int> columnsWidth = autoCompleteListBox.Tag as Tuple<int, int>;
             int articulMaxLenght = columnsWidth.Item1;
-            int titlelMaxLenght = columnsWidth.Item2;
+            int titlelMaxLenght  = columnsWidth.Item2;
 
             //Задаём нужный формат для выводимых строк.
-            string artCol = String.Format("{{0, {0}}}", -articulMaxLenght);
+            string artCol   = String.Format("{{0, {0}}}", -articulMaxLenght);
             string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
 
             SparePart sparePart = e.ListItem as SparePart;
