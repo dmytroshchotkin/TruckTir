@@ -2311,9 +2311,9 @@ namespace PartsApp
         /// <param name="titleOrArticulOrManuf">Title или Articul или Manufacturer совпадение с которым нужно искать.</param>
         /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>
         /// <returns></returns>
-        public static IList<SparePart> SearchSpByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf, int limit)
+        public static List<SparePart> SearchSpByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf, int limit)
         {
-            IList<SparePart> spareParts = new List<SparePart>();
+            List<SparePart> spareParts = new List<SparePart>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -2343,9 +2343,9 @@ namespace PartsApp
         /// </summary>
         /// <param name="titleOrArticulOrManuf">Title или Articul или Manufacturer совпадение с которым нужно искать.</param>
         /// <returns></returns>
-        public static IList<SparePart> SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf)
+        public static List<SparePart> SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf)
         {
-            IList<SparePart> spareParts = new List<SparePart>();
+            List<SparePart> spareParts = new List<SparePart>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -2378,9 +2378,9 @@ namespace PartsApp
         /// <param name="titleOrArticulOrManuf">Title или Articul или Manufacturer совпадение с которым нужно искать.</param>
         /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>
         /// <returns></returns>
-        public static IList<SparePart> SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf, int limit)
+        public static List<SparePart> SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf, int limit)
         {
-            IList<SparePart> spareParts = new List<SparePart>();
+            List<SparePart> spareParts = new List<SparePart>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {

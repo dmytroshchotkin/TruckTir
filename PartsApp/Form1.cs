@@ -14,11 +14,7 @@ using PartsApp.Models;
 namespace PartsApp
 {
     public partial class Form1 : Form
-    {
-        /// <summary>
-        /// Список для выпадающего списка при поиске в searchTextBox.
-        /// </summary>
-        IList<SparePart> searchSpList;                                      
+    {                                    
         /// <summary>
         /// Коллекция для запоминания объектов с изм. наценкой.
         /// </summary>
@@ -354,28 +350,24 @@ namespace PartsApp
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (String.IsNullOrWhiteSpace(searchTextBox.Text))
-            {   
-                autoCompleteListBox.Visible = false;
-                return;
-            }//if 
+            autoCompleteListBox.DataSource = null;
 
-            //В зависимости от значения checkBox, выводим либо товар только в наличии, либо весь товар в базе.
-            if (onlyAvaliabilityCheckBox.CheckState == CheckState.Unchecked)
-                searchSpList = PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
-            else 
-                searchSpList = PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
-
-            ///*Выпадающий список в searchTextBox*/
-            
-            if (searchSpList.Count > 0)
+            if (!String.IsNullOrWhiteSpace(searchTextBox.Text))
             {
-                autoCompleteListBox.DataSource = searchSpList;
-                autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
-                autoCompleteListBox.ClearSelected();
+                //В зависимости от значения checkBox, выводим либо товар только в наличии, либо весь товар в базе.                
+                List<SparePart> searchSparePartsList = (onlyAvaliabilityCheckBox.CheckState == CheckState.Unchecked)
+                                    ? PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10)
+                                    : PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
+
+                //Если совпадения найдены, вывести вып. список.
+                if (searchSparePartsList.Count > 0)
+                {
+                    //Заполняем вып. список новыми объектами.
+                    autoCompleteListBox.DataSource = searchSparePartsList;
+                    autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
+                    autoCompleteListBox.ClearSelected();
+                }//if
             }//if
-            else 
-                autoCompleteListBox.Visible = false; //Если ничего не найдено, убрать вып. список.
         }//searchTextBox_TextChanged
 
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -443,7 +435,7 @@ namespace PartsApp
                 }//if
 
                 //Если нет элементов удовлетворяющих поиску, выводим сообщение об этом.
-                if (searchSpList.Count == 0)
+                if (autoCompleteListBox.Items.Count == 0)
                 {
                     toolTip.Show("Нет элементов удовлетворяющих поиску.", this, new Point(searchTextBox.Location.X, componentPanel.Location.Y), 2000);
                     return;
@@ -487,17 +479,22 @@ namespace PartsApp
 
         private void autoCompleteListBox_DataSourceChanged(object sender, EventArgs e)
         {
-            List<SparePart> spList = autoCompleteListBox.DataSource as List<SparePart>;
-            //Форматируем вывод.
-            //Находим максимальную ширину каждого параметра.
-            int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
-            int titlelMaxLenght = spList.Max(sp => sp.Title.Length);
-            int manufMaxLenght = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
+            if (autoCompleteListBox.DataSource != null)
+            {
+                List<SparePart> spList = autoCompleteListBox.DataSource as List<SparePart>;
+                //Форматируем вывод.
+                //Находим максимальную ширину каждого параметра.
+                int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
+                int titlelMaxLenght = spList.Max(sp => sp.Title.Length);
+                int manufMaxLenght = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
 
-            //Запоминаем ширину всех столбцов.
-            autoCompleteListBox.Tag = new Tuple<int, int, int>(articulMaxLenght, titlelMaxLenght, manufMaxLenght);
+                //Запоминаем ширину всех столбцов.
+                autoCompleteListBox.Tag = new Tuple<int, int, int>(articulMaxLenght, titlelMaxLenght, manufMaxLenght);
 
-            autoCompleteListBox.Visible = true;
+                autoCompleteListBox.Visible = true;
+            }//if
+            else
+                autoCompleteListBox.Visible = false;
         }//autoCompleteListBox_DataSourceChanged
 
         /// <summary>
@@ -1032,6 +1029,7 @@ namespace PartsApp
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
             searchTextBox.Clear();//Очищаем контрол поиска.
+            autoCompleteListBox.Visible = false;
 
             SpList = new SortableBindingList<SparePart>(SparePart.GetNewSparePartsList(spareParts));
             origSpList = spareParts;
