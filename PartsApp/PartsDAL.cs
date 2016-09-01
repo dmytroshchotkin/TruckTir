@@ -2195,104 +2195,7 @@ namespace PartsApp
         #region ************Поиск совпадений по БД.*****************************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /// <summary>
-        /// Возвращает список размера не более limit, состоящий из запчастей в наличии, чьи Articul имеют совпадение с параметром articul.
-        /// </summary>
-        /// <param name="articul">Артикул по которому ищутся совпадения.</param>
-        /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
-        /// <param name="withoutIDs">Список Id товара который не должен входить в результирующий список.</param>
-        /// <returns></returns>
-        public static List<SparePart> SearchSparePartsAvaliablityByArticul(string articul, int limit, IList<int> withoutIDs)
-        {
-            List<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                var cmd = new SQLiteCommand(connection);
-
-                StringBuilder notIn = new StringBuilder();
-                if (withoutIDs.Count != 0)
-                {
-                    for (int i = 0; i < withoutIDs.Count; ++i)
-                    {
-                        notIn.Append("@NotIn" + i + ", ");
-                        cmd.Parameters.AddWithValue("@NotIn" + i, withoutIDs[i]);
-                    }
-                    notIn.Remove(notIn.Length - 2, 2);
-                }//if
-
-                var query = "SELECT av.SparePartId, * FROM Avaliability AS av JOIN SpareParts AS sp "
-                          + "ON av.SparePartId = sp.SparePartId AND ToLower(sp.Articul) LIKE @Articul AND av.SparePartId NOT IN(" + notIn + ")" 
-                          + "GROUP BY av.SparePartId LIMIT @Limit;";
-
-                cmd.Parameters.AddWithValue("@Articul", articul.ToLower() + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-                cmd.CommandText = query;
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    SparePart sparePart = CreateSparePart(dataReader);
-
-                    spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-
-            return spareParts;
-
-        }//SearchSparePartsByArticul       
-
-        /// <summary>
-        /// Возвращает список размера не более limit, состоящий из запчастей в Наличии, чьи Title имеют совпадение с параметром title. 
-        /// </summary>
-        /// <param name="title">Строка по которой ищутся совпадения.</param>
-        /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
-        /// <param name="withoutIDs">Список Id товара который не должен входить в результирующий список.</param>
-        /// <returns></returns>
-        public static List<SparePart> SearchSparePartsAvaliablityByTitle(string title, int limit, IList<int> withoutIDs)
-        {
-            List<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                var cmd = new SQLiteCommand(connection);
-
-                StringBuilder notIn = new StringBuilder();
-                //Формируем строку с Id товара который пропускается при поиске.
-                if (withoutIDs.Count != 0)
-                {
-                    for (int i = 0; i < withoutIDs.Count; ++i)
-                    {
-                        notIn.Append("@NotIn" + i + ", ");
-                        cmd.Parameters.AddWithValue("@NotIn" + i, withoutIDs[i]);
-                    }
-                    notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
-                }//if
-
-                var query = "SELECT av.SparePartId, * FROM Avaliability AS av JOIN SpareParts AS sp "
-                          + "ON av.SparePartId = sp.SparePartId AND ToLower(sp.Title) LIKE @Title AND av.SparePartId NOT IN(" + notIn + ")"
-                          + "GROUP BY av.SparePartId LIMIT @Limit;";
-
-                cmd.Parameters.AddWithValue("@Title", title.ToLower() + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-                cmd.CommandText = query;
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    SparePart sparePart = CreateSparePart(dataReader);
-                    spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-
-            return spareParts;
-        }//SearchSparePartsAvaliablityByTitle        
+     
                         
 
 
@@ -2311,8 +2214,8 @@ namespace PartsApp
         /// Возвращает список из товаров, найденных по совпадению Артикула, Названия или Производителя с переданной строкой.
         /// </summary>
         /// <param name="titleOrArticulOrManuf">Строка с которой ищутся совпадения.</param>
-        /// <param name="limit">Максимальное кол-во эл-тов списка.</param>
         /// <param name="onlyInAvailability">true - если искать среди товара в наличии, false - среди всего товара в базе.</param>
+        /// <param name="limit">Максимальное кол-во эл-тов списка.</param>
         /// <returns></returns>
         public static List<SparePart> SearchSpareParts(string titleOrArticulOrManuf, bool onlyInAvailability, int limit)
         {
@@ -2346,8 +2249,58 @@ namespace PartsApp
             }//using
             return spareParts;
         }//SearchSpareParts
-               
-                        
+
+        /// <summary>
+        /// Возвращает список из товаров, найденных по совпадению Названия с переданной строкой.
+        /// </summary>
+        /// <param name="title">Название товара.</param>
+        /// <param name="withoutIDs">Список Id товаров которые игнорируются при поиске.</param>
+        /// <param name="onlyInAvailability">true - если искать среди товара в наличии, false - среди всего товара в базе.</param>
+        /// <param name="limit">Максимальное кол-во эл-тов списка.</param>
+        /// <returns></returns>
+        public static List<SparePart> SearchSparePartsByTitle(string title, IList<int> withoutIDs, bool onlyInAvailability, int limit)
+        {
+            List<SparePart> spareParts = new List<SparePart>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                var cmd = new SQLiteCommand(connection);
+
+                StringBuilder notIn = new StringBuilder();
+                //Формируем строку с Id товара который пропускается при поиске.
+                if (withoutIDs.Count != 0)
+                {
+                    for (int i = 0; i < withoutIDs.Count; ++i)
+                    {
+                        notIn.Append("@NotIn" + i + ", ");
+                        cmd.Parameters.AddWithValue("@NotIn" + i, withoutIDs[i]);
+                    }
+                    notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
+                }//if
+
+                string query = "SELECT * FROM SpareParts AS sp "
+                             + ((onlyInAvailability) ? "JOIN Avaliability AS av ON av.SparePartId = sp.SparePartId " : String.Empty)
+                             + "WHERE ToLower(sp.Title) LIKE @Title AND sp.SparePartId NOT IN(" + notIn + ")"
+                             + "GROUP BY sp.SparePartId "
+                             + "LIMIT @Limit;";
+
+                cmd.Parameters.AddWithValue("@Title", title.ToLower() + "%");
+                cmd.Parameters.AddWithValue("@Limit", limit);
+
+                cmd.CommandText = query;
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    SparePart sparePart = CreateSparePart(dataReader);
+                    spareParts.Add(sparePart);
+                }//while
+                connection.Close();
+            }//using
+
+            return spareParts;
+        }//
         
         /// <summary>
         /// Возвращает список размера не более limit, состоящий из запчастей чьи Title имеют совпадение с параметром title. 
@@ -2445,7 +2398,104 @@ namespace PartsApp
         }//SearchSparePartsByArticul           
 
 
+        /// <summary>
+        /// Возвращает список размера не более limit, состоящий из запчастей в наличии, чьи Articul имеют совпадение с параметром articul.
+        /// </summary>
+        /// <param name="articul">Артикул по которому ищутся совпадения.</param>
+        /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
+        /// <param name="withoutIDs">Список Id товара который не должен входить в результирующий список.</param>
+        /// <returns></returns>
+        public static List<SparePart> SearchSparePartsAvaliablityByArticul(string articul, int limit, IList<int> withoutIDs)
+        {
+            List<SparePart> spareParts = new List<SparePart>();
 
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                var cmd = new SQLiteCommand(connection);
+
+                StringBuilder notIn = new StringBuilder();
+                if (withoutIDs.Count != 0)
+                {
+                    for (int i = 0; i < withoutIDs.Count; ++i)
+                    {
+                        notIn.Append("@NotIn" + i + ", ");
+                        cmd.Parameters.AddWithValue("@NotIn" + i, withoutIDs[i]);
+                    }
+                    notIn.Remove(notIn.Length - 2, 2);
+                }//if
+
+                var query = "SELECT av.SparePartId, * FROM Avaliability AS av JOIN SpareParts AS sp "
+                          + "ON av.SparePartId = sp.SparePartId AND ToLower(sp.Articul) LIKE @Articul AND av.SparePartId NOT IN(" + notIn + ")"
+                          + "GROUP BY av.SparePartId LIMIT @Limit;";
+
+                cmd.Parameters.AddWithValue("@Articul", articul.ToLower() + "%");
+                cmd.Parameters.AddWithValue("@Limit", limit);
+
+                cmd.CommandText = query;
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    SparePart sparePart = CreateSparePart(dataReader);
+
+                    spareParts.Add(sparePart);
+                }//while
+                connection.Close();
+            }//using
+
+            return spareParts;
+
+        }//SearchSparePartsByArticul       
+
+        /// <summary>
+        /// Возвращает список размера не более limit, состоящий из запчастей в Наличии, чьи Title имеют совпадение с параметром title. 
+        /// </summary>
+        /// <param name="title">Строка по которой ищутся совпадения.</param>
+        /// <param name="limit">Максимально возможное кол-во эл-тов.</param>
+        /// <param name="withoutIDs">Список Id товара который не должен входить в результирующий список.</param>
+        /// <returns></returns>
+        public static List<SparePart> SearchSparePartsAvaliablityByTitle(string title, int limit, IList<int> withoutIDs)
+        {
+            List<SparePart> spareParts = new List<SparePart>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                var cmd = new SQLiteCommand(connection);
+
+                StringBuilder notIn = new StringBuilder();
+                //Формируем строку с Id товара который пропускается при поиске.
+                if (withoutIDs.Count != 0)
+                {
+                    for (int i = 0; i < withoutIDs.Count; ++i)
+                    {
+                        notIn.Append("@NotIn" + i + ", ");
+                        cmd.Parameters.AddWithValue("@NotIn" + i, withoutIDs[i]);
+                    }
+                    notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
+                }//if
+
+                var query = "SELECT av.SparePartId, * FROM Avaliability AS av JOIN SpareParts AS sp "
+                          + "ON av.SparePartId = sp.SparePartId AND ToLower(sp.Title) LIKE @Title AND av.SparePartId NOT IN(" + notIn + ")"
+                          + "GROUP BY av.SparePartId LIMIT @Limit;";
+
+                cmd.Parameters.AddWithValue("@Title", title.ToLower() + "%");
+                cmd.Parameters.AddWithValue("@Limit", limit);
+
+                cmd.CommandText = query;
+
+                var dataReader = cmd.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    SparePart sparePart = CreateSparePart(dataReader);
+                    spareParts.Add(sparePart);
+                }//while
+                connection.Close();
+            }//using
+
+            return spareParts;
+        }//SearchSparePartsAvaliablityByTitle   
 
 
 

@@ -225,8 +225,8 @@ namespace PartsApp
             {
                 //Находим подходящий по вводу товар.                
                 List<int> existingSparePartsIdsList = saleDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (r.Tag as SparePart).SparePartId).ToList(); //Id-ки уже введенного товара.
-                List<SparePart> searchSparePartsList = (_lastEditCell.OwningColumn == TitleCol) 
-                                    ? PartsDAL.SearchSparePartsAvaliablityByTitle(textBox.Text.Trim(), 10, existingSparePartsIdsList)
+                List<SparePart> searchSparePartsList = (_lastEditCell.OwningColumn == TitleCol)
+                                    ? PartsDAL.SearchSparePartsByTitle(textBox.Text.Trim(), existingSparePartsIdsList, true, 10)
                                     : PartsDAL.SearchSparePartsAvaliablityByArticul(textBox.Text.Trim(), 10, existingSparePartsIdsList);
 
                 //Если совпадения найдены, вывести вып. список.
