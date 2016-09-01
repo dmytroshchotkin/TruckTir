@@ -333,28 +333,19 @@ namespace PartsApp
                 {
                     //если выбор сделан из выпадающего списка.
                     if (autoCompleteListBox.SelectedItem != null)
-                    {
                         AutoCompleteRowInfo(cell, autoCompleteListBox.SelectedItem as SparePart); //Заполняем строку данными о товаре.
-                    }//if
                     else  //если выбор не из вып. списка.
-                    {
-                        CellEditError(cell, "Выберите товар из списка.");
-                    }//else
+                        CellEndEditWrong(cell, "Выберите товар из списка.");
                 }//if
                 else //если нет такого товара в наличии.
                 {
-                    CellEditError(cell, "Нет такого товара в наличии.");
+                    CellEndEditWrong(cell, "Нет такого товара в наличии.");
                 }//else
             }//if
 
-            //Если нет ошибки редактирования ячейки, то отписываем editing control от событий обработки ввода.
-            if (!_isCellEditError)
-            {                
-                TextBox textBoxCell = cell.Tag as TextBox;
-                textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
-                textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
-                cell.Tag = null;
-            }//if
+            //Если нет ошибки завершения редактирования ячейки, производим необх. действия.
+            if (!_isCellEditError)            
+                CellEndEditCorrect(cell);            
         }//TitleOrArticulCellFilled
 
         /// <summary>
@@ -436,15 +427,28 @@ namespace PartsApp
         }//AutoCompleteRowInfo
 
         /// <summary>
-        /// Действия при вводе некорректного значения в ячейку.
+        /// Действия при некорректном завершении редактирования ячейки.
         /// </summary>
         /// <param name="cell">Ячейка</param>
         /// <param name="toolTipText">Текст всплывающей подсказки</param>
-        private void CellEditError(DataGridViewCell cell, string toolTipText)
+        private void CellEndEditWrong(DataGridViewCell cell, string toolTipText)
         {
             toolTip.Show(toolTipText, this, GetCellBelowLocation(cell), 1000);
             _isCellEditError = true;
-        }//CellEditError
+        }//CellEndEditWrong
+
+        /// <summary>
+        /// Действия при корректном завершении редактирования ячейки.
+        /// </summary>
+        /// <param name="cell">Ячейка</param>
+        private void CellEndEditCorrect(DataGridViewCell cell)
+        {
+            //Отписываем editing control от событий обработки ввода.
+            TextBox textBoxCell = cell.Tag as TextBox;
+            textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
+            textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
+            cell.Tag = null;
+        }//CellEndEditCorrect
 
         /// <summary>
         /// Возвращает число или генерирует исключение если введенное значение в ячейку 'Кол-во' некорректно.
