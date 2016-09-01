@@ -2295,16 +2295,6 @@ namespace PartsApp
         }//SearchSparePartsAvaliablityByTitle        
                         
 
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из заданного кол-ва эл-тов найдейнных по заданному параметру. 
-        /// </summary>
-        /// <param name="titleOrArticulOrManuf">Title или Articul или Manufacturer совпадение с которым нужно искать.</param>
-        /// <returns></returns>
-        public static IList<SparePart> SearchSpByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf)
-        {
-            return SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArticulOrManuf, -1);
-        }//SearchByTitleOrArticul
-
 
         /// <summary>
         /// Возвращает список из товаров, найденных по совпадению Артикула, Названия или Производителя с переданной строкой.
@@ -2356,74 +2346,7 @@ namespace PartsApp
             }//using
             return spareParts;
         }//SearchSpareParts
-
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из заданного кол-ва эл-тов найдейнных по заданному параметру. 
-        /// </summary>
-        /// <param name="titleOrArticulOrManuf">Title или Articul или Manufacturer совпадение с которым нужно искать.</param>
-        /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>
-        /// <returns></returns>
-        public static List<SparePart> SearchSpByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf, int limit)
-        {
-            List<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                const string query = "SELECT SparePartId FROM SpareParts AS sp LEFT JOIN Manufacturers AS m "
-                                   + "ON sp.ManufacturerId = m.ManufacturerId "                              
-                                   + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
-                                   + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul LIMIT @limit;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@TitleOrArticul", "%" + titleOrArticulOrManuf.ToLower() + "%");
-                cmd.Parameters.AddWithValue("@limit", limit);
-
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePart(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;
-        }//SearchByTitleOrArticul
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из заданного кол-ва эл-тов в Наличии, найдейнных по заданному параметру.  
-        /// </summary>
-        /// <param name="titleOrArticulOrManuf">Title или Articul или Manufacturer совпадение с которым нужно искать.</param>
-        /// <returns></returns>
-        public static List<SparePart> SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf)
-        {
-            List<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query =
-                   "SELECT sp.SparePartId FROM SpareParts AS sp JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId "
-                 + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
-                 + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
-                 + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul;";
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@TitleOrArticul", "%" + titleOrArticulOrManuf.ToLower() + "%");
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePart(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;
-
-        }//SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay        
+               
                         
         
         /// <summary>

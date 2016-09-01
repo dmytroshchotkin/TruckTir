@@ -453,9 +453,9 @@ namespace PartsApp
                     else
                     {
                         if (onlyAvaliabilityCheckBox.Checked)
-                            ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text.Trim()));
+                            ChangeDataSource(PartsDAL.SearchSpareParts(searchTextBox.Text.Trim(), true));
                         else
-                            ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text.Trim()));
+                            ChangeDataSource(PartsDAL.SearchSpareParts(searchTextBox.Text.Trim(), false));
                     }//else                                        
                 }//else
                
