@@ -33,10 +33,6 @@ namespace PartsApp
         IList<SparePart> origSpList;                              
         
         /// <summary>
-        /// Переменная для запоминания введенного поль-лем текста в searchTextBox.
-        /// </summary>
-        string userText;
-        /// <summary>
         /// Авторизованный пользователь.
         /// </summary>
         public static Employee CurEmployee { get; set; }
@@ -352,9 +348,9 @@ namespace PartsApp
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion        
+
         #region Методы связанные с поиском товара.       
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -376,66 +372,11 @@ namespace PartsApp
             {
                 autoCompleteListBox.DataSource = searchSpList;
                 autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
+                autoCompleteListBox.ClearSelected();
             }//if
             else 
                 autoCompleteListBox.Visible = false; //Если ничего не найдено, убрать вып. список.
-
-            //Запоминаем введенный текст.
-            userText = searchTextBox.Text;
         }//searchTextBox_TextChanged
-
-        private void autoCompleteListBox_DataSourceChanged(object sender, EventArgs e)
-        {
-            List<SparePart> spList = autoCompleteListBox.DataSource as List<SparePart>;
-            //Форматируем вывод.
-            //Находим максимальную ширину каждого параметра.
-            int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
-            int titlelMaxLenght  = spList.Max(sp => sp.Title.Length);
-            int manufMaxLenght   = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
-
-            //Запоминаем ширину всех столбцов.
-            autoCompleteListBox.Tag = new Tuple<int, int, int>(articulMaxLenght, titlelMaxLenght, manufMaxLenght);
-
-            autoCompleteListBox.Visible = true;
-        }//autoCompleteListBox_DataSourceChanged
-
-        /// <summary>
-        /// Форматирование вывода в ListBox.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void autoCompleteListBox_Format(object sender, ListControlConvertEventArgs e)
-        {
-            //Находим максимальную ширину каждого параметра.            
-            Tuple<int, int, int> columnsWidth = autoCompleteListBox.Tag as Tuple<int, int, int>;
-            int articulMaxLenght = columnsWidth.Item1;
-            int titlelMaxLenght  = columnsWidth.Item2;
-            int manufMaxLenght   = columnsWidth.Item3;
-            
-            //Задаём нужный формат для выводимых строк.
-            string artCol = String.Format("{{0, {0}}}",   -articulMaxLenght);
-            string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
-            string manufCol = String.Format("{{2, {0}}}", -manufMaxLenght);
-
-            SparePart sparePart = e.ListItem as SparePart;
-            e.Value = String.Format(artCol + "   " + titleCol + "   " + manufCol, sparePart.Articul, sparePart.Title, sparePart.Manufacturer);
-        }//autoCompleteListBox_Format
-
-        private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Clicks == 1)
-            {
-                if (String.IsNullOrEmpty(userText))
-                    userText = searchTextBox.Text;
-
-                ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
-                searchTextBox.Focus();
-            }//if
-            else
-            {
-                searchTextBox_KeyDown(searchTextBox, new KeyEventArgs(Keys.Enter));
-            }//else
-        }//autoCompleteListBox_MouseDown
 
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -448,14 +389,12 @@ namespace PartsApp
                 //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
                 if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
                 {
-                    searchTextBox.Text = userText;
                     autoCompleteListBox.ClearSelected();
                     searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
                     return;
                 }//if
 
                 autoCompleteListBox.SelectedIndex += 1;
-                ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
                 return;
             }//if
 
@@ -470,14 +409,11 @@ namespace PartsApp
                 if (autoCompleteListBox.SelectedIndex == -1)
                 {
                     autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
-                    ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
                     return;
                 }
                 //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
                 if (autoCompleteListBox.SelectedIndex == 0)
                 {
-                    //searchTextBox.Text = customerText;
-                    searchTextBox.Text = userText;
                     autoCompleteListBox.ClearSelected();
                     searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
                     e.Handled = true;
@@ -485,7 +421,6 @@ namespace PartsApp
                 else
                 {
                     autoCompleteListBox.SelectedIndex -= 1;
-                    ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
                 }//else
                 return;
             }//if 
@@ -514,35 +449,24 @@ namespace PartsApp
                     return;
                 }//if
 
-                //распапсиваем введённую или выбранную строку.
-                string[] titleOrArtOrManuf = searchTextBox.Text.Split(new string[] { "   " }, StringSplitOptions.RemoveEmptyEntries);
-                
-                //если выбор не из вып. списка.
-                if (titleOrArtOrManuf.Length == 1)
-                {
-                    if (onlyAvaliabilityCheckBox.Checked)
-                        ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(titleOrArtOrManuf[0]));
-                    else 
-                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArtOrManuf[0]));
-
-                    autoCompleteListBox.Visible = false;
-                    return;
-                }//if
-                //вводим более корректное значение для отображение.
-                ChangeSearchTextBoxTextWithoutTextChangedEvent(titleOrArtOrManuf[0]); 
-                //Если имеются точное совпадение в введенном тексте и коллекции эл-тов вып. списка.
-                foreach (var sparePart in searchSpList)
-                {
-                    if ((sparePart.Articul == titleOrArtOrManuf[0].Trim() && sparePart.Title == titleOrArtOrManuf[1].Trim()))
+               
+                //Если есть выбранный элемент, выводим его.
+                if (autoCompleteListBox.SelectedItem != null)
+                    ChangeDataSource(new List<SparePart>() { autoCompleteListBox.SelectedItem as SparePart });
+                else //Если выбранного элемента нет
+                { 
+                    //Если вып. список заполнен меньше макс. кол-ва, заполняем таблицу эл-ми вып. списка.
+                    if (autoCompleteListBox.Items.Count > 0 && autoCompleteListBox.Items.Count < 10)
+                        ChangeDataSource(autoCompleteListBox.DataSource as List<SparePart>);
+                    else
                     {
-                        //если точное совпадение найдено.
-                        ChangeDataSource(new List<SparePart>() { sparePart });
-                        autoCompleteListBox.Visible = false;
-                        return;
-                    }//if 
-                }//foreach
-
-                userText = null;
+                        if (onlyAvaliabilityCheckBox.Checked)
+                            ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text.Trim()));
+                        else
+                            ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text.Trim()));
+                    }//else                                        
+                }//else
+               
                 autoCompleteListBox.Visible = false;
                 return;
             }//if
@@ -555,56 +479,62 @@ namespace PartsApp
             searchTextBox_TextChanged(sender, e);
         }//onlyAvaliabilityCheckBox_CheckedChanged
 
-        
+                
 
-        /// <summary>
-        /// Присваиваем searchTextBox текст выбранный из выпадающего списка, без вызова события TextChanged.
-        /// </summary>
-        /// <param name="text">Текст который будет вставлен в searchTextBox.</param>
-        private void ChangeSearchTextBoxTextWithoutTextChangedEvent(string text)
-        {
-            searchTextBox.TextChanged -= searchTextBox_TextChanged;
-            searchTextBox.Text = text; 
-            searchTextBox.TextChanged += searchTextBox_TextChanged;
-        }//ChangeSearchTextBoxTextWithoutTextChangedEvent
 
-        /// <summary>
-        /// Выводит на экран фоматированный выпадающий список из переданной коллекции SparePart.
-        /// </summary>
-        /// <param name="spList">Коллекция которая будет выведена в выпадающем списке.</param>
-        private void OutputFormattedDropDownList(IList<SparePart> spList)
+        #region Методы работы с вып. списком.
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+        private void autoCompleteListBox_DataSourceChanged(object sender, EventArgs e)
         {
-            autoCompleteListBox.Items.Clear();
+            List<SparePart> spList = autoCompleteListBox.DataSource as List<SparePart>;
             //Форматируем вывод.
             //Находим максимальную ширину каждого параметра.
             int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
-            int titlelMaxLenght  = spList.Max(sp => sp.Title.Length);
-            int manufMaxLenght   = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
+            int titlelMaxLenght = spList.Max(sp => sp.Title.Length);
+            int manufMaxLenght = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
+
+            //Запоминаем ширину всех столбцов.
+            autoCompleteListBox.Tag = new Tuple<int, int, int>(articulMaxLenght, titlelMaxLenght, manufMaxLenght);
+
+            autoCompleteListBox.Visible = true;
+        }//autoCompleteListBox_DataSourceChanged
+
+        /// <summary>
+        /// Форматирование вывода в ListBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void autoCompleteListBox_Format(object sender, ListControlConvertEventArgs e)
+        {
+            //Находим максимальную ширину каждого параметра.            
+            Tuple<int, int, int> columnsWidth = autoCompleteListBox.Tag as Tuple<int, int, int>;
+            int articulMaxLenght = columnsWidth.Item1;
+            int titlelMaxLenght = columnsWidth.Item2;
+            int manufMaxLenght = columnsWidth.Item3;
 
             //Задаём нужный формат для выводимых строк.
-            string artCol   = String.Format("{{0, {0}}}", -articulMaxLenght);
+            string artCol = String.Format("{{0, {0}}}", -articulMaxLenght);
             string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
             string manufCol = String.Format("{{2, {0}}}", -manufMaxLenght);
 
-            for (int i = 0; i < spList.Count; ++i)
-            {
-                string searchSparePart = String.Format(artCol + "   " + titleCol + "   " + manufCol, spList[i].Articul, spList[i].Title, spList[i].Manufacturer);
-                autoCompleteListBox.Items.Add(searchSparePart);
-            }//for
+            SparePart sparePart = e.ListItem as SparePart;
+            e.Value = String.Format(artCol + "   " + titleCol + "   " + manufCol, sparePart.Articul, sparePart.Title, sparePart.Manufacturer);
+        }//autoCompleteListBox_Format
 
-            autoCompleteListBox.Visible = true;
-            autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
-        }//OutputFormattedDropDownList
-
-
-
-
+        private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks == 1)
+                searchTextBox.Focus();
+            else
+                searchTextBox_KeyDown(searchTextBox, new KeyEventArgs(Keys.Enter));
+        }//autoCompleteListBox_MouseDown
 
 
 
 
-
-
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        #endregion
 
 
 
@@ -627,7 +557,14 @@ namespace PartsApp
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         #region Методы связанные с изменением Наценки.
@@ -831,6 +768,7 @@ namespace PartsApp
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
+
         #region Обработчики событий для талбиц.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1093,6 +1031,8 @@ namespace PartsApp
         /// <param name="availabilityList">Новый источник данных для partsDataGridView.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
+            searchTextBox.Clear();//Очищаем контрол поиска.
+
             SpList = new SortableBindingList<SparePart>(SparePart.GetNewSparePartsList(spareParts));
             origSpList = spareParts;
 
@@ -1100,7 +1040,7 @@ namespace PartsApp
             binding.DataSource = SpList;
 
             //Очищаем и заполняем DataSource новымы значениями.
-            //partsDataGridView.DataSource = extPartsDataGridView.DataSource = null; /*Выдаёт ошибку при раскомментировании*/
+            //partsDataGridView.DataSource = extPartsDataGridView.DataSource = null; /*Выдаёт ошибку*/
             partsDataGridView.DataSource = extPartsDataGridView.DataSource = binding;            
         }//ChangeDataSource
 
