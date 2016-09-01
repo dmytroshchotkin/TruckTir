@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             this.purchaseIdLabel = new System.Windows.Forms.Label();
             this.purchaseDateLabel = new System.Windows.Forms.Label();
             this.supplierLabel = new System.Windows.Forms.Label();
@@ -211,8 +211,8 @@
             // MeasureUnitCol
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle16;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -233,10 +233,10 @@
             // PriceCol
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle12.Format = "C2";
-            dataGridViewCellStyle12.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle17.Format = "C2";
+            dataGridViewCellStyle17.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle17;
             this.PriceCol.HeaderText = "Цена";
             this.PriceCol.MinimumWidth = 100;
             this.PriceCol.Name = "PriceCol";
@@ -245,10 +245,10 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle13.Format = "C2";
-            dataGridViewCellStyle13.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle18.Format = "C2";
+            dataGridViewCellStyle18.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle18;
             this.SumCol.HeaderText = "Сумма";
             this.SumCol.MinimumWidth = 100;
             this.SumCol.Name = "SumCol";
@@ -257,8 +257,8 @@
             // MarkupCol
             // 
             this.MarkupCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MarkupCol.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MarkupCol.DefaultCellStyle = dataGridViewCellStyle19;
             this.MarkupCol.HeaderText = "Наценка";
             this.MarkupCol.Name = "MarkupCol";
             this.MarkupCol.ReadOnly = true;
@@ -267,10 +267,10 @@
             // SellingPriceCol
             // 
             this.SellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle15.Format = "C2";
-            dataGridViewCellStyle15.NullValue = null;
-            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle20.Format = "C2";
+            dataGridViewCellStyle20.NullValue = null;
+            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle20;
             this.SellingPriceCol.HeaderText = "Цена продажи (руб)";
             this.SellingPriceCol.MinimumWidth = 100;
             this.SellingPriceCol.Name = "SellingPriceCol";
@@ -518,6 +518,7 @@
             // 
             // autoCompleteListBox
             // 
+            this.autoCompleteListBox.BackColor = System.Drawing.SystemColors.Menu;
             this.autoCompleteListBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.autoCompleteListBox.FormattingEnabled = true;
             this.autoCompleteListBox.Location = new System.Drawing.Point(325, 90);
