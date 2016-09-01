@@ -2305,6 +2305,58 @@ namespace PartsApp
             return SearchSpByTitleOrArticulOrManufacturerToDisplay(titleOrArticulOrManuf, -1);
         }//SearchByTitleOrArticul
 
+
+        /// <summary>
+        /// Возвращает список из товаров, найденных по совпадению Артикула, Названия или Производителя с переданной строкой.
+        /// </summary>
+        /// <param name="titleOrArticulOrManuf">Строка с которой ищутся совпадения.</param>
+        /// <param name="onlyInAvailability">true - если искать среди товара в наличии, false - среди всего товара в базе.</param>
+        /// <returns></returns>
+        public static List<SparePart> SearchSpareParts(string titleOrArticulOrManuf, bool onlyInAvailability)
+        {
+            return SearchSpareParts(titleOrArticulOrManuf, onlyInAvailability, -1);
+        }//SearchSpareParts
+
+        /// <summary>
+        /// Возвращает список из товаров, найденных по совпадению Артикула, Названия или Производителя с переданной строкой.
+        /// </summary>
+        /// <param name="titleOrArticulOrManuf">Строка с которой ищутся совпадения.</param>
+        /// <param name="limit">Максимальное кол-во эл-тов списка.</param>
+        /// <param name="onlyInAvailability">true - если искать среди товара в наличии, false - среди всего товара в базе.</param>
+        /// <returns></returns>
+        public static List<SparePart> SearchSpareParts(string titleOrArticulOrManuf, bool onlyInAvailability, int limit)
+        {
+            List<SparePart> spareParts = new List<SparePart>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                string query = "SELECT sp.SparePartId FROM SpareParts AS sp "
+                             + ((onlyInAvailability) ? "JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId " : String.Empty)
+                             + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
+                             + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
+                             + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul "
+                             + "LIMIT @limit;";
+                
+
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@TitleOrArticul", "%" + titleOrArticulOrManuf.ToLower() + "%");
+                    cmd.Parameters.AddWithValue("@limit", limit);
+
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            spareParts.Add(FindSparePart(Convert.ToInt32(dataReader["SparePartId"]), connection));
+                    }//using dataReader
+                }//using cmd
+
+                connection.Close();
+            }//using
+            return spareParts;
+        }//SearchSpareParts
+
         /// <summary>
         /// Возвращает полностью готовый для отображения в общей таблице список из заданного кол-ва эл-тов найдейнных по заданному параметру. 
         /// </summary>
@@ -2352,7 +2404,7 @@ namespace PartsApp
                 connection.Open();
 
                 const string query =
-                   "SELECT DISTINCT sp.SparePartId FROM SpareParts AS sp JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId "
+                   "SELECT sp.SparePartId FROM SpareParts AS sp JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId "
                  + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
                  + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
                  + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul;";
@@ -2371,44 +2423,7 @@ namespace PartsApp
             }//using
             return spareParts;
 
-        }//SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDispla
-        /// <summary>
-        /// Возвращает полностью готовый для отображения в общей таблице список из заданного кол-ва эл-тов в Наличии, найдейнных по заданному параметру.  
-        /// </summary>
-        /// <param name="titleOrArticulOrManuf">Title или Articul или Manufacturer совпадение с которым нужно искать.</param>
-        /// <param name="limit">Ограничение по максимальному кол-ву эл-тов.</param>
-        /// <returns></returns>
-        public static List<SparePart> SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(string titleOrArticulOrManuf, int limit)
-        {
-            List<SparePart> spareParts = new List<SparePart>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query =
-                   "SELECT DISTINCT sp.SparePartId FROM SpareParts AS sp JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId "
-                 + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
-                 + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
-                 + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul LIMIT @Limit;";
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@TitleOrArticul", "%" + titleOrArticulOrManuf.ToLower() + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    spareParts.Add(FindSparePart(Convert.ToInt32(dataReader["SparePartId"]), connection));
-                }//while
-
-                connection.Close();
-            }//using
-            return spareParts;
-
-        }//SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDispla
+        }//SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay        
                         
         
         /// <summary>

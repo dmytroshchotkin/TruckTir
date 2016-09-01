@@ -356,8 +356,8 @@ namespace PartsApp
             {
                 //В зависимости от значения checkBox, выводим либо товар только в наличии, либо весь товар в базе.                
                 List<SparePart> searchSparePartsList = (onlyAvaliabilityCheckBox.CheckState == CheckState.Unchecked)
-                                    ? PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10)
-                                    : PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
+                                    ? PartsDAL.SearchSpareParts(searchTextBox.Text, false, 10)
+                                    : PartsDAL.SearchSpareParts(searchTextBox.Text, true, 10);
 
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
@@ -427,9 +427,9 @@ namespace PartsApp
                 if (String.IsNullOrWhiteSpace(searchTextBox.Text))
                 {
                     if (onlyAvaliabilityCheckBox.Checked)
-                        ChangeDataSource(PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(String.Empty));
+                        ChangeDataSource(PartsDAL.SearchSpareParts(String.Empty, true));
                     else
-                        ChangeDataSource(PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(String.Empty));
+                        ChangeDataSource(PartsDAL.SearchSpareParts(String.Empty, false));
 
                     return;
                 }//if
