@@ -328,26 +328,22 @@ namespace PartsApp
         {
             if (cell.Value != null)
             {
-                //Если есть такой товар в базе.
+                //Если есть такой товар в наличии.
                 if (autoCompleteListBox.Items.Count > 0)
                 {
                     //если выбор сделан из выпадающего списка.
                     if (autoCompleteListBox.SelectedItem != null)
                     {
-                        SparePart sparePart = autoCompleteListBox.SelectedItem as SparePart;
-                        AutoCompleteRowInfo(cell, sparePart); //Заполняем строку данными о товаре.
-                        //autoCompleteListBox.Visible = false;
+                        AutoCompleteRowInfo(cell, autoCompleteListBox.SelectedItem as SparePart); //Заполняем строку данными о товаре.
                     }//if
                     else  //если выбор не из вып. списка.
                     {
-                        toolTip.Show("Выберите товар из списка.", this, GetCellBelowLocation(cell), 1000);
-                        _isCellEditError = true;
+                        CellEditError(cell, "Выберите товар из списка.");
                     }//else
                 }//if
-                else
+                else //если нет такого товара в наличии.
                 {
-                    toolTip.Show("Нет такого товара в наличии.", this, GetCellBelowLocation(cell), 1000);
-                    _isCellEditError = true;
+                    CellEditError(cell, "Нет такого товара в наличии.");
                 }//else
             }//if
 
@@ -355,7 +351,7 @@ namespace PartsApp
             if (!_isCellEditError)
             {                
                 TextBox textBoxCell = cell.Tag as TextBox;
-                textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;
+                textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
                 textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
                 cell.Tag = null;
             }//if
@@ -438,6 +434,17 @@ namespace PartsApp
             //}
             #endregion
         }//AutoCompleteRowInfo
+
+        /// <summary>
+        /// Действия при вводе некорректного значения в ячейку.
+        /// </summary>
+        /// <param name="cell">Ячейка</param>
+        /// <param name="toolTipText">Текст всплывающей подсказки</param>
+        private void CellEditError(DataGridViewCell cell, string toolTipText)
+        {
+            toolTip.Show(toolTipText, this, GetCellBelowLocation(cell), 1000);
+            _isCellEditError = true;
+        }//CellEditError
 
         /// <summary>
         /// Возвращает число или генерирует исключение если введенное значение в ячейку 'Кол-во' некорректно.
