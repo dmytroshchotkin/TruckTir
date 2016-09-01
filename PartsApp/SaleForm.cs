@@ -219,7 +219,7 @@ namespace PartsApp
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
             autoCompleteListBox.Visible = false;
-            autoCompleteListBox.Items.Clear();
+            autoCompleteListBox.DataSource = null;
 
             TextBox textBox = (TextBox)sender;
             if (!String.IsNullOrWhiteSpace(textBox.Text))
@@ -234,11 +234,9 @@ namespace PartsApp
                 if (searchSparePartsList.Count > 0)
                 {                    
                     //Заполняем вып. список новыми объектами.
-                    searchSparePartsList.ForEach(sp => autoCompleteListBox.Items.Add(sp));
-
-                    autoCompleteListBox.DisplayMember = (_lastEditCell.OwningColumn == TitleCol) ? "Title" : "Articul";                    
-                    autoCompleteListBox.Visible = true;
+                    autoCompleteListBox.DataSource = searchSparePartsList;               
                     autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
+                    autoCompleteListBox.ClearSelected();
                 }//if
             }//if
         }//dataGridViewTextBoxCell_TextChanged
@@ -734,6 +732,38 @@ namespace PartsApp
                 saleDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));                
             }//else
         }//autoCompleteListBox_MouseDown
+
+        private void autoCompleteListBox_DataSourceChanged(object sender, EventArgs e)
+        {            
+            if (autoCompleteListBox.DataSource != null)
+            {
+                List<SparePart> spList = autoCompleteListBox.DataSource as List<SparePart>;
+                //Форматируем вывод.
+                //Находим максимальную ширину каждого параметра.
+                int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
+                int titlelMaxLenght = spList.Max(sp => sp.Title.Length);
+
+                //Запоминаем ширину всех столбцов.
+                autoCompleteListBox.Tag = new Tuple<int, int>(articulMaxLenght, titlelMaxLenght);
+
+                autoCompleteListBox.Visible = true;
+            }//if
+        }//autoCompleteListBox_DataSourceChanged
+
+        private void autoCompleteListBox_Format(object sender, ListControlConvertEventArgs e)
+        {
+            //Находим максимальную ширину каждого параметра.            
+            Tuple<int, int> columnsWidth = autoCompleteListBox.Tag as Tuple<int, int>;
+            int articulMaxLenght = columnsWidth.Item1;
+            int titlelMaxLenght = columnsWidth.Item2;
+
+            //Задаём нужный формат для выводимых строк.
+            string artCol = String.Format("{{0, {0}}}", -articulMaxLenght);
+            string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
+
+            SparePart sparePart = e.ListItem as SparePart;
+            e.Value = String.Format(artCol + "   " + titleCol, sparePart.Articul, sparePart.Title);
+        }//autoCompleteListBox_Format
 
 
 
@@ -1343,6 +1373,8 @@ namespace PartsApp
                 }//if
             }//if
         }//
+
+
 
         
     }//Form2
