@@ -367,20 +367,76 @@ namespace PartsApp
             //В зависимости от значения checkBox, выводим либо товар только в наличии, либо весь товар в базе.
             if (onlyAvaliabilityCheckBox.CheckState == CheckState.Unchecked)
                 searchSpList = PartsDAL.SearchSpByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
-            else searchSpList = PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
+            else 
+                searchSpList = PartsDAL.SearchSpAvaliabilityByTitleOrArticulOrManufacturerToDisplay(searchTextBox.Text, 10);
 
             ///*Выпадающий список в searchTextBox*/
             
             if (searchSpList.Count > 0)
             {
-                OutputFormattedDropDownList(searchSpList);
+                autoCompleteListBox.DataSource = searchSpList;
+                autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
             }//if
-            else autoCompleteListBox.Visible = false; //Если ничего не найдено, убрать вып. список.
+            else 
+                autoCompleteListBox.Visible = false; //Если ничего не найдено, убрать вып. список.
 
             //Запоминаем введенный текст.
             userText = searchTextBox.Text;
         }//searchTextBox_TextChanged
-        
+
+        private void autoCompleteListBox_DataSourceChanged(object sender, EventArgs e)
+        {
+            List<SparePart> spList = autoCompleteListBox.DataSource as List<SparePart>;
+            //Форматируем вывод.
+            //Находим максимальную ширину каждого параметра.
+            int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
+            int titlelMaxLenght  = spList.Max(sp => sp.Title.Length);
+            int manufMaxLenght   = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
+
+            //Запоминаем ширину всех столбцов.
+            autoCompleteListBox.Tag = new Tuple<int, int, int>(articulMaxLenght, titlelMaxLenght, manufMaxLenght);
+
+            autoCompleteListBox.Visible = true;
+        }//autoCompleteListBox_DataSourceChanged
+
+        /// <summary>
+        /// Форматирование вывода в ListBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void autoCompleteListBox_Format(object sender, ListControlConvertEventArgs e)
+        {
+            //Находим максимальную ширину каждого параметра.            
+            Tuple<int, int, int> columnsWidth = autoCompleteListBox.Tag as Tuple<int, int, int>;
+            int articulMaxLenght = columnsWidth.Item1;
+            int titlelMaxLenght  = columnsWidth.Item2;
+            int manufMaxLenght   = columnsWidth.Item3;
+            
+            //Задаём нужный формат для выводимых строк.
+            string artCol = String.Format("{{0, {0}}}",   -articulMaxLenght);
+            string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
+            string manufCol = String.Format("{{2, {0}}}", -manufMaxLenght);
+
+            SparePart sparePart = e.ListItem as SparePart;
+            e.Value = String.Format(artCol + "   " + titleCol + "   " + manufCol, sparePart.Articul, sparePart.Title, sparePart.Manufacturer);
+        }//autoCompleteListBox_Format
+
+        private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks == 1)
+            {
+                if (String.IsNullOrEmpty(userText))
+                    userText = searchTextBox.Text;
+
+                ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
+                searchTextBox.Focus();
+            }//if
+            else
+            {
+                searchTextBox_KeyDown(searchTextBox, new KeyEventArgs(Keys.Enter));
+            }//else
+        }//autoCompleteListBox_MouseDown
+
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             #region Нажатие клавиши "Вниз".
@@ -499,22 +555,7 @@ namespace PartsApp
             searchTextBox_TextChanged(sender, e);
         }//onlyAvaliabilityCheckBox_CheckedChanged
 
-        private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Clicks == 1)
-            {
-                if (String.IsNullOrEmpty(userText))
-                    userText = searchTextBox.Text;
-
-                ChangeSearchTextBoxTextWithoutTextChangedEvent(autoCompleteListBox.SelectedItem.ToString());
-                searchTextBox.Focus();
-
-            }//if
-            else
-            {
-                searchTextBox_KeyDown(searchTextBox, new KeyEventArgs(Keys.Enter));
-            }//else
-        }//autoCompleteListBox_MouseDown
+        
 
         /// <summary>
         /// Присваиваем searchTextBox текст выбранный из выпадающего списка, без вызова события TextChanged.
@@ -1253,6 +1294,8 @@ namespace PartsApp
             else
                 new ContragentOperationsInfoForm(typeof(Customer)).Show();
         }
+
+
 
 
 
