@@ -2263,19 +2263,14 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                var cmd = new SQLiteCommand(connection);
-
+                
+                //Формируем строку с Id товара который пропускается при поиске.                
                 StringBuilder notIn = new StringBuilder();
-                //Формируем строку с Id товара который пропускается при поиске.
-                if (withoutIDs.Count != 0)
-                {
-                    for (int i = 0; i < withoutIDs.Count; ++i)
-                    {
-                        notIn.Append("@NotIn" + i + ", ");                              /*ERROR Исправить!*/
-                        cmd.Parameters.AddWithValue("@NotIn" + i, withoutIDs[i]);
-                    }
+                foreach(int id in withoutIDs)                    
+                    notIn.Append(id + ", ");
+
+                if (withoutIDs.Count > 0)
                     notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
-                }//if
 
                 string query = "SELECT * FROM SpareParts AS sp "
                              + ((onlyInAvailability) ? "JOIN Avaliability AS av ON av.SparePartId = sp.SparePartId " : String.Empty)
@@ -2283,22 +2278,24 @@ namespace PartsApp
                              + "GROUP BY sp.SparePartId "
                              + "LIMIT @Limit;";
 
-                cmd.Parameters.AddWithValue("@Title", title.ToLower() + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-                cmd.CommandText = query;
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                 {
-                    SparePart sparePart = CreateSparePart(dataReader);
-                    spareParts.Add(sparePart);
-                }//while
+                    cmd.Parameters.AddWithValue("@Title", title.ToLower() + "%");
+                    cmd.Parameters.AddWithValue("@Limit", limit);
+                    cmd.Parameters.AddWithValue("@NotIn", notIn);
+
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            spareParts.Add(CreateSparePart(dataReader));
+                    }//using dataReader
+                }//using cmd
+
                 connection.Close();
             }//using
 
             return spareParts;
-        }//       
+        }//SearchSparePartsByTitle  
 
         /// <summary>
         /// Возвращает список из товаров, найденных по совпадению Артикула с переданной строкой.
@@ -2315,18 +2312,14 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                var cmd = new SQLiteCommand(connection);
 
+                //Формируем строку с Id товара который пропускается при поиске.                
                 StringBuilder notIn = new StringBuilder();
-                if (withoutIDs.Count != 0)
-                {
-                    for (int i = 0; i < withoutIDs.Count; ++i)
-                    {
-                        notIn.Append("@NotIn" + i + ", ");
-                        cmd.Parameters.AddWithValue("@NotIn" + i, withoutIDs[i]);
-                    }
-                    notIn.Remove(notIn.Length - 2, 2);
-                }//if
+                foreach (int id in withoutIDs)
+                    notIn.Append(id + ", ");
+
+                if (withoutIDs.Count > 0)
+                    notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
 
                 string query = "SELECT * FROM SpareParts AS sp "
                              + ((onlyInAvailability) ? "JOIN Avaliability AS av ON av.SparePartId = sp.SparePartId " : String.Empty)
@@ -2334,18 +2327,19 @@ namespace PartsApp
                              + "GROUP BY sp.SparePartId "
                              + "LIMIT @Limit;";
 
-                cmd.Parameters.AddWithValue("@Articul", articul.ToLower() + "%");
-                cmd.Parameters.AddWithValue("@Limit", limit);
-
-                cmd.CommandText = query;
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                 {
-                    SparePart sparePart = CreateSparePart(dataReader);
+                    cmd.Parameters.AddWithValue("@Articul", articul.ToLower() + "%");
+                    cmd.Parameters.AddWithValue("@Limit", limit);
+                    cmd.Parameters.AddWithValue("@NotIn", notIn);
 
-                    spareParts.Add(sparePart);
-                }//while
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            spareParts.Add(CreateSparePart(dataReader));
+                    }//using dataReader
+                }//using cmd
+
                 connection.Close();
             }//using
 
