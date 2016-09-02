@@ -1079,7 +1079,18 @@ namespace PartsApp
             {
                 connection.Open();
 
-                sparePart = FindSparePart(sparePartId, connection);
+                const string query = "SELECT * FROM SpareParts as sp LEFT JOIN Manufacturers AS m "
+                                   + "ON m.ManufacturerId = sp.ManufacturerId AND SparePartId = @SparePartId;";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
+
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            sparePart = CreateSparePart(dataReader);
+                    }//using dataReader
+                }//using cmd
                 
                 connection.Close();
             }//using
@@ -1087,67 +1098,40 @@ namespace PartsApp
             return sparePart;
         }//FindSparePart
 
-        /// <summary>
-        /// Возвращает объект типа SparePart, найденный по заданному Id, или null если такого объекта не найдено.
-        /// </summary>
-        /// <param name="sparePartId">Ид товара</param>
-        /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
-        /// <returns></returns>
-        private static SparePart FindSparePart(int sparePartId, SQLiteConnection openConnection)
-        {
-            SparePart sparePart = null;
-
-            var cmd = new SQLiteCommand("SELECT * FROM SpareParts WHERE SparePartId = @SparePartId;", openConnection);
-            cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-
-            using (SQLiteDataReader dataReader = cmd.ExecuteReader())
-            {
-                while (dataReader.Read())
-                    sparePart = CreateSparePart(dataReader);
-            }//using dataReader
-
-            return sparePart;
-        }//FindSparePart
 
 
 
         /// <summary>
-        /// Возвращает список запчастей с заданным артикулом, заполненных только полями таблицы SpareParts, остальные поля не заполнены. 
+        /// Возвращает список запчастей с заданным артикулом. 
         /// </summary>
-        /// <param name="sparePartArticul">Артикул искомых запчастей.</param>
+        /// <param name="articul">Артикул.</param>
         /// <returns></returns>
-        public static IList<SparePart> FindSparePartsByArticul(string sparePartArticul)
+        public static List<SparePart> FindSparePartsByArticul(string articul)
         {
-            IList<SparePart> spareParts = new List<SparePart>();
+            List<SparePart> sparePartsList = new List<SparePart>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
 
-                IList<int> sparePartsId = FindSparePartsIdByArticul(sparePartArticul, connection);
-                foreach (var sparePartId in sparePartsId)
-                    spareParts.Add(FindSparePart(sparePartId, connection));
+                const string query = "SELECT * FROM SpareParts as sp LEFT JOIN Manufacturers AS m "
+                                   + "ON m.ManufacturerId = sp.ManufacturerId AND ToLower(Articul) LIKE @Articul;";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Articul", articul.ToLower());
+
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            CreateSparePart(dataReader);
+                    }//using dataReader
+
+                }//using cmd
 
                 connection.Close();
             }//using
-            return spareParts;
-        }//FindSparePartsIdByArticul
-        
-        public static IList<int> FindSparePartsIdByArticul(string sparePartArticul, SQLiteConnection openConnection)
-        {
-            IList<int> sparePartsId = new List<int>();
 
-            var cmd = new SQLiteCommand("SELECT SparePartId FROM SpareParts WHERE Articul LIKE @Articul;", openConnection);
-
-            cmd.Parameters.AddWithValue("@Articul", sparePartArticul);
-
-            var dataReader = cmd.ExecuteReader();
-            while (dataReader.Read())
-            {
-                sparePartsId.Add(Convert.ToInt32(dataReader["SparePartId"]));
-            }//while    
-
-            return sparePartsId;
+            return sparePartsList;
         }//FindSparePartsIdByArticul
 
 
@@ -2195,7 +2179,6 @@ namespace PartsApp
         #region ************Поиск совпадений по БД.*****************************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                              
-
         /// <summary>
         /// Возвращает список из товаров, найденных по совпадению Артикула, Названия или Производителя с переданной строкой.
         /// </summary>
@@ -2222,7 +2205,7 @@ namespace PartsApp
             {
                 connection.Open();
 
-                string query = "SELECT sp.* FROM SpareParts AS sp " /*ERROR вывод manufacturer*/
+                string query = "SELECT sp.*, m.* FROM SpareParts AS sp "
                              + ((onlyInAvailability) ? "JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId " : String.Empty)
                              + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
                              + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
@@ -2272,7 +2255,8 @@ namespace PartsApp
                 if (withoutIDs.Count > 0)
                     notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
 
-                string query = "SELECT * FROM SpareParts AS sp "
+                string query = "SELECT sp.*, m.* FROM SpareParts AS sp "
+                             + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
                              + ((onlyInAvailability) ? "JOIN Avaliability AS av ON av.SparePartId = sp.SparePartId " : String.Empty)
                              + "WHERE ToLower(sp.Title) LIKE @Title AND sp.SparePartId NOT IN(" + notIn + ")"
                              + "GROUP BY sp.SparePartId "
@@ -2321,7 +2305,8 @@ namespace PartsApp
                 if (withoutIDs.Count > 0)
                     notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
 
-                string query = "SELECT * FROM SpareParts AS sp "
+                string query = "SELECT sp.*, m.* FROM SpareParts AS sp "
+                             + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
                              + ((onlyInAvailability) ? "JOIN Avaliability AS av ON av.SparePartId = sp.SparePartId " : String.Empty)
                              + "WHERE ToLower(sp.Articul) LIKE @Articul AND sp.SparePartId NOT IN(" + notIn + ")"
                              + "GROUP BY sp.SparePartId "
@@ -2346,6 +2331,7 @@ namespace PartsApp
             return spareParts;
         }//SearchSparePartsByArticul
                 
+
 
 
 
@@ -2393,7 +2379,7 @@ namespace PartsApp
                 articul        : dataReader["Articul"] as string,
                 title          : dataReader["Title"] as string,
                 description    : (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,
-                manufacturer   : (dataReader["ManufacturerId"] == DBNull.Value) ? null : FindManufacturerNameById(Convert.ToInt32(dataReader["ManufacturerId"])), 
+                manufacturer   : dataReader["ManufacturerName"] as string,
                 measureUnit    : dataReader["MeasureUnit"] as string             
             );     
         }//CreateSparePart
