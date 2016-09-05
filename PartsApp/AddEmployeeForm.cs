@@ -379,19 +379,17 @@ namespace PartsApp
         /// <param name="employee">Сотрудник чьей информацией заполняется форма.</param>
         private void FillTheForm(Employee employee)
         {
-            lastNameTextBox.Text        = employee.LastName;
-            firstNameTextBox.Text       = employee.FirstName;
-            middleNameTextBox.Text      = employee.MiddleName;
-            birthDateTimePicker.Value   = (DateTime)employee.BirthDate;
-            hireDateTimePicker.Value    = (DateTime)employee.HireDate;            
-            descrRichTextBox.Text       = employee.Note;
-            passportNumTextBox.Text     = employee.PassportNum;
-            titleTextBox.Text           = employee.Title;
-            loginTextBox.Text           = employee.Login;
+            lastNameTextBox.Text             = employee.LastName;
+            firstNameTextBox.Text            = employee.FirstName;
+            middleNameTextBox.Text           = employee.MiddleName;
+            birthDateTimePicker.Value        = (DateTime)employee.BirthDate;
+            hireDateTimePicker.Value         = (DateTime)employee.HireDate;            
+            descrRichTextBox.Text            = employee.Note;
+            passportNumTextBox.Text          = employee.PassportNum;
+            titleTextBox.Text                = employee.Title;
+            loginTextBox.Text                = employee.Login;
             accessLayerComboBox.SelectedItem = employee.AccessLayer;
-
-            if (employee.ContactInfo != null)
-                FillTheContactInfoPanel(employee.ContactInfo);
+            FillTheContactInfoPanel(employee.ContactInfo); //Заполняем контактную информацию.
             //Проверяем наличие фото.
             //photoPictureBox.Image = (employee.Photo != null) ? new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size) : null;
             if (employee.Photo != null)
@@ -403,7 +401,7 @@ namespace PartsApp
                 }//if
                 //else //если путь фото указан, но такого фото уже нет в папке.
                 //{
-                 //   employee.Photo = null; 
+                 //   employee.Photo = null;                 
                 //}//else
             }//if
 
@@ -415,17 +413,21 @@ namespace PartsApp
         /// <param name="contactInfo">Oбъект по которому заполняются поля в ContactInfoPanel.</param>
         private void FillTheContactInfoPanel(ContactInfo contactInfo)
         {
-            countryTextBox.Text     = contactInfo.Country;
-            regionTextBox.Text      = contactInfo.Region;
-            cityTextBox.Text        = contactInfo.City;
-            streetTextBox.Text      = contactInfo.Street;
-            houseTextBox.Text       = contactInfo.House;
-            roomTextBox.Text        = contactInfo.Room;
-            phoneTextBox.Text       = contactInfo.Phone;
-            ExtPhoneTextBox.Text   = contactInfo.ExtPhone;
-            emailTextBox.Text       = contactInfo.Email; ;
-            websiteTextBox.Text     = contactInfo.Website; 
+            if (contactInfo != null)
+            {
+                countryTextBox.Text  = contactInfo.Country;
+                regionTextBox.Text   = contactInfo.Region;
+                cityTextBox.Text     = contactInfo.City;
+                streetTextBox.Text   = contactInfo.Street;
+                houseTextBox.Text    = contactInfo.House;
+                roomTextBox.Text     = contactInfo.Room;
+                phoneTextBox.Text    = contactInfo.Phone;
+                ExtPhoneTextBox.Text = contactInfo.ExtPhone;
+                emailTextBox.Text    = contactInfo.Email; ;
+                websiteTextBox.Text  = contactInfo.Website;
+            }//if
         }//FillTheContactInfoPanel        
+
         /// <summary>
         /// Задаёт ограничения модификации формы исходя из уровня доступа переданного сотрудника.
         /// </summary>

@@ -108,7 +108,7 @@ namespace PartsApp.Models
             Login         = login;
             Password      = password;
 
-            _contactInfo = new Lazy<ContactInfo>(() => PartsDAL.FindContactInfo(employeeId));
+            _contactInfo = new Lazy<ContactInfo>(() => PartsDAL.FindContactInfo(this));
         }//
 
 

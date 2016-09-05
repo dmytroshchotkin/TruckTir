@@ -1343,7 +1343,7 @@ namespace PartsApp
                 contragentName  : dataReader["ContragentName"] as string,
                 code            : dataReader["Code"] as string,
                 entity          : dataReader["Entity"] as string,   
-                contactInfo     : (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
+                contactInfo     : (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
                 description     : dataReader["Description"] as string
             );            
         }//CreateSupplier
@@ -1387,7 +1387,7 @@ namespace PartsApp
                     customer.ContragentName = dataReader["ContragentName"] as string;
                     customer.Code           = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     customer.Entity      = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
+                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
                     customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
 
                     customers.Add(customer);
@@ -1424,7 +1424,7 @@ namespace PartsApp
                     customer.ContragentName = dataReader["ContragentName"] as string;
                     customer.Code        = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     customer.Entity      = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
+                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
                     customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
                 }//while
 
@@ -1460,7 +1460,7 @@ namespace PartsApp
                     customer.ContragentName = dataReader["ContragentName"] as string;
                     customer.Code   = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     customer.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
+                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
                     customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
                 }//while
 
@@ -1908,7 +1908,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="contactInfoId">Id по которому находится информация.</param>
         /// <returns></returns>
-        public static ContactInfo FindContactInfoById(int contactInfoId)
+        public static ContactInfo FindContactInfo(int contactInfoId)
         {
             ContactInfo contactInfo = new ContactInfo();
 
@@ -1931,14 +1931,14 @@ namespace PartsApp
             }//using
 
             return contactInfo;
-        }//FindContactInfoById
+        }//FindContactInfo
 
         /// <summary>
         /// Возвращает объект типа ContactInfo, найденный по заданному Id сотрудника, или null если ничего не найдено.
         /// </summary>
         /// <param name="employeeId">Id сотрудника.</param>
         /// <returns></returns>
-        public static ContactInfo FindContactInfo(int employeeId)
+        public static ContactInfo FindContactInfo(Employee employee)
         {
             ContactInfo contactInfo = null;
 
@@ -1952,7 +1952,7 @@ namespace PartsApp
                                    + "WHERE EmployeeId = @EmployeeId;";
 
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@EmployeeId", employeeId);
+                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
 
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
