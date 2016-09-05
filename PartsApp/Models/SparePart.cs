@@ -20,6 +20,9 @@ namespace PartsApp.Models
         public List<Availability> AvailabilityList { get { return _availabilityList.Value; } }
 
         public SparePart() { }
+        /// <summary>
+        /// Конструктор для добавления нового объекта в БД.
+        /// </summary>
         public SparePart(int sparePartId, string photo, string manufacturer, string articul,
                          string title, string description, string measureUnit)
         {
@@ -34,24 +37,11 @@ namespace PartsApp.Models
             _availabilityList = new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(this));
         }//
 
-        public SparePart(string photo, string manufacturer, string articul,
-                         string title, string description, string measureUnit, List<Availability> availabilityList)
-        {
-            Photo = photo;
-            Manufacturer = manufacturer;
-            Articul = articul;
-            Title = title;
-            Description = description;
-            MeasureUnit = measureUnit;
-
-            _availabilityList = new Lazy<List<Availability>>(() => availabilityList);
-        }//
-
         public SparePart(SparePart sparePart)
             : this (sparePart.SparePartId, sparePart.Photo, sparePart.Manufacturer, sparePart.Articul, sparePart.Title,
                     sparePart.Description, sparePart.MeasureUnit)
         {
-           this._availabilityList = new Lazy<List<Availability>>(() => Availability.GetNewAvailabilityList(sparePart.AvailabilityList));
+           
         }//
 
         /// <summary>

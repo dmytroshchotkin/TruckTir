@@ -596,15 +596,6 @@ namespace PartsApp
             //Находим все SP с изменяемой наценкой. 
             foreach (DataGridViewRow extRow in extPartsDataGridView.SelectedRows)
             {
-                SparePart sp1 = partsDataGridView.SelectedRows[0].DataBoundItem as SparePart;
-                Availability availab = extPartsDataGridView.SelectedRows[0].DataBoundItem as Availability;
-
-                if (sp1 == availab.OperationDetails.SparePart)
-                {
-                    MessageBox.Show("Yes");
-                }//if
-
-                /*ERROR!!! Почему avail получается другой объект чем SparePart.Avail из осн. таблицы??*/
                 Availability avail = extRow.DataBoundItem as Availability;
                 avail.Markup = markup;
 
@@ -612,8 +603,9 @@ namespace PartsApp
                 //Заполняем столбец 'Цена продажи' в главной таблице.
                 SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
                 //запоминем объекты Availability наценка кот. изменилась.
-                SaveMarkupChangeToBuffer(avail);
-                extPartsDataGridView.InvalidateCell(extRow.Cells[MarkupCol.Index]); //Обновляем измененную ячейку.                
+                SaveMarkupChangeToBuffer(avail);                
+                //extPartsDataGridView.InvalidateCell(extRow.Cells[MarkupCol.Index]); //Обновляем измененную ячейку.
+                extPartsDataGridView.InvalidateCell(extRow.Cells[SellingPriceExtCol.Index]); //Обновляем измененную ячейку
             }//foreach   
         }//extPartsDataGridViewMarkupChange
 
