@@ -51,10 +51,11 @@ namespace PartsApp.Models
         /// <param name="login"></param>
         /// <param name="password"></param>
         /// <param name="contactInfo"></param>
-        public Employee(string lastName, string firstName, string middleName, DateTime? birthDate,
+        public Employee(int employeeId, string lastName, string firstName, string middleName, DateTime? birthDate,
                         DateTime? hireDate, DateTime? dismissalDate, string photo, string note, string passportNum,
                         string title, string accessLayer, string login, string password, ContactInfo contactInfo)
         {
+            EmployeeId    = employeeId;
             LastName      = lastName;
             FirstName     = firstName;
             MiddleName    = middleName;
@@ -90,26 +91,15 @@ namespace PartsApp.Models
         /// <param name="login"></param>
         /// <param name="password"></param>
         public Employee(int employeeId, string lastName, string firstName, string middleName, DateTime? birthDate,
-                        DateTime? hireDate, DateTime? dismissalDate, string photo, string note, string passportNum, 
+                        DateTime? hireDate, DateTime? dismissalDate, string photo, string note, string passportNum,
                         string title, string accessLayer, string login, string password)
+            : this(employeeId, lastName, firstName, middleName, birthDate, hireDate, dismissalDate,
+                   photo, note, passportNum, title, accessLayer, login, password, null)
         {
-            EmployeeId    = employeeId;
-            LastName      = lastName;
-            FirstName     = firstName;
-            MiddleName    = middleName;
-            BirthDate     = birthDate;
-            HireDate      = hireDate;
-            DismissalDate = dismissalDate;
-            Photo         = photo;
-            Note          = note;
-            PassportNum   = passportNum;
-            Title         = title;
-            AccessLayer   = accessLayer;
-            Login         = login;
-            Password      = password;
-
             _contactInfo = new Lazy<ContactInfo>(() => PartsDAL.FindContactInfo(this));
         }//
+
+
 
 
         /// <summary>

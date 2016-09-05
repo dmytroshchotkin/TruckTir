@@ -1966,7 +1966,6 @@ namespace PartsApp
             }//using
 
             return contactInfo;
-
         }//FindContactInfo
 
 

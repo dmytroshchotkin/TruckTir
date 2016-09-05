@@ -528,6 +528,7 @@ namespace PartsApp
 
             Employee employee = new Employee
             (
+                employeeId     : 0,
                 photo          : photoPath,
                 lastName       : lastNameTextBox.Text.Trim(),
                 firstName      : firstNameTextBox.Text.Trim(),
@@ -535,9 +536,9 @@ namespace PartsApp
                 birthDate      : birthDateTimePicker.Value,
                 hireDate       : hireDateTimePicker.Value,
                 dismissalDate  : null,
-                note           : (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null,
+                note           : (!String.IsNullOrWhiteSpace(descrRichTextBox.Text))   ? descrRichTextBox.Text.Trim()   : null,
                 passportNum    : (!String.IsNullOrWhiteSpace(passportNumTextBox.Text)) ? passportNumTextBox.Text.Trim() : null,
-                title          : (!String.IsNullOrWhiteSpace(titleTextBox.Text)) ? titleTextBox.Text.Trim() : null,
+                title          : (!String.IsNullOrWhiteSpace(titleTextBox.Text))       ? titleTextBox.Text.Trim()       : null,
                 accessLayer    : accessLayerComboBox.SelectedItem as string,
                 contactInfo    : GetContactInfo(),
                 login          : loginTextBox.Text.Trim(),
