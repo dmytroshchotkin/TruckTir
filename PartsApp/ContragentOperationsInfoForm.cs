@@ -74,7 +74,7 @@ namespace PartsApp
             List<IOperation> operList;
             if (_contragentsOperations.TryGetValue(contragId, out operList) == false)
             {                
-                operList = (_contragType == typeof(Supplier)) ? PartsDAL.FindPurchases(contragId) : PartsDAL.FindSales(contragId, null);
+                operList = (_contragType == typeof(Supplier)) ? PartsDAL.FindPurchases(contragId, null) : PartsDAL.FindSales(contragId, null);
                 _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.                
             }//if
 

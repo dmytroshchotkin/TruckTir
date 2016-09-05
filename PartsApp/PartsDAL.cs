@@ -150,15 +150,14 @@ namespace PartsApp
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         private static void SaleSparePartAvaliability(OperationDetails operDet, SQLiteCommand cmd)
         {
-            //Узнаем количество данного товара в наличии.
-            double spAvaliabilityCount = FindSparePartAvaliabilityCount(operDet.SparePart.SparePartId, operDet.Operation.OperationId);
-            
+            //Узнаем количество данного товара в наличии по данному приходу.
+            float availCount = FindAvailability(operDet.SparePart).First(av => av.OperationDetails.Operation.OperationId == operDet.Operation.OperationId).OperationDetails.Count;
 
             //Если кол-во продаваемого товара с данного прихода равно всему кол-во товара данной записи, удаляем из таблицы эту запись, иначе обновляем кол-во товара в базе.
-            if (spAvaliabilityCount == operDet.Count)
+            if (availCount == operDet.Count)
                 DeleteSparePartAvaliability(operDet.SparePart.SparePartId, operDet.Operation.OperationId, cmd);
             else
-                UpdateSparePartСountAvaliability(operDet.SparePart.SparePartId, operDet.Operation.OperationId, spAvaliabilityCount - operDet.Count, cmd);
+                UpdateSparePartСountAvaliability(operDet.SparePart.SparePartId, operDet.Operation.OperationId, availCount - operDet.Count, cmd);
 
         }//SaleSparePartAvaliability
 
@@ -456,16 +455,16 @@ namespace PartsApp
                             + "SELECT ContactInfoId FROM ContactInfo WHERE rowid = last_insert_rowid();";
 
             cmd.Parameters.Clear();
-            cmd.Parameters.AddWithValue("@Country", contactInfo.Country);
-            cmd.Parameters.AddWithValue("@Region", contactInfo.Region);
-            cmd.Parameters.AddWithValue("@City", contactInfo.City);
-            cmd.Parameters.AddWithValue("@Street", contactInfo.Street);
-            cmd.Parameters.AddWithValue("@House", contactInfo.House);
-            cmd.Parameters.AddWithValue("@Room", contactInfo.Room);
-            cmd.Parameters.AddWithValue("@Phone", contactInfo.Phone);
+            cmd.Parameters.AddWithValue("@Country",  contactInfo.Country);
+            cmd.Parameters.AddWithValue("@Region",   contactInfo.Region);
+            cmd.Parameters.AddWithValue("@City",     contactInfo.City);
+            cmd.Parameters.AddWithValue("@Street",   contactInfo.Street);
+            cmd.Parameters.AddWithValue("@House",    contactInfo.House);
+            cmd.Parameters.AddWithValue("@Room",     contactInfo.Room);
+            cmd.Parameters.AddWithValue("@Phone",    contactInfo.Phone);
             cmd.Parameters.AddWithValue("@ExtPhone", contactInfo.ExtPhone);
-            cmd.Parameters.AddWithValue("@Website", contactInfo.Website);
-            cmd.Parameters.AddWithValue("@Email", contactInfo.Email);
+            cmd.Parameters.AddWithValue("@Website",  contactInfo.Website);
+            cmd.Parameters.AddWithValue("@Email",    contactInfo.Email);
 
             return Convert.ToInt32(cmd.ExecuteScalar());
         }//AddContactInfo
@@ -969,36 +968,6 @@ namespace PartsApp
 
         #region *****************Поиск по таблицам Avaliablility********************************************************************
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
-
-        /// <summary>
-        /// Возвращает количество в наличии заданной единицы товара.
-        /// </summary>
-        /// <param name="sparePartId">Ид товара искомой записи</param>
-        /// <param name="saleId">Ид прихода искомой записи</param>
-        /// <returns></returns>
-        public static double FindSparePartAvaliabilityCount(int sparePartId, int purchaseId)
-        {
-            double count = 0;         
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                string query = "SELECT Count FROM Avaliability WHERE SparePartId = @SparePartId AND OperationId = @OperationId;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.CommandText = query;
-
-                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
-                cmd.Parameters.AddWithValue("@OperationId", purchaseId);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    count = Convert.ToDouble(dataReader["Count"]);
-                }//while
-                connection.Close();
-            }//using
-            return count;        
-        }//FindSparePartAvaliabilityCount
         
        
        
@@ -1080,7 +1049,7 @@ namespace PartsApp
                 connection.Open();
 
                 const string query = "SELECT * FROM SpareParts as sp LEFT JOIN Manufacturers AS m "
-                                   + "ON m.ManufacturerId = sp.ManufacturerId AND SparePartId = @SparePartId;";
+                                   + "ON m.ManufacturerId = sp.ManufacturerId WHERE SparePartId = @SparePartId;";
                 using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
@@ -1098,9 +1067,6 @@ namespace PartsApp
             return sparePart;
         }//FindSparePart
 
-
-
-
         /// <summary>
         /// Возвращает список запчастей с заданным артикулом. 
         /// </summary>
@@ -1115,7 +1081,7 @@ namespace PartsApp
                 connection.Open();
 
                 const string query = "SELECT * FROM SpareParts as sp LEFT JOIN Manufacturers AS m "
-                                   + "ON m.ManufacturerId = sp.ManufacturerId AND ToLower(Articul) LIKE @Articul;";
+                                   + "ON m.ManufacturerId = sp.ManufacturerId WHERE ToLower(Articul) LIKE @Articul;";
                 using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@Articul", articul.ToLower());
@@ -1182,28 +1148,7 @@ namespace PartsApp
 
             return manuf;
         }//FindAllManufacturersName
-
-/*!!!*/ public static string FindManufacturerNameById(int? manufacturerId)
-        {
-            string manufacturer = null;
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "SELECT ManufacturerName FROM Manufacturers WHERE ManufacturerId = @ManufacturerId;";
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@ManufacturerId", manufacturerId);
-
-                var dataReader = cmd.ExecuteReader();
-                dataReader.Read();
-                manufacturer = dataReader["ManufacturerName"] as string;
-
-                connection.Close();
-            }//using
-            return manufacturer;
-        }//FindManufacturerNameById        
+      
         /// <summary>
         /// Возвращает список Id-ков производителей с заданным именем.
         /// </summary>
@@ -1595,7 +1540,34 @@ namespace PartsApp
         #region Поиск по таблице Purchases и Sales.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public static List<IOperation> FindPurchases(int supplierId)
+        public static Purchase FindPurchase(int purchaseId)
+        {
+            Purchase purchase = null;
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
+                                   + "FROM Purchases WHERE OperationId = @PurchaseId;";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@PurchaseId", purchaseId);
+
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            purchase = CreatePurchase(dataReader);
+                    }//using dataReader
+                }//using cmd
+
+                connection.Close();
+            }//using
+
+            return purchase;
+        }//FindPurchase
+
+        public static List<IOperation> FindPurchases(int supplierId, SparePart spr)
         {
             List<IOperation> purchases = new List<IOperation>();
 
@@ -1651,41 +1623,6 @@ namespace PartsApp
         }//FindSales
 
 
-        /// <summary>
-        /// Возвращает объект класса Operation, найденный по заданному Id. 
-        /// </summary>
-        /// <param name="saleId">Id прихода информацию о котором нужно вернуть.</param>
-        /// <returns></returns>
-        public static Purchase FindPurchase(int purchaseId)
-        {
-            Purchase purchase = new Purchase();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                var cmd = new SQLiteCommand("SELECT * FROM Purchases WHERE OperationId = @OperationId;", connection);
-
-                cmd.Parameters.AddWithValue("@OperationId", purchaseId);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    purchase.OperationId = Convert.ToInt32(dataReader["OperationId"]);
-                    purchase.Employee = (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null;
-                    purchase.Contragent = FindSuppliers(Convert.ToInt32(dataReader["ContragentId"]));
-                    purchase.ContragentEmployee = dataReader["ContragentEmployee"] as string;
-                    //Переводим кол-во секунд Utc в DateTime.
-                    TimeSpan ts = TimeSpan.FromSeconds(Convert.ToInt32(dataReader["OperationDate"]));
-                    DateTime purchaseDate = new DateTime(1970, 1, 1);
-                    purchaseDate += ts;
-                    purchase.OperationDate = purchaseDate;
-
-                }//while
-                connection.Close();
-            }//using
-
-            return purchase;
-        }//FindPurchase
 
 
         /// <summary>
@@ -1693,25 +1630,18 @@ namespace PartsApp
         /// </summary>
         /// <param name="sparePartId">Ид искомого товара.</param>
         /// <returns></returns>
-        public static List<IOperation> FindOperations(int sparePartId)
+        public static List<IOperation> FindOperations(SparePart sparePart)
         {
-            List<IOperation> operations = new List<IOperation>();
+            List<IOperation> operationsList = new List<IOperation>();
 
-            List<Purchase> purchList = FindPurchases(sparePartId, null);
-            foreach (Purchase purch in purchList)
-                operations.Add(purch); 
-                
-            List<Sale> salesList = FindSales(sparePartId);
-            foreach (Sale sale in salesList)
-                operations.Add(sale); 
-            
-                        
-            return operations;
+            FindPurchases(sparePart).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
+            FindSales(sparePart).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
+                                    
+            return operationsList;
         }//FindOperations
 
-        public static List<Purchase> FindPurchases(int sparePartId, SparePart spr)
+        public static List<Purchase> FindPurchases(SparePart sparePart)
         {
-            /*ERROR!!! лишний пар-р SparePart.*/
             List<Purchase> purchases = new List<Purchase>();
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
@@ -1724,7 +1654,7 @@ namespace PartsApp
                                    + "WHERE SparePartId = @SparePartId);";
 
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
+                cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
 
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
@@ -1737,7 +1667,8 @@ namespace PartsApp
             
             return purchases;
         }//FindPurchases
-        public static List<Sale> FindSales(int sparePartId)
+
+        public static List<Sale> FindSales(SparePart sparePart)
         {
             List<Sale> salesList = new List<Sale>();
 
@@ -1751,7 +1682,7 @@ namespace PartsApp
                                    + "WHERE SparePartId = @SparePartId);";
 
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
+                cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
 
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
@@ -1786,12 +1717,12 @@ namespace PartsApp
         }//CreatePurchase
 
         private static Sale CreateSale(SQLiteDataReader dataReader)
-        {
+        {            
             return new Sale
             (
                 operationId        : Convert.ToInt32(dataReader["OperationId"]),
                 employee           : (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null,
-                contragent         : FindSuppliers(Convert.ToInt32(dataReader["ContragentId"])),
+                contragent         : FindCustomers(Convert.ToInt32(dataReader["ContragentId"])),
                 contragentEmployee : dataReader["ContragentEmployee"] as string,
                 operationDate      : Convert.ToDateTime(dataReader["OD"]),
                 description        : dataReader["Description"] as string
@@ -1882,10 +1813,10 @@ namespace PartsApp
         {
             return new OperationDetails
             (
-                sparePart   : FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
-                operation   : operat,
-                count       : Convert.ToSingle(dataReader["Count"]),
-                price       : Convert.ToSingle(dataReader["Price"])
+                sparePart: FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
+                operation: operat,
+                count: Convert.ToSingle(dataReader["Count"]),
+                price: Convert.ToSingle(dataReader["Price"])
             );
         }//CreateOperationDetails
 
@@ -2205,7 +2136,7 @@ namespace PartsApp
             {
                 connection.Open();
 
-                string query = "SELECT sp.*, m.* FROM SpareParts AS sp "
+                string query = "SELECT DISTINCT sp.*, m.* FROM SpareParts AS sp "
                              + ((onlyInAvailability) ? "JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId " : String.Empty)
                              + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
                              + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
@@ -2378,7 +2309,7 @@ namespace PartsApp
                 photo          : dataReader["Photo"] as string,
                 articul        : dataReader["Articul"] as string,
                 title          : dataReader["Title"] as string,
-                description    : (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string,
+                description    : dataReader["Description"] as string,
                 manufacturer   : dataReader["ManufacturerName"] as string,
                 measureUnit    : dataReader["MeasureUnit"] as string             
             );     

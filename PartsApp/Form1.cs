@@ -354,10 +354,8 @@ namespace PartsApp
 
             if (!String.IsNullOrWhiteSpace(searchTextBox.Text))
             {
-                //В зависимости от значения checkBox, выводим либо товар только в наличии, либо весь товар в базе.                
-                List<SparePart> searchSparePartsList = (onlyAvaliabilityCheckBox.CheckState == CheckState.Unchecked)
-                                    ? PartsDAL.SearchSpareParts(searchTextBox.Text, false, 10)
-                                    : PartsDAL.SearchSpareParts(searchTextBox.Text, true, 10);
+                //В зависимости от значения checkBox, выводим либо товар только в наличии, либо весь товар в базе.
+                List<SparePart> searchSparePartsList = PartsDAL.SearchSpareParts(searchTextBox.Text.Trim(), onlyAvaliabilityCheckBox.Checked, 10);
 
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
@@ -370,108 +368,91 @@ namespace PartsApp
             }//if
         }//searchTextBox_TextChanged
 
+        
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            #region Нажатие клавиши "Вниз".
+            e.Handled = true; //Перехватываем событие для того чтобы каретка не меняла свою позицию в строке.
 
-            if (e.KeyCode == Keys.Down)
+            switch (e.KeyCode)
             {
-                if (autoCompleteListBox.Visible == false) return;
-
-                //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
-                if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
-                {
-                    autoCompleteListBox.ClearSelected();
-                    searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
-                    return;
-                }//if
-
-                autoCompleteListBox.SelectedIndex += 1;
-                return;
-            }//if
-
-            #endregion
-            #region Нажатие клавиши "Вверх".
-
-            if (e.KeyCode == Keys.Up)
-            {
-                if (autoCompleteListBox.Visible == false) return;
-
-                //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
-                if (autoCompleteListBox.SelectedIndex == -1)
-                {
-                    autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
-                    return;
-                }
-                //Если выбран верхний эл-нт вып. списка, вернуть введенную ранее пользователем строку.
-                if (autoCompleteListBox.SelectedIndex == 0)
-                {
-                    autoCompleteListBox.ClearSelected();
-                    searchTextBox.SelectionStart = searchTextBox.Text.Length; //переводим каретку в конец строки.
-                    e.Handled = true;
-                }//if
-                else
-                {
-                    autoCompleteListBox.SelectedIndex -= 1;
-                }//else
-                return;
-            }//if 
-
-
-            #endregion
-            #region Нажатие клавиши "Enter".
-
-            if (e.KeyCode == Keys.Enter)
-            {
-                //Если ничего не введено, то находим весь товар из базы.
-                if (String.IsNullOrWhiteSpace(searchTextBox.Text))
-                {
-                    if (onlyAvaliabilityCheckBox.Checked)
-                        ChangeDataSource(PartsDAL.SearchSpareParts(String.Empty, true));
-                    else
-                        ChangeDataSource(PartsDAL.SearchSpareParts(String.Empty, false));
-
-                    return;
-                }//if
-
-                //Если нет элементов удовлетворяющих поиску, выводим сообщение об этом.
-                if (autoCompleteListBox.Items.Count == 0)
-                {
-                    toolTip.Show("Нет элементов удовлетворяющих поиску.", this, new Point(searchTextBox.Location.X, componentPanel.Location.Y), 2000);
-                    return;
-                }//if
-
-               
-                //Если есть выбранный элемент, выводим его.
-                if (autoCompleteListBox.SelectedItem != null)
-                    ChangeDataSource(new List<SparePart>() { autoCompleteListBox.SelectedItem as SparePart });
-                else //Если выбранного элемента нет
-                { 
-                    //Если вып. список заполнен меньше макс. кол-ва, заполняем таблицу эл-ми вып. списка.
-                    if (autoCompleteListBox.Items.Count > 0 && autoCompleteListBox.Items.Count < 10)
-                        ChangeDataSource(autoCompleteListBox.DataSource as List<SparePart>);
-                    else
-                    {
-                        if (onlyAvaliabilityCheckBox.Checked)
-                            ChangeDataSource(PartsDAL.SearchSpareParts(searchTextBox.Text.Trim(), true));
-                        else
-                            ChangeDataSource(PartsDAL.SearchSpareParts(searchTextBox.Text.Trim(), false));
-                    }//else                                        
-                }//else
-               
-                autoCompleteListBox.Visible = false;
-                return;
-            }//if
-
-            #endregion
+                case Keys.Down:
+                    KeyDownPress();
+                    break;
+                case Keys.Up:
+                    KeyUpPress();                    
+                    break;
+                case Keys.Enter:
+                    KeyEnterPress();
+                    break;
+            }//switch
         }//searchTextBox_KeyDown
+
 
         private void onlyAvaliabilityCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             searchTextBox_TextChanged(sender, e);
         }//onlyAvaliabilityCheckBox_CheckedChanged
 
-                
+
+
+        /// <summary>
+        /// Выполняет необходимые действия при нажатии юзером Keys.Down.
+        /// </summary>
+        private void KeyDownPress()
+        {
+            //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
+            if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
+                autoCompleteListBox.ClearSelected();
+            else
+                autoCompleteListBox.SelectedIndex += 1;
+        }//KeyDownPress
+
+        /// <summary>
+        /// Выполняет необходимые действия при нажатии юзером Keys.Up.
+        /// </summary>
+        private void KeyUpPress()
+        {            
+            if (autoCompleteListBox.SelectedIndex == -1)
+            {
+                autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1; //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
+            }//if
+            else
+            {
+                if (autoCompleteListBox.SelectedIndex == 0)
+                    autoCompleteListBox.ClearSelected();           
+                else
+                    autoCompleteListBox.SelectedIndex -= 1;
+            }//else
+        }//KeyUpPress
+
+        /// <summary>
+        /// Выполняет необходимые действия при нажатии юзером Keys.Enter.
+        /// </summary>
+        private void KeyEnterPress()
+        {
+            //Если нет элементов удовлетворяющих поиску, выводим сообщение об этом.
+            if (autoCompleteListBox.Items.Count == 0 && !String.IsNullOrWhiteSpace(searchTextBox.Text))
+            {
+                toolTip.Show("Нет элементов удовлетворяющих поиску.", this, new Point(searchTextBox.Location.X, componentPanel.Location.Y), 2000);
+            }//if
+            else
+            {
+                //Если есть выбранный элемент, выводим его.
+                if (autoCompleteListBox.SelectedItem != null)
+                    ChangeDataSource(new List<SparePart>() { autoCompleteListBox.SelectedItem as SparePart });
+                else //Если выбранного элемента нет
+                {
+                    //Если вып. список заполнен меньше макс. кол-ва, заполняем таблицу эл-ми вып. списка.
+                    if (autoCompleteListBox.Items.Count > 0 && autoCompleteListBox.Items.Count < 10)
+                        ChangeDataSource(autoCompleteListBox.DataSource as List<SparePart>);
+                    else
+                        ChangeDataSource(PartsDAL.SearchSpareParts(searchTextBox.Text.Trim(), onlyAvaliabilityCheckBox.Checked));
+                }//else
+            }//else
+        }//KeyEnterPress
+
+        
+
 
 
         #region Методы работы с вып. списком.
@@ -485,8 +466,8 @@ namespace PartsApp
                 //Форматируем вывод.
                 //Находим максимальную ширину каждого параметра.
                 int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
-                int titlelMaxLenght = spList.Max(sp => sp.Title.Length);
-                int manufMaxLenght = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
+                int titlelMaxLenght  = spList.Max(sp => sp.Title.Length);
+                int manufMaxLenght   = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
 
                 //Запоминаем ширину всех столбцов.
                 autoCompleteListBox.Tag = new Tuple<int, int, int>(articulMaxLenght, titlelMaxLenght, manufMaxLenght);
@@ -507,11 +488,11 @@ namespace PartsApp
             //Находим максимальную ширину каждого параметра.            
             Tuple<int, int, int> columnsWidth = autoCompleteListBox.Tag as Tuple<int, int, int>;
             int articulMaxLenght = columnsWidth.Item1;
-            int titlelMaxLenght = columnsWidth.Item2;
-            int manufMaxLenght = columnsWidth.Item3;
+            int titlelMaxLenght  = columnsWidth.Item2;
+            int manufMaxLenght   = columnsWidth.Item3;
 
             //Задаём нужный формат для выводимых строк.
-            string artCol = String.Format("{{0, {0}}}", -articulMaxLenght);
+            string artCol   = String.Format("{{0, {0}}}", -articulMaxLenght);
             string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
             string manufCol = String.Format("{{2, {0}}}", -manufMaxLenght);
 
@@ -583,13 +564,13 @@ namespace PartsApp
                 return;
 
             
-            //выделяем строки всех выделенных клеток.
-            foreach (DataGridViewCell cell in partsDataGridView.SelectedCells)    cell.OwningRow.Selected = true;
+            //выделяем строки всех выделенных клеток.            
+            foreach (DataGridViewCell cell in partsDataGridView.SelectedCells)    cell.OwningRow.Selected = true;    //partsDataGridView.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
             foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
-            //узнаем процент заданной наценки.
 
+            //узнаем процент заданной наценки.
             try
-            {                
+            {
                 float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
                 //Если выделены только строки в partsDataGridView.
                 if (extPartsDataGridView.SelectedRows.Count == 0)
@@ -851,6 +832,7 @@ namespace PartsApp
             //Если ПКМ, выводим контекстное меню.
             else
             {
+                partsDataGridView[e.ColumnIndex, e.RowIndex].Selected = true;
                 //Находим позицию в таблице, где был сделан клик.
                 Point cellLocation = partsDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
                 Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
@@ -877,7 +859,7 @@ namespace PartsApp
 
             changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
-            Deselection();
+            Deselection(null, null);
 
             //Устанавливаем постоянную позицию для отображения Фото.           
             DataGridViewCell cell2 = partsDataGridView.Columns[1].HeaderCell;
@@ -1061,7 +1043,7 @@ namespace PartsApp
         /// <summary>
         /// Осуществляет действия необходимые при сбросе выделения.
         /// </summary>
-        private void Deselection()
+        private void Deselection(object sender, EventArgs e)
         {
             excRateNumericUpDown.Value = 1;
             excRateNumericUpDown.Enabled = false;
@@ -1141,29 +1123,15 @@ namespace PartsApp
             }//foreach     
         }//excRateNumericUpDown_ValueChanged
         
-
-
-        //События инициируемые для сброса выделения строк в partsDataGridView
-        private void menuStrip_Click(object sender, EventArgs e)
-        {
-            Deselection();
-        }//menuStrip_Click
-        private void componentPanel_Click(object sender, EventArgs e)
-        {
-            Deselection();
-        }//componentPanel_Click  
-        private void partsStatusStrip_Click(object sender, EventArgs e)
-        {
-            Deselection();
-        }      
-        private void extPartsStatusStrip_Click(object sender, EventArgs e)
-        {
-            Deselection();
-        }//extPartsStatusStrip_Click
+        /// <summary>
+        /// Сброс выделения в доп. таблице.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void extPartsGroupBox_Click(object sender, System.EventArgs e)
         {
-            extPartsDataGridView.ClearSelection(); //Убираем все выделения.
-        }
+            extPartsDataGridView.ClearSelection();
+        }//extPartsGroupBox_Click
 
         
 
@@ -1219,19 +1187,17 @@ namespace PartsApp
 
         private void посмотретьПередвижениеТовараToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int sparePartId = Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value);
-            new SparePartOperationsInfoForm(sparePartId).Show();
+            SparePart sparePart = partsDataGridView.SelectedCells[0].OwningRow.DataBoundItem as SparePart;
+            new SparePartOperationsInfoForm(sparePart).Show();
         }//
 
         private void ViewInfoByContragentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Открываем форму инф-ции по поставщикам или клиетам в зависимости от выбранного меню.
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
-            if (menuItem == ViewInfoBySuppliersToolStripMenuItem)
-                new ContragentOperationsInfoForm(typeof(Supplier)).Show();
-            else
-                new ContragentOperationsInfoForm(typeof(Customer)).Show();
-        }
+            Type contragentType = (menuItem == ViewSuppliersInfoToolStripMenuItem) ? typeof(Supplier) : typeof(Customer);       
+            new ContragentOperationsInfoForm(contragentType).Show();
+        }//
 
 
 

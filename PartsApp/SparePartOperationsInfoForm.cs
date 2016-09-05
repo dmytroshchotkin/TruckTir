@@ -16,16 +16,16 @@ namespace PartsApp
         public SparePartOperationsInfoForm()
         {
             InitializeComponent();
-        }
+        }//
 
-        public SparePartOperationsInfoForm(int sparePartId)
+        public SparePartOperationsInfoForm(SparePart sparePart)
         {
             InitializeComponent();
 
-            var operList = PartsDAL.FindOperations(sparePartId);
+            List<IOperation> operList = PartsDAL.FindOperations(sparePart);
             
             //Заполняем таблицу.
-            FillTheOperationDGV(operList, sparePartId);
+            FillTheOperationDGV(operList, sparePart.SparePartId);
         }//
 
         /// <summary>
@@ -41,24 +41,22 @@ namespace PartsApp
                 DataGridViewRow row = OperationsInfoDGV.Rows[rowIndx];
 
                 row.Cells[OperationTypeCol.Index].Value = (operat.GetType() == typeof(Sale)) ? "Расход" : "Приход";
-                row.DefaultCellStyle.BackColor = (operat.GetType() == typeof(Sale)) ? Color.LightGreen : Color.Khaki;//Color.Pink;
-                row.Cells[OperationIdCol.Index].Value = operat.OperationId;
-                row.Cells[DateCol.Index].Value = operat.OperationDate.ToShortDateString();
-                row.Cells[EmployeeCol.Index].Value = (operat.Employee != null) ? operat.Employee.GetShortFullName() : null;
-                row.Cells[ContragentCol.Index].Value = operat.Contragent.ContragentName;
+                row.DefaultCellStyle.BackColor          = (operat.GetType() == typeof(Sale)) ? Color.LightGreen : Color.Khaki;//Color.Pink;
+                row.Cells[OperationIdCol.Index].Value   = operat.OperationId;
+                row.Cells[DateCol.Index].Value          = operat.OperationDate.ToShortDateString();
+                row.Cells[EmployeeCol.Index].Value      = (operat.Employee != null) ? operat.Employee.GetShortFullName() : null;
+                row.Cells[ContragentCol.Index].Value    = operat.Contragent.ContragentName;
                 row.Cells[ContragentEmployeeCol.Index].Value = operat.ContragentEmployee;
 
-                OperationDetails operDet = operat.OperationDetailsList.First(sp => sp.SparePart.SparePartId == sparePartId);
-                row.Cells[UnitCol.Index].Value = operDet.SparePart.MeasureUnit;
+                OperationDetails operDet = operat.OperationDetailsList.First(od => od.SparePart.SparePartId == sparePartId);
+                row.Cells[UnitCol.Index].Value  = operDet.SparePart.MeasureUnit;
                 row.Cells[CountCol.Index].Value = operDet.Count;
-                //double? price = (operat.GetType() == typeof(Sale)) ? avail.SellingPrice : avail.Price;
-                float sellPrice = operDet.Price;
-                row.Cells[PriceCol.Index].Value = sellPrice;
-                row.Cells[SumCol.Index].Value = sellPrice * operDet.Count;
+                row.Cells[PriceCol.Index].Value = operDet.Price;
+                row.Cells[SumCol.Index].Value   = operDet.Price * operDet.Count;
 
                 //Выводим название и артикул запчасти.
                 ArticulLabel.Text = operDet.SparePart.Articul;
-                TitleLabel.Text = operDet.SparePart.Title;
+                TitleLabel.Text   = operDet.SparePart.Title;
             }//foreach
         }//FillTheOperationDGV
 

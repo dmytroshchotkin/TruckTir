@@ -55,10 +55,10 @@
             this.addNewEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supplierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewSupplierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ViewInfoBySuppliersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewSuppliersInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewCustomerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ViewInfoByCustomersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewCustomersInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.purchaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewPurchaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -185,7 +185,7 @@
             this.partsStatusStrip.Size = new System.Drawing.Size(979, 22);
             this.partsStatusStrip.TabIndex = 0;
             this.partsStatusStrip.Text = "statusStrip1";
-            this.partsStatusStrip.Click += new System.EventHandler(this.partsStatusStrip_Click);
+            this.partsStatusStrip.Click += new System.EventHandler(this.Deselection);
             // 
             // toolStripStatusLabel
             // 
@@ -214,7 +214,7 @@
             this.menuStrip.Size = new System.Drawing.Size(979, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip";
-            this.menuStrip.Click += new System.EventHandler(this.menuStrip_Click);
+            this.menuStrip.Click += new System.EventHandler(this.Deselection);
             // 
             // FileToolStripMenuItem
             // 
@@ -274,7 +274,7 @@
             // 
             this.supplierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addNewSupplierToolStripMenuItem,
-            this.ViewInfoBySuppliersToolStripMenuItem});
+            this.ViewSuppliersInfoToolStripMenuItem});
             this.supplierToolStripMenuItem.Name = "supplierToolStripMenuItem";
             this.supplierToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
             this.supplierToolStripMenuItem.Text = "Поставщики";
@@ -286,18 +286,18 @@
             this.addNewSupplierToolStripMenuItem.Text = "Добавить нового поставщика";
             this.addNewSupplierToolStripMenuItem.Click += new System.EventHandler(this.addNewSupplierToolStripMenuItem_Click);
             // 
-            // ViewInfoBySuppliersToolStripMenuItem
+            // ViewSuppliersInfoToolStripMenuItem
             // 
-            this.ViewInfoBySuppliersToolStripMenuItem.Name = "ViewInfoBySuppliersToolStripMenuItem";
-            this.ViewInfoBySuppliersToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
-            this.ViewInfoBySuppliersToolStripMenuItem.Text = "Посмотреть инф-цию по поставщикам";
-            this.ViewInfoBySuppliersToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
+            this.ViewSuppliersInfoToolStripMenuItem.Name = "ViewInfoBySuppliersToolStripMenuItem";
+            this.ViewSuppliersInfoToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
+            this.ViewSuppliersInfoToolStripMenuItem.Text = "Посмотреть инф-цию по поставщикам";
+            this.ViewSuppliersInfoToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
             // 
             // customerToolStripMenuItem
             // 
             this.customerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addNewCustomerToolStripMenuItem,
-            this.ViewInfoByCustomersToolStripMenuItem});
+            this.ViewCustomersInfoToolStripMenuItem});
             this.customerToolStripMenuItem.Name = "customerToolStripMenuItem";
             this.customerToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.customerToolStripMenuItem.Text = "Клиенты";
@@ -309,12 +309,12 @@
             this.addNewCustomerToolStripMenuItem.Text = "Добавить нового клиента";
             this.addNewCustomerToolStripMenuItem.Click += new System.EventHandler(this.addNewCustomerToolStripMenuItem_Click);
             // 
-            // ViewInfoByCustomersToolStripMenuItem
+            // ViewCustomersInfoToolStripMenuItem
             // 
-            this.ViewInfoByCustomersToolStripMenuItem.Name = "ViewInfoByCustomersToolStripMenuItem";
-            this.ViewInfoByCustomersToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
-            this.ViewInfoByCustomersToolStripMenuItem.Text = "Посмотреть инф-цию по клиентам";
-            this.ViewInfoByCustomersToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
+            this.ViewCustomersInfoToolStripMenuItem.Name = "ViewInfoByCustomersToolStripMenuItem";
+            this.ViewCustomersInfoToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.ViewCustomersInfoToolStripMenuItem.Text = "Посмотреть инф-цию по клиентам";
+            this.ViewCustomersInfoToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
             // 
             // purchaseToolStripMenuItem
             // 
@@ -362,7 +362,7 @@
             this.componentPanel.Name = "componentPanel";
             this.componentPanel.Size = new System.Drawing.Size(979, 30);
             this.componentPanel.TabIndex = 5;
-            this.componentPanel.Click += new System.EventHandler(this.componentPanel_Click);
+            this.componentPanel.Click += new System.EventHandler(this.Deselection);
             // 
             // onlyAvaliabilityCheckBox
             // 
@@ -827,7 +827,7 @@
             this.extPartsStatusStrip.Size = new System.Drawing.Size(979, 22);
             this.extPartsStatusStrip.TabIndex = 0;
             this.extPartsStatusStrip.Text = "statusStrip1";
-            this.extPartsStatusStrip.Click += new System.EventHandler(this.extPartsStatusStrip_Click);
+            this.extPartsStatusStrip.Click += new System.EventHandler(this.Deselection);
             // 
             // progressBar
             // 
@@ -1004,8 +1004,8 @@
         private System.Windows.Forms.ListBox autoCompleteListBox;
         private System.Windows.Forms.ToolStripMenuItem распечататьЦенникToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem посмотретьПередвижениеТовараToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ViewInfoBySuppliersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ViewInfoByCustomersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewSuppliersInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewCustomersInfoToolStripMenuItem;
         private System.Windows.Forms.DataGridView partsDataGridView;
         private System.Windows.Forms.DataGridView extPartsDataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn SparePartIdCol;
