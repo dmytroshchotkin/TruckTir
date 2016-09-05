@@ -1224,13 +1224,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    Supplier supplier = new Supplier();
-                    supplier.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
-                    supplier.ContragentName = dataReader["ContragentName"] as string;
-                    supplier.Code        = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    supplier.Entity      = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    supplier.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    supplier.Description = (dataReader["Description"] == DBNull.Value) ? String.Empty : dataReader["Description"] as string;
+                    Supplier supplier = CreateSupplier(dataReader);
 
                     suppliers.Add(supplier);
                 }//while
@@ -1247,7 +1241,7 @@ namespace PartsApp
         /// <returns></returns>
         public static Supplier FindSuppliers(int supplierId)
         {
-            Supplier supplier = new Supplier();
+            Supplier supplier = null;
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -1261,12 +1255,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    supplier.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
-                    supplier.ContragentName = dataReader["ContragentName"] as string;
-                    supplier.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    supplier.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    supplier.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    supplier.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
+                    supplier = CreateSupplier(dataReader);
                 }//while
 
                 connection.Close();
@@ -1274,41 +1263,6 @@ namespace PartsApp
 
             return supplier;
         }//FindSuppliers
-        /// <summary>
-        /// Возвращает объект Contragent, заполненный данными с таблицы Suppliers по заданному Id поставки. 
-        /// </summary>
-        /// <param name="saleId">Id поставки, по которой находятся данные о поставщике.</param>
-        /// <returns></returns>
-        public static Supplier FindSupplierByPurchaseId(int purchaseId)
-        {
-            Supplier supplier = new Supplier();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "SELECT * FROM Purchases AS p JOIN Suppliers AS s ON p.ContragentId = s.ContragentId "
-                                   + "WHERE p.OperationId = @OperationId;";
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@OperationId", purchaseId);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    supplier.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
-                    supplier.ContragentName = dataReader["ContragentName"] as string;
-                    supplier.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    supplier.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    supplier.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    supplier.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
-                }//while
-
-                connection.Close();
-            }//using
-
-            return supplier;
-        }//FindSupplierByPurchaseId
 
         /// <summary>
         /// Возвращает объект Supplier найденный по заданному SupplierName, или null если такого объекта не найдено.
@@ -1331,13 +1285,7 @@ namespace PartsApp
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    supplier = new Supplier();
-                    supplier.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
-                    supplier.ContragentName = dataReader["ContragentName"] as string;
-                    supplier.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    supplier.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    supplier.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    supplier.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
+                    supplier = CreateSupplier(dataReader);
                 }//while
 
                 connection.Close();
@@ -1387,7 +1335,18 @@ namespace PartsApp
 
 
 
-
+        private static Supplier CreateSupplier(SQLiteDataReader dataReader)
+        {
+            return new Supplier
+            (
+                contragentId    : Convert.ToInt32(dataReader["ContragentId"]),
+                contragentName  : dataReader["ContragentName"] as string,
+                code            : dataReader["Code"] as string,
+                entity          : dataReader["Entity"] as string,   
+                contactInfo     : (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfoById(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
+                description     : dataReader["Description"] as string
+            );            
+        }//CreateSupplier
 
 
 

@@ -493,9 +493,7 @@ namespace PartsApp
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-            {
                 markupComboBox_SelectedIndexChanged(sender, null);                                
-            }//if
         }//markupComboBox_PreviewKeyDown 
 
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -577,10 +575,8 @@ namespace PartsApp
                 List<Availability> availList = (row.DataBoundItem as SparePart).AvailabilityList;
                 if (availList.Count > 0)
                 {
-                    //Меняем наценку во всем списке этого товара в наличии.
-                    availList.ForEach(av => av.Markup = markup);
-                    //запоминем объекты Availability наценка кот. изменилась.                    
-                    availList.ForEach(av => SaveMarkupChangeToBuffer(av));
+                    //Меняем наценку во всем списке этого товара в наличии и запоминаем эти объекты.
+                    availList.ForEach(av => { av.Markup = markup; SaveMarkupChangeToBuffer(av); });
                     //Меняем значение наценки в соотв. ячейках доп. таблицы.
                     foreach (DataGridViewRow extRow in extPartsDataGridView.Rows)
                         extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); 
@@ -600,13 +596,13 @@ namespace PartsApp
             //Находим все SP с изменяемой наценкой. 
             foreach (DataGridViewRow extRow in extPartsDataGridView.SelectedRows)
             {
-                //SparePart sp1      = partsDataGridView.SelectedRows[0].DataBoundItem as SparePart;
-                //Availability availab = extPartsDataGridView.SelectedRows[0].DataBoundItem as Availability;
+                SparePart sp1 = partsDataGridView.SelectedRows[0].DataBoundItem as SparePart;
+                Availability availab = extPartsDataGridView.SelectedRows[0].DataBoundItem as Availability;
 
-                //if (sp1 == availab.OperationDetails.SparePart)
-                //{
-                //    MessageBox.Show("Yes");
-                //}//if
+                if (sp1 == availab.OperationDetails.SparePart)
+                {
+                    MessageBox.Show("Yes");
+                }//if
 
                 /*ERROR!!! Почему avail получается другой объект чем SparePart.Avail из осн. таблицы??*/
                 Availability avail = extRow.DataBoundItem as Availability;
@@ -941,7 +937,7 @@ namespace PartsApp
             foreach (DataGridViewRow row in partsDataGridView.Rows)
             {
                 SparePart sp = row.DataBoundItem as SparePart;
-                if (sp.AvailabilityList != null && sp.AvailabilityList.Count != 0)
+                if (sp.AvailabilityList != null && sp.AvailabilityList.Count != 0) /*Error!!! зачем проверка на null?*/
                 {
                     row.Cells[AvaliabilityCol.Index].Value = Availability.GetTotalCount(sp.AvailabilityList);
                     row.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sp.AvailabilityList);
