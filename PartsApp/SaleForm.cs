@@ -204,14 +204,16 @@ namespace PartsApp
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void dataGridViewTextBoxCell_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
+        {            
             switch (e.KeyCode)
             { 
                 case Keys.Down:
-                    KeyDownPress();
+                    _isCellEditError = true;
+                    AutoCompleteListBox.KeyDownPress(autoCompleteListBox);
                     break;
                 case Keys.Up:
-                    KeyUpPress();
+                    _isCellEditError = true;
+                    AutoCompleteListBox.KeyUpPress(autoCompleteListBox);
                     break;
             }//switch
         }//dataGridViewTextBoxCell_PreviewKeyDown
@@ -669,42 +671,6 @@ namespace PartsApp
             cell.Value = value;
         }//SetCustomValueToCell
 
-        /// <summary>
-        /// Выполняет необходимые действия при нажатии юзером Keys.Down.
-        /// </summary>
-        private void KeyDownPress()
-        {
-            _isCellEditError = true;
-            //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
-            if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
-                autoCompleteListBox.ClearSelected();
-            else
-                autoCompleteListBox.SelectedIndex += 1;
-        }//KeyDownPress
-
-        /// <summary>
-        /// Выполняет необходимые действия при нажатии юзером Keys.Up.
-        /// </summary>
-        private void KeyUpPress()
-        {
-            _isCellEditError = true;
-            //Если нет выбранных эл-тов в вып. списке, выбрать последний его эл-нт.
-            if (autoCompleteListBox.SelectedIndex == -1)
-            {
-                autoCompleteListBox.SelectedIndex = autoCompleteListBox.Items.Count - 1;
-            }//if
-            else
-            {
-                if (autoCompleteListBox.SelectedIndex == 0)
-                    autoCompleteListBox.ClearSelected();
-                else
-                    autoCompleteListBox.SelectedIndex -= 1;
-            }//else
-
-            //Если это нулевая строка, то при нажатии Up не происходит событие SelectionChanged, и при выборе из вып. списка каретка ставится в начало строки, что затрудняет дальнейший ввод поль-лю. Мы вызываем событие искусственно и ставим каретку в конец строки.                               
-            if (_lastEditCell.OwningRow.Index == 0)
-                saleDataGridView_SelectionChanged(null, null);
-        }//KeyUpPress
 
 
 //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
