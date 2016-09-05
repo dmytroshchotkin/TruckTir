@@ -16,18 +16,18 @@ namespace PartsApp
     public partial class Form1 : Form
     {                                    
         /// <summary>
-        /// Коллекция для запоминания объектов с изм. наценкой.
-        /// </summary>
-        IDictionary<int, IDictionary<int, double>> changeMarkupBufferDict;    /*ERROR заменить*/
-        /// <summary>
         /// Коллекция для вывода в таблице.
         /// </summary>
         SortableBindingList<SparePart> SpList;
         /// <summary>
         /// Коллекция для запоминания списка вывода в таблице в оригинальном состоянии.
         /// </summary>
-        IList<SparePart> origSpList;                              
-        
+        IList<SparePart> origSpList;
+        /// <summary>
+        /// Список объектов с измененной наценкой.
+        /// </summary>
+        List<Availability> _changedMarkupList;
+
         /// <summary>
         /// Авторизованный пользователь.
         /// </summary>
@@ -38,7 +38,7 @@ namespace PartsApp
         {
             InitializeComponent();
 
-            changeMarkupBufferDict = new Dictionary<int, IDictionary<int, double>>();
+            _changedMarkupList = new List<Availability>();
         }//
 
         private void Form1_Load(object sender, EventArgs e)
@@ -146,7 +146,7 @@ namespace PartsApp
             ExcelApp.Cells[row, column + 3] = "Ед. изм.";
             ExcelApp.Cells[row, column + 4] = "Кол-во";
             ExcelApp.Cells[row, column + 5] = "Цена";
-            //excelApp.Cells[row, column + 5] = "Сумма";
+            //excelApp.Cells[extRow, column + 5] = "Сумма";
 
             Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
             excelCells.Font.Bold = true;
@@ -188,8 +188,8 @@ namespace PartsApp
 
                 ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;
                 ExcelApp.Cells[row, column + 4] = spareParts[i].AvailabilityList.Sum(av => av.OperationDetails.Count);
-                //excelApp.Cells[row, column + 5] = availabilityList[i].Price;                
-                //excelApp.Cells[row, column + 5] = availabilityList[i].Price * availabilityList[i].Count;
+                //excelApp.Cells[extRow, column + 5] = availabilityList[i].Price;                
+                //excelApp.Cells[extRow, column + 5] = availabilityList[i].Price * availabilityList[i].Count;
                 if (spareParts[i].AvailabilityList.Count > 0)
                     ExcelApp.Cells[row, column + 5] = Availability.GetMaxSellingPrice(spareParts[i].AvailabilityList);      
             }//for
@@ -593,20 +593,21 @@ namespace PartsApp
 
             try
             {
-                PartsDAL.UpdateSparePartMarkup(changeMarkupBufferDict);
+                PartsDAL.UpdateSparePartMarkup(_changedMarkupList);
                 //Действия осущ-мые при удачной записи в базу.
                 saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопки недоступными.
 
                 //Перезаписываем начальный список.            
                 origSpList = SparePart.GetNewSparePartsList(SpList);
 
-                changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
+                _changedMarkupList.Clear(); //Очищаем словарь запчастей с измененной наценкой.
             }//try			
             catch (System.Data.SQLite.SQLiteException ex)
             {
-                if (ex.Message == "database is locked\r\ndatabase is locked") /*ERROR!!! корявое сообщение*/
+                if (ex.Message == "database is locked\r\ndatabase is locked") 
                     MessageBox.Show("Вероятно кто-то другой сейчас осуществляет запись в базу\nПопробуйте ещё раз.", "База данных занята в данный момент." );
-                else MessageBox.Show(String.Format("Ошибка записи изменения наценки\n{0}", ex.Message));
+                else 
+                    MessageBox.Show(String.Format("Ошибка записи изменения наценки\n{0}", ex.Message));
             }//catch    
 
             Cursor = Cursors.Default;
@@ -619,7 +620,7 @@ namespace PartsApp
             //Отменяем все изменения.
             ChangeDataSource(origSpList);
 
-            changeMarkupBufferDict.Clear(); //Очищаем словарь запчастей с измененной наценкой.
+            _changedMarkupList.Clear(); //Очищаем словарь запчастей с измененной наценкой.
         }//cancelChangesButton_Click
 
         /// <summary>
@@ -656,7 +657,7 @@ namespace PartsApp
         private void extPartsDataGridViewMarkupChange(float markup)
         {
             //Находим все SP с изменяемой наценкой. 
-            foreach (DataGridViewRow row in extPartsDataGridView.SelectedRows)
+            foreach (DataGridViewRow extRow in extPartsDataGridView.SelectedRows)
             {
                 //SparePart sp1      = partsDataGridView.SelectedRows[0].DataBoundItem as SparePart;
                 //Availability availab = extPartsDataGridView.SelectedRows[0].DataBoundItem as Availability;
@@ -667,15 +668,15 @@ namespace PartsApp
                 //}//if
 
                 /*ERROR!!! Почему avail получается другой объект чем SparePart.Avail из осн. таблицы??*/
-                Availability avail = row.DataBoundItem as Availability;
+                Availability avail = extRow.DataBoundItem as Availability;
                 avail.Markup = markup;
 
-                row.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
+                extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
                 //Заполняем столбец 'Цена продажи' в главной таблице.
                 SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
                 //запоминем объекты Availability наценка кот. изменилась.
                 SaveMarkupChangeToBuffer(avail);
-                extPartsDataGridView.InvalidateCell(row.Cells[MarkupCol.Index]); //Обновляем измененную ячейку.
+                extPartsDataGridView.InvalidateCell(extRow.Cells[MarkupCol.Index]); //Обновляем измененную ячейку.                
             }//foreach   
         }//extPartsDataGridViewMarkupChange
 
@@ -687,44 +688,10 @@ namespace PartsApp
         /// <param name="markup">Наценка на которую нужно изменить старое значение.</param>
         private void SaveMarkupChangeToBuffer(Availability avail)
         {
-            int sparePartId = avail.OperationDetails.SparePart.SparePartId;
-            int purchaseId = avail.OperationDetails.Operation.OperationId;
-
-            if (changeMarkupBufferDict.ContainsKey(sparePartId)) //Если уже есть такой SparePartId.
-            {
-                if (changeMarkupBufferDict[sparePartId].ContainsKey(purchaseId)) //если уже есть такой PurchaseId. 
-                    (changeMarkupBufferDict[sparePartId])[purchaseId] = avail.Markup;
-                else //если у данной SparePartId ещё нет такой PurchaseId.
-                    (changeMarkupBufferDict[sparePartId]).Add(new KeyValuePair<int, double>(purchaseId, avail.Markup));
-            }//if
-            else //Если ещё нет данной SparePartId
-            {
-                IDictionary<int, double> dict = new Dictionary<int, double>();
-                dict.Add(new KeyValuePair<int, double>(purchaseId, avail.Markup));
-                changeMarkupBufferDict.Add(new KeyValuePair<int, IDictionary<int, double>>(sparePartId, dict));
-            }//else
+            //Если такого объекта ещё нет в списке, добавляем его.
+            if (!_changedMarkupList.Contains(avail))         
+                _changedMarkupList.Add(avail);
         }//SaveMarkupChangeToBuffer
-
-        /// <summary>
-        /// Проверяет одинаков ли Процент Наценки у всех эл-тов переданного списка запчастей. 
-        /// </summary>
-        /// <param name="availabilityList">Список проверяемых запчастей</param>
-        /// <returns></returns>
-        private bool IsSameMarkup(IList<SparePart> spareParts)
-        {
-            //Проверяем не одинаковая ли у всех записей цена продажи и процент наценки.
-            bool isSameMarkup = true;
-            for (int i = 0; i < spareParts.Count - 1; ++i)
-            {
-                for (int j = i + 1; j < spareParts.Count; ++j)
-                {
-                    //if (sparePartsList[i].Markup != sparePartsList[j].Markup) isSameMarkup = false;
-                }//for j
-                if (isSameMarkup == false) break;
-            }//for i
-
-            return isSameMarkup;
-        }//IsSamePriceAndMarkup
 
 
 
@@ -857,7 +824,7 @@ namespace PartsApp
             }//for    
             partsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
 
-            changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
+            _changedMarkupList.Clear(); //очищаем список деталей с измененной наценкой. 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
             Deselection(null, null);
 
@@ -874,6 +841,7 @@ namespace PartsApp
         /// <param name="e"></param>
         private void partsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
+            /*ERROR Изменить*/
             DataGridView dataGridView = sender as DataGridView;
             int index = e.RowIndex;
             string indexStr = (index + 1).ToString();
@@ -906,7 +874,7 @@ namespace PartsApp
             }//for    
             extPartsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
 
-            //changeMarkupBufferDict.Clear(); //очищаем список деталей с измененной наценкой. 
+            //_changedMarkupList.Clear(); //очищаем список деталей с измененной наценкой. 
             //убираем выделение строк.
             extPartsDataGridView.ClearSelection();
         }//extPartsDataGridView_DataSourceChanged

@@ -132,6 +132,7 @@
     <Compile Include="SparePartOperationsInfoForm.Designer.cs">
       <DependentUpon>SparePartOperationsInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SupportClasses\AutoCompleteListBox.cs" />
     <Compile Include="SupportClasses\ExtensionClasses.cs" />
     <Compile Include="SupportClasses\PasswordClass.cs" />
     <Compile Include="SupportClasses\SortableBindingList.cs" />

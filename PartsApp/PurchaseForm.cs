@@ -531,7 +531,7 @@ namespace PartsApp
         /// <summary>
         /// Заполняет осн. таблицу данными.
         /// </summary>
-        /// <param name="row">Заполняемая строка.</param>
+        /// <param name="extRow">Заполняемая строка.</param>
         /// <param name="sparePart">Данные для заполнения строки.</param>
         private void FillThePurchaseDGV(DataGridViewRow row, SparePart sparePart)
         {
@@ -568,7 +568,7 @@ namespace PartsApp
         /// <summary>
         /// Заполняет ячейку 'Сумма' заданной строки и общую сумму.
         /// </summary>
-        /// <param name="row">Строка дял которой производятся вычисления и заполнение.</param>
+        /// <param name="extRow">Строка дял которой производятся вычисления и заполнение.</param>
         private void FillTheSumCell(DataGridViewRow row)
         {
             if (row.Cells[CountCol.Index].Value != null && row.Cells[PriceCol.Index].Value != null)
@@ -999,23 +999,23 @@ namespace PartsApp
                 purchaseDataGridView.Enabled = true;
             }
             else purchaseDataGridView.Enabled = false;
-            //foreach (DataGridViewRow row in purchaseDataGridView.Rows)
+            //foreach (DataGridViewRow extRow in purchaseDataGridView.Rows)
             //{
-            //    if (row.Cells["Price"].Value != null)
+            //    if (extRow.Cells["Price"].Value != null)
             //    {
-            //        row.Cells["Price"].Value = Math.Round(((double)row.Cells["Price"].Value * (double)excRateNumericUpDown.Value), 2, MidpointRounding.AwayFromZero);                                                           
-            //        double price = Convert.ToDouble(row.Cells["Price"].Value);
+            //        extRow.Cells["Price"].Value = Math.Round(((double)extRow.Cells["Price"].Value * (double)excRateNumericUpDown.Value), 2, MidpointRounding.AwayFromZero);                                                           
+            //        double price = Convert.ToDouble(extRow.Cells["Price"].Value);
             //        double excRate = (double)excRateNumericUpDown.Value;
             //        double newPrice = Math.Round(price * excRate, 2, MidpointRounding.AwayFromZero);
-            //        row.Cells["Price"].Value = newPrice;
-            //        if (row.Cells["Count"].Value != null)
+            //        extRow.Cells["Price"].Value = newPrice;
+            //        if (extRow.Cells["Count"].Value != null)
             //        {
             //            //Узнаем была ли уже до этого введена цена, для изменения строки "итого".
-            //            if (row.Cells["Sum"].Value != null)
-            //                inTotal -= Convert.ToDouble((row.Cells["Sum"].Value));
+            //            if (extRow.Cells["Sum"].Value != null)
+            //                inTotal -= Convert.ToDouble((extRow.Cells["Sum"].Value));
 
-            //            row.Cells["Sum"].Value = newPrice * Convert.ToDouble(row.Cells["Count"].Value);
-            //            inTotal += newPrice * Convert.ToDouble(row.Cells["Count"].Value);
+            //            extRow.Cells["Sum"].Value = newPrice * Convert.ToDouble(extRow.Cells["Count"].Value);
+            //            inTotal += newPrice * Convert.ToDouble(extRow.Cells["Count"].Value);
             //            inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
             //        }//if
             //    }//if

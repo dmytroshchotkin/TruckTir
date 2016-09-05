@@ -477,7 +477,7 @@ namespace PartsApp
         /// <summary>
         /// Заполняет обе таблицы необх. данными
         /// </summary>
-        /// <param name="row">Заполняемая строка в осн. таблице.</param>
+        /// <param name="extRow">Заполняемая строка в осн. таблице.</param>
         /// <param name="sparePart">Данные для заполнения.</param>
         private void FillTheBothDGV(DataGridViewRow row, SparePart sparePart)
         {
@@ -491,7 +491,7 @@ namespace PartsApp
         /// <summary>
         /// Заполняет осн. таблицу данными.
         /// </summary>
-        /// <param name="row">Заполняемая строка.</param>
+        /// <param name="extRow">Заполняемая строка.</param>
         /// <param name="sparePart">Данные для заполнения строки.</param>
         private void FillTheSaleDGV(DataGridViewRow row, SparePart sparePart)
         {
@@ -596,7 +596,7 @@ namespace PartsApp
         /// <summary>
         /// Заполняет ячейку 'Сумма' заданной строки и общую сумму.
         /// </summary>
-        /// <param name="row">Строка дял которой производятся вычисления и заполнение.</param>
+        /// <param name="extRow">Строка дял которой производятся вычисления и заполнение.</param>
         private void FillTheSumCell(DataGridViewRow row)
         {
             if (row.Cells[CountCol.Index].Style.ForeColor == Color.Black && row.Cells[SellingPriceCol.Index].Value != null)

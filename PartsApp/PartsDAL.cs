@@ -87,7 +87,7 @@ namespace PartsApp
         /// Изменяет наценку у записей с заданными SparePartId и PurchaseId на заданную Markup
         /// </summary>
         /// <param name="changeMarkupDict">Словарь типа (sparePartId, IDictionary(saleId, markup))</param>
-        public static void UpdateSparePartMarkup(IDictionary<int, IDictionary<int, double>> changeMarkupDict)
+        public static void UpdateSparePartMarkup(List<Availability> availList)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -99,18 +99,13 @@ namespace PartsApp
                     {
                         try
                         {
-                            int sparePartId = 0, purchaseId = 0;
-                            double markup = 0;
-                            foreach (KeyValuePair<int, IDictionary<int, double>> spIdKeyValue in changeMarkupDict)
+                            foreach (Availability avail in availList)
                             {
-                                sparePartId = spIdKeyValue.Key;
+                                int sparePartId = avail.OperationDetails.SparePart.SparePartId;
+                                int purchaseId  = avail.OperationDetails.Operation.OperationId;
+                                float markup    = avail.Markup;
 
-                                foreach (KeyValuePair<int, double> purchIdKeyValue in spIdKeyValue.Value)
-                                {
-                                    purchaseId = purchIdKeyValue.Key;
-                                    markup = purchIdKeyValue.Value;
-                                    UpdateSparePartMarkup(sparePartId, purchaseId, markup, cmd);
-                                }//foreach                    
+                                UpdateSparePartMarkup(sparePartId, purchaseId, markup, cmd);                  
                             }//foreach
 
                             trans.Commit();
