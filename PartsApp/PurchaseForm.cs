@@ -627,36 +627,17 @@ namespace PartsApp
 
         private void autoCompleteListBox_DataSourceChanged(object sender, EventArgs e)
         {
-            if (autoCompleteListBox.DataSource != null)
-            {
-                List<SparePart> spList = autoCompleteListBox.DataSource as List<SparePart>;
-                //Форматируем вывод.
-                //Находим максимальную ширину каждого параметра.
-                int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
-                int titlelMaxLenght  = spList.Max(sp => sp.Title.Length);
-
-                //Запоминаем ширину всех столбцов.
-                autoCompleteListBox.Tag = new Tuple<int, int>(articulMaxLenght, titlelMaxLenght);
-
-                autoCompleteListBox.Visible = true;
-            }//if
-            else
-                autoCompleteListBox.Visible = false;
+            AutoCompleteListBox.DataSourceChanged(autoCompleteListBox);
         }//autoCompleteListBox_DataSourceChanged
 
+        /// <summary>
+        /// Форматирование вывода в ListBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void autoCompleteListBox_Format(object sender, ListControlConvertEventArgs e)
         {
-            //Находим максимальную ширину каждого параметра.            
-            Tuple<int, int> columnsWidth = autoCompleteListBox.Tag as Tuple<int, int>;
-            int articulMaxLenght = columnsWidth.Item1;
-            int titlelMaxLenght  = columnsWidth.Item2;
-
-            //Задаём нужный формат для выводимых строк.
-            string artCol   = String.Format("{{0, {0}}}", -articulMaxLenght);
-            string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
-
-            SparePart sparePart = e.ListItem as SparePart;
-            e.Value = String.Format(artCol + "   " + titleCol, sparePart.Articul, sparePart.Title);
+            AutoCompleteListBox.OutputFormatting(autoCompleteListBox, e);
         }//autoCompleteListBox_Format
 
         #endregion

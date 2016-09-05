@@ -38,6 +38,53 @@ namespace PartsApp.SupportClasses
                     autoCompleteListBox.SelectedIndex -= 1;
             }//else
         }//KeyUpPress
+
+        /// <summary>
+        /// Производит необходимые действия при смене DataSource.
+        /// </summary>
+        /// <param name="autoCompleteListBox">Выпадающий список.</param>
+        public static void DataSourceChanged(ListBox autoCompleteListBox)
+        { 
+            if (autoCompleteListBox.DataSource != null)
+            {
+                List<Models.SparePart> spList = autoCompleteListBox.DataSource as List<Models.SparePart>;
+                //Форматируем вывод.
+                //Находим максимальную ширину каждого параметра.
+                int articulMaxLenght = spList.Max(sp => sp.Articul.Length);
+                int titlelMaxLenght  = spList.Max(sp => sp.Title.Length);
+                int manufMaxLenght   = spList.Select(sp => sp.Manufacturer).Where(m => m != null).DefaultIfEmpty(String.Empty).Max(m => m.Length);
+
+                //Запоминаем ширину всех столбцов.
+                autoCompleteListBox.Tag = new Tuple<int, int, int>(articulMaxLenght, titlelMaxLenght, manufMaxLenght);
+
+                autoCompleteListBox.Visible = true;
+            }//if
+            else
+                autoCompleteListBox.Visible = false;
+        }//DataSourceChanged
+       
+        /// <summary>
+        /// Форматирование вывода в ListBox.
+        /// </summary>
+        /// <param name="autoCompleteListBox">Выпадающий список.</param>
+        /// <param name="e"></param>       
+        public static void OutputFormatting(ListBox autoCompleteListBox, ListControlConvertEventArgs e)
+        {
+            //Находим максимальную ширину каждого параметра.            
+            Tuple<int, int, int> columnsWidth = autoCompleteListBox.Tag as Tuple<int, int, int>;
+            int articulMaxLenght = columnsWidth.Item1;
+            int titlelMaxLenght  = columnsWidth.Item2;
+            int manufMaxLenght   = columnsWidth.Item3;
+
+            //Задаём нужный формат для выводимых строк.
+            string artCol   = String.Format("{{0, {0}}}", -articulMaxLenght);
+            string titleCol = String.Format("{{1, {0}}}", -titlelMaxLenght);
+            string manufCol = String.Format("{{2, {0}}}", -manufMaxLenght);
+
+            Models.SparePart sparePart = e.ListItem as Models.SparePart;
+            e.Value = String.Format(artCol + "   " + titleCol + "   " + manufCol, sparePart.Articul, sparePart.Title, sparePart.Manufacturer);
+        }//OutputFormatting
+
     }//AutoCompleteListBox
 
 
