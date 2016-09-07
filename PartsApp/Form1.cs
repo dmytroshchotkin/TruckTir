@@ -553,7 +553,11 @@ namespace PartsApp
                 if (availList.Count > 0)
                 {
                     //Меняем наценку во всем списке этого товара в наличии и запоминаем эти объекты.
-                    availList.ForEach(av => { av.Markup = markup; SaveMarkupChangeToBuffer(av); });
+                    foreach (Availability avail in availList)
+                    { 
+                        SaveMarkupChangeToBuffer(avail, markup); //Запоминаем объект с измененной наценкой.
+                    }//foreach
+                    //availList.ForEach(av => { av.Tag = av.Markup;  av.Markup = markup; SaveMarkupChangeToBuffer(av); });
                     //Меняем значение наценки в соотв. ячейках доп. таблицы.
                     foreach (DataGridViewRow extRow in extPartsDataGridView.Rows)
                         extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); 
@@ -574,29 +578,48 @@ namespace PartsApp
             foreach (DataGridViewRow extRow in extPartsDataGridView.SelectedRows)
             {
                 Availability avail = extRow.DataBoundItem as Availability;
-                avail.Markup = markup;
+                SaveMarkupChangeToBuffer(avail, markup); //запоминем объекты Availability наценка кот. изменилась.
 
                 extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
-                //Заполняем столбец 'Цена продажи' в главной таблице.
-                SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
-                //запоминем объекты Availability наценка кот. изменилась.
-                SaveMarkupChangeToBuffer(avail);                
                 //extPartsDataGridView.InvalidateCell(extRow.Cells[MarkupCol.Index]); //Обновляем измененную ячейку.
                 extPartsDataGridView.InvalidateCell(extRow.Cells[SellingPriceExtCol.Index]); //Обновляем измененную ячейку
-            }//foreach   
+            }//foreach  
+
+            //Заполняем столбец 'Цена продажи' в главной таблице.
+            SparePart sparePart = (extPartsDataGridView.SelectedRows[0].DataBoundItem as Availability).OperationDetails.SparePart;
+            SetMaxValueToSellingPriceColumn(sparePart);
         }//extPartsDataGridViewMarkupChange
 
         /// <summary>
         /// Метод сохраняющий в буфер изменения связанные с наценкой. 
         /// </summary>
-        /// <param name="sparePartId">Id запчасти с изменяемой наценкой.</param>
-        /// <param name="saleId">Id прихода с изменяемой наценкой.</param>
-        /// <param name="markup">Наценка на которую нужно изменить старое значение.</param>
-        private void SaveMarkupChangeToBuffer(Availability avail)
+        /// <param name="avail">Объект с изменяемой наценкой.</param>
+        /// <param name="markup">Новая наценка.</param>
+        private void SaveMarkupChangeToBuffer(Availability avail, float markup)
         {
+            //Если изменена дефолтная наценка, запоминаем её в Tag объекта.
+            if (avail.Tag == null)
+                avail.Tag = avail.Markup;
+            avail.Markup = markup;
+
             //Если такого объекта ещё нет в списке, добавляем его.
-            if (!_changedMarkupList.Contains(avail))         
-                _changedMarkupList.Add(avail);
+            if (!_changedMarkupList.Contains(avail))
+                _changedMarkupList.Add(avail);     
+
+            /*Более эффективный способ записи изменения наценки, но требует блокировки/разблокировки кнопок Сохранить/Отменить.*/
+            ////Если такого объекта ещё нет в списке.
+            //if (!_changedMarkupList.Contains(avail))
+            //{
+            //    //Если новая наценка не равна первоначальной, добавляем объект в список.
+            //    if (avail.Markup != (float)avail.Tag)
+            //        _changedMarkupList.Add(avail);
+            //}//if 
+            //else //Если такой объект уже есть в списке.
+            //{ 
+            //    //Если новая наценка равна первоначальной, удаляем объект из списка.
+            //    if (avail.Markup == (float)avail.Tag)
+            //        _changedMarkupList.Remove(avail);
+            //}//else
         }//SaveMarkupChangeToBuffer
 
 
