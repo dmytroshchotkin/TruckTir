@@ -56,7 +56,7 @@
             this.excRateLabel = new System.Windows.Forms.Label();
             this.currencyLabel = new System.Windows.Forms.Label();
             this.saleGroupBox = new System.Windows.Forms.GroupBox();
-            this.saleDataGridView = new System.Windows.Forms.DataGridView();
+            this.saleDGV = new System.Windows.Forms.DataGridView();
             this.ArticulCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TitleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MeasureUnitCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -95,7 +95,7 @@
             this.customerBackPanel.SuspendLayout();
             this.sellerBackPanel.SuspendLayout();
             this.saleGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.saleDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.saleDGV)).BeginInit();
             this.extGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.extDataGridView)).BeginInit();
             this.saleContextMenuStrip.SuspendLayout();
@@ -297,7 +297,7 @@
             // 
             // saleGroupBox
             // 
-            this.saleGroupBox.Controls.Add(this.saleDataGridView);
+            this.saleGroupBox.Controls.Add(this.saleDGV);
             this.saleGroupBox.Location = new System.Drawing.Point(23, 156);
             this.saleGroupBox.Name = "saleGroupBox";
             this.saleGroupBox.Size = new System.Drawing.Size(854, 247);
@@ -305,32 +305,32 @@
             this.saleGroupBox.TabStop = false;
             this.saleGroupBox.Text = "Лист прихода.";
             // 
-            // saleDataGridView
+            // saleDGV
             // 
-            this.saleDataGridView.AllowUserToDeleteRows = false;
-            this.saleDataGridView.AllowUserToResizeRows = false;
-            this.saleDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.saleDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.saleDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.saleDGV.AllowUserToDeleteRows = false;
+            this.saleDGV.AllowUserToResizeRows = false;
+            this.saleDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.saleDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.saleDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ArticulCol,
             this.TitleCol,
             this.MeasureUnitCol,
             this.CountCol,
             this.SellingPriceCol,
             this.SumCol});
-            this.saleDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.saleDataGridView.Location = new System.Drawing.Point(3, 16);
-            this.saleDataGridView.Name = "saleDataGridView";
-            this.saleDataGridView.Size = new System.Drawing.Size(848, 228);
-            this.saleDataGridView.TabIndex = 0;
-            this.saleDataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.saleDataGridView_CellBeginEdit);
-            this.saleDataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.saleDataGridView_CellEndEdit);
-            this.saleDataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.saleDataGridView_CellMouseClick);
-            this.saleDataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.saleDataGridView_EditingControlShowing);
-            this.saleDataGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.saleDataGridView_RowEnter);
-            this.saleDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.saleDataGridView_RowPrePaint);
-            this.saleDataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.saleDataGridView_RowsAdded);
-            this.saleDataGridView.SelectionChanged += new System.EventHandler(this.saleDataGridView_SelectionChanged);
+            this.saleDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.saleDGV.Location = new System.Drawing.Point(3, 16);
+            this.saleDGV.Name = "saleDataGridView";
+            this.saleDGV.Size = new System.Drawing.Size(848, 228);
+            this.saleDGV.TabIndex = 0;
+            this.saleDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.saleDataGridView_CellBeginEdit);
+            this.saleDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.saleDataGridView_CellEndEdit);
+            this.saleDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.saleDataGridView_CellMouseClick);
+            this.saleDGV.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.saleDataGridView_EditingControlShowing);
+            this.saleDGV.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.saleDataGridView_RowEnter);
+            this.saleDGV.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.saleDataGridView_RowPrePaint);
+            this.saleDGV.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.saleDataGridView_RowsAdded);
+            this.saleDGV.SelectionChanged += new System.EventHandler(this.saleDataGridView_SelectionChanged);
             // 
             // ArticulCol
             // 
@@ -703,7 +703,7 @@
             this.sellerBackPanel.ResumeLayout(false);
             this.sellerBackPanel.PerformLayout();
             this.saleGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.saleDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.saleDGV)).EndInit();
             this.extGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.extDataGridView)).EndInit();
             this.saleContextMenuStrip.ResumeLayout(false);
@@ -733,7 +733,7 @@
         private System.Windows.Forms.Label excRateLabel;
         private System.Windows.Forms.Label currencyLabel;
         private System.Windows.Forms.GroupBox saleGroupBox;
-        private System.Windows.Forms.DataGridView saleDataGridView;
+        private System.Windows.Forms.DataGridView saleDGV;
         private System.Windows.Forms.Label customerLabel;
         private System.Windows.Forms.Label sellerLabel;
         private System.Windows.Forms.Label saleDateLabel;

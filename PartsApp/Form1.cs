@@ -462,13 +462,6 @@ namespace PartsApp
         #region Методы связанные с изменением Наценки.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-        private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {            
-            //if (e.KeyCode == Keys.Enter)
-            //    markupComboBox_SelectedIndexChanged(sender, null);                                
-        }//markupComboBox_PreviewKeyDown 
-
         private void markupComboBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)

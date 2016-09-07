@@ -460,10 +460,10 @@ namespace PartsApp
             autoCompleteListBox.Visible = false;
 
             #region Увеличение purchaseGroupBox.
-            //if (saleDataGridView.PreferredSize.Height > saleDataGridView.Size.Height)
+            //if (saleDGV.PreferredSize.Height > saleDGV.Size.Height)
             //{
             //    MessageBox.Show("bigger");
-            //    int height = saleDataGridView.Rows[0].Cells["Title"].Size.Height;
+            //    int height = saleDGV.Rows[0].Cells["Title"].Size.Height;
             //    saleGroupBox.Size = new Size(saleGroupBox.Width, saleGroupBox.Height + height);
             //}
             #endregion
