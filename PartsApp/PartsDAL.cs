@@ -1322,19 +1322,6 @@ namespace PartsApp
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         private static Supplier CreateSupplier(SQLiteDataReader dataReader)
         {
             return new Supplier

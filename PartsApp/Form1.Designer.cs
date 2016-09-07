@@ -47,7 +47,6 @@
             this.rowsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.FileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addToDbFromExcelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveInExcelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.productToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewSpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -219,19 +218,10 @@
             // FileToolStripMenuItem
             // 
             this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addToDbFromExcelToolStripMenuItem,
             this.saveInExcelToolStripMenuItem});
             this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
             this.FileToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.FileToolStripMenuItem.Text = "Файл";
-            // 
-            // addToDbFromExcelToolStripMenuItem
-            // 
-            this.addToDbFromExcelToolStripMenuItem.Enabled = false;
-            this.addToDbFromExcelToolStripMenuItem.Name = "addToDbFromExcelToolStripMenuItem";
-            this.addToDbFromExcelToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
-            this.addToDbFromExcelToolStripMenuItem.Text = "Добавить";
-            this.addToDbFromExcelToolStripMenuItem.Click += new System.EventHandler(this.addToDbFromExcelToolStripMenuItem_Click);
             // 
             // saveInExcelToolStripMenuItem
             // 
@@ -962,7 +952,6 @@
         private System.Windows.Forms.ToolStripStatusLabel rowsCountLabel;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem FileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addToDbFromExcelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveInExcelToolStripMenuItem;
         private System.Windows.Forms.Panel componentPanel;
         private System.Windows.Forms.Button cancelChangesButton;

@@ -49,33 +49,31 @@ namespace PartsApp
             #region Настройки таблиц.
 
             /*Закомментированные строки выполнены через дизайнер.*/
-            partsDataGridView.AutoGenerateColumns = false;
+            partsDataGridView.AutoGenerateColumns    = false;
             extPartsDataGridView.AutoGenerateColumns = false;
             
 
-            //SupplierExtCol.DataPropertyName = "OperationDetails.Operation.Contragent.ContragentName";
-            //PurchaseIdExtCol.DataPropertyName = "OperationDetails.Operation.OperationId";
-            //ArticulExtCol.DataPropertyName = "OperationDetails.SparePart.Articul";
-            //PurchaseDateExtCol.DataPropertyName = "OperationDetails.Operation.OperationDate";
+            //SupplierExtCol.DataPropertyName       = "OperationDetails.Operation.Contragent.ContragentName";
+            //PurchaseIdExtCol.DataPropertyName     = "OperationDetails.Operation.OperationId";
+            //ArticulExtCol.DataPropertyName        = "OperationDetails.SparePart.Articul";
+            //PurchaseDateExtCol.DataPropertyName   = "OperationDetails.Operation.OperationDate";
             //StorageAddressExtCol.DataPropertyName = "StorageAddress";
-            //MeasureUnitExtCol.DataPropertyName = "OperationDetails.SparePart.MeasureUnit";
-            //AvailabilityExtCol.DataPropertyName = "OperationDetails.Count";
-            //SellingPriceExtCol.DataPropertyName = "SellingPrice";
-            //NoteExtCol.DataPropertyName = "OperationDetails.Operation.Description";
+            //MeasureUnitExtCol.DataPropertyName    = "OperationDetails.SparePart.MeasureUnit";
+            //AvailabilityExtCol.DataPropertyName   = "OperationDetails.Count";
+            //SellingPriceExtCol.DataPropertyName   = "SellingPrice";
+            //NoteExtCol.DataPropertyName           = "OperationDetails.Operation.Description";
             
             //extPartsDataGridView.DataMember = "AvailabilityList";
 
             #endregion
-
             
-
             //Выводим окно авторизации.
             CurEmployee = PartsDAL.FindEmployees().First();
             //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
 
             
-            PartsDAL.RegistrateUDFs();
+            PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.
             /* Пробная зона */
             /////////////////////////////////////////////////////////////////////////////            
 
@@ -85,27 +83,6 @@ namespace PartsApp
 
         #region Работа с Excel.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void addToDbFromExcelToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //if (openExcelFileDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    partsDataGridView.Cursor = Cursors.WaitCursor;
-            //    progressBar.Value += progressBar.Step; // нужно просто для визуального отображения начала работы. 
-            //    foreach (var str in openExcelFileDialog.FileNames)
-            //    {
-            //        PartsDAL.AddSparePartsFromExcelFile(str);                   
-            //        progressBar.Value += 100 / openExcelFileDialog.FileNames.Length;            
-            //    }
-            //    System.Threading.Thread t = new System.Threading.Thread(() =>
-            //    {
-            //        System.Threading.Thread.Sleep(1000);
-            //        progressBar.Value = 0;
-            //    });
-            //    t.Start();
-            //    partsDataGridView.Cursor = Cursors.Default;
-            //}
-        }//addToDbFromExcelToolStripMenuItem_Click
 
         private void saveInExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1001,23 +978,23 @@ namespace PartsApp
 
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            //Если нет выделенных строк, то выходим.
-            if (partsDataGridView.SelectedCells.Count == 0) 
-                return;
-
-            //выделяем строки всех выделенных клеток.
-            foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
-            foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
-
-            decimal rate = excRateNumericUpDown.Value; //Находим установленный курс.
-            foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
+            //Если есть выделенные строки.
+            if (partsDataGridView.SelectedCells.Count != 0)
             {
-                SparePart sparePart = row.DataBoundItem as SparePart; //Находим соотв. строке объект.
-                float selPrice = Availability.GetMaxSellingPrice(sparePart.AvailabilityList); 
-                
-                //Присваиваем новое значение в ячейку 'Цена продажи'.
-                row.Cells[SellingPriceCol.Name].Value = (decimal)selPrice / rate;
-            }//foreach     
+                //выделяем строки всех выделенных клеток.
+                foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected    = true;
+                foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+
+                decimal rate = excRateNumericUpDown.Value; //Находим установленный курс.
+                foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
+                {
+                    SparePart sparePart = row.DataBoundItem as SparePart; //Находим соотв. строке объект.
+                    float selPrice = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
+
+                    //Присваиваем новое значение в ячейку 'Цена продажи'.
+                    row.Cells[SellingPriceCol.Name].Value = (decimal)selPrice / rate;
+                }//foreach     
+            }//if
         }//excRateNumericUpDown_ValueChanged
         
         /// <summary>
