@@ -20,10 +20,6 @@ namespace PartsApp
         /// </summary>
         SortableBindingList<SparePart> SpList;
         /// <summary>
-        /// Коллекция для запоминания списка вывода в таблице в оригинальном состоянии.
-        /// </summary>
-        IList<SparePart> origSpList;
-        /// <summary>
         /// Список объектов с измененной наценкой.
         /// </summary>
         List<Availability> _changedMarkupList;
@@ -245,7 +241,7 @@ namespace PartsApp
             foreach (DataGridViewRow row in selectedRows)
             {
                 int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
-                sparePartsList.Add(origSpList.First(s => s.SparePartId == sparePartId));
+                sparePartsList.Add(SpList.First(s => s.SparePartId == sparePartId));
             }//foreach
 
             ExcelSaveSparePartPriceList(sparePartsList);
@@ -513,9 +509,6 @@ namespace PartsApp
                 //Действия осущ-мые при удачной записи в базу.
                 saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопки недоступными.
 
-                //Перезаписываем начальный список.            
-                origSpList = SparePart.GetNewSparePartsList(SpList);
-
                 _changedMarkupList.Clear(); //Очищаем словарь запчастей с измененной наценкой.
             }//try			
             catch (System.Data.SQLite.SQLiteException ex)
@@ -533,10 +526,7 @@ namespace PartsApp
         {
             /*ERROR Не нравиться мне код метода*/
 
-            saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопку недоступной. /*ERROR может переместить в Enable_changed?*/
-             
-            //Отменяем все изменения.
-            //ChangeDataSource(origSpList);
+            saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопку недоступной. /*ERROR может переместить в Enable_changed?*/            
 
             foreach (Availability avail in _changedMarkupList)
             {
@@ -924,7 +914,6 @@ namespace PartsApp
             autoCompleteListBox.Visible = false;
 
             SpList = new SortableBindingList<SparePart>(SparePart.GetNewSparePartsList(spareParts));
-            origSpList = spareParts;
 
             BindingSource binding = new BindingSource();
             binding.DataSource = SpList;
