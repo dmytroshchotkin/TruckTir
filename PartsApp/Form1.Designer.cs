@@ -701,7 +701,6 @@
             this.extPartsDataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extPartsDataGridView_CellEndEdit);
             this.extPartsDataGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.extPartsDataGridView_CellFormatting);
             this.extPartsDataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.extPartsDataGridView_DataBindingComplete);
-            this.extPartsDataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.extPartsDataGridView_RowsAdded);
             // 
             // SupplierExtCol
             // 

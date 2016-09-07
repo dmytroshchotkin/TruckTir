@@ -531,10 +531,35 @@ namespace PartsApp
 
         private void cancelChangesButton_Click(object sender, EventArgs e)
         {
-            saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопку недоступной.
+            /*ERROR Не нравиться мне код метода*/
+
+            saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопку недоступной. /*ERROR может переместить в Enable_changed?*/
              
             //Отменяем все изменения.
-            ChangeDataSource(origSpList);
+            //ChangeDataSource(origSpList);
+
+            foreach (Availability avail in _changedMarkupList)
+            {
+                avail.Markup = (float)avail.Tag;
+                avail.Tag = null;
+            }//foreach
+
+            //Меняем значение наценки в соотв. ячейках доп. таблицы.
+            foreach (DataGridViewRow extRow in extPartsDataGridView.Rows)
+            {
+                Availability avail = extRow.DataBoundItem as Availability;                
+                extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup);
+            }//foreach
+            extPartsDataGridView.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
+
+            //Обновляем значения в ячейке 'Цена продажи' осн. таблицы.
+            foreach (DataGridViewRow row in partsDataGridView.Rows)
+            {
+                SparePart sparePart = row.DataBoundItem as SparePart;
+                Availability avail = _changedMarkupList.FirstOrDefault(av => av.OperationDetails.SparePart.SparePartId == sparePart.SparePartId);
+                if (avail != null)
+                    row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList); //Присваиваем новое значение столбцу 'ЦенаПродажи'.
+            }//foreach
 
             _changedMarkupList.Clear(); //Очищаем словарь запчастей с измененной наценкой.
         }//cancelChangesButton_Click
@@ -545,8 +570,7 @@ namespace PartsApp
         /// <param name="markup">Наценка на которую требуется изменить.</param>
         private void partsDataGridViewMarkupChange(float markup)
         {
-            //Модифицировать!!! Сделать изменение через DataGridView, без циклов.
-            //Находим все SP с изменяемой наценкой. 
+            //Находим весь товар с изменяемой наценкой. 
             foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
             {
                 List<Availability> availList = (row.DataBoundItem as SparePart).AvailabilityList;
@@ -585,7 +609,7 @@ namespace PartsApp
         }//extPartsDataGridViewMarkupChange
 
         /// <summary>
-        /// Метод сохраняющий в буфер изменения связанные с наценкой. 
+        /// Производятся необходимые действия при изменении наценки объекта типа Availability.
         /// </summary>
         /// <param name="avail">Объект с изменяемой наценкой.</param>
         /// <param name="markup">Новая наценка.</param>
@@ -739,7 +763,7 @@ namespace PartsApp
             //Обновляем rowsCountLabel по количеству строк. 
             rowsCountLabel.Text = partsDataGridView.Rows.Count.ToString();
 
-            //обработка размера RowHeaders.
+            //обработка размера RowHeaders. /*ERROR*/
             int i, count = partsDataGridView.Rows.Count;
             for (i = 0; count != 0; ++i)
             {
@@ -749,7 +773,7 @@ namespace PartsApp
 
             _changedMarkupList.Clear(); //очищаем список деталей с измененной наценкой. 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
-            Deselection(null, null);
+            Deselection(null, null); /*ERROR Корректно ли это теперь работает?*/
 
             //Устанавливаем постоянную позицию для отображения Фото.           
             DataGridViewCell cell2 = partsDataGridView.Columns[1].HeaderCell;
@@ -789,7 +813,7 @@ namespace PartsApp
             if (extPartsDataGridView.DataSource == null)
                 return;
 
-            //обработка размера RowHeaders.
+            //обработка размера RowHeaders. /*ERROR*/
             int i, count = extPartsDataGridView.Rows.Count;
             for (i = 0; count != 0; ++i)
             {
@@ -829,11 +853,6 @@ namespace PartsApp
                     e.Value = val;
                 }//if
         }//extPartsDataGridView_CellFormatting
-
-        private void extPartsDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-
-        }//extPartsDataGridView_RowsAdded
 
         private void extPartsDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
@@ -954,6 +973,7 @@ namespace PartsApp
         /// <returns></returns>
         public Image ResizeOrigImg(Image image, int nWidth, int nHeight)
         {
+            /*ERROR Чё так сложно?*/
             int newWidth, newHeight;
 
             var coefH = (double)nHeight / (double)image.Height;
