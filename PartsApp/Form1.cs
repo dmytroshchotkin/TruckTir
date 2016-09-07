@@ -45,7 +45,7 @@ namespace PartsApp
             #region Настройки таблиц.
 
             /*Закомментированные строки выполнены через дизайнер.*/
-            partsDataGridView.AutoGenerateColumns    = false;
+            partsDGV.AutoGenerateColumns    = false;
             extPartsDataGridView.AutoGenerateColumns = false;
             
 
@@ -234,7 +234,7 @@ namespace PartsApp
 
         private void SpPriceListToExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-             IEnumerable<DataGridViewRow> selectedRows = partsDataGridView.SelectedCells.Cast<DataGridViewCell>()
+             IEnumerable<DataGridViewRow> selectedRows = partsDGV.SelectedCells.Cast<DataGridViewCell>()
                                                                                         .Select(cell => cell.OwningRow).Distinct();
 
             List<SparePart> sparePartsList = new List<SparePart>();
@@ -472,19 +472,19 @@ namespace PartsApp
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
-            if (partsDataGridView.SelectedCells.Count == 0) 
+            if (partsDGV.SelectedCells.Count == 0) 
                 return;
 
             
             //выделяем строки всех выделенных клеток.            
-            foreach (DataGridViewCell cell in partsDataGridView.SelectedCells)    cell.OwningRow.Selected = true;    //partsDataGridView.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
+            foreach (DataGridViewCell cell in partsDGV.SelectedCells)    cell.OwningRow.Selected = true;    //partsDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
             foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
 
             //узнаем процент заданной наценки.
             try
             {
                 float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
-                //Если выделены только строки в partsDataGridView.
+                //Если выделены только строки в partsDGV.
                 if (extPartsDataGridView.SelectedRows.Count == 0)
                     partsDataGridViewMarkupChange(markup);
                 else
@@ -543,7 +543,7 @@ namespace PartsApp
             extPartsDataGridView.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
 
             //Обновляем значения в ячейке 'Цена продажи' осн. таблицы.
-            foreach (DataGridViewRow row in partsDataGridView.Rows)
+            foreach (DataGridViewRow row in partsDGV.Rows)
             {
                 SparePart sparePart = row.DataBoundItem as SparePart;
                 Availability avail = _changedMarkupList.FirstOrDefault(av => av.OperationDetails.SparePart.SparePartId == sparePart.SparePartId);
@@ -561,7 +561,7 @@ namespace PartsApp
         private void partsDataGridViewMarkupChange(float markup)
         {
             //Находим весь товар с изменяемой наценкой. 
-            foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
+            foreach (DataGridViewRow row in partsDGV.SelectedRows)
             {
                 List<Availability> availList = (row.DataBoundItem as SparePart).AvailabilityList;
                 if (availList.Count > 0)
@@ -672,9 +672,9 @@ namespace PartsApp
             try
             {
                 //Если клетка находится в колонке Photo и при этом не является заголовком.
-                if (e.ColumnIndex == partsDataGridView.Columns[PhotoCol.Name].Index && e.RowIndex != partsDataGridView.Columns[PhotoCol.Name].HeaderCell.RowIndex)
+                if (e.ColumnIndex == partsDGV.Columns[PhotoCol.Name].Index && e.RowIndex != partsDGV.Columns[PhotoCol.Name].HeaderCell.RowIndex)
                 {
-                    DataGridViewCell cell = partsDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    DataGridViewCell cell = partsDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
                     //проверяем есть ли фото у данного эл-та.
                     if (cell.Value.ToString() == String.Empty) return;
 
@@ -684,20 +684,20 @@ namespace PartsApp
                         #region Aльтернативный способ отображения клеток.
                         //1)
                         ////вычисляем положение клетки, для задания положения отображения Фотографии.
-                        //int dispayedRows = partsDataGridView.DisplayedRowCount(true);
-                        //if (partsDataGridView.Rows[e.RowIndex + dispayedRows/2].Displayed == false) //если клетка находится ниже половины отображаемых клеток, отображать Фото вверх.
+                        //int dispayedRows = partsDGV.DisplayedRowCount(true);
+                        //if (partsDGV.Rows[e.RowIndex + dispayedRows/2].Displayed == false) //если клетка находится ниже половины отображаемых клеток, отображать Фото вверх.
                         //{
-                        //    Rectangle rect = partsDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+                        //    Rectangle rect = partsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
                         //    photoPictureBox.Location = new Point(rect.X + rect.Width, rect.Y - photoPictureBox.PreferredSize.Height);
                         //}//if   
                         //else //иначе отображать вниз.
                         //{
-                        //    Rectangle rect = partsDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex + 1, true);
+                        //    Rectangle rect = partsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex + 1, true);
                         //    photoPictureBox.Location = new Point(rect.X + rect.Width, rect.Y);
                         //} //else       
 
                         //2)отображение картинки всегда в правом углу DataGridView.                
-                        //photoPictureBox.Location = new Point(partsDataGridView.Width - photoPictureBox.PreferredSize.Width, partsDataGridView.Location.Y);
+                        //photoPictureBox.Location = new Point(partsDGV.Width - photoPictureBox.PreferredSize.Width, partsDGV.Location.Y);
                         #endregion
 
                         //Задаём выводимый на экран размер фото. 
@@ -724,7 +724,7 @@ namespace PartsApp
         private void partsDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             //Если заголовок то ничего не делаем.
-            if (e.RowIndex == partsDataGridView.Columns[0].HeaderCell.RowIndex)
+            if (e.RowIndex == partsDGV.Columns[0].HeaderCell.RowIndex)
                 return;
 
             //Если ЛКМ
@@ -736,12 +736,12 @@ namespace PartsApp
             //Если ПКМ, выводим контекстное меню.
             else
             {
-                partsDataGridView[e.ColumnIndex, e.RowIndex].Selected = true;
+                partsDGV[e.ColumnIndex, e.RowIndex].Selected = true;
                 //Находим позицию в таблице, где был сделан клик.
-                Point cellLocation = partsDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
+                Point cellLocation = partsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
                 Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
                 //Выводим контекстное меню.
-                partsDGVContextMenuStrip.Show(partsDataGridView, location);
+                partsDGVContextMenuStrip.Show(partsDGV, location);
             }//else
         }//partsDataGridView_CellMouseClick
 
@@ -751,28 +751,28 @@ namespace PartsApp
             FillColumns();  //Заполняем столбец 'Цена продажи' и 'Наличие'.  
 
             //Обновляем rowsCountLabel по количеству строк. 
-            rowsCountLabel.Text = partsDataGridView.Rows.Count.ToString();
+            rowsCountLabel.Text = partsDGV.Rows.Count.ToString();
 
             //обработка размера RowHeaders. /*ERROR*/
-            int i, count = partsDataGridView.Rows.Count;
+            int i, count = partsDGV.Rows.Count;
             for (i = 0; count != 0; ++i)
             {
                 count /= 10;
             }//for    
-            partsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
+            partsDGV.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
 
             _changedMarkupList.Clear(); //очищаем список деталей с измененной наценкой. 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
             Deselection(null, null); /*ERROR Корректно ли это теперь работает?*/
 
             //Устанавливаем постоянную позицию для отображения Фото.           
-            DataGridViewCell cell2 = partsDataGridView.Columns[1].HeaderCell;
-            Rectangle rect = partsDataGridView.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
-            photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDataGridView.Location.Y);
+            DataGridViewCell cell2 = partsDGV.Columns[1].HeaderCell;
+            Rectangle rect = partsDGV.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
+            photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDGV.Location.Y);
         }//partsDataGridView_DataSourceChanged
 
         /// <summary>
-        /// Нумерация строк partsDataGridView.
+        /// Нумерация строк partsDGV.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -894,7 +894,7 @@ namespace PartsApp
         /// <param name="sparePart">Товар, в соотв. строке в таблице которого меняется цена продажи.</param>
         private void SetMaxValueToSellingPriceColumn(SparePart sparePart)
         {
-            foreach (DataGridViewRow mainRow in partsDataGridView.Rows)
+            foreach (DataGridViewRow mainRow in partsDGV.Rows)
             {
                 if (Convert.ToInt32(mainRow.Cells[SparePartIdCol.Index].Value) == sparePart.SparePartId)
                 {
@@ -907,7 +907,7 @@ namespace PartsApp
         /// <summary>
         /// Метод изменения источника данных для обоих dgv.
         /// </summary>
-        /// <param name="availabilityList">Новый источник данных для partsDataGridView.</param>
+        /// <param name="availabilityList">Новый источник данных для partsDGV.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
             searchTextBox.Clear();//Очищаем контрол поиска.
@@ -919,8 +919,8 @@ namespace PartsApp
             binding.DataSource = SpList;
 
             //Очищаем и заполняем DataSource новымы значениями.
-            //partsDataGridView.DataSource = extPartsDataGridView.DataSource = null; /*Выдаёт ошибку*/
-            partsDataGridView.DataSource = extPartsDataGridView.DataSource = binding;            
+            //partsDGV.DataSource = extPartsDataGridView.DataSource = null; /*Выдаёт ошибку*/
+            partsDGV.DataSource = extPartsDataGridView.DataSource = binding;            
         }//ChangeDataSource
 
         /// <summary>
@@ -928,7 +928,7 @@ namespace PartsApp
         /// </summary>
         private void FillColumns()
         {
-            foreach (DataGridViewRow row in partsDataGridView.Rows)
+            foreach (DataGridViewRow row in partsDGV.Rows)
             {
                 SparePart sp = row.DataBoundItem as SparePart;
                 if (sp.AvailabilityList != null && sp.AvailabilityList.Count != 0) /*Error!!! зачем проверка на null?*/
@@ -1005,14 +1005,14 @@ namespace PartsApp
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             //Если есть выделенные строки.
-            if (partsDataGridView.SelectedCells.Count != 0)
+            if (partsDGV.SelectedCells.Count != 0)
             {
                 //выделяем строки всех выделенных клеток.
-                foreach (DataGridViewCell cell in partsDataGridView.SelectedCells) cell.OwningRow.Selected    = true;
+                foreach (DataGridViewCell cell in partsDGV.SelectedCells) cell.OwningRow.Selected    = true;
                 foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
 
                 decimal rate = excRateNumericUpDown.Value; //Находим установленный курс.
-                foreach (DataGridViewRow row in partsDataGridView.SelectedRows)
+                foreach (DataGridViewRow row in partsDGV.SelectedRows)
                 {
                     SparePart sparePart = row.DataBoundItem as SparePart; //Находим соотв. строке объект.
                     float selPrice = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
@@ -1069,7 +1069,7 @@ namespace PartsApp
 
         private void editSparePartToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddSparePartForm(Convert.ToInt32(partsDataGridView.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value)).Show();
+            new AddSparePartForm(Convert.ToInt32(partsDGV.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value)).Show();
         }//editSparePartToolStripMenuItem_Click
 
         
@@ -1087,7 +1087,7 @@ namespace PartsApp
 
         private void посмотретьПередвижениеТовараToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SparePart sparePart = partsDataGridView.SelectedCells[0].OwningRow.DataBoundItem as SparePart;
+            SparePart sparePart = partsDGV.SelectedCells[0].OwningRow.DataBoundItem as SparePart;
             new SparePartOperationsInfoForm(sparePart).Show();
         }//
 

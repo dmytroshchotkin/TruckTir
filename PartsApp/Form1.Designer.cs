@@ -77,7 +77,7 @@
             this.dataSplitContainer = new System.Windows.Forms.SplitContainer();
             this.partsPanel = new System.Windows.Forms.Panel();
             this.autoCompleteListBox = new System.Windows.Forms.ListBox();
-            this.partsDataGridView = new System.Windows.Forms.DataGridView();
+            this.partsDGV = new System.Windows.Forms.DataGridView();
             this.SparePartIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PhotoCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ManufacturerCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -121,7 +121,7 @@
             this.dataSplitContainer.Panel2.SuspendLayout();
             this.dataSplitContainer.SuspendLayout();
             this.partsPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.partsDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.partsDGV)).BeginInit();
             this.partsStatusStripPanel.SuspendLayout();
             this.extPartsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.extPartsDataGridView)).BeginInit();
@@ -515,7 +515,7 @@
             // 
             this.partsPanel.Controls.Add(this.autoCompleteListBox);
             this.partsPanel.Controls.Add(this.photoPictureBox);
-            this.partsPanel.Controls.Add(this.partsDataGridView);
+            this.partsPanel.Controls.Add(this.partsDGV);
             this.partsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.partsPanel.Location = new System.Drawing.Point(0, 0);
             this.partsPanel.Name = "partsPanel";
@@ -536,14 +536,14 @@
             this.autoCompleteListBox.Format += new System.Windows.Forms.ListControlConvertEventHandler(this.autoCompleteListBox_Format);
             this.autoCompleteListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.autoCompleteListBox_MouseDown);
             // 
-            // partsDataGridView
+            // partsDGV
             // 
-            this.partsDataGridView.AllowUserToAddRows = false;
-            this.partsDataGridView.AllowUserToDeleteRows = false;
-            this.partsDataGridView.AllowUserToResizeRows = false;
-            this.partsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.partsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.partsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.partsDGV.AllowUserToAddRows = false;
+            this.partsDGV.AllowUserToDeleteRows = false;
+            this.partsDGV.AllowUserToResizeRows = false;
+            this.partsDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.partsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.partsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SparePartIdCol,
             this.PhotoCol,
             this.ManufacturerCol,
@@ -553,18 +553,18 @@
             this.MeasureUnitCol,
             this.AvaliabilityCol,
             this.SellingPriceCol});
-            this.partsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.partsDataGridView.Location = new System.Drawing.Point(0, 0);
-            this.partsDataGridView.Name = "partsDataGridView";
-            this.partsDataGridView.ReadOnly = true;
-            this.partsDataGridView.Size = new System.Drawing.Size(979, 461);
-            this.partsDataGridView.TabIndex = 0;
-            this.partsDataGridView.DataSourceChanged += new System.EventHandler(this.partsDataGridView_DataSourceChanged);
-            this.partsDataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.partsDataGridView_CellMouseClick);
-            this.partsDataGridView.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDataGridView_CellMouseEnter);
-            this.partsDataGridView.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDataGridView_CellMouseLeave);
-            this.partsDataGridView.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.partsDataGridView_RowPrePaint);
-            this.partsDataGridView.Sorted += new System.EventHandler(this.partsDataGridView_Sorted);
+            this.partsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.partsDGV.Location = new System.Drawing.Point(0, 0);
+            this.partsDGV.Name = "partsDataGridView";
+            this.partsDGV.ReadOnly = true;
+            this.partsDGV.Size = new System.Drawing.Size(979, 461);
+            this.partsDGV.TabIndex = 0;
+            this.partsDGV.DataSourceChanged += new System.EventHandler(this.partsDataGridView_DataSourceChanged);
+            this.partsDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.partsDataGridView_CellMouseClick);
+            this.partsDGV.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDataGridView_CellMouseEnter);
+            this.partsDGV.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDataGridView_CellMouseLeave);
+            this.partsDGV.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.partsDataGridView_RowPrePaint);
+            this.partsDGV.Sorted += new System.EventHandler(this.partsDataGridView_Sorted);
             // 
             // SparePartIdCol
             // 
@@ -922,7 +922,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataSplitContainer)).EndInit();
             this.dataSplitContainer.ResumeLayout(false);
             this.partsPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.partsDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.partsDGV)).EndInit();
             this.partsStatusStripPanel.ResumeLayout(false);
             this.partsStatusStripPanel.PerformLayout();
             this.extPartsGroupBox.ResumeLayout(false);
@@ -994,7 +994,7 @@
         private System.Windows.Forms.ToolStripMenuItem посмотретьПередвижениеТовараToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewSuppliersInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewCustomersInfoToolStripMenuItem;
-        private System.Windows.Forms.DataGridView partsDataGridView;
+        private System.Windows.Forms.DataGridView partsDGV;
         private System.Windows.Forms.DataGridView extPartsDataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn SparePartIdCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PhotoCol;
