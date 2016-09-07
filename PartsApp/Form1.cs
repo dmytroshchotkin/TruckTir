@@ -551,21 +551,16 @@ namespace PartsApp
             {
                 List<Availability> availList = (row.DataBoundItem as SparePart).AvailabilityList;
                 if (availList.Count > 0)
-                {
-                    //Меняем наценку во всем списке этого товара в наличии и запоминаем эти объекты.
-                    foreach (Availability avail in availList)
-                    { 
-                        SaveMarkupChangeToBuffer(avail, markup); //Запоминаем объект с измененной наценкой.
-                    }//foreach
-                    //availList.ForEach(av => { av.Tag = av.Markup;  av.Markup = markup; SaveMarkupChangeToBuffer(av); });
+                {                    
+                    availList.ForEach(av => MarkupChanged(av, markup)); //Меняем наценку во всем cоотв. объектах.
                     //Меняем значение наценки в соотв. ячейках доп. таблицы.
-                    foreach (DataGridViewRow extRow in extPartsDataGridView.Rows)
-                        extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); 
+                    extPartsDataGridView.Rows.Cast<DataGridViewRow>().ToList().ForEach(r => r.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup));
                     //Присваиваем новое значение столбцу 'ЦенаПродажи'.
                     row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(availList); 
                 }//if                                                      
             }//foreach   
-            extPartsDataGridView.Invalidate(); //Обновляем отображение столбцов в extPartsDataGridView.
+
+            extPartsDataGridView.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
         }//partsDataGridViewMarkupChange
 
         /// <summary>
@@ -578,10 +573,9 @@ namespace PartsApp
             foreach (DataGridViewRow extRow in extPartsDataGridView.SelectedRows)
             {
                 Availability avail = extRow.DataBoundItem as Availability;
-                SaveMarkupChangeToBuffer(avail, markup); //запоминем объекты Availability наценка кот. изменилась.
+                MarkupChanged(avail, markup); //запоминем объекты Availability наценка кот. изменилась.
 
                 extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
-                //extPartsDataGridView.InvalidateCell(extRow.Cells[MarkupCol.Index]); //Обновляем измененную ячейку.
                 extPartsDataGridView.InvalidateCell(extRow.Cells[SellingPriceExtCol.Index]); //Обновляем измененную ячейку
             }//foreach  
 
@@ -595,7 +589,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="avail">Объект с изменяемой наценкой.</param>
         /// <param name="markup">Новая наценка.</param>
-        private void SaveMarkupChangeToBuffer(Availability avail, float markup)
+        private void MarkupChanged(Availability avail, float markup)
         {
             //Если изменена дефолтная наценка, запоминаем её в Tag объекта.
             if (avail.Tag == null)
@@ -620,7 +614,7 @@ namespace PartsApp
             //    if (avail.Markup == (float)avail.Tag)
             //        _changedMarkupList.Remove(avail);
             //}//else
-        }//SaveMarkupChangeToBuffer
+        }//MarkupChanged
 
 
 
