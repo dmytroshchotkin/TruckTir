@@ -464,10 +464,19 @@ namespace PartsApp
 
 
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {            
+            //if (e.KeyCode == Keys.Enter)
+            //    markupComboBox_SelectedIndexChanged(sender, null);                                
+        }//markupComboBox_PreviewKeyDown 
+
+        private void markupComboBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                markupComboBox_SelectedIndexChanged(sender, null);                                
-        }//markupComboBox_PreviewKeyDown 
+            {
+                markupComboBox_SelectedIndexChanged(sender, null);
+                e.SuppressKeyPress = true; //Для предотвращения звука некорректного ввода.
+            }//if
+        }//markupComboBox_KeyDown
 
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1098,6 +1107,8 @@ namespace PartsApp
             Type contragentType = (menuItem == ViewSuppliersInfoToolStripMenuItem) ? typeof(Supplier) : typeof(Customer);       
             new ContragentOperationsInfoForm(contragentType).Show();
         }//
+
+
 
 
 
