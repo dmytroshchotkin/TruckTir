@@ -33,6 +33,12 @@ namespace PartsApp.Models
             }
         }//
 
+        /// <summary>
+        /// Возвращает или задает объект, содержащий данные об элементе управления.
+        /// </summary>
+        public object Tag { get; set; }
+
+
         public Availability(OperationDetails operationDetails, string storageAddress, float markup)
         {
             OperationDetails = operationDetails;
