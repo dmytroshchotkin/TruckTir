@@ -89,7 +89,7 @@
             this.SellingPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.partsStatusStripPanel = new System.Windows.Forms.Panel();
             this.extPartsGroupBox = new System.Windows.Forms.GroupBox();
-            this.extPartsDataGridView = new System.Windows.Forms.DataGridView();
+            this.extPartsDGV = new System.Windows.Forms.DataGridView();
             this.SupplierExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PurchaseIdExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ArticulExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -124,7 +124,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.partsDGV)).BeginInit();
             this.partsStatusStripPanel.SuspendLayout();
             this.extPartsGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.extPartsDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.extPartsDGV)).BeginInit();
             this.extPartsStatusStrip.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.partsDGVContextMenuStrip.SuspendLayout();
@@ -665,7 +665,7 @@
             // extPartsGroupBox
             // 
             this.extPartsGroupBox.BackColor = System.Drawing.SystemColors.Control;
-            this.extPartsGroupBox.Controls.Add(this.extPartsDataGridView);
+            this.extPartsGroupBox.Controls.Add(this.extPartsDGV);
             this.extPartsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extPartsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.extPartsGroupBox.Name = "extPartsGroupBox";
@@ -675,13 +675,13 @@
             this.extPartsGroupBox.Text = "Доп. информ.";
             this.extPartsGroupBox.Click += new System.EventHandler(this.extPartsGroupBox_Click);
             // 
-            // extPartsDataGridView
+            // extPartsDGV
             // 
-            this.extPartsDataGridView.AllowUserToAddRows = false;
-            this.extPartsDataGridView.AllowUserToDeleteRows = false;
-            this.extPartsDataGridView.AllowUserToResizeRows = false;
-            this.extPartsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.extPartsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.extPartsDGV.AllowUserToAddRows = false;
+            this.extPartsDGV.AllowUserToDeleteRows = false;
+            this.extPartsDGV.AllowUserToResizeRows = false;
+            this.extPartsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.extPartsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SupplierExtCol,
             this.PurchaseIdExtCol,
             this.ArticulExtCol,
@@ -692,15 +692,15 @@
             this.MarkupCol,
             this.SellingPriceExtCol,
             this.NoteExtCol});
-            this.extPartsDataGridView.DataMember = "AvailabilityList";
-            this.extPartsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.extPartsDataGridView.Location = new System.Drawing.Point(3, 16);
-            this.extPartsDataGridView.Name = "extPartsDataGridView";
-            this.extPartsDataGridView.Size = new System.Drawing.Size(973, 149);
-            this.extPartsDataGridView.TabIndex = 2;
-            this.extPartsDataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extPartsDataGridView_CellEndEdit);
-            this.extPartsDataGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.extPartsDataGridView_CellFormatting);
-            this.extPartsDataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.extPartsDataGridView_DataBindingComplete);
+            this.extPartsDGV.DataMember = "AvailabilityList";
+            this.extPartsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.extPartsDGV.Location = new System.Drawing.Point(3, 16);
+            this.extPartsDGV.Name = "extPartsDataGridView";
+            this.extPartsDGV.Size = new System.Drawing.Size(973, 149);
+            this.extPartsDGV.TabIndex = 2;
+            this.extPartsDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extPartsDataGridView_CellEndEdit);
+            this.extPartsDGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.extPartsDataGridView_CellFormatting);
+            this.extPartsDGV.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.extPartsDataGridView_DataBindingComplete);
             // 
             // SupplierExtCol
             // 
@@ -926,7 +926,7 @@
             this.partsStatusStripPanel.ResumeLayout(false);
             this.partsStatusStripPanel.PerformLayout();
             this.extPartsGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.extPartsDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.extPartsDGV)).EndInit();
             this.extPartsStatusStrip.ResumeLayout(false);
             this.extPartsStatusStrip.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
@@ -995,7 +995,7 @@
         private System.Windows.Forms.ToolStripMenuItem ViewSuppliersInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewCustomersInfoToolStripMenuItem;
         private System.Windows.Forms.DataGridView partsDGV;
-        private System.Windows.Forms.DataGridView extPartsDataGridView;
+        private System.Windows.Forms.DataGridView extPartsDGV;
         private System.Windows.Forms.DataGridViewTextBoxColumn SparePartIdCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PhotoCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ManufacturerCol;

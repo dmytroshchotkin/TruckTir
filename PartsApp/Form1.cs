@@ -46,7 +46,7 @@ namespace PartsApp
 
             /*Закомментированные строки выполнены через дизайнер.*/
             partsDGV.AutoGenerateColumns    = false;
-            extPartsDataGridView.AutoGenerateColumns = false;
+            extPartsDGV.AutoGenerateColumns = false;
             
 
             //SupplierExtCol.DataPropertyName       = "OperationDetails.Operation.Contragent.ContragentName";
@@ -59,7 +59,7 @@ namespace PartsApp
             //SellingPriceExtCol.DataPropertyName   = "SellingPrice";
             //NoteExtCol.DataPropertyName           = "OperationDetails.Operation.Description";
             
-            //extPartsDataGridView.DataMember = "AvailabilityList";
+            //extPartsDGV.DataMember = "AvailabilityList";
 
             #endregion
             
@@ -478,17 +478,17 @@ namespace PartsApp
             
             //выделяем строки всех выделенных клеток.            
             foreach (DataGridViewCell cell in partsDGV.SelectedCells)    cell.OwningRow.Selected = true;    //partsDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
-            foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+            foreach (DataGridViewCell cell in extPartsDGV.SelectedCells) cell.OwningRow.Selected = true;
 
             //узнаем процент заданной наценки.
             try
             {
                 float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
                 //Если выделены только строки в partsDGV.
-                if (extPartsDataGridView.SelectedRows.Count == 0)
+                if (extPartsDGV.SelectedRows.Count == 0)
                     partsDataGridViewMarkupChange(markup);
                 else
-                    extPartsDataGridViewMarkupChange(markup); //Если есть выделенные строки в extPartsDataGridView.
+                    extPartsDataGridViewMarkupChange(markup); //Если есть выделенные строки в extPartsDGV.
 
                 //Делаем доступными кнопки "Сохранить изменения" и "Отменить изменения"
                 saveChangesButton.Enabled = cancelChangesButton.Enabled = true; 
@@ -535,12 +535,12 @@ namespace PartsApp
             }//foreach
 
             //Меняем значение наценки в соотв. ячейках доп. таблицы.
-            foreach (DataGridViewRow extRow in extPartsDataGridView.Rows)
+            foreach (DataGridViewRow extRow in extPartsDGV.Rows)
             {
                 Availability avail = extRow.DataBoundItem as Availability;                
                 extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup);
             }//foreach
-            extPartsDataGridView.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
+            extPartsDGV.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
 
             //Обновляем значения в ячейке 'Цена продажи' осн. таблицы.
             foreach (DataGridViewRow row in partsDGV.Rows)
@@ -568,13 +568,13 @@ namespace PartsApp
                 {                    
                     availList.ForEach(av => MarkupChanged(av, markup)); //Меняем наценку во всем cоотв. объектах.
                     //Меняем значение наценки в соотв. ячейках доп. таблицы.
-                    extPartsDataGridView.Rows.Cast<DataGridViewRow>().ToList().ForEach(r => r.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup));
+                    extPartsDGV.Rows.Cast<DataGridViewRow>().ToList().ForEach(r => r.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup));
                     //Присваиваем новое значение столбцу 'ЦенаПродажи'.
                     row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(availList); 
                 }//if                                                      
             }//foreach   
 
-            extPartsDataGridView.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
+            extPartsDGV.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
         }//partsDataGridViewMarkupChange
 
         /// <summary>
@@ -584,17 +584,17 @@ namespace PartsApp
         private void extPartsDataGridViewMarkupChange(float markup)
         {
             //Находим все SP с изменяемой наценкой. 
-            foreach (DataGridViewRow extRow in extPartsDataGridView.SelectedRows)
+            foreach (DataGridViewRow extRow in extPartsDGV.SelectedRows)
             {
                 Availability avail = extRow.DataBoundItem as Availability;
                 MarkupChanged(avail, markup); //запоминем объекты Availability наценка кот. изменилась.
 
                 extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
-                extPartsDataGridView.InvalidateCell(extRow.Cells[SellingPriceExtCol.Index]); //Обновляем измененную ячейку
+                extPartsDGV.InvalidateCell(extRow.Cells[SellingPriceExtCol.Index]); //Обновляем измененную ячейку
             }//foreach  
 
             //Заполняем столбец 'Цена продажи' в главной таблице.
-            SparePart sparePart = (extPartsDataGridView.SelectedRows[0].DataBoundItem as Availability).OperationDetails.SparePart;
+            SparePart sparePart = (extPartsDGV.SelectedRows[0].DataBoundItem as Availability).OperationDetails.SparePart;
             SetMaxValueToSellingPriceColumn(sparePart);
         }//extPartsDataGridViewMarkupChange
 
@@ -800,20 +800,20 @@ namespace PartsApp
         /// <param name="e"></param>
         private void extPartsDataGridView_DataSourceChanged(object sender, EventArgs e)
         {
-            if (extPartsDataGridView.DataSource == null)
+            if (extPartsDGV.DataSource == null)
                 return;
 
             //обработка размера RowHeaders. /*ERROR*/
-            int i, count = extPartsDataGridView.Rows.Count;
+            int i, count = extPartsDGV.Rows.Count;
             for (i = 0; count != 0; ++i)
             {
                 count /= 10;
             }//for    
-            extPartsDataGridView.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
+            extPartsDGV.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
 
             //_changedMarkupList.Clear(); //очищаем список деталей с измененной наценкой. 
             //убираем выделение строк.
-            extPartsDataGridView.ClearSelection();
+            extPartsDGV.ClearSelection();
         }//extPartsDataGridView_DataSourceChanged
 
         /// <summary>
@@ -847,7 +847,7 @@ namespace PartsApp
         private void extPartsDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             StorageAddressExtCol.Visible = NoteExtCol.Visible = false;
-            foreach (DataGridViewRow row in extPartsDataGridView.Rows)
+            foreach (DataGridViewRow row in extPartsDGV.Rows)
             {
                 Availability avail = row.DataBoundItem as Availability;
 
@@ -861,21 +861,21 @@ namespace PartsApp
                     NoteExtCol.Visible = true;
             }//foreach
 
-            extPartsDataGridView.ClearSelection();//Убираем выделение ячейки.
+            extPartsDGV.ClearSelection();//Убираем выделение ячейки.
         }//extPartsDataGridView_DataBindingComplete
 
         private void extPartsDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == SellingPriceExtCol.Index)
             {
-                DataGridViewRow extRow = extPartsDataGridView.Rows[e.RowIndex];
+                DataGridViewRow extRow = extPartsDGV.Rows[e.RowIndex];
 
                 Availability avail = extRow.DataBoundItem as Availability;
                 extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup);//меняем тип наценки.
 
                 //Обновляем ячейки 'Цена продажи' и 'Тип наценки'.
-                extPartsDataGridView.InvalidateCell(extRow.Cells[e.ColumnIndex]);
-                extPartsDataGridView.InvalidateCell(extRow.Cells[MarkupCol.Index]);
+                extPartsDGV.InvalidateCell(extRow.Cells[e.ColumnIndex]);
+                extPartsDGV.InvalidateCell(extRow.Cells[MarkupCol.Index]);
 
                 //Обновляем столбец 'Цена продажи' в главной таблице.
                 SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
@@ -919,8 +919,8 @@ namespace PartsApp
             binding.DataSource = SpList;
 
             //Очищаем и заполняем DataSource новымы значениями.
-            //partsDGV.DataSource = extPartsDataGridView.DataSource = null; /*Выдаёт ошибку*/
-            partsDGV.DataSource = extPartsDataGridView.DataSource = binding;            
+            //partsDGV.DataSource = extPartsDGV.DataSource = null; /*Выдаёт ошибку*/
+            partsDGV.DataSource = extPartsDGV.DataSource = binding;            
         }//ChangeDataSource
 
         /// <summary>
@@ -950,7 +950,7 @@ namespace PartsApp
             markupComboBox.Text = String.Empty;
             markupComboBox.Enabled = false;
 
-            extPartsDataGridView.ClearSelection();
+            extPartsDGV.ClearSelection();
         }//Deselection        
 
         /// <summary>
@@ -1009,7 +1009,7 @@ namespace PartsApp
             {
                 //выделяем строки всех выделенных клеток.
                 foreach (DataGridViewCell cell in partsDGV.SelectedCells) cell.OwningRow.Selected    = true;
-                foreach (DataGridViewCell cell in extPartsDataGridView.SelectedCells) cell.OwningRow.Selected = true;
+                foreach (DataGridViewCell cell in extPartsDGV.SelectedCells) cell.OwningRow.Selected = true;
 
                 decimal rate = excRateNumericUpDown.Value; //Находим установленный курс.
                 foreach (DataGridViewRow row in partsDGV.SelectedRows)
@@ -1030,7 +1030,7 @@ namespace PartsApp
         /// <param name="e"></param>
         private void extPartsGroupBox_Click(object sender, System.EventArgs e)
         {
-            extPartsDataGridView.ClearSelection();
+            extPartsDGV.ClearSelection();
         }//extPartsGroupBox_Click
 
         
