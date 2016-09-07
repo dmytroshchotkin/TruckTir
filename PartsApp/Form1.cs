@@ -538,7 +538,7 @@ namespace PartsApp
             foreach (DataGridViewRow extRow in extPartsDGV.Rows)
             {
                 Availability avail = extRow.DataBoundItem as Availability;                
-                extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup);
+                extRow.Cells[MarkupExtCol.Index].Value = Markup.GetDescription(avail.Markup);
             }//foreach
             extPartsDGV.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
 
@@ -568,7 +568,7 @@ namespace PartsApp
                 {                    
                     availList.ForEach(av => MarkupChanged(av, markup)); //Меняем наценку во всем cоотв. объектах.
                     //Меняем значение наценки в соотв. ячейках доп. таблицы.
-                    extPartsDGV.Rows.Cast<DataGridViewRow>().ToList().ForEach(r => r.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup));
+                    extPartsDGV.Rows.Cast<DataGridViewRow>().ToList().ForEach(r => r.Cells[MarkupExtCol.Index].Value = Markup.GetDescription(markup));
                     //Присваиваем новое значение столбцу 'ЦенаПродажи'.
                     row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(availList); 
                 }//if                                                      
@@ -589,7 +589,7 @@ namespace PartsApp
                 Availability avail = extRow.DataBoundItem as Availability;
                 MarkupChanged(avail, markup); //запоминем объекты Availability наценка кот. изменилась.
 
-                extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
+                extRow.Cells[MarkupExtCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
                 extPartsDGV.InvalidateCell(extRow.Cells[SellingPriceExtCol.Index]); //Обновляем измененную ячейку
             }//foreach  
 
@@ -851,7 +851,7 @@ namespace PartsApp
             {
                 Availability avail = row.DataBoundItem as Availability;
 
-                row.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup); //Заполняем ячейки столбца 'Тип наценки'
+                row.Cells[MarkupExtCol.Index].Value = Markup.GetDescription(avail.Markup); //Заполняем ячейки столбца 'Тип наценки'
 
                 //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.
                 if (avail.StorageAddress != null)
@@ -871,11 +871,11 @@ namespace PartsApp
                 DataGridViewRow extRow = extPartsDGV.Rows[e.RowIndex];
 
                 Availability avail = extRow.DataBoundItem as Availability;
-                extRow.Cells[MarkupCol.Index].Value = Markup.GetDescription(avail.Markup);//меняем тип наценки.
+                extRow.Cells[MarkupExtCol.Index].Value = Markup.GetDescription(avail.Markup);//меняем тип наценки.
 
                 //Обновляем ячейки 'Цена продажи' и 'Тип наценки'.
                 extPartsDGV.InvalidateCell(extRow.Cells[e.ColumnIndex]);
-                extPartsDGV.InvalidateCell(extRow.Cells[MarkupCol.Index]);
+                extPartsDGV.InvalidateCell(extRow.Cells[MarkupExtCol.Index]);
 
                 //Обновляем столбец 'Цена продажи' в главной таблице.
                 SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
