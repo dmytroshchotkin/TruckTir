@@ -129,11 +129,11 @@ namespace PartsApp
         #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private void purchaseDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        private void purchaseDataGridView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             //Нумерация строк.
             EnumerableExtensions.RowsNumerateAndAutoSize(purchaseDataGridView.Rows[e.RowIndex]);
-        }//purchaseDataGridView_RowPrePaint
+        }//
 
         /*События идут в порядке их возможного вызова.*/
 
@@ -1149,6 +1149,8 @@ namespace PartsApp
                 }//if
             }//if
         }//
+
+
 
 
 
