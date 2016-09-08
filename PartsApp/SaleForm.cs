@@ -135,7 +135,7 @@ namespace PartsApp
             if (sparePart != null)
                 FillTheExtDGV(sparePart.AvailabilityList);
             else
-                extSaleDGV.Rows.Clear();
+                ExtSaleDGV.Rows.Clear();
         }//SaleDGV_RowEnter
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace PartsApp
                     SaleDGV.Rows.Remove(row);   
             }//foreach
 
-            extSaleDGV.Rows.Clear(); //Очищаем доп. таблицу.
+            ExtSaleDGV.Rows.Clear(); //Очищаем доп. таблицу.
             FillTheInTotal(); //Заполняем общую сумму операции.
         }//removeToolStripMenuItem_Click
         
@@ -349,7 +349,7 @@ namespace PartsApp
                 SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
 
                 //Возвращаем дефолтные значения во всех строках доп. таблицы.
-                SetDefaultValuesToExtDataGridView((cell.OwningRow.Tag as SparePart).SparePartId);
+                SetDefaultValuesToExtSaleDGV((cell.OwningRow.Tag as SparePart).SparePartId);
             }//else
             FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
         }//CountCellFilled
@@ -467,7 +467,7 @@ namespace PartsApp
             //Заполняем осн. таблицу.
             FillTheSaleDGV(row, sparePart);
             //Очищаем доп. таблицу и заполняем её новой инф-цией.
-            extSaleDGV.Rows.Clear();
+            ExtSaleDGV.Rows.Clear();
             FillTheExtDGV(sparePart.AvailabilityList);
         }//FillTheBothDGV
 
@@ -521,7 +521,7 @@ namespace PartsApp
             
 
             //Перебираем по строкам из extDGV.
-            foreach (DataGridViewRow row in extSaleDGV.Rows)
+            foreach (DataGridViewRow row in ExtSaleDGV.Rows)
             {
                 float extAvailCount = Convert.ToSingle(row.Cells[ExtCountCol.Index].Tag); //количество в наличии в данном приходе.                
                 
@@ -622,14 +622,14 @@ namespace PartsApp
         /// Возвращает дефолтные значения во все ячейки столбца 'Кол-во' доп. таблицы.
         /// </summary>
         /// <param name="sparePartId">Ид товара.</param>
-        private void SetDefaultValuesToExtDataGridView(int sparePartId)
+        private void SetDefaultValuesToExtSaleDGV(int sparePartId)
         {
-            foreach (DataGridViewRow extRow in extSaleDGV.Rows)
+            foreach (DataGridViewRow extRow in ExtSaleDGV.Rows)
             {
                 SetDefaultValueToCell(extRow.Cells[ExtCountCol.Index]);           //Записываем дефолтное значение в ячейку.
                 FillTheOperDetList(sparePartId, extRow.Cells[ExtCountCol.Index]); //Запоминаем изменение в список.    
             }//foreach
-        }//SetDefaultValuesToExtDataGridView
+        }//SetDefaultValuesToExtSaleDGV
 
         /// <summary>
         /// Записывает дефолтное значения в переданную ячейку.
@@ -725,22 +725,22 @@ namespace PartsApp
         #region Методы работы с доп. таблицей.
 //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
-        private void extDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private void ExtSaleDGV_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             if (e.ColumnIndex == ExtCountCol.Index)
             {
-                DataGridViewCell cell = extSaleDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                DataGridViewCell cell = ExtSaleDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 SetCustomValueToCell(cell, null); //Очищаем ячейку для ввода знвчения поль-лем.
             }//if
-        }//extDataGridView_CellBeginEdit
+        }//ExtSaleDGV_CellBeginEdit
 
-        private void extDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void ExtSaleDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             //Если редактировалась колонка "Кол-во". хотя по идее все остальные readOnly.
-            if (extSaleDGV.Columns[e.ColumnIndex] == ExtCountCol)
+            if (ExtSaleDGV.Columns[e.ColumnIndex] == ExtCountCol)
             {
                 DataGridViewRow row = SaleDGV.CurrentRow;
-                DataGridViewCell extCountCell = extSaleDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                DataGridViewCell extCountCell = ExtSaleDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 DataGridViewCell countCell = row.Cells[CountCol.Index];
                 //Проверяем корректность ввода.
                 int sparePartId = (row.Tag as SparePart).SparePartId;
@@ -759,16 +759,16 @@ namespace PartsApp
                 FillTheSumCell(row);                           //Заполняем столбец 'Сумма'.
                 FillTheOperDetList(sparePartId, extCountCell); //Запоминаем изменение в список.    
             }//if       
-        }//extDataGridView_CellEndEdit  
+        }//ExtSaleDGV_CellEndEdit  
 
-        private void extDataGridView_SelectionChanged(object sender, EventArgs e)
+        private void ExtSaleDGV_SelectionChanged(object sender, EventArgs e)
         {
-            markupComboBox.Enabled = (extSaleDGV.SelectedCells.Count > 0); //Если есть выделенные клетки делаем доступной изменение наценки.
-        }//extDataGridView_SelectionChanged
+            markupComboBox.Enabled = (ExtSaleDGV.SelectedCells.Count > 0); //Если есть выделенные клетки делаем доступной изменение наценки.
+        }//ExtSaleDGV_SelectionChanged
 
         private void extGroupBox_Click(object sender, EventArgs e)
         {
-            extSaleDGV.ClearSelection();
+            ExtSaleDGV.ClearSelection();
         }//extGroupBox_Click
 
         /// <summary>
@@ -778,13 +778,13 @@ namespace PartsApp
         private void FillTheExtDGV(List<Availability> availList)
         {
             //Очищаем предварительно таблицу.
-            extSaleDGV.Rows.Clear();
+            ExtSaleDGV.Rows.Clear();
             ExtStorageAdressCol.Visible = ExtNoteCol.Visible = false;
             //Заполняем таблицу новыми данными.
             foreach (Availability avail in availList)
             {
-                int rowIndx = extSaleDGV.Rows.Add();
-                DataGridViewRow row = extSaleDGV.Rows[rowIndx];
+                int rowIndx = ExtSaleDGV.Rows.Add();
+                DataGridViewRow row = ExtSaleDGV.Rows[rowIndx];
 
                 row.Cells[ExtSupplierCol.Index].Value       = avail.OperationDetails.Operation.Contragent.ContragentName;
                 row.Cells[ExtMeasureUnitCol.Index].Value    = avail.OperationDetails.SparePart.MeasureUnit;
@@ -817,8 +817,8 @@ namespace PartsApp
             }//foreach            
 
             //Сортируем таблицу по дате прихода.
-            extSaleDGV.Sort(ExtPurchaseDateCol, ListSortDirection.Ascending);
-            extSaleDGV.ClearSelection();
+            ExtSaleDGV.Sort(ExtPurchaseDateCol, ListSortDirection.Ascending);
+            ExtSaleDGV.ClearSelection();
         }//FillTheExtDGV
 
         /// <summary>
@@ -829,7 +829,7 @@ namespace PartsApp
         {
             //Находим общее кол-во данного продаваемого товара.
             float extSellCount = 0;
-            foreach (DataGridViewRow extRow in extSaleDGV.Rows)
+            foreach (DataGridViewRow extRow in ExtSaleDGV.Rows)
             {
                 if (extRow.Cells[ExtCountCol.Index].Style.ForeColor == Color.Black)
                     extSellCount += Convert.ToSingle(extRow.Cells[ExtCountCol.Index].Value);
@@ -849,8 +849,8 @@ namespace PartsApp
         /// <returns></returns>
         private Point GetExtCellBelowLocation(DataGridViewCell cell)
         {
-            Point cellLoc = extSaleDGV.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
-            Point dgvLoc  = extSaleDGV.Location;
+            Point cellLoc = ExtSaleDGV.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
+            Point dgvLoc  = ExtSaleDGV.Location;
             Point gbLoc   = extGroupBox.Location;
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);
         }//GetCellBelowLocation
@@ -870,11 +870,11 @@ namespace PartsApp
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
-            if (extSaleDGV.SelectedCells.Count == 0) 
+            if (ExtSaleDGV.SelectedCells.Count == 0) 
                 return;
 
             //выделяем строки всех выделенных клеток.
-            extSaleDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
+            ExtSaleDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
             
             try
             {
@@ -883,7 +883,7 @@ namespace PartsApp
                 string markupType = Models.Markup.GetDescription(markupValue);
 
                 //Обновляем таблицу.
-                foreach (DataGridViewRow row in extSaleDGV.SelectedRows)
+                foreach (DataGridViewRow row in ExtSaleDGV.SelectedRows)
                 {
                     row.Cells[ExtMarkupCol.Index].Value = markupType;
 
