@@ -486,9 +486,6 @@ namespace PartsApp
                     PartsDGVMarkupChange(markup);
                 else
                     ExtPartsDGVMarkupChange(markup); //Если есть выделенные строки в extPartsDGV.
-
-                //Делаем доступными кнопки "Сохранить изменения" и "Отменить изменения"
-                saveChangesButton.Enabled = cancelChangesButton.Enabled = true; 
             }//try                
             catch 
             { 
@@ -519,9 +516,7 @@ namespace PartsApp
         private void cancelChangesButton_Click(object sender, EventArgs e)
         {
             /*ERROR Не нравиться мне код метода*/
-
-            saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопку недоступной. /*ERROR может переместить в Enable_changed?*/            
-
+            
             foreach (Availability avail in _changedMarkupList)
             {
                 avail.Markup = (float)avail.Tag;
@@ -544,6 +539,8 @@ namespace PartsApp
                 if (avail != null)
                     row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList); //Присваиваем новое значение столбцу 'ЦенаПродажи'.
             }//foreach
+
+            saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
         }//cancelChangesButton_Click
 
         private void saveChangesButton_EnabledChanged(object sender, EventArgs e)
@@ -609,24 +606,22 @@ namespace PartsApp
                 avail.Tag = avail.Markup;
             avail.Markup = markup;
 
-            //Если такого объекта ещё нет в списке, добавляем его.
+            //Если такого объекта ещё нет в списке.
             if (!_changedMarkupList.Contains(avail))
-                _changedMarkupList.Add(avail);     
+            {
+                //Если новая наценка не равна первоначальной, добавляем объект в список.
+                if (avail.Markup != (float)avail.Tag)
+                    _changedMarkupList.Add(avail);
+            }//if 
+            else //Если такой объект уже есть в списке.
+            {
+                //Если новая наценка равна первоначальной, удаляем объект из списка.
+                if (avail.Markup == (float)avail.Tag)
+                    _changedMarkupList.Remove(avail);
+            }//else
 
-            /*Более эффективный способ записи изменения наценки, но требует блокировки/разблокировки кнопок Сохранить/Отменить.*/
-            ////Если такого объекта ещё нет в списке.
-            //if (!_changedMarkupList.Contains(avail))
-            //{
-            //    //Если новая наценка не равна первоначальной, добавляем объект в список.
-            //    if (avail.Markup != (float)avail.Tag)
-            //        _changedMarkupList.Add(avail);
-            //}//if 
-            //else //Если такой объект уже есть в списке.
-            //{ 
-            //    //Если новая наценка равна первоначальной, удаляем объект из списка.
-            //    if (avail.Markup == (float)avail.Tag)
-            //        _changedMarkupList.Remove(avail);
-            //}//else
+            //Если в списке товаров с изм. наценкой есть хоть один объект, делаем доступными кнопки Сохранения и Отмены, иначе делаем недоступными.
+            saveChangesButton.Enabled = cancelChangesButton.Enabled = _changedMarkupList.Count > 0; 
         }//MarkupChanged
 
 
