@@ -869,17 +869,9 @@ namespace PartsApp
         /// <param name="availabilityList">Новый источник данных для partsDGV.</param>
         private void ChangeDataSource(IList<SparePart> spareParts)
         {
-            searchTextBox.Clear();//Очищаем контрол поиска.
             autoCompleteListBox.Visible = false;
-
-            SpList = new SortableBindingList<SparePart>(SparePart.GetNewSparePartsList(spareParts));
-
-            BindingSource binding = new BindingSource();
-            binding.DataSource = SpList;
-
-            //Очищаем и заполняем DataSource новымы значениями.
-            //partsDGV.DataSource = extPartsDGV.DataSource = null; /*Выдаёт ошибку*/
-            PartsDGV.DataSource = ExtPartsDGV.DataSource = binding;            
+            //Заполняем DataSource новымы значениями.
+            PartsDGV.DataSource = ExtPartsDGV.DataSource = new BindingSource(new SortableBindingList<SparePart>(spareParts), null);            
         }//ChangeDataSource
 
         /// <summary>
