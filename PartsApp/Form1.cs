@@ -750,24 +750,15 @@ namespace PartsApp
         //Событие исп-ся для регулирования ширины RowHeaders.
         private void partsDataGridView_DataSourceChanged(object sender, EventArgs e)
         {
-            FillColumns();  //Заполняем столбец 'Цена продажи' и 'Наличие'.  
+            FillColumns();                                          //Заполняем столбец 'Цена продажи' и 'Наличие'.  
+            rowsCountLabel.Text = partsDGV.Rows.Count.ToString();   //Обновляем rowsCountLabel по количеству строк.
+            EnumerableExtensions.RowsNumerate(partsDGV);            //Нумерация строк.   
+            _changedMarkupList.Clear();                             //очищаем список деталей с измененной наценкой. 
 
-            //Обновляем rowsCountLabel по количеству строк. 
-            rowsCountLabel.Text = partsDGV.Rows.Count.ToString();
-
-            //обработка размера RowHeaders. /*ERROR*/
-            int i, count = partsDGV.Rows.Count;
-            for (i = 0; count != 0; ++i)
-            {
-                count /= 10;
-            }//for    
-            partsDGV.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
-
-            _changedMarkupList.Clear(); //очищаем список деталей с измененной наценкой. 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
             Deselection(null, null); /*ERROR Корректно ли это теперь работает?*/
 
-            //Устанавливаем постоянную позицию для отображения Фото.           
+            //Устанавливаем постоянную позицию для отображения Фото. /*ERROR Перенести в Form_Load.*/
             DataGridViewCell cell2 = partsDGV.Columns[1].HeaderCell;
             Rectangle rect = partsDGV.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
             photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDGV.Location.Y);
@@ -780,13 +771,13 @@ namespace PartsApp
         /// <param name="e"></param>
         private void partsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
-            /*ERROR Изменить*/
-            DataGridView dataGridView = sender as DataGridView;
-            int index = e.RowIndex;
-            string indexStr = (index + 1).ToString();
-            object header = dataGridView.Rows[index].HeaderCell.Value;
-            if (header == null || !header.Equals(indexStr))
-                dataGridView.Rows[index].HeaderCell.Value = indexStr;
+            ///*ERROR Изменить*/
+            //DataGridView dataGridView = sender as DataGridView;
+            //int index = e.RowIndex;
+            //string indexStr = (index + 1).ToString();
+            //object header = dataGridView.Rows[index].HeaderCell.Value;
+            //if (header == null || !header.Equals(indexStr))
+            //    dataGridView.Rows[index].HeaderCell.Value = indexStr;
         }//purchaseDataGridView_RowPrePaint
 
         private void partsDataGridView_Sorted(object sender, EventArgs e)

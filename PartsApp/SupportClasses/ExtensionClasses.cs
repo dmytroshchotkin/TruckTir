@@ -64,6 +64,33 @@ namespace PartsApp.SupportClasses
                                       .Concat(controls)
                                       .Where(c => c.GetType() == type && c.Name.Contains(searchName)).ToList();
         }//GetAllControls
+
+
+        public static void RowsNumerate(DataGridView dgv)
+        {
+            //Если RowHeadersCell не заполнена или индекс строки изменен, присваиваем новый номер строке.
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                string rowNumber = (row.Index + 1).ToString();
+                object headerCellValue = dgv.Rows[row.Index].HeaderCell.Value;
+                if (headerCellValue == null || headerCellValue.ToString() != rowNumber)
+                    dgv.Rows[row.Index].HeaderCell.Value = rowNumber;                             
+            }//foreach
+
+            RowHeadersWidthAutoSize(dgv);
+        }//RowsNumerate
+
+        public static void RowHeadersWidthAutoSize(DataGridView dgv)
+        {
+            //Если необходимо меняем ширину RowHeaders в зависимости от кол-ва строк в таблице.
+            int defaultRowHeadersWidth = 41;
+            int oneDigitWidth = 7; //Ширина одного разряда числа (определена методом тыка).
+            int newRowHeadersWidth = defaultRowHeadersWidth + (oneDigitWidth * (dgv.Rows.Count.ToString().Length - 1));
+            if (dgv.RowHeadersWidth != newRowHeadersWidth) //Проверка необходима, потому что изменение RowHeadersWidth приводит к инициированию события OnPaint, а сл-но к бесконечному циклу. 
+                dgv.RowHeadersWidth = newRowHeadersWidth;
+        }//RowHeadersWidthAutoSize
+
+
     }//EnumerableExtensions
 
 
