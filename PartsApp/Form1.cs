@@ -499,14 +499,11 @@ namespace PartsApp
         private void saveChangesButton_Click(object sender, EventArgs e)
         {                      
             Cursor = Cursors.WaitCursor;
-
             try
             {
                 PartsDAL.UpdateSparePartMarkup(_changedMarkupList);
                 //Действия осущ-мые при удачной записи в базу.
                 saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопки недоступными.
-
-                _changedMarkupList.Clear(); //Очищаем словарь запчастей с измененной наценкой.
             }//try			
             catch (System.Data.SQLite.SQLiteException ex)
             {
@@ -547,9 +544,14 @@ namespace PartsApp
                 if (avail != null)
                     row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList); //Присваиваем новое значение столбцу 'ЦенаПродажи'.
             }//foreach
-
-            _changedMarkupList.Clear(); //Очищаем словарь запчастей с измененной наценкой.
         }//cancelChangesButton_Click
+
+        private void saveChangesButton_EnabledChanged(object sender, EventArgs e)
+        {
+            //Если кнопка стала недоступной, то очищаем список объетов с изм. наценкой.  //Такой же обработчик для cancelChangesButton не нужен, т.к. св-во Enabled у обоих контролов всегда меняется парно.
+            if (!saveChangesButton.Enabled)
+                _changedMarkupList.Clear();
+        }//saveChangesButton_EnabledChanged
 
         /// <summary>
         /// Осущ-ние действий вызванных изменением наценки.
@@ -748,8 +750,7 @@ namespace PartsApp
         {
             FillColumns();                                          //Заполняем столбец 'Цена продажи' и 'Наличие'.  
             rowsCountLabel.Text = PartsDGV.Rows.Count.ToString();   //Обновляем rowsCountLabel по количеству строк.
-            EnumerableExtensions.RowsNumerateAndAutoSize(PartsDGV); //Нумерация строк.   
-            _changedMarkupList.Clear();                             //очищаем список деталей с измененной наценкой. 
+            EnumerableExtensions.RowsNumerateAndAutoSize(PartsDGV); //Нумерация строк.    
 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
             Deselection(null, null); /*ERROR Корректно ли это теперь работает?*/
@@ -1043,6 +1044,8 @@ namespace PartsApp
             Type contragentType = (menuItem == ViewSuppliersInfoToolStripMenuItem) ? typeof(Supplier) : typeof(Customer);       
             new ContragentOperationsInfoForm(contragentType).Show();
         }//
+
+        
 
 
 
