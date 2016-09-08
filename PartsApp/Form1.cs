@@ -470,22 +470,13 @@ namespace PartsApp
         {
             //Если нет выделенных строк, то выходим.
             if (PartsDGV.SelectedCells.Count == 0) 
-                return;
-
-            
-            //выделяем строки всех выделенных клеток.            
-            foreach (DataGridViewCell cell in PartsDGV.SelectedCells)    cell.OwningRow.Selected = true;    //partsDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
-            foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells) cell.OwningRow.Selected = true;
+                return;            
 
             //узнаем процент заданной наценки.
             try
             {
                 float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
-                //Если выделены только строки в partsDGV.
-                if (ExtPartsDGV.SelectedRows.Count == 0)
-                    PartsDGVMarkupChange(markup);
-                else
-                    ExtPartsDGVMarkupChange(markup); //Если есть выделенные строки в extPartsDGV.
+                MarkupChanged(markup); //Меняем наценку.
             }//try                
             catch 
             { 
@@ -516,12 +507,8 @@ namespace PartsApp
         private void cancelChangesButton_Click(object sender, EventArgs e)
         {
             /*ERROR Не нравиться мне код метода*/
-            
-            foreach (Availability avail in _changedMarkupList)
-            {
-                avail.Markup = (float)avail.Tag;
-                avail.Tag = null;
-            }//foreach
+
+            _changedMarkupList.ForEach(av => av.Markup = (float)av.Tag); //Присваиваем первоначальную наценку всем необх. объектам.
 
             //Меняем значение наценки в соотв. ячейках доп. таблицы.
             foreach (DataGridViewRow extRow in ExtPartsDGV.Rows)
@@ -593,6 +580,23 @@ namespace PartsApp
             SparePart sparePart = (ExtPartsDGV.SelectedRows[0].DataBoundItem as Availability).OperationDetails.SparePart;
             SetMaxValueToSellingPriceColumn(sparePart);
         }//ExtPartsDGVMarkupChange
+
+        /// <summary>
+        /// Производятся необходимые действия при изменении наценки объекта типа Availability.
+        /// </summary>
+        /// <param name="markup">Новая наценка.</param>
+        private void MarkupChanged(float markup)
+        {
+            //Выделяем строки всех выделенных ячеек.            
+            foreach (DataGridViewCell cell in PartsDGV.SelectedCells)    cell.OwningRow.Selected = true;    //partsDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
+            foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells) cell.OwningRow.Selected = true;
+
+            //В зависимотсти от того, есть ли выделенные ячейки в доп. таблице, вызываем соотв. метод измененния наценки.
+            if (ExtPartsDGV.SelectedRows.Count == 0)
+                PartsDGVMarkupChange(markup);
+            else
+                ExtPartsDGVMarkupChange(markup);
+        }//MarkupChanged
 
         /// <summary>
         /// Производятся необходимые действия при изменении наценки объекта типа Availability.
