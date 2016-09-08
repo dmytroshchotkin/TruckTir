@@ -323,14 +323,14 @@
             this.SaleDGV.Name = "SaleDGV";
             this.SaleDGV.Size = new System.Drawing.Size(848, 228);
             this.SaleDGV.TabIndex = 0;
-            this.SaleDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.saleDataGridView_CellBeginEdit);
-            this.SaleDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.saleDataGridView_CellEndEdit);
-            this.SaleDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.saleDataGridView_CellMouseClick);
-            this.SaleDGV.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.saleDataGridView_EditingControlShowing);
-            this.SaleDGV.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.saleDataGridView_RowEnter);
+            this.SaleDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.SaleDGV_CellBeginEdit);
+            this.SaleDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.SaleDGV_CellEndEdit);
+            this.SaleDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.SaleDGV_CellMouseClick);
+            this.SaleDGV.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.SaleDGV_EditingControlShowing);
+            this.SaleDGV.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.SaleDGV_RowEnter);
             this.SaleDGV.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.DGV_RowPostPaint);
-            this.SaleDGV.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.saleDataGridView_RowsAdded);
-            this.SaleDGV.SelectionChanged += new System.EventHandler(this.saleDataGridView_SelectionChanged);
+            this.SaleDGV.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.SaleDGV_RowsAdded);
+            this.SaleDGV.SelectionChanged += new System.EventHandler(this.SaleDGV_SelectionChanged);
             // 
             // ArticulCol
             // 
