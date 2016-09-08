@@ -76,7 +76,7 @@ namespace PartsApp
             if (e.KeyCode == Keys.Enter)
             {
                 supplierTextBox_Leave(sender, null);
-                purchaseDataGridView.Select(); //переводим фокус на таблицу приходов.
+                PurchaseDGV.Select(); //переводим фокус на таблицу приходов.
             }//if
         }//supplierTextBox_PreviewKeyDown
 
@@ -129,43 +129,43 @@ namespace PartsApp
         #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private void purchaseDataGridView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        private void PurchaseDGV_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             //Нумерация строк.
-            EnumerableExtensions.RowsNumerateAndAutoSize(purchaseDataGridView.Rows[e.RowIndex]);
+            EnumerableExtensions.RowsNumerateAndAutoSize(PurchaseDGV.Rows[e.RowIndex]);
         }//
 
         /*События идут в порядке их возможного вызова.*/
 
-        private void purchaseDataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void PurchaseDGV_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             DataGridView dgv = sender as DataGridView;
             //Делаем ReadOnly ячейки 'Цена', 'Кол-во' и 'Цена Продажи'.
             dgv[SellingPriceCol.Index, e.RowIndex].ReadOnly = dgv[CountCol.Index, e.RowIndex].ReadOnly = dgv[PriceCol.Index, e.RowIndex].ReadOnly = true;
-        }//purchaseDataGridView_RowsAdded
+        }//PurchaseDGV_RowsAdded
 
         /// <summary>
         /// Событие для установки listBox в нужную позицию.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void purchaseDataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private void PurchaseDGV_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            _lastEditCell = purchaseDataGridView[e.ColumnIndex, e.RowIndex]; //запоминаем текущую ячейку как последнюю редактируемую.
+            _lastEditCell = PurchaseDGV[e.ColumnIndex, e.RowIndex]; //запоминаем текущую ячейку как последнюю редактируемую.
 
             //Обрабатываем ввод в ячейку 'Название' или 'Артикул'.
             if (_lastEditCell.OwningColumn == TitleCol || _lastEditCell.OwningColumn == ArticulCol)
                 autoCompleteListBox.Location = GetCellBelowLocation(_lastEditCell); //устанавливаем позицию вып. списка.
-        }//purchaseDataGridView_CellBeginEdit
+        }//PurchaseDGV_CellBeginEdit
 
         /// <summary>
         /// Событие для добавления обработчиков на ввод текста в ячейку.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void purchaseDataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        private void PurchaseDGV_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {            
-            DataGridViewCell cell = purchaseDataGridView.CurrentCell;
+            DataGridViewCell cell = PurchaseDGV.CurrentCell;
 
             if (cell.OwningColumn == TitleCol || cell.OwningColumn == ArticulCol)
             {
@@ -179,7 +179,7 @@ namespace PartsApp
                     textBoxCell.TextChanged    += new EventHandler(dataGridViewTextBoxCell_TextChanged);
                 }//if
             }//if
-        }//purchaseDataGridView_EditingControlShowing
+        }//PurchaseDGV_EditingControlShowing
 
         /// <summary>
         /// Метод обработки нажатия клавиш в ячейках осн. таблицы.
@@ -209,7 +209,7 @@ namespace PartsApp
             if (String.IsNullOrEmpty(textBox.Text) == false)
             {
                 //Находим подходящий по вводу товар.
-                List<int> existingSparePartsIdsList = purchaseDataGridView.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (r.Tag as SparePart).SparePartId).ToList(); //Id-ки уже введенного товара.
+                List<int> existingSparePartsIdsList = PurchaseDGV.Rows.Cast<DataGridViewRow>().Where(r => r.Tag != null).Select(r => (r.Tag as SparePart).SparePartId).ToList(); //Id-ки уже введенного товара.
                 List<SparePart> searchSparePartsList = (_lastEditCell.OwningColumn == TitleCol)
                     ? PartsDAL.SearchSparePartsByTitle(textBox.Text, existingSparePartsIdsList, false, 10 )
                     : PartsDAL.SearchSparePartsByArticul(textBox.Text, existingSparePartsIdsList, false, 10);
@@ -225,11 +225,11 @@ namespace PartsApp
             }//if
         }//dataGridViewTextBoxCell_TextChanged
 
-        private void purchaseDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void PurchaseDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (!_isCellEditError)
             {
-                DataGridViewCell cell = purchaseDataGridView[e.ColumnIndex, e.RowIndex];
+                DataGridViewCell cell = PurchaseDGV[e.ColumnIndex, e.RowIndex];
 
                 if (cell.OwningColumn == TitleCol || cell.OwningColumn == ArticulCol) //Если редактируется артикул или название товара. 
                     TitleOrArticulCellFilled(cell);
@@ -240,56 +240,56 @@ namespace PartsApp
                 else if (cell.OwningColumn == SellingPriceCol)                     //Если редактируется цена продажи. 
                     SellingPriceCellFilled(cell);
             }//if
-        }//purchaseDataGridView_CellEndEdit                            
+        }//PurchaseDGV_CellEndEdit                            
 
-        private void purchaseDataGridView_SelectionChanged(object sender, EventArgs e)
+        private void PurchaseDGV_SelectionChanged(object sender, EventArgs e)
         {
             //Если ошибка редактирования ячейки 'Title' или 'Articul', то возвращаем фокус обратно на ячейку (фокус теряется при выборе из вып. списка).
             if (_isCellEditError == true)
             {
                 _isCellEditError = false;
-                purchaseDataGridView.CurrentCell = _lastEditCell;
+                PurchaseDGV.CurrentCell = _lastEditCell;
 
                 //Включаем режим редактирования ячейки, не инициируя при этом соотв. события.
-                purchaseDataGridView.CellBeginEdit         -= purchaseDataGridView_CellBeginEdit;
-                purchaseDataGridView.EditingControlShowing -= purchaseDataGridView_EditingControlShowing;
-                purchaseDataGridView.BeginEdit(true);
-                purchaseDataGridView.CellBeginEdit         += purchaseDataGridView_CellBeginEdit;
-                purchaseDataGridView.EditingControlShowing += purchaseDataGridView_EditingControlShowing;
+                PurchaseDGV.CellBeginEdit         -= PurchaseDGV_CellBeginEdit;
+                PurchaseDGV.EditingControlShowing -= PurchaseDGV_EditingControlShowing;
+                PurchaseDGV.BeginEdit(true);
+                PurchaseDGV.CellBeginEdit         += PurchaseDGV_CellBeginEdit;
+                PurchaseDGV.EditingControlShowing += PurchaseDGV_EditingControlShowing;
 
                 //ставим каретку в конец текста. 
                 TextBox textBoxCell = _lastEditCell.Tag as TextBox;
                 textBoxCell.SelectionStart = textBoxCell.Text.Length;
             }//if
-        }//purchaseDataGridView_SelectionChanged
+        }//PurchaseDGV_SelectionChanged
 
-        private void purchaseDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void PurchaseDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
                 if (e.ColumnIndex == -1)
                 {
                     if (e.RowIndex == -1)
-                        purchaseDataGridView.SelectAll();
+                        PurchaseDGV.SelectAll();
                     else
-                        purchaseDataGridView.Rows[e.RowIndex].Selected = true;
+                        PurchaseDGV.Rows[e.RowIndex].Selected = true;
 
                     //Выводим контекстное меню.
-                    Point location = purchaseDataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true).Location;
+                    Point location = PurchaseDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true).Location;
                     location.X += e.Location.X;
                     location.Y += e.Location.Y;
-                    purchaseContextMenuStrip.Show(purchaseDataGridView, location, ToolStripDropDownDirection.BelowRight);
+                    purchaseContextMenuStrip.Show(PurchaseDGV, location, ToolStripDropDownDirection.BelowRight);
                 }//if                
             }//if 
-        }//purchaseDataGridView_CellMouseClick        
+        }//PurchaseDGV_CellMouseClick        
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Выделяем строки всех выделенных ячеек.           
-            purchaseDataGridView.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
+            PurchaseDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
             //Удаляем все выбранные строки, eсли это не последняя строка (предназнач. для ввода нового товара в список), удаляем её.
-            int lastRowIndx = purchaseDataGridView.Rows.Count - 1;
-            purchaseDataGridView.SelectedRows.Cast<DataGridViewRow>().Where(r => r.Index != lastRowIndx).ToList().ForEach(r => purchaseDataGridView.Rows.Remove(r));
+            int lastRowIndx = PurchaseDGV.Rows.Count - 1;
+            PurchaseDGV.SelectedRows.Cast<DataGridViewRow>().Where(r => r.Index != lastRowIndx).ToList().ForEach(r => PurchaseDGV.Rows.Remove(r));
 
             FillTheInTotal(); //Заполняем общую сумму операции.
         }//removeToolStripMenuItem_Click
@@ -543,7 +543,7 @@ namespace PartsApp
         private void FillTheInTotal()
         {
             float inTotal = 0;
-            foreach (DataGridViewRow row in purchaseDataGridView.Rows)
+            foreach (DataGridViewRow row in PurchaseDGV.Rows)
             {
                 //Если в строке указана и цена и количестов.
                 if (row.Cells[SumCol.Index].Value != null)
@@ -560,14 +560,14 @@ namespace PartsApp
 
 
         /// <summary>
-        /// Возвращает абсолютный location области сразу под позицией клетки из purchaseDataGridView. 
+        /// Возвращает абсолютный location области сразу под позицией клетки из PurchaseDGV. 
         /// </summary>
         /// <param name="countCell">Клетка под чьей location необходимо вернуть</param>
         /// <returns></returns>
         private Point GetCellBelowLocation(DataGridViewCell cell)
         {
-            Point cellLoc = purchaseDataGridView.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
-            Point dgvLoc = purchaseDataGridView.Location;
+            Point cellLoc = PurchaseDGV.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
+            Point dgvLoc = PurchaseDGV.Location;
             Point gbLoc = purchaseGroupBox.Location;
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);        
         }//GetCellBelowLocation
@@ -600,14 +600,14 @@ namespace PartsApp
             if (e.Clicks == 1)
             {
                 //Возвращаем фокус на ячейку для кот. выводится вып. список.                
-                purchaseDataGridView_SelectionChanged(null, null);
+                PurchaseDGV_SelectionChanged(null, null);
                 _isCellEditError = true;
             }//if
             else
             {
                 //Делаем автозаполнение строки, выбранным объектом.   
                 _isCellEditError = false;
-                purchaseDataGridView_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));
+                PurchaseDGV_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));
             }//else
         }//autoCompleteListBox_MouseDown
 
@@ -915,7 +915,7 @@ namespace PartsApp
             {
                 excRateNumericUpDown.Value = 1;
                 excRateNumericUpDown.Enabled = false;
-                purchaseDataGridView.Enabled = true;
+                PurchaseDGV.Enabled = true;
                 currencyComboBox.Enabled = false;
                 helpLabel.Dispose();
             }//if
@@ -928,10 +928,10 @@ namespace PartsApp
         {
             if (excRateNumericUpDown.Value > excRateNumericUpDown.Minimum)
             {
-                purchaseDataGridView.Enabled = true;
+                PurchaseDGV.Enabled = true;
             }
-            else purchaseDataGridView.Enabled = false;
-            //foreach (DataGridViewRow extRow in purchaseDataGridView.Rows)
+            else PurchaseDGV.Enabled = false;
+            //foreach (DataGridViewRow extRow in PurchaseDGV.Rows)
             //{
             //    if (extRow.Cells["Price"].Value != null)
             //    {
@@ -959,7 +959,7 @@ namespace PartsApp
             if (excRateNumericUpDown.Value > excRateNumericUpDown.Minimum)
             {
                 excRateNumericUpDown.Enabled = false;
-                //purchaseDataGridView.Enabled = true;
+                //PurchaseDGV.Enabled = true;
                 currencyComboBox.Enabled = false;
                 helpLabel.Dispose();
             }//if
@@ -987,11 +987,11 @@ namespace PartsApp
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {            
             //Если нет выделенных строк, то выходим.
-            if (purchaseDataGridView.SelectedCells.Count == 0)
+            if (PurchaseDGV.SelectedCells.Count == 0)
                 return;
 
             //выделяем строки всех выделенных клеток.
-            purchaseDataGridView.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
+            PurchaseDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
 
             try
             {
@@ -1000,7 +1000,7 @@ namespace PartsApp
                 string markupType = Models.Markup.GetDescription(markupValue);
 
                 //Обновляем таблицу.
-                foreach (DataGridViewRow row in purchaseDataGridView.SelectedRows)
+                foreach (DataGridViewRow row in PurchaseDGV.SelectedRows)
                 {
                     //Если указана цена.
                     if (row.Cells[PriceCol.Index].Value != null)
@@ -1056,7 +1056,7 @@ namespace PartsApp
         {
             List<Availability> availList = new List<Availability>();
             Purchase purchase = CreatePurchaseFromForm();
-            foreach(DataGridViewRow row in purchaseDataGridView.Rows)
+            foreach(DataGridViewRow row in PurchaseDGV.Rows)
             {
                 //Если строка не пустая.
                 if (row.Tag != null)
@@ -1098,7 +1098,7 @@ namespace PartsApp
                 return false;
 
             //Если таблица не заполнена или не везде указана цена или кол-во.
-            if (purchaseDataGridView.Rows.Cast<DataGridViewRow>().All(r => r.Tag == null) || purchaseDataGridView.Rows.Cast<DataGridViewRow>().Any(r => r.Tag != null && (r.Cells[PriceCol.Index].Value == null || r.Cells[CountCol.Index].Value == null)))
+            if (PurchaseDGV.Rows.Cast<DataGridViewRow>().All(r => r.Tag == null) || PurchaseDGV.Rows.Cast<DataGridViewRow>().Any(r => r.Tag != null && (r.Cells[PriceCol.Index].Value == null || r.Cells[CountCol.Index].Value == null)))
             {
                 toolTip.Show("Таблица не заполнена или не везде указана цена или количество товара", this, okButton.Location, 3000);
                 return false;

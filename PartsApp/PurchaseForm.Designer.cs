@@ -41,7 +41,7 @@
             this.storageLabel = new System.Windows.Forms.Label();
             this.storageAdressLabel = new System.Windows.Forms.Label();
             this.purchaseGroupBox = new System.Windows.Forms.GroupBox();
-            this.purchaseDataGridView = new System.Windows.Forms.DataGridView();
+            this.PurchaseDGV = new System.Windows.Forms.DataGridView();
             this.SparePartIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ArticulCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TitleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -86,7 +86,7 @@
             this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.purchaseGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.purchaseDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PurchaseDGV)).BeginInit();
             this.supplierBackPanel.SuspendLayout();
             this.buyerBackPanel.SuspendLayout();
             this.storageAdressBackPanel.SuspendLayout();
@@ -153,7 +153,7 @@
             // 
             // purchaseGroupBox
             // 
-            this.purchaseGroupBox.Controls.Add(this.purchaseDataGridView);
+            this.purchaseGroupBox.Controls.Add(this.PurchaseDGV);
             this.purchaseGroupBox.Location = new System.Drawing.Point(22, 195);
             this.purchaseGroupBox.Name = "purchaseGroupBox";
             this.purchaseGroupBox.Size = new System.Drawing.Size(854, 211);
@@ -161,11 +161,11 @@
             this.purchaseGroupBox.TabStop = false;
             this.purchaseGroupBox.Text = "Лист прихода.";
             // 
-            // purchaseDataGridView
+            // PurchaseDGV
             // 
-            this.purchaseDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.purchaseDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.purchaseDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.PurchaseDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.PurchaseDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.PurchaseDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SparePartIdCol,
             this.ArticulCol,
             this.TitleCol,
@@ -175,19 +175,19 @@
             this.SumCol,
             this.MarkupCol,
             this.SellingPriceCol});
-            this.purchaseDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.purchaseDataGridView.Enabled = false;
-            this.purchaseDataGridView.Location = new System.Drawing.Point(3, 16);
-            this.purchaseDataGridView.Name = "purchaseDataGridView";
-            this.purchaseDataGridView.Size = new System.Drawing.Size(848, 192);
-            this.purchaseDataGridView.TabIndex = 0;
-            this.purchaseDataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.purchaseDataGridView_CellBeginEdit);
-            this.purchaseDataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.purchaseDataGridView_CellEndEdit);
-            this.purchaseDataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.purchaseDataGridView_CellMouseClick);
-            this.purchaseDataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.purchaseDataGridView_EditingControlShowing);
-            this.purchaseDataGridView.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.purchaseDataGridView_RowPostPaint);            
-            this.purchaseDataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.purchaseDataGridView_RowsAdded);
-            this.purchaseDataGridView.SelectionChanged += new System.EventHandler(this.purchaseDataGridView_SelectionChanged);
+            this.PurchaseDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PurchaseDGV.Enabled = false;
+            this.PurchaseDGV.Location = new System.Drawing.Point(3, 16);
+            this.PurchaseDGV.Name = "PurchaseDGV";
+            this.PurchaseDGV.Size = new System.Drawing.Size(848, 192);
+            this.PurchaseDGV.TabIndex = 0;
+            this.PurchaseDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.PurchaseDGV_CellBeginEdit);
+            this.PurchaseDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.PurchaseDGV_CellEndEdit);
+            this.PurchaseDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.PurchaseDGV_CellMouseClick);
+            this.PurchaseDGV.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.PurchaseDGV_EditingControlShowing);
+            this.PurchaseDGV.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.PurchaseDGV_RowPostPaint);            
+            this.PurchaseDGV.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.PurchaseDGV_RowsAdded);
+            this.PurchaseDGV.SelectionChanged += new System.EventHandler(this.PurchaseDGV_SelectionChanged);
             // 
             // SparePartIdCol
             // 
@@ -662,7 +662,7 @@
             this.Text = "Форма прихода товара.";
             this.Load += new System.EventHandler(this.PurchaseForm_Load);
             this.purchaseGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.purchaseDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PurchaseDGV)).EndInit();
             this.supplierBackPanel.ResumeLayout(false);
             this.supplierBackPanel.PerformLayout();
             this.buyerBackPanel.ResumeLayout(false);
@@ -686,7 +686,7 @@
         private System.Windows.Forms.Label storageLabel;
         private System.Windows.Forms.Label storageAdressLabel;
         private System.Windows.Forms.GroupBox purchaseGroupBox;
-        private System.Windows.Forms.DataGridView purchaseDataGridView;
+        private System.Windows.Forms.DataGridView PurchaseDGV;
         private System.Windows.Forms.Label currencyLabel;
         private System.Windows.Forms.Label excRateLabel;
         private System.Windows.Forms.Label inTotalLabel;
