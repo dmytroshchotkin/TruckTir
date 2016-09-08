@@ -66,19 +66,30 @@ namespace PartsApp.SupportClasses
         }//GetAllControls
 
 
-        public static void RowsNumerate(DataGridView dgv)
+
+        private static void RowNumerate(DataGridViewRow row)
+        {
+            DataGridView dgv = row.DataGridView;
+            string rowNumber = (row.Index + 1).ToString();
+            object headerCellValue = dgv.Rows[row.Index].HeaderCell.Value;
+            if (headerCellValue == null || headerCellValue.ToString() != rowNumber)
+                dgv.Rows[row.Index].HeaderCell.Value = rowNumber;
+        }//RowNumerate
+
+        public static void RowsNumerateAndAutoSize(DataGridViewRow row)
+        {
+            RowNumerate(row);                           //Нумеруем строку.
+            RowHeadersWidthAutoSize(row.DataGridView);  //Задаём размер RowHeaders.
+        }//RowsNumerateAndAutoSize
+
+        public static void RowsNumerateAndAutoSize(DataGridView dgv)
         {
             //Если RowHeadersCell не заполнена или индекс строки изменен, присваиваем новый номер строке.
             foreach (DataGridViewRow row in dgv.Rows)
-            {
-                string rowNumber = (row.Index + 1).ToString();
-                object headerCellValue = dgv.Rows[row.Index].HeaderCell.Value;
-                if (headerCellValue == null || headerCellValue.ToString() != rowNumber)
-                    dgv.Rows[row.Index].HeaderCell.Value = rowNumber;                             
-            }//foreach
+                RowNumerate(row);            //Нумеруем строку.                    
 
-            RowHeadersWidthAutoSize(dgv);
-        }//RowsNumerate
+            RowHeadersWidthAutoSize(dgv);    //Задаём размер RowHeaders.
+        }//RowsNumerateAndAutoSize
 
         public static void RowHeadersWidthAutoSize(DataGridView dgv)
         {
