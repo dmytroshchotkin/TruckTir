@@ -720,23 +720,17 @@ namespace PartsApp
             /*ERROR привести в порядок*/
             //Если клик сделан не по заголовку таблицы.
             if (e.RowIndex != -1)
-            { 
-                //Если ЛКМ
-                if (e.Button == MouseButtons.Left)
-                {
-                    //Делаем доступным функционал изменения наценки и перерасчета по валюте.
-                    excRateNumericUpDown.Enabled = markupComboBox.Enabled = true;                 
-                }//if
+            {
                 //Если ПКМ, выводим контекстное меню.
-                else
+                if (e.Button == MouseButtons.Right)
                 {
                     PartsDGV[e.ColumnIndex, e.RowIndex].Selected = true;
                     //Находим позицию в таблице, где был сделан клик.
                     Point cellLocation = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
                     Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
                     //Выводим контекстное меню.
-                    partsDGVContextMenuStrip.Show(PartsDGV, location);
-                }//else
+                    partsDGVContextMenuStrip.Show(PartsDGV, location);                
+                }//if                
             }//if       
             
         }//partsDGV_CellMouseClick
@@ -744,12 +738,13 @@ namespace PartsApp
         //Событие исп-ся для регулирования ширины RowHeaders.
         private void partsDGV_DataSourceChanged(object sender, EventArgs e)
         {
-            FillColumns();                                          //Заполняем столбец 'Цена продажи' и 'Наличие'.  
-            rowsCountLabel.Text = PartsDGV.Rows.Count.ToString();   //Обновляем rowsCountLabel по количеству строк.
-            EnumerableExtensions.RowsNumerateAndAutoSize(PartsDGV); //Нумерация строк.    
+            excRateNumericUpDown.Enabled = markupComboBox.Enabled = true; //Делаем доступным функционал изменения наценки и перерасчета по валюте.
+            FillColumns();                                                //Заполняем столбец 'Цена продажи' и 'Наличие'.  
+            rowsCountLabel.Text = PartsDGV.Rows.Count.ToString();         //Обновляем rowsCountLabel по количеству строк.
+            EnumerableExtensions.RowsNumerateAndAutoSize(PartsDGV);       //Нумерация строк.    
 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
-            Deselection(null, null); /*ERROR Корректно ли это теперь работает?*/
+            Deselection(null, null); //сбрасываем выделение в доп. таблице.
 
             //Устанавливаем постоянную позицию для отображения Фото. /*ERROR Перенести в Form_Load.*/
             DataGridViewCell cell2 = PartsDGV.Columns[1].HeaderCell;
