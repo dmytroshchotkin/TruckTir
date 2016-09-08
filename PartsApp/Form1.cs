@@ -234,16 +234,11 @@ namespace PartsApp
 
         private void SpPriceListToExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-             IEnumerable<DataGridViewRow> selectedRows = PartsDGV.SelectedCells.Cast<DataGridViewCell>()
-                                                                                        .Select(cell => cell.OwningRow).Distinct();
-
-            List<SparePart> sparePartsList = new List<SparePart>();
-            foreach (DataGridViewRow row in selectedRows)
-            {
-                int sparePartId = Convert.ToInt32(row.Cells[SparePartIdCol.Name].Value);
-                sparePartsList.Add(SpList.First(s => s.SparePartId == sparePartId));
-            }//foreach
-
+            //Находим все строки в которых есть выделенные ячейки.
+            IEnumerable<DataGridViewRow> selectedRows = PartsDGV.SelectedCells.Cast<DataGridViewCell>().Select(cell => cell.OwningRow).Distinct();
+            //Находим соотв. объекты из выделенных строк.
+            List<SparePart> sparePartsList = selectedRows.Select(r => r.DataBoundItem as SparePart).ToList();
+            //Выводим в Excel.
             ExcelSaveSparePartPriceList(sparePartsList);
         }//SpPriceListToExcelToolStripMenuItem_Click
 
@@ -895,12 +890,11 @@ namespace PartsApp
         /// </summary>
         private void Deselection(object sender, EventArgs e)
         {
-            excRateNumericUpDown.Value = 1;
-            excRateNumericUpDown.Enabled = false;
             //Очищаем строку и делаем функционал изменения наценки недоступным.
-            markupComboBox.Text = String.Empty;
-            markupComboBox.Enabled = false;
-
+            excRateNumericUpDown.Value = 1;
+            markupComboBox.Text = String.Empty;  
+            excRateNumericUpDown.Enabled = markupComboBox.Enabled = false;
+                        
             ExtPartsDGV.ClearSelection();
         }//Deselection        
 
