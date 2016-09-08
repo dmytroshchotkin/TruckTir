@@ -66,31 +66,44 @@ namespace PartsApp.SupportClasses
         }//GetAllControls
 
 
-
+        /// <summary>
+        /// Заполняет RowHeaders переданной строки текущим номером по порядку.
+        /// </summary>
+        /// <param name="row">Нумеруемая строка.</param>
         private static void RowNumerate(DataGridViewRow row)
         {
             DataGridView dgv = row.DataGridView;
             string rowNumber = (row.Index + 1).ToString();
             object headerCellValue = dgv.Rows[row.Index].HeaderCell.Value;
+            //Если RowHeadersCell не заполнена или индекс строки изменен, присваиваем новый номер строке.
             if (headerCellValue == null || headerCellValue.ToString() != rowNumber)
                 dgv.Rows[row.Index].HeaderCell.Value = rowNumber;
         }//RowNumerate
-
+        /// <summary>
+        /// Заполняет RowHeaders переданной строки текущим номером по порядку и устанавливает его ширину.
+        /// </summary>
+        /// <param name="row">Нумеруемая строка.</param>
         public static void RowsNumerateAndAutoSize(DataGridViewRow row)
         {
             RowNumerate(row);                           //Нумеруем строку.
             RowHeadersWidthAutoSize(row.DataGridView);  //Задаём размер RowHeaders.
         }//RowsNumerateAndAutoSize
-
+        /// <summary>
+        /// Заполняет RowHeaders строк переданной таблицы текущими номероми по порядку и устанавливает его ширину.
+        /// </summary>
+        /// <param name="dgv">Таблица с нумеруемыми строками.</param>
         public static void RowsNumerateAndAutoSize(DataGridView dgv)
         {
-            //Если RowHeadersCell не заполнена или индекс строки изменен, присваиваем новый номер строке.
+            
             foreach (DataGridViewRow row in dgv.Rows)
                 RowNumerate(row);            //Нумеруем строку.                    
 
             RowHeadersWidthAutoSize(dgv);    //Задаём размер RowHeaders.
         }//RowsNumerateAndAutoSize
-
+        /// <summary>
+        /// Устанавливает ширину RowHeaders переденной таблицы.
+        /// </summary>
+        /// <param name="dgv">Таблица.</param>
         public static void RowHeadersWidthAutoSize(DataGridView dgv)
         {
             //Если необходимо меняем ширину RowHeaders в зависимости от кол-ва строк в таблице.
