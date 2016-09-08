@@ -467,14 +467,10 @@ namespace PartsApp
         }//markupComboBox_KeyDown
 
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //Если нет выделенных строк, то выходим.
-            if (PartsDGV.SelectedCells.Count == 0) 
-                return;            
-
-            //узнаем процент заданной наценки.
+        {            
             try
             {
+                //узнаем процент заданной наценки.
                 float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
                 MarkupChanged(markup); //Меняем наценку.
             }//try                
@@ -722,26 +718,27 @@ namespace PartsApp
         private void partsDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             /*ERROR привести в порядок*/
-            //Если заголовок то ничего не делаем.
-            if (e.RowIndex == PartsDGV.Columns[0].HeaderCell.RowIndex)
-                return;            
-
-            //Если ЛКМ
-            if (e.Button == MouseButtons.Left)
-            {
-                excRateNumericUpDown.Enabled = true;
-                markupComboBox.Enabled = true; //Делаем доступным функционал изменения наценки. 
-            }//if
-            //Если ПКМ, выводим контекстное меню.
-            else
-            {
-                PartsDGV[e.ColumnIndex, e.RowIndex].Selected = true;
-                //Находим позицию в таблице, где был сделан клик.
-                Point cellLocation = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
-                Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
-                //Выводим контекстное меню.
-                partsDGVContextMenuStrip.Show(PartsDGV, location);
-            }//else
+            //Если клик сделан не по заголовку таблицы.
+            if (e.RowIndex != -1)
+            { 
+                //Если ЛКМ
+                if (e.Button == MouseButtons.Left)
+                {
+                    //Делаем доступным функционал изменения наценки и перерасчета по валюте.
+                    excRateNumericUpDown.Enabled = markupComboBox.Enabled = true;                 
+                }//if
+                //Если ПКМ, выводим контекстное меню.
+                else
+                {
+                    PartsDGV[e.ColumnIndex, e.RowIndex].Selected = true;
+                    //Находим позицию в таблице, где был сделан клик.
+                    Point cellLocation = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
+                    Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
+                    //Выводим контекстное меню.
+                    partsDGVContextMenuStrip.Show(PartsDGV, location);
+                }//else
+            }//if       
+            
         }//partsDGV_CellMouseClick
 
         //Событие исп-ся для регулирования ширины RowHeaders.
@@ -890,10 +887,10 @@ namespace PartsApp
         /// </summary>
         private void Deselection(object sender, EventArgs e)
         {
-            //Очищаем строку и делаем функционал изменения наценки недоступным.
-            excRateNumericUpDown.Value = 1;
-            markupComboBox.Text = String.Empty;  
-            excRateNumericUpDown.Enabled = markupComboBox.Enabled = false;
+            ////Очищаем строку и делаем функционал изменения наценки недоступным.
+            //excRateNumericUpDown.Value = 1;
+            //markupComboBox.Text = String.Empty;  
+            //excRateNumericUpDown.Enabled = markupComboBox.Enabled = false;
                         
             ExtPartsDGV.ClearSelection();
         }//Deselection        
