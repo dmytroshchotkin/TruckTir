@@ -16,10 +16,6 @@ namespace PartsApp
     public partial class Form1 : Form
     {                                    
         /// <summary>
-        /// Коллекция для вывода в таблице.
-        /// </summary>
-        SortableBindingList<SparePart> SpList;
-        /// <summary>
         /// Список объектов с измененной наценкой.
         /// </summary>
         List<Availability> _changedMarkupList;
@@ -84,7 +80,11 @@ namespace PartsApp
         {
             //Визуальное отображение работы.
             //progressBar.Value = progressBar.Maximum / 2;
-            new System.Threading.Thread(beginSaveInExcel).Start(SpList); //Сделать по нормальному вызов с потоком.
+
+            //Находим соотв. объекты SparePart для всех выведенных в таблице строк.
+            List<SparePart> sparePartsList = PartsDGV.Rows.Cast<DataGridViewRow>().Select(r => r.DataBoundItem as SparePart).ToList();
+            //Выводим в Excel.
+            new System.Threading.Thread(beginSaveInExcel).Start(sparePartsList); //Сделать по нормальному вызов с потоком.
             
         }//saveInExcelToolStripMenuItem_Click
 
@@ -239,7 +239,7 @@ namespace PartsApp
             //Находим соотв. объекты из выделенных строк.
             List<SparePart> sparePartsList = selectedRows.Select(r => r.DataBoundItem as SparePart).ToList();
             //Выводим в Excel.
-            ExcelSaveSparePartPriceList(sparePartsList);
+            ExcelSaveSparePartPriceList(sparePartsList); /*ERROR распараллелить*/
         }//SpPriceListToExcelToolStripMenuItem_Click
 
         private void ExcelSaveSparePartPriceList(IList<SparePart> sparePartsList)
