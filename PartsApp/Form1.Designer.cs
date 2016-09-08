@@ -562,8 +562,7 @@
             this.partsDGV.DataSourceChanged += new System.EventHandler(this.partsDataGridView_DataSourceChanged);
             this.partsDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.partsDataGridView_CellMouseClick);
             this.partsDGV.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDataGridView_CellMouseEnter);
-            this.partsDGV.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDataGridView_CellMouseLeave);
-            this.partsDGV.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.partsDataGridView_RowPrePaint);
+            this.partsDGV.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDataGridView_CellMouseLeave);            
             this.partsDGV.Sorted += new System.EventHandler(this.partsDataGridView_Sorted);
             // 
             // SparePartIdCol

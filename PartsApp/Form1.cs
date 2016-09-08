@@ -725,6 +725,7 @@ namespace PartsApp
         //Событие для отображения расширенной информации о Наличии запчасти.
         private void partsDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            /*ERROR привести в порядок*/
             //Если заголовок то ничего не делаем.
             if (e.RowIndex == partsDGV.Columns[0].HeaderCell.RowIndex)
                 return;
@@ -763,22 +764,6 @@ namespace PartsApp
             Rectangle rect = partsDGV.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
             photoPictureBox.Location = new Point(rect.X + rect.Width + 10, partsDGV.Location.Y);
         }//partsDataGridView_DataSourceChanged
-
-        /// <summary>
-        /// Нумерация строк partsDGV.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void partsDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
-        {
-            ///*ERROR Изменить*/
-            //DataGridView dataGridView = sender as DataGridView;
-            //int index = e.RowIndex;
-            //string indexStr = (index + 1).ToString();
-            //object header = dataGridView.Rows[index].HeaderCell.Value;
-            //if (header == null || !header.Equals(indexStr))
-            //    dataGridView.Rows[index].HeaderCell.Value = indexStr;
-        }//purchaseDataGridView_RowPrePaint
 
         private void partsDataGridView_Sorted(object sender, EventArgs e)
         {
