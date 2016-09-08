@@ -753,7 +753,7 @@ namespace PartsApp
         {
             FillColumns();                                          //Заполняем столбец 'Цена продажи' и 'Наличие'.  
             rowsCountLabel.Text = partsDGV.Rows.Count.ToString();   //Обновляем rowsCountLabel по количеству строк.
-            EnumerableExtensions.RowsNumerateAndAutoSize(partsDGV);            //Нумерация строк.   
+            EnumerableExtensions.RowsNumerateAndAutoSize(partsDGV); //Нумерация строк.   
             _changedMarkupList.Clear();                             //очищаем список деталей с измененной наценкой. 
 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;

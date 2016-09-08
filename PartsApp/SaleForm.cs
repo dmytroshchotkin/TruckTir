@@ -121,22 +121,7 @@ namespace PartsApp
         private void saleDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             //Нумерация строк.
-            DataGridView dgv = sender as DataGridView;
-
-            //Если RowHeadersCell не заполнена или индекс строки изменен, присваиваем новый номер строке.
-            string rowNumber = (e.RowIndex + 1).ToString();      
-            object headerCellValue = dgv.Rows[e.RowIndex].HeaderCell.Value;
-            if (headerCellValue == null || headerCellValue.ToString() != rowNumber)
-            {
-                dgv.Rows[e.RowIndex].HeaderCell.Value = rowNumber;
-
-                //Если необходимо меняем ширину RowHeaders в зависимости от кол-ва строк в таблице.
-                int defaultRowHeadersWidth = 41;
-                int oneDigitWidth = 7; //Ширина одного разряда числа (определена методом тыка).
-                int newRowHeadersWidth = defaultRowHeadersWidth + (oneDigitWidth * (dgv.Rows.Count.ToString().Length - 1));
-                if (dgv.RowHeadersWidth != newRowHeadersWidth) //Проверка необходима, потому что изменение RowHeadersWidth приводит к инициированию события OnPaint, а сл-но к бесконечному циклу. 
-                    dgv.RowHeadersWidth = newRowHeadersWidth;
-            }//if
+            EnumerableExtensions.RowsNumerateAndAutoSize(saleDGV.Rows[e.RowIndex]);           
         }//saleDataGridView_RowPrePaint
 
         #region Методы работы с осн. таблицей.
