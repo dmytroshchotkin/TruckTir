@@ -767,7 +767,8 @@ namespace PartsApp
 
         private void partsDataGridView_Sorted(object sender, EventArgs e)
         {
-            FillColumns(); //Заполняем ячейки столбцов 'Цена продажи' и 'Наличие'.
+            FillColumns();                                           //Заполняем ячейки столбцов 'Цена продажи' и 'Наличие'.
+            EnumerableExtensions.RowsNumerateAndAutoSize(partsDGV);  //Нумеруем строки.
         }//partsDataGridView_Sorted
 
 
