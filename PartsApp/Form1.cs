@@ -64,7 +64,12 @@ namespace PartsApp
             //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
 
-            
+
+            //Устанавливаем позицию для отображения Фото.
+            DataGridViewCell photoHeaderCell = PartsDGV.Columns[1].HeaderCell;
+            Rectangle rect = PartsDGV.GetCellDisplayRectangle(photoHeaderCell.ColumnIndex, photoHeaderCell.RowIndex, true);
+            photoPictureBox.Location = new Point(rect.Right + 10, PartsDGV.Location.Y);
+
             PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.
             /* Пробная зона */
             /////////////////////////////////////////////////////////////////////////////            
@@ -717,7 +722,6 @@ namespace PartsApp
         //Событие для отображения расширенной информации о Наличии запчасти.
         private void partsDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            /*ERROR привести в порядок*/
             //Если клик сделан не по заголовку таблицы.
             if (e.RowIndex != -1)
             {
@@ -725,14 +729,11 @@ namespace PartsApp
                 if (e.Button == MouseButtons.Right)
                 {
                     PartsDGV[e.ColumnIndex, e.RowIndex].Selected = true;
-                    //Находим позицию в таблице, где был сделан клик.
-                    Point cellLocation = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
-                    Point location = new Point(cellLocation.X + e.X, cellLocation.Y + e.Y);
-                    //Выводим контекстное меню.
-                    partsDGVContextMenuStrip.Show(PartsDGV, location);                
+                    //Находим позицию в таблице, где был сделан клик и выводим контекстное меню.
+                    Rectangle cellRect = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);                    
+                    partsDGVContextMenuStrip.Show(PartsDGV, new Point(cellRect.X, cellRect.Bottom));                
                 }//if                
-            }//if       
-            
+            }//if                   
         }//partsDGV_CellMouseClick
 
         //Событие исп-ся для регулирования ширины RowHeaders.
@@ -745,11 +746,6 @@ namespace PartsApp
 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
             Deselection(null, null); //сбрасываем выделение в доп. таблице.
-
-            //Устанавливаем постоянную позицию для отображения Фото. /*ERROR Перенести в Form_Load.*/
-            DataGridViewCell cell2 = PartsDGV.Columns[1].HeaderCell;
-            Rectangle rect = PartsDGV.GetCellDisplayRectangle(cell2.ColumnIndex, cell2.RowIndex, true);
-            photoPictureBox.Location = new Point(rect.X + rect.Width + 10, PartsDGV.Location.Y);
         }//partsDGV_DataSourceChanged
 
         private void partsDGV_Sorted(object sender, EventArgs e)
