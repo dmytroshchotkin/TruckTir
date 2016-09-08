@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -77,7 +77,7 @@
             this.dataSplitContainer = new System.Windows.Forms.SplitContainer();
             this.partsPanel = new System.Windows.Forms.Panel();
             this.autoCompleteListBox = new System.Windows.Forms.ListBox();
-            this.partsDGV = new System.Windows.Forms.DataGridView();
+            this.PartsDGV = new System.Windows.Forms.DataGridView();
             this.SparePartIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PhotoCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ManufacturerCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -89,7 +89,7 @@
             this.SellingPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.partsStatusStripPanel = new System.Windows.Forms.Panel();
             this.extPartsGroupBox = new System.Windows.Forms.GroupBox();
-            this.extPartsDGV = new System.Windows.Forms.DataGridView();
+            this.ExtPartsDGV = new System.Windows.Forms.DataGridView();
             this.SupplierExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PurchaseIdExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ArticulExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -121,10 +121,10 @@
             this.dataSplitContainer.Panel2.SuspendLayout();
             this.dataSplitContainer.SuspendLayout();
             this.partsPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.partsDGV)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PartsDGV)).BeginInit();
             this.partsStatusStripPanel.SuspendLayout();
             this.extPartsGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.extPartsDGV)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ExtPartsDGV)).BeginInit();
             this.extPartsStatusStrip.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.partsDGVContextMenuStrip.SuspendLayout();
@@ -515,7 +515,7 @@
             // 
             this.partsPanel.Controls.Add(this.autoCompleteListBox);
             this.partsPanel.Controls.Add(this.photoPictureBox);
-            this.partsPanel.Controls.Add(this.partsDGV);
+            this.partsPanel.Controls.Add(this.PartsDGV);
             this.partsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.partsPanel.Location = new System.Drawing.Point(0, 0);
             this.partsPanel.Name = "partsPanel";
@@ -536,14 +536,14 @@
             this.autoCompleteListBox.Format += new System.Windows.Forms.ListControlConvertEventHandler(this.autoCompleteListBox_Format);
             this.autoCompleteListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.autoCompleteListBox_MouseDown);
             // 
-            // partsDGV
+            // PartsDGV
             // 
-            this.partsDGV.AllowUserToAddRows = false;
-            this.partsDGV.AllowUserToDeleteRows = false;
-            this.partsDGV.AllowUserToResizeRows = false;
-            this.partsDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.partsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.partsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.PartsDGV.AllowUserToAddRows = false;
+            this.PartsDGV.AllowUserToDeleteRows = false;
+            this.PartsDGV.AllowUserToResizeRows = false;
+            this.PartsDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.PartsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.PartsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SparePartIdCol,
             this.PhotoCol,
             this.ManufacturerCol,
@@ -553,17 +553,17 @@
             this.MeasureUnitCol,
             this.AvaliabilityCol,
             this.SellingPriceCol});
-            this.partsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.partsDGV.Location = new System.Drawing.Point(0, 0);
-            this.partsDGV.Name = "partsDGV";
-            this.partsDGV.ReadOnly = true;
-            this.partsDGV.Size = new System.Drawing.Size(979, 461);
-            this.partsDGV.TabIndex = 0;
-            this.partsDGV.DataSourceChanged += new System.EventHandler(this.partsDataGridView_DataSourceChanged);
-            this.partsDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.partsDataGridView_CellMouseClick);
-            this.partsDGV.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDataGridView_CellMouseEnter);
-            this.partsDGV.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDataGridView_CellMouseLeave);
-            this.partsDGV.Sorted += new System.EventHandler(this.partsDataGridView_Sorted);
+            this.PartsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PartsDGV.Location = new System.Drawing.Point(0, 0);
+            this.PartsDGV.Name = "PartsDGV";
+            this.PartsDGV.ReadOnly = true;
+            this.PartsDGV.Size = new System.Drawing.Size(979, 461);
+            this.PartsDGV.TabIndex = 0;
+            this.PartsDGV.DataSourceChanged += new System.EventHandler(this.partsDGV_DataSourceChanged);
+            this.PartsDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.partsDGV_CellMouseClick);
+            this.PartsDGV.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDGV_CellMouseEnter);
+            this.PartsDGV.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.partsDGV_CellMouseLeave);
+            this.PartsDGV.Sorted += new System.EventHandler(this.partsDGV_Sorted);
             // 
             // SparePartIdCol
             // 
@@ -620,8 +620,8 @@
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.MeasureUnitCol.DataPropertyName = "MeasureUnit";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle12;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -632,8 +632,8 @@
             // AvaliabilityCol
             // 
             this.AvaliabilityCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AvaliabilityCol.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AvaliabilityCol.DefaultCellStyle = dataGridViewCellStyle13;
             this.AvaliabilityCol.HeaderText = "Наличие";
             this.AvaliabilityCol.Name = "AvaliabilityCol";
             this.AvaliabilityCol.ReadOnly = true;
@@ -642,10 +642,10 @@
             // SellingPriceCol
             // 
             this.SellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "C2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle14.Format = "C2";
+            dataGridViewCellStyle14.NullValue = null;
+            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle14;
             this.SellingPriceCol.HeaderText = "Цена (руб.)";
             this.SellingPriceCol.MinimumWidth = 75;
             this.SellingPriceCol.Name = "SellingPriceCol";
@@ -664,7 +664,7 @@
             // extPartsGroupBox
             // 
             this.extPartsGroupBox.BackColor = System.Drawing.SystemColors.Control;
-            this.extPartsGroupBox.Controls.Add(this.extPartsDGV);
+            this.extPartsGroupBox.Controls.Add(this.ExtPartsDGV);
             this.extPartsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extPartsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.extPartsGroupBox.Name = "extPartsGroupBox";
@@ -674,13 +674,13 @@
             this.extPartsGroupBox.Text = "Доп. информ.";
             this.extPartsGroupBox.Click += new System.EventHandler(this.extPartsGroupBox_Click);
             // 
-            // extPartsDGV
+            // ExtPartsDGV
             // 
-            this.extPartsDGV.AllowUserToAddRows = false;
-            this.extPartsDGV.AllowUserToDeleteRows = false;
-            this.extPartsDGV.AllowUserToResizeRows = false;
-            this.extPartsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.extPartsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ExtPartsDGV.AllowUserToAddRows = false;
+            this.ExtPartsDGV.AllowUserToDeleteRows = false;
+            this.ExtPartsDGV.AllowUserToResizeRows = false;
+            this.ExtPartsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ExtPartsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SupplierExtCol,
             this.PurchaseIdExtCol,
             this.ArticulExtCol,
@@ -691,15 +691,15 @@
             this.MarkupExtCol,
             this.SellingPriceExtCol,
             this.NoteExtCol});
-            this.extPartsDGV.DataMember = "AvailabilityList";
-            this.extPartsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.extPartsDGV.Location = new System.Drawing.Point(3, 16);
-            this.extPartsDGV.Name = "extPartsDGV";
-            this.extPartsDGV.Size = new System.Drawing.Size(973, 149);
-            this.extPartsDGV.TabIndex = 2;
-            this.extPartsDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extPartsDataGridView_CellEndEdit);
-            this.extPartsDGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.extPartsDataGridView_CellFormatting);
-            this.extPartsDGV.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.extPartsDataGridView_DataBindingComplete);
+            this.ExtPartsDGV.DataMember = "AvailabilityList";
+            this.ExtPartsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ExtPartsDGV.Location = new System.Drawing.Point(3, 16);
+            this.ExtPartsDGV.Name = "ExtPartsDGV";
+            this.ExtPartsDGV.Size = new System.Drawing.Size(973, 149);
+            this.ExtPartsDGV.TabIndex = 2;
+            this.ExtPartsDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extPartsDGV_CellEndEdit);
+            this.ExtPartsDGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.extPartsDGV_CellFormatting);
+            this.ExtPartsDGV.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.extPartsDGV_DataBindingComplete);
             // 
             // SupplierExtCol
             // 
@@ -734,9 +734,9 @@
             // 
             this.PurchaseDateExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.PurchaseDateExtCol.DataPropertyName = "OperationDetails.Operation.OperationDate";
-            dataGridViewCellStyle4.Format = "dd.MM.yyyy \'г.\'   HH:mm";
-            dataGridViewCellStyle4.NullValue = null;
-            this.PurchaseDateExtCol.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            dataGridViewCellStyle8.NullValue = null;
+            this.PurchaseDateExtCol.DefaultCellStyle = dataGridViewCellStyle8;
             this.PurchaseDateExtCol.HeaderText = "Дата поставки";
             this.PurchaseDateExtCol.Name = "PurchaseDateExtCol";
             this.PurchaseDateExtCol.ReadOnly = true;
@@ -756,8 +756,8 @@
             // 
             this.MeasureUnitExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.MeasureUnitExtCol.DataPropertyName = "OperationDetails.SparePart.MeasureUnit";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitExtCol.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitExtCol.DefaultCellStyle = dataGridViewCellStyle9;
             this.MeasureUnitExtCol.HeaderText = "Ед. изм.";
             this.MeasureUnitExtCol.MinimumWidth = 35;
             this.MeasureUnitExtCol.Name = "MeasureUnitExtCol";
@@ -769,8 +769,8 @@
             // 
             this.AvailabilityExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.AvailabilityExtCol.DataPropertyName = "OperationDetails.Count";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AvailabilityExtCol.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AvailabilityExtCol.DefaultCellStyle = dataGridViewCellStyle10;
             this.AvailabilityExtCol.HeaderText = "Наличие";
             this.AvailabilityExtCol.Name = "AvailabilityExtCol";
             this.AvailabilityExtCol.ReadOnly = true;
@@ -788,10 +788,10 @@
             // 
             this.SellingPriceExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.SellingPriceExtCol.DataPropertyName = "SellingPrice";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "C2";
-            dataGridViewCellStyle7.NullValue = null;
-            this.SellingPriceExtCol.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle11.Format = "C2";
+            dataGridViewCellStyle11.NullValue = null;
+            this.SellingPriceExtCol.DefaultCellStyle = dataGridViewCellStyle11;
             this.SellingPriceExtCol.HeaderText = "Цена продажи";
             this.SellingPriceExtCol.Name = "SellingPriceExtCol";
             this.SellingPriceExtCol.Width = 96;
@@ -921,11 +921,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataSplitContainer)).EndInit();
             this.dataSplitContainer.ResumeLayout(false);
             this.partsPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.partsDGV)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PartsDGV)).EndInit();
             this.partsStatusStripPanel.ResumeLayout(false);
             this.partsStatusStripPanel.PerformLayout();
             this.extPartsGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.extPartsDGV)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ExtPartsDGV)).EndInit();
             this.extPartsStatusStrip.ResumeLayout(false);
             this.extPartsStatusStrip.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
@@ -993,8 +993,8 @@
         private System.Windows.Forms.ToolStripMenuItem посмотретьПередвижениеТовараToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewSuppliersInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ViewCustomersInfoToolStripMenuItem;
-        private System.Windows.Forms.DataGridView partsDGV;
-        private System.Windows.Forms.DataGridView extPartsDGV;
+        private System.Windows.Forms.DataGridView PartsDGV;
+        private System.Windows.Forms.DataGridView ExtPartsDGV;
         private System.Windows.Forms.DataGridViewTextBoxColumn SparePartIdCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PhotoCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ManufacturerCol;
