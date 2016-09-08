@@ -77,6 +77,11 @@ namespace PartsApp
                 if (row.Cells[OperationTypeCol.Index].Value.ToString() == "Приход")
                     row.Visible = PurchaseCheckBox.Checked;
             }//foreach
+        }
+
+        private void SparePartOperationsInfoForm_Load(object sender, EventArgs e)
+        {
+
         }//
 
 

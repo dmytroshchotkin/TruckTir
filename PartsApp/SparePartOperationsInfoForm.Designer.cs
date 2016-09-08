@@ -209,6 +209,7 @@
             this.MaximizeBox = false;
             this.Name = "SparePartOperationsInfoForm";
             this.Text = "Форма просмотра передвижения товара";
+            this.Load += new System.EventHandler(this.SparePartOperationsInfoForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.OperationsInfoDGV)).EndInit();
             this.OperationInfoGroupBox.ResumeLayout(false);
             this.OperationInfoGroupBox.PerformLayout();

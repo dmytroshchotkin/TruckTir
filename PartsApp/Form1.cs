@@ -728,7 +728,7 @@ namespace PartsApp
             /*ERROR привести в порядок*/
             //Если заголовок то ничего не делаем.
             if (e.RowIndex == partsDGV.Columns[0].HeaderCell.RowIndex)
-                return;
+                return;            
 
             //Если ЛКМ
             if (e.Button == MouseButtons.Left)
@@ -773,40 +773,18 @@ namespace PartsApp
 
 
         /// <summary>
-        /// Cобытие изменения DataSource в таблице доп. информации.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void extPartsDataGridView_DataSourceChanged(object sender, EventArgs e)
-        {
-            if (extPartsDGV.DataSource == null)
-                return;
-
-            //обработка размера RowHeaders. /*ERROR*/
-            int i, count = extPartsDGV.Rows.Count;
-            for (i = 0; count != 0; ++i)
-            {
-                count /= 10;
-            }//for    
-            extPartsDGV.RowHeadersWidth = 41 + ((i - 1) * 7); //41 - изначальный размер RowHeaders
-
-            //_changedMarkupList.Clear(); //очищаем список деталей с измененной наценкой. 
-            //убираем выделение строк.
-            extPartsDGV.ClearSelection();
-        }//extPartsDataGridView_DataSourceChanged
-
-        /// <summary>
         /// Метод для корректной binding-привязки вложенных эл-тов объекта.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void extPartsDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView grid = (DataGridView)sender;
-            DataGridViewRow row = grid.Rows[e.RowIndex];
+            DataGridView grid      = (DataGridView)sender;
+            DataGridViewRow row    = grid.Rows[e.RowIndex];
             DataGridViewColumn col = grid.Columns[e.ColumnIndex];
 
             if (row.DataBoundItem != null)
+            {
                 if (col.DataPropertyName.Contains("."))
                 {
                     string[] props = col.DataPropertyName.Split('.');
@@ -821,6 +799,7 @@ namespace PartsApp
                     }//for
                     e.Value = val;
                 }//if
+            }//if
         }//extPartsDataGridView_CellFormatting
 
         private void extPartsDataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -840,7 +819,8 @@ namespace PartsApp
                     NoteExtCol.Visible = true;
             }//foreach
 
-            extPartsDGV.ClearSelection();//Убираем выделение ячейки.
+            EnumerableExtensions.RowsNumerateAndAutoSize(extPartsDGV); //Нумерация строк.
+            extPartsDGV.ClearSelection();                              //Убираем выделение ячейки.
         }//extPartsDataGridView_DataBindingComplete
 
         private void extPartsDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)

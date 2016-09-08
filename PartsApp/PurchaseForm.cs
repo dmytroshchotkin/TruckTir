@@ -123,16 +123,17 @@ namespace PartsApp
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
-
-        /*Нумерация строк purchaseDataGridView*/
-        private void purchaseDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
-        {
-            //Нумерация строк.
-            EnumerableExtensions.RowsNumerateAndAutoSize(purchaseDataGridView.Rows[e.RowIndex]);   
-        }//purchaseDataGridView_RowPrePaint
+        
+        
 
         #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void purchaseDataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            //Нумерация строк.
+            EnumerableExtensions.RowsNumerateAndAutoSize(purchaseDataGridView.Rows[e.RowIndex]);
+        }//purchaseDataGridView_RowPrePaint
 
         /*События идут в порядке их возможного вызова.*/
 
