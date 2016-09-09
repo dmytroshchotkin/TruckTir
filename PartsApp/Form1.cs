@@ -872,29 +872,18 @@ namespace PartsApp
         /// <returns></returns>
         public Image ResizeOrigImg(Image image, int nWidth, int nHeight)
         {
-            /*ERROR Чё так сложно?*/
-            int newWidth, newHeight;
+            double coefH = (double)nHeight / (double)image.Height;
+            double coefW = (double)nWidth / (double)image.Width;
 
-            var coefH = (double)nHeight / (double)image.Height;
-            var coefW = (double)nWidth / (double)image.Width;
-            if (coefW >= coefH)
-            {
-                newHeight = (int)(image.Height * coefH);
-                newWidth = (int)(image.Width * coefH);
-            }//if
-            else
-            {
-                newHeight = (int)(image.Height * coefW);
-                newWidth = (int)(image.Width * coefW);
-            }//else
+            int newWidth  = (coefW >= coefH) ? (int)(image.Width * coefH)  : (int)(image.Width * coefW);
+            int newHeight = (coefW >= coefH) ? (int)(image.Height * coefH) : (int)(image.Height * coefW);
 
             Image result = new Bitmap(newWidth, newHeight);
-            using (var g = Graphics.FromImage(result))
+            using (Graphics g = Graphics.FromImage(result))
             {
-
                 g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode      = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.InterpolationMode  = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
                 g.DrawImage(image, 0, 0, newWidth, newHeight);
                 g.Dispose();
