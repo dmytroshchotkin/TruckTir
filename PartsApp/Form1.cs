@@ -64,12 +64,6 @@ namespace PartsApp
             //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
 
-
-            //Устанавливаем позицию для отображения Фото.
-            DataGridViewCell photoHeaderCell = PartsDGV.Columns[1].HeaderCell;
-            Rectangle rect = PartsDGV.GetCellDisplayRectangle(photoHeaderCell.ColumnIndex, photoHeaderCell.RowIndex, true);
-            photoPictureBox.Location = new Point(rect.Right + 10, PartsDGV.Location.Y);
-
             PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.
             /* Пробная зона */
             /////////////////////////////////////////////////////////////////////////////            
@@ -665,58 +659,41 @@ namespace PartsApp
                 photoPictureBox.Visible = false;
         }//partsDGV_CellMouseLeave
 
-        //Событие для отображения Фотографии.
+        /// <summary>
+        /// Событие для отображения Фотографии.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void partsDGV_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
-            try
+            //Если клетка находится в колонке Photo и при этом не является заголовком.
+            if (e.ColumnIndex == PhotoCol.Index && e.RowIndex != -1)
             {
-                //Если клетка находится в колонке Photo и при этом не является заголовком.
-                if (e.ColumnIndex == PartsDGV.Columns[PhotoCol.Name].Index && e.RowIndex != PartsDGV.Columns[PhotoCol.Name].HeaderCell.RowIndex)
+                DataGridViewCell cell = PartsDGV[e.ColumnIndex, e.RowIndex];
+                //Если у данного объекта есть фото.
+                if (cell.Value != null)
                 {
-                    DataGridViewCell cell = PartsDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                    //проверяем есть ли фото у данного эл-та.
-                    if (cell.Value.ToString() == String.Empty) return;
-
                     if (System.IO.File.Exists(cell.Value.ToString()))
                     {
                         photoPictureBox.Image = new Bitmap(cell.Value.ToString());
-                        #region Aльтернативный способ отображения клеток.
-                        //1)
-                        ////вычисляем положение клетки, для задания положения отображения Фотографии.
-                        //int dispayedRows = partsDGV.DisplayedRowCount(true);
-                        //if (partsDGV.Rows[e.RowIndex + dispayedRows/2].Displayed == false) //если клетка находится ниже половины отображаемых клеток, отображать Фото вверх.
-                        //{
-                        //    Rectangle rect = partsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
-                        //    photoPictureBox.Location = new Point(rect.X + rect.Width, rect.Y - photoPictureBox.PreferredSize.Height);
-                        //}//if   
-                        //else //иначе отображать вниз.
-                        //{
-                        //    Rectangle rect = partsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex + 1, true);
-                        //    photoPictureBox.Location = new Point(rect.X + rect.Width, rect.Y);
-                        //} //else       
-
-                        //2)отображение картинки всегда в правом углу DataGridView.                
-                        //photoPictureBox.Location = new Point(partsDGV.Width - photoPictureBox.PreferredSize.Width, partsDGV.Location.Y);
-                        #endregion
 
                         //Задаём выводимый на экран размер фото. 
-                        System.Drawing.Size photoSize = new System.Drawing.Size(625, 450); //размер взят случайный. 
+                        Size photoSize = new System.Drawing.Size(625, 450); //размер взят случайный. 
 
-                        if (photoPictureBox.PreferredSize.Width <= photoSize.Width && photoPictureBox.PreferredSize.Height <= photoSize.Height)
-                            photoPictureBox.Size = photoPictureBox.PreferredSize;
-                        else
-                        {
+                        //Если картинка больше размером чем заданный размер, то подгоняем её под заданный размер.
+                        if (photoPictureBox.PreferredSize.Width > photoSize.Width || photoPictureBox.PreferredSize.Height > photoSize.Height)
                             photoPictureBox.Image = ResizeOrigImg(photoPictureBox.Image, photoSize.Width, photoSize.Height);
-                            photoPictureBox.Size = photoPictureBox.PreferredSize;
-                        }
+
+                        photoPictureBox.Size = photoPictureBox.PreferredSize;
                         photoPictureBox.Visible = true;
-                    }
+                    }//if
+                    else
+                    { 
+                        /*ERROR*/
+                        //Удаление данных о фото у объкта, если такого фото уже нет в папке.
+                    }//else
                 }//if
-            }
-            catch
-            {
-                //По-моему эта обработка нужна, для игнорирования ошибки. Проверить!
-            }
+            }//if
         }//partsDGV_CellMouseEnter
 
         //Событие для отображения расширенной информации о Наличии запчасти.
@@ -865,7 +842,7 @@ namespace PartsApp
             foreach (DataGridViewRow row in PartsDGV.Rows)
             {
                 SparePart sp = row.DataBoundItem as SparePart;
-                if (sp.AvailabilityList != null && sp.AvailabilityList.Count != 0) /*Error!!! зачем проверка на null?*/
+                if (sp.AvailabilityList.Count != 0)
                 {
                     row.Cells[AvaliabilityCol.Index].Value = Availability.GetTotalCount(sp.AvailabilityList);
                     row.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sp.AvailabilityList);
