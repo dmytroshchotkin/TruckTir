@@ -486,7 +486,7 @@ namespace PartsApp
             {
                 PartsDAL.UpdateSparePartMarkup(_changedMarkupList);
                 //Действия осущ-мые при удачной записи в базу.
-                saveChangesButton.Enabled = cancelChangesButton.Enabled = false; //делаем кнопки недоступными.
+                SaveAndCancelChangesButtonsSetEnable(false); //делаем кнопки недоступными.
             }//try			
             catch (System.Data.SQLite.SQLiteException ex)
             {
@@ -507,10 +507,8 @@ namespace PartsApp
 
             //Меняем значение наценки в соотв. ячейках доп. таблицы.
             foreach (DataGridViewRow extRow in ExtPartsDGV.Rows)
-            {
-                Availability avail = extRow.DataBoundItem as Availability;                
-                extRow.Cells[MarkupExtCol.Index].Value = Markup.GetDescription(avail.Markup);
-            }//foreach
+                extRow.Cells[MarkupExtCol.Index].Value = Markup.GetDescription((extRow.DataBoundItem as Availability).Markup);
+
             ExtPartsDGV.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
 
             //Обновляем значения в ячейке 'Цена продажи' осн. таблицы.
@@ -522,12 +520,19 @@ namespace PartsApp
                     row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList); //Присваиваем новое значение столбцу 'ЦенаПродажи'.
             }//foreach
 
-            saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
+            SaveAndCancelChangesButtonsSetEnable(false);
         }//cancelChangesButton_Click
 
-        private void saveChangesButton_EnabledChanged(object sender, EventArgs e)
+        private void SaveAndCancelChangesButtonsSetEnable(bool enabled)
         {
-            //Если кнопка стала недоступной, то очищаем список объетов с изм. наценкой.  //Такой же обработчик для cancelChangesButton не нужен, т.к. св-во Enabled у обоих контролов всегда меняется парно.
+            saveChangesButton.Enabled = cancelChangesButton.Enabled = enabled;
+            //Если кнопка стала недоступной, то очищаем список объетов с изм. наценкой.
+            if (enabled == false)
+                _changedMarkupList.Clear();
+        }//SaveAndCancelChangesButtonsSetEnable
+
+        private void saveChangesButton_EnabledChanged(object sender, EventArgs e)
+        {            
             if (!saveChangesButton.Enabled)
                 _changedMarkupList.Clear();
         }//saveChangesButton_EnabledChanged
@@ -620,7 +625,7 @@ namespace PartsApp
             }//else
 
             //Если в списке товаров с изм. наценкой есть хоть один объект, делаем доступными кнопки Сохранения и Отмены, иначе делаем недоступными.
-            saveChangesButton.Enabled = cancelChangesButton.Enabled = _changedMarkupList.Count > 0; 
+            SaveAndCancelChangesButtonsSetEnable(_changedMarkupList.Count > 0); 
         }//MarkupChanged
 
 
@@ -721,7 +726,7 @@ namespace PartsApp
             rowsCountLabel.Text = PartsDGV.Rows.Count.ToString();         //Обновляем rowsCountLabel по количеству строк.
             EnumerableExtensions.RowsNumerateAndAutoSize(PartsDGV);       //Нумерация строк.    
 
-            saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
+            SaveAndCancelChangesButtonsSetEnable(false);
             ExtPartsDGVClearSelection(null, null); //сбрасываем выделение в доп. таблице.
         }//partsDGV_DataSourceChanged
 
