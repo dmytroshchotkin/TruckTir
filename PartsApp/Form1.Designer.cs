@@ -432,7 +432,6 @@
             this.saveChangesButton.TabIndex = 7;
             this.saveChangesButton.Text = "Сохранить изменения";
             this.saveChangesButton.UseVisualStyleBackColor = true;
-            this.saveChangesButton.EnabledChanged += new System.EventHandler(this.saveChangesButton_EnabledChanged);
             this.saveChangesButton.Click += new System.EventHandler(this.saveChangesButton_Click);
             // 
             // searchTextBox

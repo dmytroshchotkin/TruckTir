@@ -531,12 +531,6 @@ namespace PartsApp
                 _changedMarkupList.Clear();
         }//SaveAndCancelChangesButtonsSetEnable
 
-        private void saveChangesButton_EnabledChanged(object sender, EventArgs e)
-        {            
-            if (!saveChangesButton.Enabled)
-                _changedMarkupList.Clear();
-        }//saveChangesButton_EnabledChanged
-
         /// <summary>
         /// Осущ-ние действий вызванных изменением наценки.
         /// </summary>
