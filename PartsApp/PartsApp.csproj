@@ -68,11 +68,11 @@
     <Compile Include="AddEmployeeForm.Designer.cs">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="AddSparePartForm.cs">
+    <Compile Include="SparePartForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddSparePartForm.Designer.cs">
-      <DependentUpon>AddSparePartForm.cs</DependentUpon>
+    <Compile Include="SparePartForm.Designer.cs">
+      <DependentUpon>SparePartForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AddContragentForm.cs">
       <SubType>Form</SubType>
@@ -139,8 +139,8 @@
     <EmbeddedResource Include="AddEmployeeForm.resx">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddSparePartForm.resx">
-      <DependentUpon>AddSparePartForm.cs</DependentUpon>
+    <EmbeddedResource Include="SparePartForm.resx">
+      <DependentUpon>SparePartForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddContragentForm.resx">
       <DependentUpon>AddContragentForm.cs</DependentUpon>

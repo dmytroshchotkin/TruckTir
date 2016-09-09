@@ -324,7 +324,7 @@ namespace PartsApp
                     _isCellEditError = true;
                     //Если такого товара нет в базе, даём возможность добавить его.
                     if (DialogResult.Yes == MessageBox.Show("Нет такого товара в базе. Добавить?", null, MessageBoxButtons.YesNo))
-                        if (new AddSparePartForm().ShowDialog() == DialogResult.OK)
+                        if (new SparePartForm().ShowDialog() == DialogResult.OK)
                             dataGridViewTextBoxCell_TextChanged(cell.Tag, null); //обновляем вып. список.
                 }//else
             }//if

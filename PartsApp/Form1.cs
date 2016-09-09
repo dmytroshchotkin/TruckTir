@@ -941,7 +941,7 @@ namespace PartsApp
 
         private void addNewSpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddSparePartForm().Show(this);
+            new SparePartForm().Show(this);
         }//addNewSpToolStripMenuItem_Click
 
         private void addNewSupplierToolStripMenuItem_Click(object sender, EventArgs e)
@@ -966,7 +966,7 @@ namespace PartsApp
 
         private void editSparePartToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddSparePartForm(Convert.ToInt32(PartsDGV.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value)).Show();
+            new SparePartForm(Convert.ToInt32(PartsDGV.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value)).Show();
         }//editSparePartToolStripMenuItem_Click
 
         
