@@ -184,36 +184,43 @@ namespace PartsApp
 
         public static void AddSparePart(SparePart sparePart)
         {
-            /*ERROR добавить транзакцию.*/
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
 
                 using (SQLiteTransaction trans = connection.BeginTransaction())
-                {
-                    //Вставляем запись в табл. "SparePart"
-                    const string query = "INSERT INTO SpareParts(Photo, Articul, Title, Description, ManufacturerId, MeasureUnit) " +
-                                         "VALUES(@Photo, @Articul, @Title, @Description, @ManufacturerId, @MeasureUnit);";
-
-                    var cmd = new SQLiteCommand(query, connection, trans);
-
-                    cmd.Parameters.AddWithValue("@Photo", sparePart.Photo);
-                    cmd.Parameters.AddWithValue("@Articul", sparePart.Articul);
-                    cmd.Parameters.AddWithValue("@Title", sparePart.Title);
-                    cmd.Parameters.AddWithValue("@Description", sparePart.Description);
-                    cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
-
-                    //Находим существующий manufacturerId в базе или добавляем новый объект если отсутствует.
-                    if (sparePart.Manufacturer == null)
-                        cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.Manufacturer);
-                    else
+                {                    
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
                     {
-                        int manufId = FindManufacturerId(sparePart.Manufacturer);
-                        cmd.Parameters.AddWithValue("@ManufacturerId", (manufId != 0) ? AddManufacturer(sparePart.Manufacturer) : manufId);
-                    }//else
+                        try
+                        {
+                            //Находим существующий manufacturerId в базе или добавляем новый объект если отсутствует.
+                            int? manufId = (sparePart.Manufacturer != null) ? FindManufacturerId(sparePart.Manufacturer) : (int?)null;
+                            cmd.Parameters.AddWithValue("@ManufacturerId", (manufId == 0) ? AddManufacturer(sparePart.Manufacturer, cmd) : manufId);
 
-                    cmd.ExecuteNonQuery();
+                            const string query = "INSERT INTO SpareParts(Photo, Articul, Title, Description, ManufacturerId, MeasureUnit) " +
+                                                 "VALUES(@Photo, @Articul, @Title, @Description, @ManufacturerId, @MeasureUnit);";
+
+                            cmd.CommandText = query;
+                            cmd.Parameters.AddWithValue("@Photo", sparePart.Photo);
+                            cmd.Parameters.AddWithValue("@Articul", sparePart.Articul);
+                            cmd.Parameters.AddWithValue("@Title", sparePart.Title);
+                            cmd.Parameters.AddWithValue("@Description", sparePart.Description);
+                            cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
+
+                        
+                            cmd.ExecuteNonQuery();
+
+                            trans.Commit();
+                        }//try
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new System.Data.SQLite.SQLiteException(ex.Message);
+                        }//catch
+                    }//using cmd
                 }//using transaction
+
                 connection.Close();
             }//using
         }//AddSparePart
@@ -226,31 +233,39 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                //Вставляем запись в табл. "SparePart"
-                const string query = "UPDATE SpareParts SET Photo = @Photo, Articul = @Articul, Title = @Title, "
-                                   + "Description = @Description, ManufacturerId = @ManufacturerId, MeasureUnit = @MeasureUnit " 
-                                   + "WHERE SparePartId = @SparePartId;";
-                 
+                using (SQLiteTransaction trans = connection.BeginTransaction())
+                {             
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
+                    {
+                        try
+                        {
+                            //Находим существующий manufacturerId в базе или добавляем новый объект если отсутствует.
+                            int? manufId = (sparePart.Manufacturer != null) ? FindManufacturerId(sparePart.Manufacturer) : (int?)null;
+                            cmd.Parameters.AddWithValue("@ManufacturerId", (manufId == 0) ? AddManufacturer(sparePart.Manufacturer, cmd) : manufId);
 
-                var cmd = new SQLiteCommand(query, connection);
+                            const string query = "UPDATE SpareParts SET Photo = @Photo, Articul = @Articul, Title = @Title, "
+                                               + "Description = @Description, ManufacturerId = @ManufacturerId, MeasureUnit = @MeasureUnit "
+                                               + "WHERE SparePartId = @SparePartId;";
 
-                cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
-                cmd.Parameters.AddWithValue("@Photo",       sparePart.Photo);
-                cmd.Parameters.AddWithValue("@Articul",     sparePart.Articul);
-                cmd.Parameters.AddWithValue("@Title",       sparePart.Title);
-                cmd.Parameters.AddWithValue("@Description", sparePart.Description);
-                cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
+                            cmd.CommandText = query;
+                            cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
+                            cmd.Parameters.AddWithValue("@Photo",       sparePart.Photo);
+                            cmd.Parameters.AddWithValue("@Articul",     sparePart.Articul);
+                            cmd.Parameters.AddWithValue("@Title",       sparePart.Title);
+                            cmd.Parameters.AddWithValue("@Description", sparePart.Description);
+                            cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
+                            
+                            cmd.ExecuteNonQuery();
 
-                //Находим существующий manufacturerId в базе или добавляем новый объект если отсутствует.
-                if (sparePart.Manufacturer == null)
-                    cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.Manufacturer);
-                else
-                {
-                    int manufId = FindManufacturerId(sparePart.Manufacturer);
-                    cmd.Parameters.AddWithValue("@ManufacturerId", (manufId != 0) ? AddManufacturer(sparePart.Manufacturer) : manufId);
-                }//else
-
-                cmd.ExecuteNonQuery();
+                            trans.Commit();
+                        }//try
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new System.Data.SQLite.SQLiteException(ex.Message);
+                        }//catch
+                    }//using cmd
+                }//using transaction
 
                 connection.Close();
             }//using
@@ -388,28 +403,16 @@ namespace PartsApp
         /// </summary>
         /// <param name="manufacturerName">Имя добавляемого производителя</param>
         /// <returns></returns>
-        public static int AddManufacturer(string manufacturerName)
+        public static int AddManufacturer(string manufacturerName, SQLiteCommand cmd)
         {
-            int id = 0;
+            string query = String.Format("INSERT INTO Manufacturers(ManufacturerName) VALUES(@ManufacturerName); " +
+                                         "SELECT ManufacturerId FROM Manufacturers WHERE rowid = last_insert_rowid();");
+            cmd.CommandText = query;
 
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@ManufacturerName", manufacturerName);
 
-                string query = String.Format("INSERT INTO Manufacturers(ManufacturerName) VALUES(@ManufacturerName); " +
-                                             "SELECT ManufacturerId FROM Manufacturers WHERE rowid = last_insert_rowid();");
-
-                //Вставляем запись в табл. "Manufacturer"
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@ManufacturerName", manufacturerName);
-                
-                id = Convert.ToInt32(cmd.ExecuteScalar());    
-                               
-                connection.Close();
-            }//using
-
-            return id;
+            return Convert.ToInt32(cmd.ExecuteScalar());    
         }//AddManufacturer
 
 
@@ -1086,7 +1089,7 @@ namespace PartsApp
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
-                            CreateSparePart(dataReader);
+                            sparePartsList.Add(CreateSparePart(dataReader));
                     }//using dataReader
 
                 }//using cmd

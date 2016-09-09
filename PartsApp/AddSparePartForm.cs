@@ -278,6 +278,7 @@ namespace PartsApp
             //manufacturerTextBox.AutoCompleteCustomSource = coll;
         }//manufacturerTextBox_TextChanged
 
+        Порядок!
         private void manufacturerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             ////Если идет выбор с выпадающего списка.
