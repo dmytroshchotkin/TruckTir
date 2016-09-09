@@ -28,7 +28,6 @@ namespace PartsApp
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         private static void AddSparePartAvaliability(Availability avail, SQLiteCommand cmd)
         {
-            /*ERROR!!! лишние параметры */
             var query = "INSERT INTO Avaliability VALUES (@SparePartId, @OperationId, @Price, @Markup, @StorageAdress, @Count);";
 
             cmd.CommandText = query;
@@ -189,29 +188,32 @@ namespace PartsApp
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-                //Вставляем запись в табл. "SparePart"
-                const string query = "INSERT INTO SpareParts(Photo, Articul, Title, Description, ManufacturerId, MeasureUnit) " +
-                                     "VALUES(@Photo, @Articul, @Title, @Description, @ManufacturerId, @MeasureUnit);";
 
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@Photo", sparePart.Photo);
-                cmd.Parameters.AddWithValue("@Articul", sparePart.Articul);
-                cmd.Parameters.AddWithValue("@Title", sparePart.Title);
-                cmd.Parameters.AddWithValue("@Description", sparePart.Description);                
-                cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
-
-                //Находим существующий manufacturerId в базе или добавляем новый объект если отсутствует.
-                if (sparePart.Manufacturer == null)
-                    cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.Manufacturer);
-                else
+                using (SQLiteTransaction trans = connection.BeginTransaction())
                 {
-                    IList<int> manufIds = FindManufacturersIdByName(sparePart.Manufacturer);
-                    cmd.Parameters.AddWithValue("@ManufacturerId", (manufIds.Count == 0) ? AddManufacturer(sparePart.Manufacturer) : manufIds[0]);
-                }//else
+                    //Вставляем запись в табл. "SparePart"
+                    const string query = "INSERT INTO SpareParts(Photo, Articul, Title, Description, ManufacturerId, MeasureUnit) " +
+                                         "VALUES(@Photo, @Articul, @Title, @Description, @ManufacturerId, @MeasureUnit);";
 
-                cmd.ExecuteNonQuery();
-                
+                    var cmd = new SQLiteCommand(query, connection, trans);
+
+                    cmd.Parameters.AddWithValue("@Photo", sparePart.Photo);
+                    cmd.Parameters.AddWithValue("@Articul", sparePart.Articul);
+                    cmd.Parameters.AddWithValue("@Title", sparePart.Title);
+                    cmd.Parameters.AddWithValue("@Description", sparePart.Description);
+                    cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
+
+                    //Находим существующий manufacturerId в базе или добавляем новый объект если отсутствует.
+                    if (sparePart.Manufacturer == null)
+                        cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.Manufacturer);
+                    else
+                    {
+                        int manufId = FindManufacturerId(sparePart.Manufacturer);
+                        cmd.Parameters.AddWithValue("@ManufacturerId", (manufId != 0) ? AddManufacturer(sparePart.Manufacturer) : manufId);
+                    }//else
+
+                    cmd.ExecuteNonQuery();
+                }//using transaction
                 connection.Close();
             }//using
         }//AddSparePart
@@ -233,9 +235,9 @@ namespace PartsApp
                 var cmd = new SQLiteCommand(query, connection);
 
                 cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
-                cmd.Parameters.AddWithValue("@Photo", sparePart.Photo);
-                cmd.Parameters.AddWithValue("@Articul", sparePart.Articul);
-                cmd.Parameters.AddWithValue("@Title", sparePart.Title);
+                cmd.Parameters.AddWithValue("@Photo",       sparePart.Photo);
+                cmd.Parameters.AddWithValue("@Articul",     sparePart.Articul);
+                cmd.Parameters.AddWithValue("@Title",       sparePart.Title);
                 cmd.Parameters.AddWithValue("@Description", sparePart.Description);
                 cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
 
@@ -244,8 +246,8 @@ namespace PartsApp
                     cmd.Parameters.AddWithValue("@ManufacturerId", sparePart.Manufacturer);
                 else
                 {
-                    IList<int> manufIds = FindManufacturersIdByName(sparePart.Manufacturer);
-                    cmd.Parameters.AddWithValue("@ManufacturerId", (manufIds.Count == 0) ? AddManufacturer(sparePart.Manufacturer) : manufIds[0]);
+                    int manufId = FindManufacturerId(sparePart.Manufacturer);
+                    cmd.Parameters.AddWithValue("@ManufacturerId", (manufId != 0) ? AddManufacturer(sparePart.Manufacturer) : manufId);
                 }//else
 
                 cmd.ExecuteNonQuery();
@@ -1149,29 +1151,28 @@ namespace PartsApp
         /// </summary>
         /// <param name="manufacturerName">Имя искомых производителей.</param>
         /// <returns></returns>
-        public static IList<int> FindManufacturersIdByName(string manufacturerName)
+        public static int FindManufacturerId(string manufacturerName)
         {
-            IList<int> manufacturersId = new List<int>();
+            int manufacturerId = 0;
 
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
 
-                var cmd = new SQLiteCommand("SELECT ManufacturerId FROM Manufacturers WHERE ManufacturerName = @ManufacturerName;", connection);
-
-                cmd.Parameters.AddWithValue("@ManufacturerName", manufacturerName);
-
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
+                const string query = "SELECT ManufacturerId FROM Manufacturers WHERE ManufacturerName = @ManufacturerName;";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                 {
-                    manufacturersId.Add(Convert.ToInt32(dataReader["ManufacturerId"]));
-                }//while
+                    cmd.Parameters.AddWithValue("@ManufacturerName", manufacturerName);
+
+                    object executeScalar = cmd.ExecuteScalar();
+                    manufacturerId = (executeScalar != null) ? Convert.ToInt32(executeScalar) : 0;
+                }//using cmd
 
                 connection.Close();
             }//using
 
-            return manufacturersId;       
-        }//FindManufacturersIdByName
+            return manufacturerId;       
+        }//FindManufacturerId
         
 
 

@@ -62,27 +62,6 @@ namespace PartsApp.Models
         {
             return availabilityList.Max(av => av.SellingPrice);
         }//GetMaxSellingPrice
-
-        //public static string GetTotalCount(IList<Availability> availabilityList)
-        //{
-        //    float mainStorageCount = 0f, virtStorageCount = 0f;
-
-        //    foreach (Availability avail in availabilityList)
-        //    {
-        //        if (avail.StorageAddress == null)
-        //            mainStorageCount += avail.OperationDetails.Count;
-        //        else
-        //            virtStorageCount += avail.OperationDetails.Count;
-        //    }//foreach
-
-        //    //Присваиваем общее кол-во товара в формате "X (Y)", где X - кол-во товара на осн. складе, а Y - на виртуальном.
-        //    if (virtStorageCount == 0)
-        //        return mainStorageCount.ToString();
-        //    else if (mainStorageCount == 0)
-        //        return String.Format("({0})", virtStorageCount);
-        //    else
-        //        return String.Format("{0} ({1})", mainStorageCount, virtStorageCount);
-        //}//GetTotalCount
         /// <summary>
         /// Возвращает общее кол-во товара с основного и виртуального склада.
         /// </summary>

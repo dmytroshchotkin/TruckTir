@@ -155,8 +155,7 @@ namespace PartsApp
                         property.SetValue(contactInfo, textBox.Text.Trim());
                     }//if
                 }//foreach    
-                //добавляем запись в таблицу ContactInfo.
-                //contactInfo.ContactInfoId = PartsDAL.AddContactInfo(contactInfo); /*ERROR!!! Сделать через метод в PartsDAL.*/
+
                 return contactInfo;
             }//if
             return null;

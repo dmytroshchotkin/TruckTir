@@ -19,7 +19,6 @@ namespace PartsApp
         /// Список объектов с измененной наценкой.
         /// </summary>
         List<Availability> _changedMarkupList;
-
         /// <summary>
         /// Авторизованный пользователь.
         /// </summary>
