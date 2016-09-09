@@ -94,7 +94,8 @@ namespace PartsApp
                 supplierBackPanel.BackColor = SystemColors.Control;
 
                 //Если такой контрагент в базе отсутствует, выводим сообщение об этом.
-                string supplier = supplierTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == supplierTextBox.Text.Trim().ToLower());
+                string text = supplierTextBox.Text.Trim().ToLower();
+                string supplier = supplierTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == text);
                 if (supplier == null)
                     toolTip.Show("Такого клиента нет в базе! Он будет добавлен.", this, supplierBackPanel.Location, 2000);
                 else
