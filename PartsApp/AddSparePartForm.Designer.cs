@@ -214,8 +214,7 @@
             this.manufacturerTextBox.Location = new System.Drawing.Point(130, 111);
             this.manufacturerTextBox.Name = "manufacturerTextBox";
             this.manufacturerTextBox.Size = new System.Drawing.Size(194, 20);
-            this.manufacturerTextBox.TabIndex = 54;
-            this.manufacturerTextBox.TextChanged += new System.EventHandler(this.manufacturerTextBox_TextChanged);
+            this.manufacturerTextBox.TabIndex = 54;            
             this.manufacturerTextBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.manufacturerTextBox_PreviewKeyDown);
             // 
             // manufacturerLabel

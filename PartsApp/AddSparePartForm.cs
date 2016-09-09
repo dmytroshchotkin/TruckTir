@@ -264,21 +264,8 @@ namespace PartsApp
             photoPictureBox.Image = null;
             photoOpenFileDialog.FileName = String.Empty;
             toolTip.SetToolTip(photoPictureBox, String.Empty);
-        }//deselectToolStripMenuItem_Click
-       
-        private void manufacturerTextBox_TextChanged(object sender, EventArgs e)
-        {
-            //manufColl.Clear();
+        }//deselectToolStripMenuItem_Click       
 
-            //if (manufacturerTextBox.Text == String.Empty) return;
-
-            //string[] str = PartsDAL.SearchManufacturersName(manufacturerTextBox.Text, 10);
-            //manufColl.AddRange(str);
-
-            //manufacturerTextBox.AutoCompleteCustomSource = coll;
-        }//manufacturerTextBox_TextChanged
-
-        Порядок!
         private void manufacturerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             ////Если идет выбор с выпадающего списка.
