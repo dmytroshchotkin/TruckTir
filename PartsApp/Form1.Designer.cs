@@ -184,7 +184,7 @@
             this.partsStatusStrip.Size = new System.Drawing.Size(979, 22);
             this.partsStatusStrip.TabIndex = 0;
             this.partsStatusStrip.Text = "statusStrip1";
-            this.partsStatusStrip.Click += new System.EventHandler(this.Deselection);
+            this.partsStatusStrip.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
             // 
             // toolStripStatusLabel
             // 
@@ -213,7 +213,7 @@
             this.menuStrip.Size = new System.Drawing.Size(979, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip";
-            this.menuStrip.Click += new System.EventHandler(this.Deselection);
+            this.menuStrip.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
             // 
             // FileToolStripMenuItem
             // 
@@ -352,7 +352,7 @@
             this.componentPanel.Name = "componentPanel";
             this.componentPanel.Size = new System.Drawing.Size(979, 30);
             this.componentPanel.TabIndex = 5;
-            this.componentPanel.Click += new System.EventHandler(this.Deselection);
+            this.componentPanel.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
             // 
             // onlyAvaliabilityCheckBox
             // 
@@ -817,7 +817,7 @@
             this.extPartsStatusStrip.Size = new System.Drawing.Size(979, 22);
             this.extPartsStatusStrip.TabIndex = 0;
             this.extPartsStatusStrip.Text = "statusStrip1";
-            this.extPartsStatusStrip.Click += new System.EventHandler(this.Deselection);
+            this.extPartsStatusStrip.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
             // 
             // progressBar
             // 

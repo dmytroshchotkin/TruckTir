@@ -722,7 +722,7 @@ namespace PartsApp
             EnumerableExtensions.RowsNumerateAndAutoSize(PartsDGV);       //Нумерация строк.    
 
             saveChangesButton.Enabled = cancelChangesButton.Enabled = false;
-            Deselection(null, null); //сбрасываем выделение в доп. таблице.
+            ExtPartsDGVClearSelection(null, null); //сбрасываем выделение в доп. таблице.
         }//partsDGV_DataSourceChanged
 
         private void partsDGV_Sorted(object sender, EventArgs e)
@@ -853,7 +853,7 @@ namespace PartsApp
         /// <summary>
         /// Осуществляет действия необходимые при сбросе выделения.
         /// </summary>
-        private void Deselection(object sender, EventArgs e)
+        private void ExtPartsDGVClearSelection(object sender, EventArgs e)
         {
             ////Очищаем строку и делаем функционал изменения наценки недоступным.
             //excRateNumericUpDown.Value = 1;
@@ -861,7 +861,7 @@ namespace PartsApp
             //excRateNumericUpDown.Enabled = markupComboBox.Enabled = false;
                         
             ExtPartsDGV.ClearSelection();
-        }//Deselection        
+        }//ExtPartsDGVClearSelection        
 
         /// <summary>
         /// Возвращает новый Image на основе переданного, с пропорционального уменьшения размеров до заданных.
