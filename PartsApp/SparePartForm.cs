@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PartsApp.Models;
+using PartsApp.SupportClasses;
 
 namespace PartsApp
 {
@@ -326,6 +327,27 @@ namespace PartsApp
             sparePart.MeasureUnit = MeasureUnitComboBox.SelectedValue.ToString();
         }//FillTheSparePartFromForm
 
+
+
+        /// <summary>
+        /// Возвращает true если все обязательные поля корректно заполнены, иначе false.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsRequiredFieldsValid()
+        {
+            ////Находим все BackPanel-контролы на форме. 
+            List<Control> curAccBackControls = this.GetAllControls(typeof(Panel), "BackPanel");
+
+            ////Проверяем все необходимые контролы.
+            //curAccBackControls.ForEach(backPanel => ControlValidation.IsInputControlEmpty(backPanel.Controls[0], toolTip));
+            articulTextBox_Leave(null, null);
+            titleTextBox_Leave(null, null);
+            unitComboBox_Leave(null, null);
+
+            //Если хоть один не прошел валидацию, возв-ем false.
+            return !curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red);
+        }//IsRequiredAddingAreaFieldsValid
+
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -342,19 +364,13 @@ namespace PartsApp
         {
             if (e.Button == MouseButtons.Left)
             {
-                //Проверяем корректность ввода необходимых данных.
-                articulTextBox_Leave(sender, e);
-                titleTextBox_Leave(sender, e);
-                unitComboBox_Leave(sender, e);
-
                 //Если все корректно.
-                if (articulTextBoxBackPanel.BackColor != Color.Red && titleTextBoxBackPanel.BackColor != Color.Red
-                    && MeasureUnitBackPanel.BackColor != Color.Red)
+                if (IsRequiredFieldsValid())
                 {
                     this.Cursor = Cursors.WaitCursor;
 
                     SparePart sparePart = new SparePart();
-                    FillTheSparePartFromForm(sparePart);
+                    FillTheSparePartFromForm(sparePart); //Заполняем объект данными с формы.
 
                     try
                     {

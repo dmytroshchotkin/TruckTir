@@ -217,10 +217,7 @@ namespace PartsApp
             codeMaskedTextBox_Leave(null, null);
 
             //Если хоть один не прошел валидацию, возв-ем false.
-            if (curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red))
-                return false;
-
-            return true;
+            return !curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red);
         }//IsRequiredAddingAreaFieldsValid
 
 
