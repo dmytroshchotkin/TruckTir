@@ -9,7 +9,41 @@ using System.Drawing;
 namespace PartsApp.SupportClasses
 {
     public static class ControlValidation
-    {
+    {        
+
+        ///// <summary>
+        ///// Метод выдачи визуального сообщения о том что введены некорректные данные.
+        ///// </summary>
+        ///// <param name="inputControl">Контрол ввода инф-ции</param>
+        ///// <param name="toolTipMessage">Всплывающее сообщение.</param>
+        ///// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param>
+        //public static void WrongValueInput(ToolTip toolTip, Control inputControl, string toolTipMessage, int toolTipShowTime)
+        //{
+        //    Point location = GetControlLocation(inputControl);
+
+        //    WrongValueInput(toolTip, inputControl, location, toolTipMessage, toolTipShowTime);
+        //}//WrongValueInput 
+        ///// <summary>
+        /////  Метод выдачи визуального сообщения о том что введены некорректные данные.
+        ///// </summary>
+        ///// <param name="inputControl">Контрол ввода инф-ции</param>
+        ///// <param name="toolTipLocation">Позиция где будет показано всплывающее сообщение</param>
+        ///// <param name="toolTipMessage">Всплывающее сообщение.</param>
+        ///// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param
+        //public static void WrongValueInput(ToolTip toolTip, Control inputControl, Point toolTipLocation, string toolTipMessage, int toolTipShowTime)
+        //{
+        //    Control backControl = inputControl.Parent as Panel;
+        //    Control starControl = FindStarLabel(inputControl); //Находим соответствующую контролу StarLabel.
+
+        //    //Если StarControl есть, меняем его цвет.
+        //    if (starControl != null)
+        //        starControl.ForeColor = Color.Red;
+        //    backControl.BackColor = Color.Red;
+
+        //    toolTip.SetToolTip(inputControl, toolTipMessage);
+        //    toolTip.Show(toolTipMessage, inputControl.FindForm(), toolTipLocation, toolTipShowTime);
+        //}//WrongValueInput
+
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены некорректные данные.
         /// </summary>
@@ -17,11 +51,20 @@ namespace PartsApp.SupportClasses
         /// <param name="inputControl">Контрол ввода инф-ции.</param>
         public static void WrongValueInput(ToolTip toolTip, Control inputControl)
         {
-            Point location = GetControlLocation(inputControl);
-            string alertMessage = ControlValidation.GetAlertMessage(inputControl);
-            WrongValueInput(toolTip, inputControl, location, alertMessage, 2000);
+            string alertMessage = ControlValidation.GetAlertMessage(inputControl); //Находим дефолтное сообщение.
+            WrongValueInput(toolTip, inputControl, alertMessage);
+        }//WrongValueInput     
+        /// <summary>
+        /// Метод выдачи визуального сообщения о том что введены некорректные данные.
+        /// </summary>
+        /// <param name="toolTip"></param>
+        /// <param name="inputControl">Контрол ввода инф-ции.</param>
+        /// <param name="warningColor">Цвет выделения контрола.</param
+        public static void WrongValueInput(ToolTip toolTip, Control inputControl, Color warningColor)
+        {
+            string alertMessage = ControlValidation.GetAlertMessage(inputControl); //Находим дефолтное сообщение.
+            WrongValueInput(toolTip, inputControl, alertMessage, warningColor);
         }//WrongValueInput
-        
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены некорректные данные.
         /// </summary>
@@ -30,42 +73,34 @@ namespace PartsApp.SupportClasses
         /// <param name="toolTipMessage">Всплывающее сообщение.</param>
         public static void WrongValueInput(ToolTip toolTip, Control inputControl, string toolTipMessage)
         {
-            Point location = GetControlLocation(inputControl);
-
-            WrongValueInput(toolTip, inputControl, location, toolTipMessage, 2000);
+            WrongValueInput(toolTip, inputControl, toolTipMessage,  Color.Red);
         }//WrongValueInput
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены некорректные данные.
         /// </summary>
-        /// <param name="inputControl">Контрол ввода инф-ции</param>
+        /// <param name="toolTip"></param>
+        /// <param name="inputControl">Контрол ввода инф-ции.</param>
         /// <param name="toolTipMessage">Всплывающее сообщение.</param>
-        /// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param>
-        public static void WrongValueInput(ToolTip toolTip, Control inputControl, string toolTipMessage, int toolTipShowTime)
+        /// <param name="warningColor">Цвет выделения контрола.</param
+        public static void WrongValueInput(ToolTip toolTip, Control inputControl, string toolTipMessage, Color warningColor)
         {
             Point location = GetControlLocation(inputControl);
 
-            WrongValueInput(toolTip, inputControl, location, toolTipMessage, toolTipShowTime);
-        }//WrongValueInput 
-        /// <summary>
-        ///  Метод выдачи визуального сообщения о том что введены некорректные данные.
-        /// </summary>
-        /// <param name="inputControl">Контрол ввода инф-ции</param>
-        /// <param name="toolTipLocation">Позиция где будет показано всплывающее сообщение</param>
-        /// <param name="toolTipMessage">Всплывающее сообщение.</param>
-        /// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param
-        public static void WrongValueInput(ToolTip toolTip, Control inputControl, Point toolTipLocation, string toolTipMessage, int toolTipShowTime)
-        {
+            //WrongValueInput(toolTip, inputControl, location, toolTipMessage, 2000);
+
             Control backControl = inputControl.Parent as Panel;
             Control starControl = FindStarLabel(inputControl); //Находим соответствующую контролу StarLabel.
 
             //Если StarControl есть, меняем его цвет.
             if (starControl != null)
-                starControl.ForeColor = Color.Red;
-            backControl.BackColor = Color.Red;
+                starControl.ForeColor = warningColor;
+            backControl.BackColor = warningColor;
 
             toolTip.SetToolTip(inputControl, toolTipMessage);
-            toolTip.Show(toolTipMessage, inputControl.FindForm(), toolTipLocation, toolTipShowTime);
+            toolTip.Show(toolTipMessage, inputControl.FindForm(), location, 2000);
         }//WrongValueInput
+
+
 
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены корректные данные.

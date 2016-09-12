@@ -90,7 +90,7 @@
             // MeasureUnitBackPanel
             // 
             this.MeasureUnitBackPanel.Controls.Add(this.MeasureUnitComboBox);
-            this.MeasureUnitBackPanel.Location = new System.Drawing.Point(130, 148);
+            this.MeasureUnitBackPanel.Location = new System.Drawing.Point(133, 148);
             this.MeasureUnitBackPanel.Name = "MeasureUnitBackPanel";
             this.MeasureUnitBackPanel.Size = new System.Drawing.Size(89, 25);
             this.MeasureUnitBackPanel.TabIndex = 67;
@@ -108,7 +108,7 @@
             // titleTextBoxBackPanel
             // 
             this.titleTextBoxBackPanel.Controls.Add(this.titleTextBox);
-            this.titleTextBoxBackPanel.Location = new System.Drawing.Point(130, 57);
+            this.titleTextBoxBackPanel.Location = new System.Drawing.Point(133, 57);
             this.titleTextBoxBackPanel.Name = "titleTextBoxBackPanel";
             this.titleTextBoxBackPanel.Size = new System.Drawing.Size(196, 24);
             this.titleTextBoxBackPanel.TabIndex = 66;
@@ -124,7 +124,7 @@
             // articulTextBoxBackPanel
             // 
             this.articulTextBoxBackPanel.Controls.Add(this.articulTextBox);
-            this.articulTextBoxBackPanel.Location = new System.Drawing.Point(130, 8);
+            this.articulTextBoxBackPanel.Location = new System.Drawing.Point(133, 8);
             this.articulTextBoxBackPanel.Name = "articulTextBoxBackPanel";
             this.articulTextBoxBackPanel.Size = new System.Drawing.Size(196, 24);
             this.articulTextBoxBackPanel.TabIndex = 65;
@@ -191,7 +191,7 @@
             // 
             this.manufacturerTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.manufacturerTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.manufacturerTextBox.Location = new System.Drawing.Point(130, 111);
+            this.manufacturerTextBox.Location = new System.Drawing.Point(133, 111);
             this.manufacturerTextBox.Name = "manufacturerTextBox";
             this.manufacturerTextBox.Size = new System.Drawing.Size(194, 20);
             this.manufacturerTextBox.TabIndex = 54;

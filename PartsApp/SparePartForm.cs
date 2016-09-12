@@ -43,51 +43,37 @@ namespace PartsApp
             /*!!!*/
             manufacturerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllManufacturersName());
 
-
         }//Form1_Load   
+
+
 
         #region Методы проверки корректности ввода.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
-        /// 
+        /// Валидация ввода артикула.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void articulTextBox_Leave(object sender, EventArgs e)
         {
-            //если артикул не введен.
-            if (String.IsNullOrWhiteSpace(articulTextBox.Text)) 
+            //если артикул введен.
+            if (!String.IsNullOrWhiteSpace(articulTextBox.Text)) 
             {
-                ControlValidation.WrongValueInput(toolTip, articulTextBox);
-            }//if
-            else //Если артикул введен.
-            {
-                //если такой артикул уже есть в базе
-                if (PartsDAL.FindSparePartsByArticul(articulTextBox.Text).Count > 0)
-                {
-                    //если доб-ся новая ед. товара или редактируется уже существующая, но артикул изменен, выводим предупреждение, но разрешаем дальнейший ввод инф-ции.
-                    if (editSparePart == null || editSparePart.Articul != articulTextBox.Text.Trim())
-                    {
-                        articulStarLabel.ForeColor = articulTextBoxBackPanel.BackColor = Color.Yellow;
-                        toolTip.SetToolTip(articulTextBox, "Такой артикул уже есть в базе");
-                        toolTip.Show("Такой артикул уже есть в базе", this, articulTextBoxBackPanel.Location, 5000);
-                    }//if
-                    else //если артикул введен правильно
-                    {
-                        ControlValidation.CorrectValueInput(toolTip, articulTextBox);
-                    }//else
-                }//if                
-                else //если артикул введен правильно
-                {
+                //Если введенный артикул уже есть в базе, выдаём предупреждение, но позволяем дальнейший ввод.
+                if ((editSparePart != null && editSparePart.Articul.ToLower() == articulTextBox.Text.Trim().ToLower()) || PartsDAL.FindSparePartsByArticul(articulTextBox.Text.Trim()).Count == 0)
                     ControlValidation.CorrectValueInput(toolTip, articulTextBox);
-                }//else
-
-                //Проверяем корректность Title (если не пустой) после корректного ввода Articul.
-                if (String.IsNullOrWhiteSpace(titleTextBox.Text) == false)
-                    titleTextBox_Leave(sender, e);
-                    
+                else
+                    ControlValidation.WrongValueInput(toolTip, articulTextBox, "Такой артикул уже есть в базе", Color.Yellow);             
+            }//if
+            else //Если артикул не введен.
+            {
+                ControlValidation.WrongValueInput(toolTip, articulTextBox);                                    
             }//else
+
+            //Если Title не пустой, проверяем уникальность заполнения связки Артикул-Название.
+            if (String.IsNullOrWhiteSpace(titleTextBox.Text) == false)
+                titleTextBox_Leave(null, null);
         }//articulTextBox_Leave
 
         private void titleTextBox_Leave(object sender, EventArgs e)
@@ -130,13 +116,16 @@ namespace PartsApp
 
         private void manufacturerTextBox_Leave(object sender, EventArgs e)
         {
-            //Если такой производитель в базе отсутствует, выводим сообщение об этом.
-            string text = manufacturerTextBox.Text.Trim().ToLower();
-            string manuf = manufacturerTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == text);
-            if (manuf == null)
-                toolTip.Show("Такого производителя нет в базе! Он будет добавлен.", this, manufacturerTextBox.Location, 2000);
-            else
-                manufacturerTextBox.Text = manuf; //Выводим корректное имя контрагента.
+            if (!String.IsNullOrWhiteSpace(manufacturerTextBox.Text))
+            {
+                //Если такой производитель в базе отсутствует, выводим сообщение об этом.
+                string text = manufacturerTextBox.Text.Trim().ToLower();
+                string manuf = manufacturerTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == text);
+                if (manuf == null)
+                    toolTip.Show("Такого производителя нет в базе! Он будет добавлен.", this, manufacturerTextBox.Location, 2000);
+                else
+                    manufacturerTextBox.Text = manuf; //Выводим корректное имя контрагента.
+            }//if
         }//manufacturerTextBox_Leave
 
 
