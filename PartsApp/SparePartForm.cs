@@ -60,8 +60,9 @@ namespace PartsApp
             //если артикул введен.
             if (!String.IsNullOrWhiteSpace(articulTextBox.Text)) 
             {
+                string text = articulTextBox.Text.Trim();
                 //Если введенный артикул уже есть в базе, выдаём предупреждение, но позволяем дальнейший ввод.
-                if ((editSparePart != null && editSparePart.Articul.ToLower() == articulTextBox.Text.Trim().ToLower()) || PartsDAL.FindSparePartsByArticul(articulTextBox.Text.Trim()).Count == 0)
+                if ((editSparePart != null && editSparePart.Articul.ToLower() == text.ToLower()) || PartsDAL.FindSparePartsByArticul(text).Count == 0)
                     ControlValidation.CorrectValueInput(toolTip, articulTextBox);
                 else
                     ControlValidation.WrongValueInput(toolTip, articulTextBox, "Такой артикул уже есть в базе", Color.Yellow);             
@@ -80,29 +81,17 @@ namespace PartsApp
         {
             if (String.IsNullOrWhiteSpace(titleTextBox.Text)) //если title не введен.
             {
-                titleStarLabel.ForeColor = titleTextBoxBackPanel.BackColor = Color.Red;
-                toolTip.SetToolTip(titleTextBox, "Введите название");
-                toolTip.Show("Введите название", this, titleTextBoxBackPanel.Location, 5000);
-                titleTextBox.Clear();
-                return;
+                ControlValidation.WrongValueInput(toolTip, titleTextBox);                
             }//if
-
-            if (articulTextBoxBackPanel.BackColor == Color.Yellow) //если есть такой артикул. 
+            //Если в базе есть ещё объекты с таким Артикулом.
+            else if (articulTextBoxBackPanel.BackColor == Color.Yellow)  
             {
-                foreach (var sparePart in PartsDAL.FindSparePartsByArticul(articulTextBox.Text))
-                    if (sparePart.Title == titleTextBox.Text)
-                    {
-                        titleStarLabel.ForeColor = titleTextBoxBackPanel.BackColor = Color.Red;
-                        toolTip.SetToolTip(titleTextBox, "Такое название уже есть в базе");
-                        toolTip.Show("Такое название уже есть в базе", this, titleTextBoxBackPanel.Location, 5000);
-                        return;
-                    }//if
+                //Если связка Артикул-Название не уникальны, выводим сообщение об ошибке.
+                if (PartsDAL.FindSparePartsByArticul(articulTextBox.Text.Trim()).Any(sp => sp.Title.ToLower() == titleTextBox.Text.Trim().ToLower()))
+                    ControlValidation.WrongValueInput(toolTip, titleTextBox, "Такая связка Артикул-Название уже есть в базе");
             }//if                
-           
-            //если tilte введен правильно
-            titleStarLabel.ForeColor = Color.Black;
-            titleTextBoxBackPanel.BackColor = SystemColors.Control;
-            toolTip.SetToolTip(titleTextBox, String.Empty);         
+            else   //если tilte введен правильно            
+                ControlValidation.CorrectValueInput(toolTip, titleTextBox);            
         }//titleTextBox_Leave
 
         private void manufacturerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
