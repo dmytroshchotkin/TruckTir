@@ -34,8 +34,6 @@
             this.MeasureUnitLabel = new System.Windows.Forms.Label();
             this.MeasureUnitBackPanel = new System.Windows.Forms.Panel();
             this.MeasureUnitComboBox = new System.Windows.Forms.ComboBox();
-            this.unitContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.titleTextBoxBackPanel = new System.Windows.Forms.Panel();
             this.titleTextBox = new System.Windows.Forms.TextBox();
             this.articulTextBoxBackPanel = new System.Windows.Forms.Panel();
@@ -56,7 +54,6 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.photoOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.MeasureUnitBackPanel.SuspendLayout();
-            this.unitContextMenuStrip.SuspendLayout();
             this.titleTextBoxBackPanel.SuspendLayout();
             this.articulTextBoxBackPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).BeginInit();
@@ -100,7 +97,6 @@
             // 
             // MeasureUnitComboBox
             // 
-            this.MeasureUnitComboBox.ContextMenuStrip = this.unitContextMenuStrip;
             this.MeasureUnitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MeasureUnitComboBox.FormattingEnabled = true;
             this.MeasureUnitComboBox.Location = new System.Drawing.Point(2, 2);
@@ -108,22 +104,6 @@
             this.MeasureUnitComboBox.Size = new System.Drawing.Size(85, 21);
             this.MeasureUnitComboBox.TabIndex = 32;
             this.MeasureUnitComboBox.Leave += new System.EventHandler(this.unitComboBox_Leave);
-            // 
-            // unitContextMenuStrip
-            // 
-            this.unitContextMenuStrip.Enabled = false;
-            this.unitContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addUnitToolStripMenuItem});
-            this.unitContextMenuStrip.Name = "unitContextMenuStrip";
-            this.unitContextMenuStrip.Size = new System.Drawing.Size(275, 26);
-            // 
-            // addUnitToolStripMenuItem
-            // 
-            this.addUnitToolStripMenuItem.Enabled = false;
-            this.addUnitToolStripMenuItem.Name = "addUnitToolStripMenuItem";
-            this.addUnitToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.addUnitToolStripMenuItem.Text = "Добавить единицу измерения в базу";
-            this.addUnitToolStripMenuItem.Click += new System.EventHandler(this.addUnitToolStripMenuItem_Click);
             // 
             // titleTextBoxBackPanel
             // 
@@ -312,7 +292,6 @@
             this.Text = "Форма добавления новой единицы товара";
             this.Load += new System.EventHandler(this.AddSparePartForm_Load);
             this.MeasureUnitBackPanel.ResumeLayout(false);
-            this.unitContextMenuStrip.ResumeLayout(false);
             this.titleTextBoxBackPanel.ResumeLayout(false);
             this.titleTextBoxBackPanel.PerformLayout();
             this.articulTextBoxBackPanel.ResumeLayout(false);
@@ -348,8 +327,6 @@
         private System.Windows.Forms.Label articulLabel;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.OpenFileDialog photoOpenFileDialog;
-        private System.Windows.Forms.ContextMenuStrip unitContextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem addUnitToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip photoContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem deselectToolStripMenuItem;
     }

@@ -144,39 +144,10 @@ namespace PartsApp
         //Проверить вылеты.
         private void unitComboBox_Leave(object sender, EventArgs e)
         {
-            /*ERROR Сделать через доп. окно.*/
-            //Если добавляется новая ед.изм.
-            if (MeasureUnitComboBox.DropDownStyle == ComboBoxStyle.DropDown)
-            {
-                if (String.IsNullOrWhiteSpace(MeasureUnitComboBox.Text))
-                {
-                    WrongValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel, "Введите новую единицу измерения", 5000);
-                }//if
-                else
-                    if (MeasureUnitComboBox.Items.Contains(MeasureUnitComboBox.Text))//если введена уже существующая ед.изм.
-                    {
-                        CorrectValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel);
-                        toolTip.Show("Такая единица измерения уже существует!", this, MeasureUnitBackPanel.Location, 5000);
-
-                        string text = MeasureUnitComboBox.Text;
-                        MeasureUnitComboBox.Leave -= unitComboBox_Leave;
-                        MeasureUnitComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-                        MeasureUnitComboBox.Leave += unitComboBox_Leave;
-
-                        MeasureUnitComboBox.Text = text;
-                    }// else if
-                    else //если title введен правильно
-                    {
-                        CorrectValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel);
-                    }//else
-            }//if
-            else //Если новая ед. изм. не добавляется
-            {
-                if (String.IsNullOrWhiteSpace(MeasureUnitComboBox.Text))
-                    WrongValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel, "Выберите ед. изм.", 2000);
-                else
-                    CorrectValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel);
-            }//else
+            if (MeasureUnitComboBox.SelectedIndex == -1)
+                WrongValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel, "Выберите ед. изм.", 2000);
+            else
+                CorrectValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel);
         }//unitComboBox_Leave
 
 
@@ -312,21 +283,7 @@ namespace PartsApp
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
-        /// <summary>
-        /// Событие для добавления новой единицы измерения в БД.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void addUnitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            /*ERROR способ добавления новой ед. изм. в базу.*/
-            MeasureUnitComboBox.DropDownStyle = ComboBoxStyle.DropDown;
-            MeasureUnitComboBox.Text = String.Empty;
-            MeasureUnitComboBox.Focus();
-        }//addUnitToolStripMenuItem_Click
-
-        
-        
+                
               
 
         /// <summary>
