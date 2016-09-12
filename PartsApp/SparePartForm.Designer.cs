@@ -73,18 +73,18 @@
             this.descriptionLabel.AutoSize = true;
             this.descriptionLabel.Location = new System.Drawing.Point(42, 283);
             this.descriptionLabel.Name = "descriptionLabel";
-            this.descriptionLabel.Size = new System.Drawing.Size(60, 13);
+            this.descriptionLabel.Size = new System.Drawing.Size(63, 13);
             this.descriptionLabel.TabIndex = 41;
-            this.descriptionLabel.Text = "Описание:";
+            this.descriptionLabel.Text = "Описание :";
             // 
             // MeasureUnitLabel
             // 
             this.MeasureUnitLabel.AutoSize = true;
             this.MeasureUnitLabel.Location = new System.Drawing.Point(42, 156);
             this.MeasureUnitLabel.Name = "MeasureUnitLabel";
-            this.MeasureUnitLabel.Size = new System.Drawing.Size(49, 13);
+            this.MeasureUnitLabel.Size = new System.Drawing.Size(55, 13);
             this.MeasureUnitLabel.TabIndex = 55;
-            this.MeasureUnitLabel.Text = "Ед. изм.";
+            this.MeasureUnitLabel.Text = "Ед. изм. :";
             this.toolTip.SetToolTip(this.MeasureUnitLabel, "Единица измерения товара");
             // 
             // MeasureUnitBackPanel
@@ -203,18 +203,18 @@
             this.manufacturerLabel.AutoSize = true;
             this.manufacturerLabel.Location = new System.Drawing.Point(42, 111);
             this.manufacturerLabel.Name = "manufacturerLabel";
-            this.manufacturerLabel.Size = new System.Drawing.Size(89, 13);
+            this.manufacturerLabel.Size = new System.Drawing.Size(92, 13);
             this.manufacturerLabel.TabIndex = 53;
-            this.manufacturerLabel.Text = "Производитель:";
+            this.manufacturerLabel.Text = "Производитель :";
             // 
             // titleLabel
             // 
             this.titleLabel.AutoSize = true;
             this.titleLabel.Location = new System.Drawing.Point(42, 68);
             this.titleLabel.Name = "titleLabel";
-            this.titleLabel.Size = new System.Drawing.Size(60, 13);
+            this.titleLabel.Size = new System.Drawing.Size(63, 13);
             this.titleLabel.TabIndex = 50;
-            this.titleLabel.Text = "Название:";
+            this.titleLabel.Text = "Название :";
             // 
             // addPhotoButton
             // 
@@ -255,9 +255,9 @@
             this.articulLabel.AutoSize = true;
             this.articulLabel.Location = new System.Drawing.Point(42, 19);
             this.articulLabel.Name = "articulLabel";
-            this.articulLabel.Size = new System.Drawing.Size(51, 13);
+            this.articulLabel.Size = new System.Drawing.Size(54, 13);
             this.articulLabel.TabIndex = 47;
-            this.articulLabel.Text = "Артикул:";
+            this.articulLabel.Text = "Артикул :";
             // 
             // photoOpenFileDialog
             // 

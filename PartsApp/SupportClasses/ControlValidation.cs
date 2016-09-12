@@ -15,6 +15,18 @@ namespace PartsApp.SupportClasses
         /// </summary>
         /// <param name="toolTip"></param>
         /// <param name="inputControl">Контрол ввода инф-ции.</param>
+        public static void WrongValueInput(ToolTip toolTip, Control inputControl)
+        {
+            Point location = GetControlLocation(inputControl);
+            string alertMessage = ControlValidation.GetAlertMessage(inputControl);
+            WrongValueInput(toolTip, inputControl, location, alertMessage, 2000);
+        }//WrongValueInput
+        
+        /// <summary>
+        /// Метод выдачи визуального сообщения о том что введены некорректные данные.
+        /// </summary>
+        /// <param name="toolTip"></param>
+        /// <param name="inputControl">Контрол ввода инф-ции.</param>
         /// <param name="toolTipMessage">Всплывающее сообщение.</param>
         public static void WrongValueInput(ToolTip toolTip, Control inputControl, string toolTipMessage)
         {

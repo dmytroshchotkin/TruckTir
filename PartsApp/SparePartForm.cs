@@ -15,7 +15,7 @@ namespace PartsApp
     public partial class SparePartForm : Form
     {
         SparePart editSparePart = null;                  //Переменная требуемая для модификации данных уже сущ-щего товара.
-        const string sparePartPhotoFolder = @"Товар\"; /*ERROR перенести в метод?*/
+        const string sparePartPhotoFolder = @"Товар\";   /*ERROR перенести в метод?*/
 
 
         public SparePartForm()
@@ -59,16 +59,15 @@ namespace PartsApp
             //если артикул не введен.
             if (String.IsNullOrWhiteSpace(articulTextBox.Text)) 
             {
-                WrongValueInput(articulTextBox, articulTextBoxBackPanel, articulStarLabel, "Введите артикул", 5000);
-                articulTextBox.Clear();
+                ControlValidation.WrongValueInput(toolTip, articulTextBox);
             }//if
             else //Если артикул введен.
             {
                 //если такой артикул уже есть в базе
                 if (PartsDAL.FindSparePartsByArticul(articulTextBox.Text).Count > 0)
                 {
-                    //если (доб-ся новая ед. товара или (редактируется уже существующая, но артикул изменен)), выводим предупреждение, но разрешаем дальнейший ввод инф-ции.
-                    if (editSparePart == null || (editSparePart != null && editSparePart.Articul != articulTextBox.Text))
+                    //если доб-ся новая ед. товара или редактируется уже существующая, но артикул изменен, выводим предупреждение, но разрешаем дальнейший ввод инф-ции.
+                    if (editSparePart == null || editSparePart.Articul != articulTextBox.Text.Trim())
                     {
                         articulStarLabel.ForeColor = articulTextBoxBackPanel.BackColor = Color.Yellow;
                         toolTip.SetToolTip(articulTextBox, "Такой артикул уже есть в базе");
@@ -76,12 +75,12 @@ namespace PartsApp
                     }//if
                     else //если артикул введен правильно
                     {
-                        CorrectValueInput(articulTextBox, articulTextBoxBackPanel, articulStarLabel);
+                        ControlValidation.CorrectValueInput(toolTip, articulTextBox);
                     }//else
                 }//if                
                 else //если артикул введен правильно
                 {
-                    CorrectValueInput(articulTextBox, articulTextBoxBackPanel, articulStarLabel);
+                    ControlValidation.CorrectValueInput(toolTip, articulTextBox);
                 }//else
 
                 //Проверяем корректность Title (если не пустой) после корректного ввода Articul.
@@ -145,53 +144,10 @@ namespace PartsApp
         private void unitComboBox_Leave(object sender, EventArgs e)
         {
             if (MeasureUnitComboBox.SelectedIndex == -1)
-                WrongValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel, "Выберите ед. изм.", 2000);
+                ControlValidation.WrongValueInput(toolTip, MeasureUnitComboBox, "Выберите ед. изм.");
             else
-                CorrectValueInput(MeasureUnitComboBox, MeasureUnitBackPanel, MeasureUnitStarLabel);
+                ControlValidation.CorrectValueInput(toolTip, MeasureUnitComboBox);
         }//unitComboBox_Leave
-
-
-        /// <summary>
-        /// Метод выдачи визуального сообщения о том что введены некорректные данные.
-        /// </summary>
-        /// <param name="inputControl">Контрол ввода инф-ции</param>
-        /// <param name="backControl">Контрол исп-мый как рамка</param>
-        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
-        /// <param name="toolTipMessage">Всплывающее сообщение.</param>
-        /// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param>
-        private void WrongValueInput(Control inputControl, Control backControl, Control starControl, string toolTipMessage, int toolTipShowTime)
-        {
-            starControl.ForeColor = backControl.BackColor = Color.Red;
-            toolTip.SetToolTip(inputControl, toolTipMessage);
-            toolTip.Show(toolTipMessage, this, backControl.Location, toolTipShowTime);
-        }//wrongValueInput
-        /// <summary>
-        /// Метод выдачи визуального сообщения о том что введены корректные данные.
-        /// </summary>
-        /// <param name="inputControl">Контрол ввода инф-ции</param>
-        /// <param name="backControl">Контрол исп-мый как рамка</param>
-        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
-        private void CorrectValueInput(Control inputControl, Control backControl, Control starControl)
-        {
-            starControl.ForeColor = Color.Black;
-            backControl.BackColor = SystemColors.Control;
-            toolTip.SetToolTip(inputControl, String.Empty);
-        }//CorrectValueInput
-        /// <summary>
-        /// Метод выдачи визуального сообщения о том что введены корректные данные.
-        /// </summary>
-        /// <param name="inputControl">Контрол ввода инф-ции</param>
-        /// <param name="backControl">Контрол исп-мый как рамка</param>
-        /// <param name="starControl">Контрол указания обязательного для заполнения поля (звездочка)</param>
-        /// <param name="toolTipMessage">Всплывающее сообщение.</param>
-        /// <param name="toolTipShowTime">Длительность демонстрации всплывающего сообщения (Мс). Должно быть больше 0. </param>
-        private void CorrectValueInput(Control inputControl, Control backControl, Control starControl, string toolTipMessage, int toolTipShowTime)
-        {
-            starControl.ForeColor = Color.Black;
-            backControl.BackColor = SystemColors.Control;
-            toolTip.SetToolTip(inputControl, toolTipMessage);
-            toolTip.Show(toolTipMessage, this, backControl.Location, toolTipShowTime);
-        }//CorrectValueInput
 
 
 
