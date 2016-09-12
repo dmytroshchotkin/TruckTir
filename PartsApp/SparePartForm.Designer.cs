@@ -249,12 +249,12 @@
             // photoPictureBox
             // 
             this.photoPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.photoPictureBox.ContextMenuStrip = this.photoContextMenuStrip;
             this.photoPictureBox.Location = new System.Drawing.Point(347, 12);
             this.photoPictureBox.Name = "photoPictureBox";
             this.photoPictureBox.Size = new System.Drawing.Size(276, 224);
             this.photoPictureBox.TabIndex = 48;
             this.photoPictureBox.TabStop = false;
+            this.photoPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.photoPictureBox_MouseClick);
             // 
             // photoContextMenuStrip
             // 

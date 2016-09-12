@@ -239,20 +239,20 @@ namespace PartsApp
             /*ERROR привести в порядок.*/
             if (photoOpenFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string fileName = System.IO.Path.GetFileName(photoOpenFileDialog.FileName);
+                string fileName = System.IO.Path.GetFileName(photoOpenFileDialog.FileName); //находим имя файла.
 
-                toolTip.SetToolTip(photoPictureBox, fileName);
+                toolTip.SetToolTip(photoPictureBox, fileName);                              //задаём имя файла во всплывающую подсказку.
                 //Проверяем находится ли фото в нужной папке. 
-                string path = sparePartPhotoFolder + toolTip.GetToolTip(photoPictureBox);
+                string path = sparePartPhotoFolder + fileName;
 
+                //Проверяем, есть ли уже выбранное фото в папке 'Товар'.
                 if (System.IO.Path.GetFullPath(path) == photoOpenFileDialog.FileName)
                 {
                     //Если фото выбрано, то подгоняем его размер под PictureBox и добавляем всплывающую подсказку.
                     photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
-                    toolTip.SetToolTip(photoPictureBox, fileName);
                 }//if
-                //если выбранное фото не находится в нужной папке. 
                 else
+                {
                     if (System.IO.File.Exists(System.IO.Path.GetFullPath(path))) //проверяем есть ли фото с таким именем в нужной папке. 
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(System.IO.Path.GetFullPath(path)), photoPictureBox.Size);
@@ -264,10 +264,9 @@ namespace PartsApp
                     else
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
-                        //записываем конечный путь файла всв-во tag.
-                        photoPictureBox.Tag = System.IO.Path.GetFullPath(path);
+                        photoPictureBox.Tag = System.IO.Path.GetFullPath(path); //записываем конечный путь файла в св-во tag.
                     }//else
-
+                }//else
             }//if
         }//addPhotoButton_Click
         
@@ -316,15 +315,15 @@ namespace PartsApp
                 {
                     string destFilePath = photoPictureBox.Tag as string;
                     System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
-                }
+                }//if
                 sparePart.Photo = sparePartPhotoFolder + toolTip.GetToolTip(photoPictureBox);
             }//else
 
-            sparePart.Articul = articulTextBox.Text.Trim();
-            sparePart.Title = titleTextBox.Text.Trim();
-            sparePart.Description = (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null;
-            sparePart.Manufacturer = (String.IsNullOrWhiteSpace(manufacturerTextBox.Text)) ? null : manufacturerTextBox.Text.Trim();
-            sparePart.MeasureUnit = MeasureUnitComboBox.SelectedValue.ToString();
+            sparePart.Articul      = articulTextBox.Text.Trim();
+            sparePart.Title        = titleTextBox.Text.Trim();
+            sparePart.Description  = (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null;
+            sparePart.Manufacturer = (!String.IsNullOrWhiteSpace(manufacturerTextBox.Text)) ? manufacturerTextBox.Text.Trim() : null;
+            sparePart.MeasureUnit  = MeasureUnitComboBox.SelectedValue.ToString();
         }//FillTheSparePartFromForm
 
 
@@ -356,7 +355,7 @@ namespace PartsApp
                 {
                     this.DialogResult = DialogResult.Cancel;
                     this.Close();
-                }
+                }//if
             }//if
         }//cancelButton_MouseClick
 
@@ -395,6 +394,17 @@ namespace PartsApp
                 }//if
             }//if
         }//
+
+        private void photoPictureBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            //Если ПКМ.
+            if (e.Button == MouseButtons.Right)
+            {
+                //Если photoPictureBox не пустой.
+                if (photoPictureBox.Image != null)
+                    photoContextMenuStrip.Show(photoPictureBox, e.Location); //Выводим контекстное меню.
+            }//if
+        }//photoPictureBox_MouseClick
 
         
 
