@@ -29,53 +29,53 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.descrRichTextBox = new System.Windows.Forms.RichTextBox();
-            this.descriptionLabel = new System.Windows.Forms.Label();
+            this.DescrRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.DescriptionLabel = new System.Windows.Forms.Label();
             this.MeasureUnitLabel = new System.Windows.Forms.Label();
             this.MeasureUnitBackPanel = new System.Windows.Forms.Panel();
             this.MeasureUnitComboBox = new System.Windows.Forms.ComboBox();
-            this.titleTextBoxBackPanel = new System.Windows.Forms.Panel();
-            this.titleTextBox = new System.Windows.Forms.TextBox();
-            this.articulTextBoxBackPanel = new System.Windows.Forms.Panel();
-            this.articulTextBox = new System.Windows.Forms.TextBox();
-            this.cancelButton = new System.Windows.Forms.Button();
-            this.okButton = new System.Windows.Forms.Button();
+            this.TitleBackPanel = new System.Windows.Forms.Panel();
+            this.TitleTextBox = new System.Windows.Forms.TextBox();
+            this.ArticulBackPanel = new System.Windows.Forms.Panel();
+            this.ArticulTextBox = new System.Windows.Forms.TextBox();
+            this.CancelButton = new System.Windows.Forms.Button();
+            this.OkButton = new System.Windows.Forms.Button();
             this.MeasureUnitStarLabel = new System.Windows.Forms.Label();
-            this.titleStarLabel = new System.Windows.Forms.Label();
-            this.articulStarLabel = new System.Windows.Forms.Label();
-            this.manufacturerTextBox = new System.Windows.Forms.TextBox();
-            this.manufacturerLabel = new System.Windows.Forms.Label();
-            this.titleLabel = new System.Windows.Forms.Label();
-            this.addPhotoButton = new System.Windows.Forms.Button();
-            this.photoPictureBox = new System.Windows.Forms.PictureBox();
-            this.photoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.deselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.articulLabel = new System.Windows.Forms.Label();
+            this.TitleStarLabel = new System.Windows.Forms.Label();
+            this.ArticulStarLabel = new System.Windows.Forms.Label();
+            this.ManufacturerTextBox = new System.Windows.Forms.TextBox();
+            this.ManufacturerLabel = new System.Windows.Forms.Label();
+            this.TitleLabel = new System.Windows.Forms.Label();
+            this.AddPhotoButton = new System.Windows.Forms.Button();
+            this.PhotoPictureBox = new System.Windows.Forms.PictureBox();
+            this.PhotoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.DeselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ArticulLabel = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.photoOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.PhotoOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.MeasureUnitBackPanel.SuspendLayout();
-            this.titleTextBoxBackPanel.SuspendLayout();
-            this.articulTextBoxBackPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).BeginInit();
-            this.photoContextMenuStrip.SuspendLayout();
+            this.TitleBackPanel.SuspendLayout();
+            this.ArticulBackPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PhotoPictureBox)).BeginInit();
+            this.PhotoContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // descrRichTextBox
+            // DescrRichTextBox
             // 
-            this.descrRichTextBox.Location = new System.Drawing.Point(45, 299);
-            this.descrRichTextBox.Name = "descrRichTextBox";
-            this.descrRichTextBox.Size = new System.Drawing.Size(578, 71);
-            this.descrRichTextBox.TabIndex = 42;
-            this.descrRichTextBox.Text = "";
+            this.DescrRichTextBox.Location = new System.Drawing.Point(45, 299);
+            this.DescrRichTextBox.Name = "DescrRichTextBox";
+            this.DescrRichTextBox.Size = new System.Drawing.Size(578, 71);
+            this.DescrRichTextBox.TabIndex = 42;
+            this.DescrRichTextBox.Text = "";
             // 
-            // descriptionLabel
+            // DescriptionLabel
             // 
-            this.descriptionLabel.AutoSize = true;
-            this.descriptionLabel.Location = new System.Drawing.Point(42, 283);
-            this.descriptionLabel.Name = "descriptionLabel";
-            this.descriptionLabel.Size = new System.Drawing.Size(63, 13);
-            this.descriptionLabel.TabIndex = 41;
-            this.descriptionLabel.Text = "Описание :";
+            this.DescriptionLabel.AutoSize = true;
+            this.DescriptionLabel.Location = new System.Drawing.Point(42, 283);
+            this.DescriptionLabel.Name = "DescriptionLabel";
+            this.DescriptionLabel.Size = new System.Drawing.Size(63, 13);
+            this.DescriptionLabel.TabIndex = 41;
+            this.DescriptionLabel.Text = "Описание :";
             // 
             // MeasureUnitLabel
             // 
@@ -103,59 +103,59 @@
             this.MeasureUnitComboBox.Name = "MeasureUnitComboBox";
             this.MeasureUnitComboBox.Size = new System.Drawing.Size(85, 21);
             this.MeasureUnitComboBox.TabIndex = 32;
-            this.MeasureUnitComboBox.Leave += new System.EventHandler(this.unitComboBox_Leave);
+            this.MeasureUnitComboBox.Leave += new System.EventHandler(this.MeasureUnitComboBox_Leave);
             // 
-            // titleTextBoxBackPanel
+            // TitleBackPanel
             // 
-            this.titleTextBoxBackPanel.Controls.Add(this.titleTextBox);
-            this.titleTextBoxBackPanel.Location = new System.Drawing.Point(133, 57);
-            this.titleTextBoxBackPanel.Name = "titleTextBoxBackPanel";
-            this.titleTextBoxBackPanel.Size = new System.Drawing.Size(196, 24);
-            this.titleTextBoxBackPanel.TabIndex = 66;
+            this.TitleBackPanel.Controls.Add(this.TitleTextBox);
+            this.TitleBackPanel.Location = new System.Drawing.Point(133, 61);
+            this.TitleBackPanel.Name = "TitleBackPanel";
+            this.TitleBackPanel.Size = new System.Drawing.Size(196, 24);
+            this.TitleBackPanel.TabIndex = 66;
             // 
-            // titleTextBox
+            // TitleTextBox
             // 
-            this.titleTextBox.Location = new System.Drawing.Point(2, 2);
-            this.titleTextBox.Name = "titleTextBox";
-            this.titleTextBox.Size = new System.Drawing.Size(192, 20);
-            this.titleTextBox.TabIndex = 24;
-            this.titleTextBox.Leave += new System.EventHandler(this.titleTextBox_Leave);
+            this.TitleTextBox.Location = new System.Drawing.Point(2, 2);
+            this.TitleTextBox.Name = "TitleTextBox";
+            this.TitleTextBox.Size = new System.Drawing.Size(192, 20);
+            this.TitleTextBox.TabIndex = 24;
+            this.TitleTextBox.Leave += new System.EventHandler(this.TitleTextBox_Leave);
             // 
-            // articulTextBoxBackPanel
+            // ArticulBackPanel
             // 
-            this.articulTextBoxBackPanel.Controls.Add(this.articulTextBox);
-            this.articulTextBoxBackPanel.Location = new System.Drawing.Point(133, 8);
-            this.articulTextBoxBackPanel.Name = "articulTextBoxBackPanel";
-            this.articulTextBoxBackPanel.Size = new System.Drawing.Size(196, 24);
-            this.articulTextBoxBackPanel.TabIndex = 65;
+            this.ArticulBackPanel.Controls.Add(this.ArticulTextBox);
+            this.ArticulBackPanel.Location = new System.Drawing.Point(133, 12);
+            this.ArticulBackPanel.Name = "ArticulBackPanel";
+            this.ArticulBackPanel.Size = new System.Drawing.Size(196, 24);
+            this.ArticulBackPanel.TabIndex = 65;
             // 
-            // articulTextBox
+            // ArticulTextBox
             // 
-            this.articulTextBox.Location = new System.Drawing.Point(2, 2);
-            this.articulTextBox.Name = "articulTextBox";
-            this.articulTextBox.Size = new System.Drawing.Size(192, 20);
-            this.articulTextBox.TabIndex = 24;
-            this.articulTextBox.Leave += new System.EventHandler(this.articulTextBox_Leave);
+            this.ArticulTextBox.Location = new System.Drawing.Point(2, 2);
+            this.ArticulTextBox.Name = "ArticulTextBox";
+            this.ArticulTextBox.Size = new System.Drawing.Size(192, 20);
+            this.ArticulTextBox.TabIndex = 24;
+            this.ArticulTextBox.Leave += new System.EventHandler(this.ArticulTextBox_Leave);
             // 
-            // cancelButton
+            // CancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(358, 400);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 64;
-            this.cancelButton.Text = "Отмена";
-            this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.cancelButton_MouseClick);
+            this.CancelButton.Location = new System.Drawing.Point(358, 400);
+            this.CancelButton.Name = "CancelButton";
+            this.CancelButton.Size = new System.Drawing.Size(75, 23);
+            this.CancelButton.TabIndex = 64;
+            this.CancelButton.Text = "Отмена";
+            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.CancelButton_MouseClick);
             // 
-            // okButton
+            // OkButton
             // 
-            this.okButton.Location = new System.Drawing.Point(160, 400);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 63;
-            this.okButton.Text = "Ok";
-            this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.okButton_MouseClick);
+            this.OkButton.Location = new System.Drawing.Point(160, 400);
+            this.OkButton.Name = "OkButton";
+            this.OkButton.Size = new System.Drawing.Size(75, 23);
+            this.OkButton.TabIndex = 63;
+            this.OkButton.Text = "Ok";
+            this.OkButton.UseVisualStyleBackColor = true;
+            this.OkButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OkButton_MouseClick);
             // 
             // MeasureUnitStarLabel
             // 
@@ -167,102 +167,102 @@
             this.MeasureUnitStarLabel.TabIndex = 60;
             this.MeasureUnitStarLabel.Text = "*";
             // 
-            // titleStarLabel
+            // TitleStarLabel
             // 
-            this.titleStarLabel.AutoSize = true;
-            this.titleStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.titleStarLabel.Location = new System.Drawing.Point(25, 61);
-            this.titleStarLabel.Name = "titleStarLabel";
-            this.titleStarLabel.Size = new System.Drawing.Size(20, 25);
-            this.titleStarLabel.TabIndex = 59;
-            this.titleStarLabel.Text = "*";
+            this.TitleStarLabel.AutoSize = true;
+            this.TitleStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.TitleStarLabel.Location = new System.Drawing.Point(25, 61);
+            this.TitleStarLabel.Name = "TitleStarLabel";
+            this.TitleStarLabel.Size = new System.Drawing.Size(20, 25);
+            this.TitleStarLabel.TabIndex = 59;
+            this.TitleStarLabel.Text = "*";
             // 
-            // articulStarLabel
+            // ArticulStarLabel
             // 
-            this.articulStarLabel.AutoSize = true;
-            this.articulStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.articulStarLabel.Location = new System.Drawing.Point(25, 12);
-            this.articulStarLabel.Name = "articulStarLabel";
-            this.articulStarLabel.Size = new System.Drawing.Size(20, 25);
-            this.articulStarLabel.TabIndex = 58;
-            this.articulStarLabel.Text = "*";
+            this.ArticulStarLabel.AutoSize = true;
+            this.ArticulStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ArticulStarLabel.Location = new System.Drawing.Point(25, 12);
+            this.ArticulStarLabel.Name = "ArticulStarLabel";
+            this.ArticulStarLabel.Size = new System.Drawing.Size(20, 25);
+            this.ArticulStarLabel.TabIndex = 58;
+            this.ArticulStarLabel.Text = "*";
             // 
-            // manufacturerTextBox
+            // ManufacturerTextBox
             // 
-            this.manufacturerTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.manufacturerTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.manufacturerTextBox.Location = new System.Drawing.Point(133, 111);
-            this.manufacturerTextBox.Name = "manufacturerTextBox";
-            this.manufacturerTextBox.Size = new System.Drawing.Size(194, 20);
-            this.manufacturerTextBox.TabIndex = 54;
-            this.manufacturerTextBox.Leave += new System.EventHandler(this.manufacturerTextBox_Leave);
-            this.manufacturerTextBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.manufacturerTextBox_PreviewKeyDown);
+            this.ManufacturerTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.ManufacturerTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.ManufacturerTextBox.Location = new System.Drawing.Point(133, 108);
+            this.ManufacturerTextBox.Name = "ManufacturerTextBox";
+            this.ManufacturerTextBox.Size = new System.Drawing.Size(194, 20);
+            this.ManufacturerTextBox.TabIndex = 54;
+            this.ManufacturerTextBox.Leave += new System.EventHandler(this.ManufacturerTextBox_Leave);
+            this.ManufacturerTextBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.ManufacturerTextBox_PreviewKeyDown);
             // 
-            // manufacturerLabel
+            // ManufacturerLabel
             // 
-            this.manufacturerLabel.AutoSize = true;
-            this.manufacturerLabel.Location = new System.Drawing.Point(42, 111);
-            this.manufacturerLabel.Name = "manufacturerLabel";
-            this.manufacturerLabel.Size = new System.Drawing.Size(92, 13);
-            this.manufacturerLabel.TabIndex = 53;
-            this.manufacturerLabel.Text = "Производитель :";
+            this.ManufacturerLabel.AutoSize = true;
+            this.ManufacturerLabel.Location = new System.Drawing.Point(42, 111);
+            this.ManufacturerLabel.Name = "ManufacturerLabel";
+            this.ManufacturerLabel.Size = new System.Drawing.Size(92, 13);
+            this.ManufacturerLabel.TabIndex = 53;
+            this.ManufacturerLabel.Text = "Производитель :";
             // 
-            // titleLabel
+            // TitleLabel
             // 
-            this.titleLabel.AutoSize = true;
-            this.titleLabel.Location = new System.Drawing.Point(42, 68);
-            this.titleLabel.Name = "titleLabel";
-            this.titleLabel.Size = new System.Drawing.Size(63, 13);
-            this.titleLabel.TabIndex = 50;
-            this.titleLabel.Text = "Название :";
+            this.TitleLabel.AutoSize = true;
+            this.TitleLabel.Location = new System.Drawing.Point(42, 68);
+            this.TitleLabel.Name = "TitleLabel";
+            this.TitleLabel.Size = new System.Drawing.Size(63, 13);
+            this.TitleLabel.TabIndex = 50;
+            this.TitleLabel.Text = "Название :";
             // 
-            // addPhotoButton
+            // AddPhotoButton
             // 
-            this.addPhotoButton.Location = new System.Drawing.Point(420, 242);
-            this.addPhotoButton.Name = "addPhotoButton";
-            this.addPhotoButton.Size = new System.Drawing.Size(130, 23);
-            this.addPhotoButton.TabIndex = 49;
-            this.addPhotoButton.Text = "Добавить фото";
-            this.addPhotoButton.UseVisualStyleBackColor = true;
-            this.addPhotoButton.Click += new System.EventHandler(this.addPhotoButton_Click);
+            this.AddPhotoButton.Location = new System.Drawing.Point(420, 242);
+            this.AddPhotoButton.Name = "AddPhotoButton";
+            this.AddPhotoButton.Size = new System.Drawing.Size(130, 23);
+            this.AddPhotoButton.TabIndex = 49;
+            this.AddPhotoButton.Text = "Добавить фото";
+            this.AddPhotoButton.UseVisualStyleBackColor = true;
+            this.AddPhotoButton.Click += new System.EventHandler(this.AddPhotoButton_Click);
             // 
-            // photoPictureBox
+            // PhotoPictureBox
             // 
-            this.photoPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.photoPictureBox.Location = new System.Drawing.Point(347, 12);
-            this.photoPictureBox.Name = "photoPictureBox";
-            this.photoPictureBox.Size = new System.Drawing.Size(276, 224);
-            this.photoPictureBox.TabIndex = 48;
-            this.photoPictureBox.TabStop = false;
-            this.photoPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.photoPictureBox_MouseClick);
+            this.PhotoPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PhotoPictureBox.Location = new System.Drawing.Point(347, 12);
+            this.PhotoPictureBox.Name = "PhotoPictureBox";
+            this.PhotoPictureBox.Size = new System.Drawing.Size(276, 224);
+            this.PhotoPictureBox.TabIndex = 48;
+            this.PhotoPictureBox.TabStop = false;
+            this.PhotoPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PhotoPictureBox_MouseClick);
             // 
-            // photoContextMenuStrip
+            // PhotoContextMenuStrip
             // 
-            this.photoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deselectToolStripMenuItem});
-            this.photoContextMenuStrip.Name = "photoContextMenuStrip";
-            this.photoContextMenuStrip.Size = new System.Drawing.Size(188, 26);
+            this.PhotoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DeselectToolStripMenuItem});
+            this.PhotoContextMenuStrip.Name = "photoContextMenuStrip";
+            this.PhotoContextMenuStrip.Size = new System.Drawing.Size(188, 26);
             // 
-            // deselectToolStripMenuItem
+            // DeselectToolStripMenuItem
             // 
-            this.deselectToolStripMenuItem.Name = "deselectToolStripMenuItem";
-            this.deselectToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.deselectToolStripMenuItem.Text = "Убрать фотографию";
-            this.deselectToolStripMenuItem.Click += new System.EventHandler(this.deselectToolStripMenuItem_Click);
+            this.DeselectToolStripMenuItem.Name = "DeselectToolStripMenuItem";
+            this.DeselectToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.DeselectToolStripMenuItem.Text = "Убрать фотографию";
+            this.DeselectToolStripMenuItem.Click += new System.EventHandler(this.DeselectToolStripMenuItem_Click);
             // 
-            // articulLabel
+            // ArticulLabel
             // 
-            this.articulLabel.AutoSize = true;
-            this.articulLabel.Location = new System.Drawing.Point(42, 19);
-            this.articulLabel.Name = "articulLabel";
-            this.articulLabel.Size = new System.Drawing.Size(54, 13);
-            this.articulLabel.TabIndex = 47;
-            this.articulLabel.Text = "Артикул :";
+            this.ArticulLabel.AutoSize = true;
+            this.ArticulLabel.Location = new System.Drawing.Point(42, 19);
+            this.ArticulLabel.Name = "ArticulLabel";
+            this.ArticulLabel.Size = new System.Drawing.Size(54, 13);
+            this.ArticulLabel.TabIndex = 47;
+            this.ArticulLabel.Text = "Артикул :";
             // 
-            // photoOpenFileDialog
+            // PhotoOpenFileDialog
             // 
-            this.photoOpenFileDialog.Filter = "Image files (*.png;*.jpg;*jpeg)|*.png;*.jpg;*jpeg";
-            this.photoOpenFileDialog.InitialDirectory = "D:\\\\";
+            this.PhotoOpenFileDialog.Filter = "Image files (*.png;*.jpg;*jpeg)|*.png;*.jpg;*jpeg";
+            this.PhotoOpenFileDialog.InitialDirectory = "D:\\\\";
             // 
             // SparePartForm
             // 
@@ -270,34 +270,34 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 438);
             this.Controls.Add(this.MeasureUnitBackPanel);
-            this.Controls.Add(this.titleTextBoxBackPanel);
-            this.Controls.Add(this.articulTextBoxBackPanel);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.okButton);
-            this.Controls.Add(this.descrRichTextBox);
+            this.Controls.Add(this.TitleBackPanel);
+            this.Controls.Add(this.ArticulBackPanel);
+            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.OkButton);
+            this.Controls.Add(this.DescrRichTextBox);
             this.Controls.Add(this.MeasureUnitStarLabel);
-            this.Controls.Add(this.descriptionLabel);
-            this.Controls.Add(this.titleStarLabel);
-            this.Controls.Add(this.articulStarLabel);
+            this.Controls.Add(this.DescriptionLabel);
+            this.Controls.Add(this.TitleStarLabel);
+            this.Controls.Add(this.ArticulStarLabel);
             this.Controls.Add(this.MeasureUnitLabel);
-            this.Controls.Add(this.manufacturerTextBox);
-            this.Controls.Add(this.manufacturerLabel);
-            this.Controls.Add(this.titleLabel);
-            this.Controls.Add(this.addPhotoButton);
-            this.Controls.Add(this.photoPictureBox);
-            this.Controls.Add(this.articulLabel);
+            this.Controls.Add(this.ManufacturerTextBox);
+            this.Controls.Add(this.ManufacturerLabel);
+            this.Controls.Add(this.TitleLabel);
+            this.Controls.Add(this.AddPhotoButton);
+            this.Controls.Add(this.PhotoPictureBox);
+            this.Controls.Add(this.ArticulLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "SparePartForm";
             this.Text = "Форма добавления новой единицы товара";
             this.Load += new System.EventHandler(this.AddSparePartForm_Load);
             this.MeasureUnitBackPanel.ResumeLayout(false);
-            this.titleTextBoxBackPanel.ResumeLayout(false);
-            this.titleTextBoxBackPanel.PerformLayout();
-            this.articulTextBoxBackPanel.ResumeLayout(false);
-            this.articulTextBoxBackPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).EndInit();
-            this.photoContextMenuStrip.ResumeLayout(false);
+            this.TitleBackPanel.ResumeLayout(false);
+            this.TitleBackPanel.PerformLayout();
+            this.ArticulBackPanel.ResumeLayout(false);
+            this.ArticulBackPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PhotoPictureBox)).EndInit();
+            this.PhotoContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -307,27 +307,27 @@
 
         private System.Windows.Forms.Panel MeasureUnitBackPanel;
         private System.Windows.Forms.ComboBox MeasureUnitComboBox;
-        private System.Windows.Forms.Panel titleTextBoxBackPanel;
-        private System.Windows.Forms.TextBox titleTextBox;
-        private System.Windows.Forms.Panel articulTextBoxBackPanel;
-        private System.Windows.Forms.TextBox articulTextBox;
-        private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.RichTextBox descrRichTextBox;
-        private System.Windows.Forms.Label descriptionLabel;
+        private System.Windows.Forms.Panel TitleBackPanel;
+        private System.Windows.Forms.TextBox TitleTextBox;
+        private System.Windows.Forms.Panel ArticulBackPanel;
+        private System.Windows.Forms.TextBox ArticulTextBox;
+        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button OkButton;
+        private System.Windows.Forms.RichTextBox DescrRichTextBox;
+        private System.Windows.Forms.Label DescriptionLabel;
         private System.Windows.Forms.Label MeasureUnitStarLabel;
-        private System.Windows.Forms.Label titleStarLabel;
-        private System.Windows.Forms.Label articulStarLabel;
+        private System.Windows.Forms.Label TitleStarLabel;
+        private System.Windows.Forms.Label ArticulStarLabel;
         private System.Windows.Forms.Label MeasureUnitLabel;
-        private System.Windows.Forms.TextBox manufacturerTextBox;
-        private System.Windows.Forms.Label manufacturerLabel;
-        private System.Windows.Forms.Label titleLabel;
-        private System.Windows.Forms.Button addPhotoButton;
-        private System.Windows.Forms.PictureBox photoPictureBox;
-        private System.Windows.Forms.Label articulLabel;
+        private System.Windows.Forms.TextBox ManufacturerTextBox;
+        private System.Windows.Forms.Label ManufacturerLabel;
+        private System.Windows.Forms.Label TitleLabel;
+        private System.Windows.Forms.Button AddPhotoButton;
+        private System.Windows.Forms.PictureBox PhotoPictureBox;
+        private System.Windows.Forms.Label ArticulLabel;
         private System.Windows.Forms.ToolTip toolTip;
-        private System.Windows.Forms.OpenFileDialog photoOpenFileDialog;
-        private System.Windows.Forms.ContextMenuStrip photoContextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem deselectToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog PhotoOpenFileDialog;
+        private System.Windows.Forms.ContextMenuStrip PhotoContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem DeselectToolStripMenuItem;
     }
 }

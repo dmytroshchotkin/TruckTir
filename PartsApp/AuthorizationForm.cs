@@ -42,7 +42,7 @@ namespace PartsApp
             {
                 this.Owner.Close();
             }//if
-        }//cancelButton_MouseClick
+        }//CancelButton_MouseClick
 
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {

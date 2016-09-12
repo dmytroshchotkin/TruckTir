@@ -1276,7 +1276,7 @@ namespace PartsApp
                 if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     this.Close();
             }//if
-        }//cancelButton_MouseClick
+        }//CancelButton_MouseClick
         
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {

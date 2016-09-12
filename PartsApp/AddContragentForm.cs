@@ -232,7 +232,7 @@ namespace PartsApp
                     this.Close();
                 }
             }//if
-        }//cancelButton_MouseClick
+        }//CancelButton_MouseClick
 
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
@@ -252,7 +252,7 @@ namespace PartsApp
                     this.Close();
                 }//if
             }//if
-        }//okButton_MouseClick
+        }//OkButton_MouseClick
         
 
     }//AddcontragentForm
