@@ -47,9 +47,13 @@ namespace PartsApp
         }//Form1_Load   
 
         #region Методы проверки корректности ввода.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void articulTextBox_Leave(object sender, EventArgs e)
         {
             //если артикул не введен.
@@ -223,17 +227,19 @@ namespace PartsApp
 
 
 
-        #endregion
-        
-        
-        //Событие для добавления новой единицы измерения в БД.
-        private void addUnitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MeasureUnitComboBox.DropDownStyle = ComboBoxStyle.DropDown;
-            MeasureUnitComboBox.Text = String.Empty;
-            MeasureUnitComboBox.Focus();
-        }//addUnitToolStripMenuItem_Click
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        #region Методы работы с Фото.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Выбор фото данной единицы товара.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void addPhotoButton_Click(object sender, EventArgs e)
         {
             /*ERROR привести в порядок.*/
@@ -269,14 +275,59 @@ namespace PartsApp
                 }//else
             }//if
         }//addPhotoButton_Click
-        
-        //Событие для отмены выбора фотографии.
+
+        /// <summary>
+        /// Вызов контекстного меню для photoPictureBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void photoPictureBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            //Если ПКМ.
+            if (e.Button == MouseButtons.Right)
+            {
+                //Если photoPictureBox не пустой.
+                if (photoPictureBox.Image != null)
+                    photoContextMenuStrip.Show(photoPictureBox, e.Location); //Выводим контекстное меню.
+            }//if
+        }//photoPictureBox_MouseClick
+
+        /// <summary>
+        /// Событие для отмены выбора фотографии.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void deselectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             photoPictureBox.Image = null;
             photoOpenFileDialog.FileName = String.Empty;
             toolTip.SetToolTip(photoPictureBox, String.Empty);
-        }//deselectToolStripMenuItem_Click       
+        }//deselectToolStripMenuItem_Click 
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
+        /// <summary>
+        /// Событие для добавления новой единицы измерения в БД.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void addUnitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            /*ERROR способ добавления новой ед. изм. в базу.*/
+            MeasureUnitComboBox.DropDownStyle = ComboBoxStyle.DropDown;
+            MeasureUnitComboBox.Text = String.Empty;
+            MeasureUnitComboBox.Focus();
+        }//addUnitToolStripMenuItem_Click
+
+        
+        
+              
 
         /// <summary>
         /// Заполняет форму данными из переданного объекта.
@@ -395,16 +446,7 @@ namespace PartsApp
             }//if
         }//
 
-        private void photoPictureBox_MouseClick(object sender, MouseEventArgs e)
-        {
-            //Если ПКМ.
-            if (e.Button == MouseButtons.Right)
-            {
-                //Если photoPictureBox не пустой.
-                if (photoPictureBox.Image != null)
-                    photoContextMenuStrip.Show(photoPictureBox, e.Location); //Выводим контекстное меню.
-            }//if
-        }//photoPictureBox_MouseClick
+        
 
         
 
