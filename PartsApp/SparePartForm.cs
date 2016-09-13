@@ -14,20 +14,27 @@ namespace PartsApp
 {
     public partial class SparePartForm : Form
     {
-        SparePart editSparePart = null;                  //Переменная требуемая для модификации данных уже сущ-щего товара.
-        const string sparePartPhotoFolder = @"Товар\";   /*ERROR перенести в метод?*/
+        /// <summary>
+        /// Объект для редактирования или записи в базу нового.
+        /// </summary>
+        SparePart _sparePart;
+        /// <summary>
+        /// Название папки для хранения фото товаров.
+        /// </summary>
+        const string sparePartPhotoFolder = @"Товар\";
 
 
         public SparePartForm()
         {
             InitializeComponent();
+            _sparePart = new SparePart();
         }
-        public SparePartForm(int sparePartModifyId)
+        public SparePartForm(SparePart sparePart)
         {
             InitializeComponent();
-            editSparePart = PartsDAL.FindSparePart(sparePartModifyId);
+            _sparePart = sparePart;
 
-            FillFornFromSparePart(editSparePart); //Заполняем поля формы данными из объетка.
+            FillFornFromSparePart(_sparePart); //Заполняем поля формы данными из объетка.
         }//AddSparePartForm
 
 
@@ -35,7 +42,7 @@ namespace PartsApp
         {
             //добавляем все варианты выбора единицы измерения.
             MeasureUnitComboBox.DataSource = Models.MeasureUnit.GetDescriptions();
-            MeasureUnitComboBox.SelectedItem = (editSparePart == null) ? null : editSparePart.MeasureUnit;
+            MeasureUnitComboBox.SelectedItem = (_sparePart == null) ? null : _sparePart.MeasureUnit;
 
             //Добавляем в выпадающий список всех Производителей. /*ERROR!!!*/            
             ManufacturerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllManufacturersName());
@@ -57,7 +64,7 @@ namespace PartsApp
             {
                 string text = ArticulTextBox.Text.Trim();
                 //Если введенный артикул уже есть в базе, выдаём предупреждение, но позволяем дальнейший ввод.
-                if ((editSparePart != null && editSparePart.Articul.ToLower() == text.ToLower()) || PartsDAL.FindSparePartsByArticul(text).Count == 0)
+                if ((_sparePart.SparePartId != 0 && _sparePart.Articul.ToLower() == text.ToLower()) || PartsDAL.FindSparePartsByArticul(text).Count == 0)
                     ControlValidation.CorrectValueInput(toolTip, ArticulTextBox);
                 else
                     ControlValidation.WrongValueInput(toolTip, ArticulTextBox, "Такой артикул уже есть в базе", Color.Yellow);             
@@ -195,7 +202,21 @@ namespace PartsApp
             toolTip.SetToolTip(PhotoPictureBox, String.Empty);
         }//DeselectToolStripMenuItem_Click 
 
-
+        /// <summary>
+        /// Копирует фото в папку 'Товар', если фото с таким названием ещё нет.
+        /// </summary>
+        /// <param name="photoPath">Относительный путь к фото.</param>
+        private void CopyPhotoToTheFolder(string photoPath)
+        {
+            //Проверяем наличие фото.
+            if (PhotoPictureBox.Image != null)
+            {
+                string fullPath = System.IO.Path.GetFullPath(photoPath);
+                //Если фото ещё нет в папке 'Товар', копируем его туда.
+                if (!System.IO.File.Exists(fullPath))
+                    System.IO.File.Copy(PhotoOpenFileDialog.FileName, fullPath);
+            }//else
+        }//CopyPhotoToTheFolder
 
 
 
@@ -213,20 +234,17 @@ namespace PartsApp
         private void FillFornFromSparePart(SparePart sparePart)
         {
             //Заполняем все поля на форме.
-            ArticulTextBox.Text      = editSparePart.Articul;
-            TitleTextBox.Text        = editSparePart.Title;
-            ManufacturerTextBox.Text = editSparePart.Manufacturer;
-            DescrRichTextBox.Text    = editSparePart.Description;
-            MeasureUnitComboBox.SelectedItem = editSparePart.MeasureUnit;
+            ArticulTextBox.Text      = _sparePart.Articul;
+            TitleTextBox.Text        = _sparePart.Title;
+            ManufacturerTextBox.Text = _sparePart.Manufacturer;
+            DescrRichTextBox.Text    = _sparePart.Description;
+            MeasureUnitComboBox.SelectedItem = _sparePart.MeasureUnit;
             
             //Заполняем фото, если оно есть в соотв. папке.
-            if (editSparePart.Photo != null)
+            if (_sparePart.Photo != null && System.IO.File.Exists(System.IO.Path.GetFullPath(_sparePart.Photo)))
             {
-                if (System.IO.File.Exists(System.IO.Path.GetFullPath(editSparePart.Photo)))
-                {
-                    PhotoPictureBox.Image = new Bitmap(Image.FromFile(editSparePart.Photo), PhotoPictureBox.Size);
-                    toolTip.SetToolTip(PhotoPictureBox, System.IO.Path.GetFileName(editSparePart.Photo));
-                }//if
+                PhotoPictureBox.Image = new Bitmap(Image.FromFile(_sparePart.Photo), PhotoPictureBox.Size);
+                toolTip.SetToolTip(PhotoPictureBox, System.IO.Path.GetFileName(_sparePart.Photo));
             }//if            
         }//FillFornFromSparePart
 
@@ -236,7 +254,7 @@ namespace PartsApp
         /// <param name="employee">Товар, который будет заполнен инф-цией из формы.</param>
         private void FillTheSparePartFromForm(SparePart sparePart)
         {            
-            sparePart.Photo        = sparePartPhotoFolder + toolTip.GetToolTip(PhotoPictureBox);
+            sparePart.Photo        = (PhotoPictureBox.Image != null) ? sparePartPhotoFolder + toolTip.GetToolTip(PhotoPictureBox) : null;
             sparePart.Articul      = ArticulTextBox.Text.Trim();
             sparePart.Title        = TitleTextBox.Text.Trim();
             sparePart.Description  = (!String.IsNullOrWhiteSpace(DescrRichTextBox.Text)) ? DescrRichTextBox.Text.Trim() : null;
@@ -244,18 +262,7 @@ namespace PartsApp
             sparePart.MeasureUnit  = MeasureUnitComboBox.SelectedValue.ToString();
         }//FillTheSparePartFromForm
 
-        private void CopyPhotoToTheFolder(string photoPath)
-        {
-            //Проверяем наличие фото.
-            if (PhotoPictureBox.Image != null)
-            {
-                string fullPath = System.IO.Path.GetFullPath(photoPath);
-                //Если фото ещё нет в папке 'Товар', копируем его туда.
-                if (!System.IO.File.Exists(fullPath))
-                    System.IO.File.Copy(PhotoOpenFileDialog.FileName, fullPath);
-            }//else
-        }//CopyPhotoToTheFolder
-
+        
 
         /// <summary>
         /// Возвращает true если все обязательные поля корректно заполнены, иначе false.
@@ -281,10 +288,7 @@ namespace PartsApp
             if (e.Button == MouseButtons.Left)
             {
                 if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    this.DialogResult = DialogResult.Cancel;
                     this.Close();
-                }//if
             }//if
         }//CancelButton_MouseClick
 
@@ -296,23 +300,15 @@ namespace PartsApp
                 if (IsRequiredFieldsValid())
                 {
                     this.Cursor = Cursors.WaitCursor;
-
-                    SparePart sparePart = new SparePart();
-                    FillTheSparePartFromForm(sparePart); //Заполняем объект данными с формы.
+                    FillTheSparePartFromForm(_sparePart); //Заполняем объект данными с формы.
 
                     try
                     {
-                        //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.
-                        if (editSparePart == null)
-                            PartsDAL.AddSparePart(sparePart);
+                        //Редактируем существующий объект или добавляем новый.
+                        if (_sparePart.SparePartId != 0)
+                            PartsDAL.UpdateSparePart(_sparePart);
                         else
-                        {
-                            sparePart.SparePartId = editSparePart.SparePartId;
-                            PartsDAL.UpdateSparePart(sparePart);
-                        }//else
-
-                        //Копируем фото в папку 'Товар', если необходимо.
-                        CopyPhotoToTheFolder(sparePart.Photo);
+                            PartsDAL.AddSparePart(_sparePart);
                     }//try
                     catch
                     {
@@ -321,7 +317,7 @@ namespace PartsApp
                         return;
                     }//catch
 
-                    this.DialogResult = DialogResult.OK;
+                    CopyPhotoToTheFolder(_sparePart.Photo); //Копируем фото в папку 'Товар', если необходимо.
                     this.Close();
                 }//if
             }//if
@@ -332,8 +328,3 @@ namespace PartsApp
     }//AddSparePartForm
 
 }//namespace
-
-/*Задачи*/
-//!!! Решить проблему с "попытка записи в защищенную область памяти" или сделать listbox выпадающим списком.
-//1)Добавить возможность выбора множества категорий (как в MovieDB).
-//2)Добавить воззможность добавлять новую ед. изм. в базу.

@@ -966,7 +966,8 @@ namespace PartsApp
 
         private void editSparePartToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new SparePartForm(Convert.ToInt32(PartsDGV.SelectedCells[0].OwningRow.Cells[SparePartIdCol.Name].Value)).Show();
+            SparePart sparePart = PartsDGV.SelectedCells[0].OwningRow.DataBoundItem as SparePart;
+            new SparePartForm(sparePart).Show();
         }//editSparePartToolStripMenuItem_Click
 
         
