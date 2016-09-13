@@ -235,17 +235,8 @@ namespace PartsApp
         /// </summary>
         /// <param name="employee">Товар, который будет заполнен инф-цией из формы.</param>
         private void FillTheSparePartFromForm(SparePart sparePart)
-        {
-            //Проверяем наличие фото.
-            if (PhotoPictureBox.Image != null)
-            {
-                sparePart.Photo = sparePartPhotoFolder + toolTip.GetToolTip(PhotoPictureBox);
-                string fullPath = System.IO.Path.GetFullPath(sparePart.Photo);
-                //Если фото ещё нет в папке 'Товар', копируем его туда.
-                if (!System.IO.File.Exists(fullPath)) 
-                    System.IO.File.Copy(PhotoOpenFileDialog.FileName, fullPath);            
-            }//else
-
+        {            
+            sparePart.Photo        = sparePartPhotoFolder + toolTip.GetToolTip(PhotoPictureBox);
             sparePart.Articul      = ArticulTextBox.Text.Trim();
             sparePart.Title        = TitleTextBox.Text.Trim();
             sparePart.Description  = (!String.IsNullOrWhiteSpace(DescrRichTextBox.Text)) ? DescrRichTextBox.Text.Trim() : null;
@@ -253,6 +244,17 @@ namespace PartsApp
             sparePart.MeasureUnit  = MeasureUnitComboBox.SelectedValue.ToString();
         }//FillTheSparePartFromForm
 
+        private void CopyPhotoToTheFolder(string photoPath)
+        {
+            //Проверяем наличие фото.
+            if (PhotoPictureBox.Image != null)
+            {
+                string fullPath = System.IO.Path.GetFullPath(photoPath);
+                //Если фото ещё нет в папке 'Товар', копируем его туда.
+                if (!System.IO.File.Exists(fullPath))
+                    System.IO.File.Copy(PhotoOpenFileDialog.FileName, fullPath);
+            }//else
+        }//CopyPhotoToTheFolder
 
 
         /// <summary>
@@ -308,6 +310,9 @@ namespace PartsApp
                             sparePart.SparePartId = editSparePart.SparePartId;
                             PartsDAL.UpdateSparePart(sparePart);
                         }//else
+
+                        //Копируем фото в папку 'Товар', если необходимо.
+                        CopyPhotoToTheFolder(sparePart.Photo);
                     }//try
                     catch
                     {
