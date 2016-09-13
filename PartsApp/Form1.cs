@@ -73,25 +73,28 @@ namespace PartsApp
 
         #region Работа с Excel.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        
         private void saveInExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Визуальное отображение работы.
-            //progressBar.Value = progressBar.Maximum / 2;
-
             //Находим соотв. объекты SparePart для всех выведенных в таблице строк.
             List<SparePart> sparePartsList = PartsDGV.Rows.Cast<DataGridViewRow>().Select(r => r.DataBoundItem as SparePart).ToList();
             //Выводим в Excel.
-            new System.Threading.Thread(beginSaveInExcel).Start(sparePartsList); //Сделать по нормальному вызов с потоком.
+            saveInExcelAsync(sparePartsList);
+            //new System.Threading.Thread(beginSaveInExcel).Start(sparePartsList); //Сделать по нормальному вызов с потоком.
             
         }//saveInExcelToolStripMenuItem_Click
 
-        private void beginSaveInExcel(object spareParts)
-        {            
-            /*STUB*/
-            if (spareParts is IList<SparePart>)
-                saveInExcel(spareParts as IList<SparePart>);
-        }//beginSaveInExcel
+        private async void saveInExcelAsync(IList<SparePart> spareParts)
+        {
+            try
+            {
+                await Task.Factory.StartNew(() => saveInExcel(spareParts));
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка вывода в Excel");
+            }
+        }//saveInExcelAsync
 
         private void saveInExcel(IList<SparePart> spareParts)
         {            
