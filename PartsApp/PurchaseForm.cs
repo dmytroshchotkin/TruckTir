@@ -124,9 +124,7 @@ namespace PartsApp
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
-        
-        
-
+                
         #region Методы работы с таблицей.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -635,17 +633,28 @@ namespace PartsApp
 
         #region Методы вывода инф-ции в Excel.
 
-        private void BeginLoadPurchaseToExcelFile(object availList)
+        /// <summary>
+        /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
+        /// </summary>
+        /// <param name="spareParts">Список товаров для вывода в Excel.</param>
+        private async void saveInExcelAsync(List<Availability> availList)
         {
-            LoadPurchaseToExcelFile(availList as List<Availability>);
-        }//BeginLoadPurchaseToExcelFile
+            try
+            {
+                await Task.Factory.StartNew(() => saveInExcel(availList));
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка вывода в Excel");
+            }
+        }//saveInExcelAsync        
      
         /// <summary>
         /// Метод вывода приходной информации в Excel-файл.
         /// </summary>
         /// <param name="sale">Информация о приходе.</param>
         /// <param name="availabilityList">Список оприходованных товаров.</param>
-        private void LoadPurchaseToExcelFile(List<Availability> availList)
+        private void saveInExcel(List<Availability> availList)
         {
             Purchase purchase = availList[0].OperationDetails.Operation as Purchase;
             List<SparePart> sparePartsList = availList.Select(av => av.OperationDetails.SparePart).ToList();
@@ -791,7 +800,7 @@ namespace PartsApp
 
             //Закрываем форму (будет ошибка при отладке закрытия не из того потока), здесь потому что, если закрыть в okButton_click не будет выводится inTotal в Excel.
             this.Close();
-        }//LoadPurchaseToExcelFile  
+        }//saveInExcel  
 
         /// <summary>
         /// Устанавливает ширину столбцов.
@@ -1141,9 +1150,7 @@ namespace PartsApp
                         return;
                     }//catch 
 
-                    //LoadsaleToExcelFile(availList, availabilityList);
-                    /*!!!*/
-                    new System.Threading.Thread(BeginLoadPurchaseToExcelFile).Start(availList); //Сделать по нормальному вызов с потоком.
+                    saveInExcelAsync(availList);
 
                     this.Visible = false;
                     //this.Close();
