@@ -84,6 +84,10 @@ namespace PartsApp
             
         }//saveInExcelToolStripMenuItem_Click
 
+        /// <summary>
+        /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
+        /// </summary>
+        /// <param name="spareParts">Список товаров для вывода в Excel.</param>
         private async void saveInExcelAsync(IList<SparePart> spareParts)
         {
             try
@@ -95,7 +99,10 @@ namespace PartsApp
                 MessageBox.Show("Ошибка вывода в Excel");
             }
         }//saveInExcelAsync
-
+        /// <summary>
+        /// Вывод в Excel инф-ции из переданного списка товаров.
+        /// </summary>
+        /// <param name="spareParts">Список товаров для вывода в Excel.</param>
         private void saveInExcel(IList<SparePart> spareParts)
         {            
             Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
@@ -240,9 +247,29 @@ namespace PartsApp
             //Находим соотв. объекты из выделенных строк.
             List<SparePart> sparePartsList = selectedRows.Select(r => r.DataBoundItem as SparePart).ToList();
             //Выводим в Excel.
-            ExcelSaveSparePartPriceList(sparePartsList); /*ERROR распараллелить*/
+            ExcelSaveSparePartPriceListAsync(sparePartsList);
         }//SpPriceListToExcelToolStripMenuItem_Click
 
+        /// <summary>
+        /// Асинхронный вывод в Excel инф-ции для распечатки ценников.
+        /// </summary>
+        /// <param name="sparePartsList">Список товаров для вывода в Excel.</param>
+        private async void ExcelSaveSparePartPriceListAsync(IList<SparePart> sparePartsList)
+        {
+            try
+            {
+                await Task.Factory.StartNew(() => ExcelSaveSparePartPriceList(sparePartsList));
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка вывода в Excel");
+            }
+        }//ExcelSaveSparePartPriceListAsync
+
+        /// <summary>
+        /// Вывод в Excel инф-ции для распечатки ценников.
+        /// </summary>
+        /// <param name="sparePartsList">Список товаров для вывода в Excel.</param>
         private void ExcelSaveSparePartPriceList(IList<SparePart> sparePartsList)
         {
             Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
