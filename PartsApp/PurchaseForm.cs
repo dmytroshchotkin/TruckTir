@@ -659,19 +659,14 @@ namespace PartsApp
         {
             Purchase purchase = availList[0].OperationDetails.Operation as Purchase;
             List<SparePart> sparePartsList = availList.Select(av => av.OperationDetails.SparePart).ToList();
-            Excel.Application ExcelApp = new Excel.Application();
-            Excel.Workbook ExcelWorkBook;
-            Excel.Worksheet ExcelWorkSheet;
-            //Книга.
-            ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
-            //Таблица.
-            ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
 
+            Excel.Application ExcelApp     = new Excel.Application();
+            Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
+            Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
+            
             //Настраиваем горизонтальные и вертикальные границы области печати.
-            ExcelWorkSheet.PageSetup.LeftMargin   = 7;
-            ExcelWorkSheet.PageSetup.RightMargin  = 7;
-            ExcelWorkSheet.PageSetup.TopMargin    = 10;
-            ExcelWorkSheet.PageSetup.BottomMargin = 10;
+            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 7;
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin  = 7;
 
             int row = 1, column = 1;
 
@@ -776,7 +771,6 @@ namespace PartsApp
 
             #endregion
 
-            /*ERROR Передавать имена агентов параметром и закрывать owner-форму не здесь, а в OkButton_Click*/
             //Выводим имена агентов.
             row += 2;
             ExcelApp.Cells[row, column].Font.Name = "Consolas"; //моноширинный шрифт
@@ -798,9 +792,8 @@ namespace PartsApp
             AutoFitMergedCellRowHeight((ExcelApp.Cells[row, column] as Excel.Range));
 
             //Вызываем нашу созданную эксельку.
-            ExcelApp.Visible = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-            ExcelApp.UserControl = true;
+            ExcelApp.Visible = ExcelApp.UserControl = true;
         }//saveInExcel  
 
         /// <summary>

@@ -79,10 +79,7 @@ namespace PartsApp
         {
             //Находим соотв. объекты SparePart для всех выведенных в таблице строк.
             List<SparePart> sparePartsList = PartsDGV.Rows.Cast<DataGridViewRow>().Select(r => r.DataBoundItem as SparePart).ToList();
-            //Выводим в Excel.
-            saveInExcelAsync(sparePartsList);
-            //new System.Threading.Thread(beginSaveInExcel).Start(sparePartsList); //Сделать по нормальному вызов с потоком.
-            
+            saveInExcelAsync(sparePartsList); //Выводим в Excel.
         }//saveInExcelToolStripMenuItem_Click
 
         /// <summary>
@@ -106,17 +103,13 @@ namespace PartsApp
         /// <param name="spareParts">Список товаров для вывода в Excel.</param>
         private void saveInExcel(IList<SparePart> spareParts)
         {            
-            Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
-            Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook;
-            Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet;
-            //Книга.
-            ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value);
-            //Таблица.
-            ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
+            Excel.Application ExcelApp     = new Excel.Application();
+            Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
+            Excel.Worksheet ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
 
-            //Настраиваем горизонтальные границы области печати.
-            ExcelWorkSheet.PageSetup.LeftMargin = 7;
-            ExcelWorkSheet.PageSetup.RightMargin = 7;
+            //Настраиваем горизонтальные и вертикальные границы области печати.
+            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 7;
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin  = 7;
 
             #region Вывод таблицы товаров.
 
@@ -182,15 +175,11 @@ namespace PartsApp
 
             #endregion
 
-            //Визуальное отображение работы.
-            //progressBar.Value = progressBar.Maximum;
-
             //Вызываем нашу созданную эксельку.
-            ExcelApp.Visible = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-            ExcelApp.UserControl = true;
-        
+            ExcelApp.Visible = ExcelApp.UserControl = true;        
         }//saveInExcel
+
 
         /// <summary>
         /// Возвращает ширину заданной области.
@@ -273,13 +262,13 @@ namespace PartsApp
         /// <param name="sparePartsList">Список товаров для вывода в Excel.</param>
         private void ExcelSaveSparePartPriceList(IList<SparePart> sparePartsList)
         {
-            Microsoft.Office.Interop.Excel.Application ExcelApp = new Microsoft.Office.Interop.Excel.Application();
-            Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); ;
-            Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
+            Excel.Application ExcelApp     = new Excel.Application();
+            Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); ;
+            Excel.Worksheet ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
 
             //Настраиваем горизонтальные и вертикальные границы области печати.
-            ExcelWorkSheet.PageSetup.TopMargin = ExcelWorkSheet.PageSetup.BottomMargin = 7;
-            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin = 7;
+            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 7;
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin  = 7;
             ExcelWorkSheet.Columns["B"].ColumnWidth = 1; //задаем ширину второго столбца, для того чтобы корректно выделять рамкой ценники.
 
             //Заполняем Excel-файл, по 2 записи на строку.
@@ -292,14 +281,14 @@ namespace PartsApp
 
                 row += 2;                
             }//for
+
             //Вызываем нашу созданную эксельку.
-            ExcelApp.Visible = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-            ExcelApp.UserControl = true;
+            ExcelApp.Visible = ExcelApp.UserControl = true;
         }//ExcelSaveSparePartPriceList
 
         private int FillExcelSheetPriceList(SparePart sparePart, int startRow, int column, 
-                                             Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet)
+                                            Excel.Worksheet ExcelWorkSheet)
         {
             int row = startRow, columnWidth = 50;
             string columnChar = (column == 1) ? "A" : "C";

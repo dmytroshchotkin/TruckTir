@@ -956,11 +956,11 @@ namespace PartsApp
 
             Excel.Application ExcelApp     = new Excel.Application();
             Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
-            Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
+            Excel.Worksheet ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
 
             //Настраиваем горизонтальные и вертикальные границы области печати.
-            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin = 7;
-            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 10;
+            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 7;
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin  = 7;
 
             int row = 1, column = 1;
             //Выводим Id и Дату. 
@@ -1082,11 +1082,8 @@ namespace PartsApp
             AutoFitMergedCellRowHeight((ExcelApp.Cells[row, column] as Excel.Range));
 
             //Вызываем нашу созданную эксельку.
-            ExcelApp.Visible = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-            ExcelApp.UserControl = true;
-
-            this.Close();
+            ExcelApp.Visible = ExcelApp.UserControl = true;
         }//saveInExcel  
 
         private void AutoFitMergedCellRowHeight(Excel.Range rng)
