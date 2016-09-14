@@ -951,7 +951,6 @@ namespace PartsApp
         /// <param name="agent">Фирма-продавец.</param>
         private void saveInExcel(Sale sale, string agent)
         {
-            /*Error Уменьшить боковые margin.*/
             IList<OperationDetails> operDetList = sale.OperationDetailsList;
 
             Excel.Application ExcelApp     = new Excel.Application();
@@ -979,86 +978,8 @@ namespace PartsApp
                                                          "Продавец : " + agent,
                                                          "Покупатель : " + sale.Contragent.ContragentName);
 
-            #region Вывод таблицы товаров.
-
-            row += 2;
-            //Выводим заголовок.
-            ExcelApp.Cells[row, column] = "Произв.";
-            ExcelApp.Cells[row, column + 1] = "Артикул";
-            ExcelApp.Cells[row, column + 2] = "Название";
-            ExcelApp.Cells[row, column + 3] = "Ед. изм.";
-            ExcelApp.Cells[row, column + 4] = "Кол-во";
-            ExcelApp.Cells[row, column + 5] = "Цена";
-            ExcelApp.Cells[row, column + 6] = "Сумма";
-
-            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
-            excelCells.VerticalAlignment = Excel.XlHAlign.xlHAlignCenter;
-            excelCells.Font.Bold = true;
-            excelCells.Font.Size = 12;
-            //Уменьшаем ширину колонки "Ед. изм."
-            (ExcelApp.Cells[row, column + 3] as Excel.Range).Cells.VerticalAlignment = Excel.XlHAlign.xlHAlignDistributed;
-            (ExcelApp.Cells[row, column + 3] as Excel.Range).Columns.ColumnWidth = 5;
-            //Обводим заголовки таблицы рамкой. 
-            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-            //Устанавливаем стиль и толщину линии
-            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-
-            //Устанавливаем ширину первой Колонок
-            double titleColWidth = 30; // -- Взято методом тыка.  
-            int articulColWidth = 20;
-            //int manufColWidth = 15, minManufColWidth = 8; //  15 -- Взято методом тыка.
-
-            SetColumnsWidth(operDetList, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
-
-            //Выводим список товаров.
-            float inTotal = 0;
-            foreach (OperationDetails operDet in operDetList)
-            {
-                ++row;
-                ExcelApp.Cells[row, column + 2] = operDet.SparePart.Title;
-                ExcelApp.Cells[row, column + 1] = operDet.SparePart.Articul;
-                //Выравнивание диапазона строк.
-                ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
-                ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-
-                //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
-                if (operDet.SparePart.Articul.Length > articulColWidth || operDet.SparePart.Title.Length > titleColWidth)
-                {
-                    ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
-                    //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
-                    if (operDet.SparePart.Articul.Length > articulColWidth && operDet.SparePart.Title.Length <= titleColWidth)
-                        (ExcelApp.Cells[row, column + 2] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-                    if (operDet.SparePart.Articul.Length <= articulColWidth && operDet.SparePart.Title.Length > titleColWidth)
-                        (ExcelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-                }//if
-
-                ExcelApp.Cells[row, column] = operDet.SparePart.Manufacturer;
-                ExcelApp.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
-                ExcelApp.Cells[row, column + 4] = operDet.Count;
-                ExcelApp.Cells[row, column + 5] = operDet.Price;
-                float sum = operDet.Price * operDet.Count;
-                inTotal += sum;
-                ExcelApp.Cells[row, column + 6] = sum;
-            }//foreach
-
-            //Обводим талицу рамкой. 
-            excelCells = ExcelWorkSheet.get_Range("A" + (row - operDetList.Count + 1).ToString(), "G" + row.ToString());
-            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-
-            //Выводим "Итого".
-            ++row;
-            //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
-            int indent = 0; //отступ
-            if (inTotal.ToString("0.00").Length <= 9)
-                indent = 1;
-
-            ExcelApp.Cells[row, column + 4 + indent] = "Итого : ";
-            ExcelApp.Cells[row, column + 5 + indent] = inTotal.ToString("0.00");
-            (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Underline = true;
-            (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Size = 12;
-            (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Bold = true;
-
-            #endregion
+            //Заполняем таблицу.
+            FillTheExcelList(ExcelWorkSheet, operDetList, ref row, column);
 
             //Выводим имена агентов.
             row += 2;
@@ -1085,6 +1006,137 @@ namespace PartsApp
             ExcelApp.Visible = ExcelApp.UserControl = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
         }//saveInExcel  
+
+        /// <summary>
+        /// Заполняем Excel инф-цией из переданного списка.
+        /// </summary>
+        /// <param name="ExcelWorkSheet">Рабочая страница</param>
+        /// <param name="operDetList">Список деталей операции.</param>
+        /// <param name="row">Индекс строки.</param>
+        /// <param name="column">Индекс столбца.</param>
+        private void FillTheExcelList(Excel.Worksheet ExcelWorkSheet, IList<OperationDetails> operDetList, ref int row, int column)
+        {
+            row += 2;
+            //Выводим заголовок.
+            FillTheTitlesRow(ExcelWorkSheet, row, column);
+
+            //Уменьшаем ширину колонки "Ед. изм."
+            ExcelWorkSheet.Cells[row, column + 3].VerticalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+            ExcelWorkSheet.Cells[row, column + 3].Columns.ColumnWidth = 5;
+            
+            //Устанавливаем ширину столбцов.
+            int titleColWidth = 30, articulColWidth = 20; // -- Взято методом тыка.  
+            SetColumnsWidth(operDetList, ExcelWorkSheet.Cells[row, column + 2], ExcelWorkSheet.Cells[row, column + 1], ExcelWorkSheet.Cells[row, column]);
+
+            //Выводим список товаров.
+            float inTotal = 0;
+            foreach (OperationDetails operDet in operDetList)
+            {
+                FillExcelRow(ExcelWorkSheet, operDet, ++row, column, titleColWidth, articulColWidth);
+                inTotal += operDet.Price * operDet.Count;
+            }//foreach
+
+            //Обводим талицу рамкой. 
+            ExcelWorkSheet.get_Range("A" + (row - operDetList.Count + 1).ToString(), "G" + row.ToString()).Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+            
+            ++row;
+            //Выводим 'Итого'.
+            InTotalExcelOutput(ExcelWorkSheet, inTotal, row, column);
+        }//FillTheExcelList
+
+        /// <summary>
+        /// Заполняет строку заголовками для таблицы.
+        /// </summary>
+        /// <param name="ExcelWorkSheet">Рабочий лист.</param>
+        /// <param name="row">Индекс строки.</param>
+        /// <param name="column">Индекс столбца.</param>
+        private void FillTheTitlesRow(Excel.Worksheet ExcelWorkSheet, int row, int column)
+        {
+            //Заполняем заголовки строк.
+            ExcelWorkSheet.Cells[row, column]     = "Произв.";
+            ExcelWorkSheet.Cells[row, column + 1] = "Артикул";
+            ExcelWorkSheet.Cells[row, column + 2] = "Название";
+            ExcelWorkSheet.Cells[row, column + 3] = "Ед. изм.";
+            ExcelWorkSheet.Cells[row, column + 4] = "Кол-во";
+            ExcelWorkSheet.Cells[row, column + 5] = "Цена";
+            ExcelWorkSheet.Cells[row, column + 6] = "Сумма";
+
+            //Настраиваем вид клеток.
+            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
+            excelCells.VerticalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            excelCells.Font.Bold = true;
+            excelCells.Font.Size = 12;
+            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack; //Обводим заголовки таблицы рамкой.            
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium; //Устанавливаем стиль и толщину линии
+        }//FillTheTitlesRow
+
+        /// <summary>
+        /// Заполянет строку данными из переданного объекта.
+        /// </summary>
+        /// <param name="ExcelWorkSheet">Рабочая страница</param>
+        /// <param name="sparePart">Объект товара.</param>
+        /// <param name="row">Индекс строки.</param>
+        /// <param name="column">Индекс столбца.</param>
+        /// <param name="titleColWidth">ширина столбца 'Название'.</param>
+        /// <param name="articulColWidth">ширина столбца 'Артикул'.</param>
+        private void FillExcelRow(Excel.Worksheet ExcelWorkSheet, OperationDetails operDet, int row, int column, int titleColWidth, int articulColWidth)
+        {
+            ExcelWorkSheet.Cells[row, column + 1] = operDet.SparePart.Articul;
+            ExcelWorkSheet.Cells[row, column + 2] = operDet.SparePart.Title;
+            //Выравнивание диапазона строк.
+            ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).VerticalAlignment = Excel.Constants.xlTop;
+            ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+
+            //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
+            if (operDet.SparePart.Articul.Length > articulColWidth || operDet.SparePart.Title.Length > titleColWidth)
+                IncreaseRowHeight(ExcelWorkSheet, operDet.SparePart, row, column, titleColWidth, articulColWidth);
+
+            ExcelWorkSheet.Cells[row, column] = operDet.SparePart.Manufacturer;
+            ExcelWorkSheet.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
+            ExcelWorkSheet.Cells[row, column + 4] = operDet.Count;
+            ExcelWorkSheet.Cells[row, column + 5] = operDet.Price;
+            ExcelWorkSheet.Cells[row, column + 6] = operDet.Price * operDet.Count;
+        }//FillExcelRow
+
+        /// <summary>
+        /// Увеличивает ширину строки.
+        /// </summary>
+        /// <param name="ExcelWorkSheet">Рабочий лист</param>
+        /// <param name="sparePart">Объкт товара.</param>
+        /// <param name="row">Индекс строки</param>
+        /// <param name="column">Индекс столбца</param>
+        /// <param name="titleColWidth">Ширина столбца для Названия товара.</param>
+        /// <param name="articulColWidth">Ширина столбца для Артикула товара.</param>
+        private void IncreaseRowHeight(Excel.Worksheet ExcelWorkSheet, SparePart sparePart, int row, int column, int titleColWidth, int articulColWidth)
+        {
+            ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+            //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
+            if (sparePart.Articul.Length > articulColWidth && sparePart.Title.Length <= titleColWidth)
+                ExcelWorkSheet.Cells[row, column + 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            if (sparePart.Articul.Length <= articulColWidth && sparePart.Title.Length > titleColWidth)
+                ExcelWorkSheet.Cells[row, column + 1].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+        }//IncreaseRowHeight
+
+        /// <summary>
+        /// Выводим 'Итого' в заданной клетке.
+        /// </summary>
+        /// <param name="ExcelWorkSheet">Рабочий лист.</param>
+        /// <param name="inTotal">Общая сумма операции.</param>
+        /// <param name="row">Индекс строки.</param>
+        /// <param name="column">Индекс столбца.</param>
+        private void InTotalExcelOutput(Excel.Worksheet ExcelWorkSheet, float inTotal, int row, int column)
+        {
+            //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
+            int indent = 0; //отступ
+            if (inTotal.ToString("0.00").Length <= 9)
+                indent = 1;
+
+            ExcelWorkSheet.Cells[row, column + 4 + indent] = "Итого : ";
+            ExcelWorkSheet.Cells[row, column + 5 + indent] = inTotal.ToString("0.00");
+            ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Underline = true;
+            ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Size = ExcelWorkSheet.Cells[row, column + 4 + indent].Font.Size = 12;
+            ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Bold = ExcelWorkSheet.Cells[row, column + 4 + indent].Font.Bold = true;
+        }//InTotalExcelOutput
 
         private void AutoFitMergedCellRowHeight(Excel.Range rng)
         {
