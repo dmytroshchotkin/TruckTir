@@ -639,11 +639,11 @@ namespace PartsApp
         /// </summary>
         /// <param name="sparePart">Список товаров для вывода в Excel.</param>
         /// <param name="agent">Фирма-покупатель.</param>
-        private async void saveInExcelAsync(List<Availability> availList, string agent)
+        private async void saveInExcelAsync(IList<OperationDetails> operDetList, string agent)
         {
             try
             {
-                await Task.Factory.StartNew(() => saveInExcel(availList, agent));
+                await Task.Factory.StartNew(() => saveInExcel(operDetList, agent));
             }
             catch
             {
@@ -656,10 +656,10 @@ namespace PartsApp
         /// </summary>
         /// <param name="availabilityList">Список оприходованных товаров.</param>
         /// <param name="agent">Фирма-покупатель.</param>
-        private void saveInExcel(List<Availability> availList, string agent)
+        private void saveInExcel(IList<OperationDetails> operDetList, string agent)
         {
-            Purchase purchase = availList[0].OperationDetails.Operation as Purchase;            
-            List<SparePart> sparePartsList = availList.Select(av => av.OperationDetails.SparePart).ToList();
+            Purchase purchase = operDetList[0].Operation as Purchase;
+            List<SparePart> sparePartsList = operDetList.Select(od => od.SparePart).ToList();
 
             Excel.Application ExcelApp     = new Excel.Application();
             Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
@@ -688,7 +688,7 @@ namespace PartsApp
                                                          "Покупатель : " + agent);
 
             //Заполняем таблицу.
-            FillTheExcelList(ExcelWorkSheet, availList.Select(av => av.OperationDetails).ToList(), ref row, column);
+            FillTheExcelList(ExcelWorkSheet, operDetList, ref row, column);
 
             //Выводим имена агентов.
             row += 2;
@@ -1186,9 +1186,7 @@ namespace PartsApp
                 //Если всё заполненно корректно.
                 if (IsRequiredFieldsValid())
                 {
-
                     List<Availability> availList = CreateAvailabilityListFromForm();
-
                     try
                     {                        
                         availList[0].OperationDetails.Operation.OperationId = PartsDAL.AddPurchase(availList);
@@ -1199,7 +1197,7 @@ namespace PartsApp
                         return;
                     }//catch 
 
-                    saveInExcelAsync(availList, buyerAgentTextBox.Text.Trim());
+                    saveInExcelAsync(availList.Select(av => av.OperationDetails).ToList(), buyerAgentTextBox.Text.Trim());
 
                     this.Close();
                 }//if
