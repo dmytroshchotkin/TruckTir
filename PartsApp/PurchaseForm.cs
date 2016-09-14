@@ -721,6 +721,7 @@ namespace PartsApp
             //int manufColWidth = 15, minManufColWidth = 8; //  15 -- Взято методом тыка.
 
             SetColumnsWidth(sparePartsList, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
+            float inTotal = 0; //Общая сумма операции.
             //Выводим список товаров.
             foreach (Availability avail in availList)            
             {
@@ -750,7 +751,10 @@ namespace PartsApp
 
                 ExcelApp.Cells[row, column + 4] = avail.OperationDetails.Count;
                 ExcelApp.Cells[row, column + 5] = avail.OperationDetails.Price;
-                ExcelApp.Cells[row, column + 6] = avail.OperationDetails.Price * avail.OperationDetails.Count;
+
+                float sum = avail.OperationDetails.Price * avail.OperationDetails.Count;
+                inTotal += sum;
+                ExcelApp.Cells[row, column + 6] = sum;
             }//foreach
 
             //Обводим талицу рамкой. 
@@ -761,11 +765,11 @@ namespace PartsApp
             ++row;
             //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
             int indent = 0; //отступ
-            if (inTotalNumberLabel.Text.Length <= 9)
+            if (inTotal.ToString("0.00").Length <= 9)
                 indent = 1;
 
-            ExcelApp.Cells[row, column + 4 + indent] = inTotalLabel.Text;
-            ExcelApp.Cells[row, column + 5 + indent] = inTotalNumberLabel.Text;
+            ExcelApp.Cells[row, column + 4 + indent] = "Итого :";
+            ExcelApp.Cells[row, column + 5 + indent] = inTotal.ToString("0.00");
             (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Underline = true;
             (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Size = 12;
             (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Bold = true;
