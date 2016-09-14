@@ -105,81 +105,73 @@ namespace PartsApp
         {            
             Excel.Application ExcelApp     = new Excel.Application();
             Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
-            Excel.Worksheet ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
+            Excel.Worksheet ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);   //Таблица.
 
             //Настраиваем горизонтальные и вертикальные границы области печати.
             ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 7;
             ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin  = 7;
 
-            #region Вывод таблицы товаров.
+            //Заполняем таблицу.
+            FillExcelList(ExcelWorkSheet, spareParts);
 
+            //Вызываем нашу созданную эксельку.
+            ExcelApp.Visible = ExcelApp.UserControl = true;
+            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.                 
+        }//saveInExcel
+
+        /// <summary>
+        /// Заполняем Excel инф-цией из переданного списка.
+        /// </summary>
+        /// <param name="ExcelWorkSheet">Рабочая страница</param>
+        /// <param name="spareParts">Список товаров.</param>
+        private void FillExcelList(Excel.Worksheet ExcelWorkSheet, IList<SparePart> spareParts)
+        {
             //Выводим заголовок.
             int row = 1, column = 1;
-            ExcelApp.Cells[row, column] = "Произв.";
-            ExcelApp.Cells[row, column + 1] = "Артикул";
-            ExcelApp.Cells[row, column + 2] = "Название";
-            ExcelApp.Cells[row, column + 3] = "Ед. изм.";
-            ExcelApp.Cells[row, column + 4] = "Кол-во";
-            ExcelApp.Cells[row, column + 5] = "Цена";
-            //excelApp.Cells[extRow, column + 5] = "Сумма";
+            ExcelWorkSheet.Cells[row, column]     = "Произв.";
+            ExcelWorkSheet.Cells[row, column + 1] = "Артикул";
+            ExcelWorkSheet.Cells[row, column + 2] = "Название";
+            ExcelWorkSheet.Cells[row, column + 3] = "Ед. изм.";
+            ExcelWorkSheet.Cells[row, column + 4] = "Кол-во";
+            ExcelWorkSheet.Cells[row, column + 5] = "Цена";            
 
             Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString());
             excelCells.Font.Bold = true;
             excelCells.Font.Size = 12;
-            //Обводим заголовки таблицы рамкой. 
-            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-            //Устанавливаем стиль и толщину линии
-            //excelCells.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+
+            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack; //Обводим заголовки таблицы рамкой.
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium; //Устанавливаем стиль и толщину линии
 
             //Устанавливаем ширину первой Колонок
-            double titleColWidth = 35; //50 -- Взято методом тыка.  
-            int articulColWidth = 20;            
-            //int manufColWidth = 15, minManufColWidth = 8; //  15 -- Взято методом тыка.
+            int titleColWidth = 35, articulColWidth = 20;
+            SetColumnsWidth(spareParts, ExcelWorkSheet.Cells[row, column + 2], ExcelWorkSheet.Cells[row, column + 1], ExcelWorkSheet.Cells[row, column], titleColWidth, articulColWidth);
 
-            SetColumnsWidth(spareParts, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
             //Выводим список товаров.
-            for (int i = 0; i < spareParts.Count; ++i)
+            foreach (SparePart sparePart in spareParts)
             {
                 ++row;
-                ExcelApp.Cells[row, column + 2] = spareParts[i].Title;
-                ExcelApp.Cells[row, column + 1] = spareParts[i].Articul;
+                ExcelWorkSheet.Cells[row, column + 2] = sparePart.Title;
+                ExcelWorkSheet.Cells[row, column + 1] = sparePart.Articul;
                 //Выравнивание диапазона строк.
                 ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString()).Cells.VerticalAlignment = Excel.Constants.xlTop;
                 ExcelWorkSheet.get_Range("A" + row.ToString(), "F" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
 
                 //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
-                if (spareParts[i].Articul.Length > articulColWidth || spareParts[i].Title.Length > titleColWidth)
-                {
-                    ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;                    
-                    //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
-                    if (spareParts[i].Articul.Length > articulColWidth && spareParts[i].Title.Length <= titleColWidth)
-                        (ExcelApp.Cells[row, column + 2] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-                    if (spareParts[i].Articul.Length <= articulColWidth && spareParts[i].Title.Length > titleColWidth)
-                        (ExcelApp.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-                }//if
-                
-                ExcelApp.Cells[row, column] = spareParts[i].Manufacturer;
+                if (sparePart.Articul.Length > articulColWidth || sparePart.Title.Length > titleColWidth)
+                    IncreaseRowHeight(ExcelWorkSheet, sparePart, row, column, titleColWidth, articulColWidth);
 
-                ExcelApp.Cells[row, column + 3] = spareParts[i].MeasureUnit;
-                ExcelApp.Cells[row, column + 4] = spareParts[i].AvailabilityList.Sum(av => av.OperationDetails.Count);
-                //excelApp.Cells[extRow, column + 5] = availabilityList[i].Price;                
-                //excelApp.Cells[extRow, column + 5] = availabilityList[i].Price * availabilityList[i].Count;
-                if (spareParts[i].AvailabilityList.Count > 0)
-                    ExcelApp.Cells[row, column + 5] = Availability.GetMaxSellingPrice(spareParts[i].AvailabilityList);      
+                ExcelWorkSheet.Cells[row, column] = sparePart.Manufacturer;
+
+                ExcelWorkSheet.Cells[row, column + 3] = sparePart.MeasureUnit;
+                ExcelWorkSheet.Cells[row, column + 4] = sparePart.AvailabilityList.Sum(av => av.OperationDetails.Count);
+                if (sparePart.AvailabilityList.Count > 0)
+                    ExcelWorkSheet.Cells[row, column + 5] = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
             }//for
 
             //Обводим талицу рамкой. 
             excelCells = ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "F" + row.ToString());
             excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-
-            #endregion
-
-            //Вызываем нашу созданную эксельку.
-            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-            ExcelApp.Visible = ExcelApp.UserControl = true;        
-        }//saveInExcel
-
+        }//FillExcelList
 
         /// <summary>
         /// Возвращает ширину заданной области.
@@ -202,11 +194,9 @@ namespace PartsApp
         /// <param name="titleCol">Столбец "Название".</param>
         /// <param name="articulCol">Столбец "Артикул".</param>
         /// <param name="manufCol">Столбец "Производитель".</param>
-        private void SetColumnsWidth(IList<SparePart> spareParts, Excel.Range titleCol, Excel.Range articulCol, Excel.Range manufCol)
+        private void SetColumnsWidth(IList<SparePart> spareParts, Excel.Range titleCol, Excel.Range articulCol, Excel.Range manufCol, int titleColWidth, int articulColWidth)
         {
             //Устанавливаем ширину первой Колонок
-            double titleColWidth = 35; // -- Взято методом тыка.  
-            int articulColWidth = 20;
             int manufColWidth = 15, minManufColWidth = 8; //  -- Взято методом тыка.
 
             //Проверяем по факту максимальную длину колонки Manufacturer и если она меньше заявленной длины, дополняем лишнее в Title
@@ -222,12 +212,28 @@ namespace PartsApp
                 manufColWidth = (manufColWidth - different < minManufColWidth) ? minManufColWidth : manufColWidth - different;
             }//if
 
-            manufCol.Columns.ColumnWidth = manufColWidth;
+            manufCol.Columns.ColumnWidth   = manufColWidth;
             articulCol.Columns.ColumnWidth = articulColWidth;
-            titleCol.Columns.ColumnWidth = titleColWidth;
+            titleCol.Columns.ColumnWidth   = titleColWidth;
         }//SetColumnsWidth
-
-
+        /// <summary>
+        /// Увеличивает ширину строки.
+        /// </summary>
+        /// <param name="ExcelWorkSheet">Рабочий лист</param>
+        /// <param name="sparePart">Объкт товара.</param>
+        /// <param name="row">Индекс строки</param>
+        /// <param name="column">Индекс столбца</param>
+        /// <param name="titleColWidth">Ширина столбца для Названия товара.</param>
+        /// <param name="articulColWidth">Ширина столбца для Артикула товара.</param>
+        private void IncreaseRowHeight(Excel.Worksheet ExcelWorkSheet, SparePart sparePart, int row, int column, int titleColWidth, int articulColWidth)
+        {
+            ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+            //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
+            if (sparePart.Articul.Length > articulColWidth && sparePart.Title.Length <= titleColWidth)
+                (ExcelWorkSheet.Cells[row, column + 2] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            if (sparePart.Articul.Length <= articulColWidth && sparePart.Title.Length > titleColWidth)
+                (ExcelWorkSheet.Cells[row, column + 1] as Excel.Range).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+        }//IncreaseRowHeight
 
 
         private void SpPriceListToExcelToolStripMenuItem_Click(object sender, EventArgs e)
@@ -283,8 +289,8 @@ namespace PartsApp
             }//for
 
             //Вызываем нашу созданную эксельку.
-            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
             ExcelApp.Visible = ExcelApp.UserControl = true;
+            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
         }//ExcelSaveSparePartPriceList
 
         private int FillExcelSheetPriceList(SparePart sparePart, int startRow, int column, 
@@ -320,7 +326,6 @@ namespace PartsApp
             return row;
         }//FillExcelSheetPriceList
         
-
 
 
 

@@ -792,8 +792,8 @@ namespace PartsApp
             AutoFitMergedCellRowHeight((ExcelApp.Cells[row, column] as Excel.Range));
 
             //Вызываем нашу созданную эксельку.
-            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
             ExcelApp.Visible = ExcelApp.UserControl = true;
+            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
         }//saveInExcel  
 
         /// <summary>
