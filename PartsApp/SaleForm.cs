@@ -930,7 +930,7 @@ namespace PartsApp
         /// <summary>
         /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
         /// </summary>
-        /// <param name="spareParts">Список товаров для вывода в Excel.</param>
+        /// <param name="sparePart">Список товаров для вывода в Excel.</param>
         /// <param name="agent">Фирма-продавец.</param>
         private async void saveInExcelAsync(Sale sale, string agent)
         {
