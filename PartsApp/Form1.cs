@@ -64,6 +64,7 @@ namespace PartsApp
             userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
 
             PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.
+
             /* Пробная зона */
             /////////////////////////////////////////////////////////////////////////////            
 

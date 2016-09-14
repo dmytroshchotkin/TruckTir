@@ -637,11 +637,12 @@ namespace PartsApp
         /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
         /// </summary>
         /// <param name="spareParts">Список товаров для вывода в Excel.</param>
-        private async void saveInExcelAsync(List<Availability> availList)
+        /// <param name="agent">Фирма-покупатель.</param>
+        private async void saveInExcelAsync(List<Availability> availList, string agent)
         {
             try
             {
-                await Task.Factory.StartNew(() => saveInExcel(availList));
+                await Task.Factory.StartNew(() => saveInExcel(availList, agent));
             }
             catch
             {
@@ -652,9 +653,9 @@ namespace PartsApp
         /// <summary>
         /// Метод вывода приходной информации в Excel-файл.
         /// </summary>
-        /// <param name="sale">Информация о приходе.</param>
         /// <param name="availabilityList">Список оприходованных товаров.</param>
-        private void saveInExcel(List<Availability> availList)
+        /// <param name="agent">Фирма-покупатель.</param>
+        private void saveInExcel(List<Availability> availList, string agent)
         {
             Purchase purchase = availList[0].OperationDetails.Operation as Purchase;
             List<SparePart> sparePartsList = availList.Select(av => av.OperationDetails.SparePart).ToList();
@@ -686,9 +687,9 @@ namespace PartsApp
             //Выводим поставщика и покупателя.
             row += 2;
             ExcelApp.Cells[row, column].Font.Name = "Consolas";
-            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-50}{1}", 
-                                                         supplierLabel.Text + " " + supplierTextBox.Text,
-                                                         buyerLabel.Text + " " + buyerTextBox.Text);
+            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-50}{1}",
+                                                         "Поставщик : " + purchase.Contragent.ContragentName,
+                                                         "Покупатель : " + agent);
 
             #region Вывод таблицы товаров.
 
@@ -775,9 +776,9 @@ namespace PartsApp
             //Выводим имена агентов.
             row += 2;
             ExcelApp.Cells[row, column].Font.Name = "Consolas"; //моноширинный шрифт
-            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-50}{1}", 
-                                                         supplierAgentLabel.Text + " " + supplierAgentTextBox.Text,
-                                                         buyerAgentLabel.Text + " " + buyerAgentTextBox.Text);
+            ExcelApp.Cells[row, column] = String.Format("\t\t{0,-50}{1}",
+                                                         "Выписал : " + purchase.ContragentEmployee,
+                                                         "Принял : " +  Form1.CurEmployee.LastName + " " + Form1.CurEmployee.FirstName);
             //Делаем визуальное отделение информации от заметки, с помощью линии.
             row += 2;
 
@@ -789,17 +790,13 @@ namespace PartsApp
             excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
             excelCells.Merge(true);
             excelCells.WrapText = true;
-            excelCells.Value = purchase.Description;//descriptionRichTextBox.Text;
+            excelCells.Value = purchase.Description;
             AutoFitMergedCellRowHeight((ExcelApp.Cells[row, column] as Excel.Range));
 
             //Вызываем нашу созданную эксельку.
             ExcelApp.Visible = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
             ExcelApp.UserControl = true;
-
-
-            //Закрываем форму (будет ошибка при отладке закрытия не из того потока), здесь потому что, если закрыть в okButton_click не будет выводится inTotal в Excel.
-            this.Close();
         }//saveInExcel  
 
         /// <summary>
@@ -1082,7 +1079,7 @@ namespace PartsApp
                     (
                         operationDetails : operDet,
                         storageAddress   : (String.IsNullOrWhiteSpace(storageAdressTextBox.Text)) ? null : storageAdressTextBox.Text.Trim(),
-                        markup: (row.Cells[MarkupCol.Index].Tag != null) ? Convert.ToSingle(row.Cells[MarkupCol.Index].Tag) : 0
+                        markup           : (row.Cells[MarkupCol.Index].Tag != null) ? Convert.ToSingle(row.Cells[MarkupCol.Index].Tag) : 0
                     );
                     availList.Add(avail);
                 }//if
@@ -1138,6 +1135,7 @@ namespace PartsApp
                 //Если всё заполненно корректно.
                 if (IsRequiredFieldsValid())
                 {
+
                     List<Availability> availList = CreateAvailabilityListFromForm();
 
                     try
@@ -1150,10 +1148,10 @@ namespace PartsApp
                         return;
                     }//catch 
 
-                    saveInExcelAsync(availList);
+                    saveInExcelAsync(availList, buyerAgentTextBox.Text.Trim());
 
-                    this.Visible = false;
-                    //this.Close();
+                    //this.Visible = false;
+                    this.Close();
                 }//if
             }//if
         }//
