@@ -925,29 +925,42 @@ namespace PartsApp
         #endregion
 
         #region Методы вывода инф-ции в Excel.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private void BeginLoadSaleToExcelFile(object sale)
+        /// <summary>
+        /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
+        /// </summary>
+        /// <param name="spareParts">Список товаров для вывода в Excel.</param>
+        /// <param name="agent">Фирма-продавец.</param>
+        private async void saveInExcelAsync(Sale sale, string agent)
         {
-            if (sale is Sale)
-                LoadSaleToExcelFile(sale as Sale);
-        }//BeginLoadsaleToExcelFile
+            try
+            {
+                await Task.Factory.StartNew(() => saveInExcel(sale, agent));
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка вывода в Excel");
+            }
+        }//saveInExcelAsync   
 
         /// <summary>
         /// Метод вывода расходной информации в Excel-файл.
         /// </summary>
         /// <param name="sale">Информация о расходе.</param>
-        /// <param name="availabilityList">Список проданного товара.</param>
-        private void LoadSaleToExcelFile(Sale sale)
+        /// <param name="agent">Фирма-продавец.</param>
+        private void saveInExcel(Sale sale, string agent)
         {
+            /*Error Уменьшить боковые margin.*/
             IList<OperationDetails> operDetList = sale.OperationDetailsList;
 
-            Excel.Application ExcelApp = new Excel.Application();
-            Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
+            Excel.Application ExcelApp     = new Excel.Application();
+            Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
             Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
 
             //Настраиваем горизонтальные и вертикальные границы области печати.
             ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin = 7;
-            ExcelWorkSheet.PageSetup.TopMargin = ExcelWorkSheet.PageSetup.BottomMargin = 10;
+            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 10;
 
             int row = 1, column = 1;
             //Выводим Id и Дату. 
@@ -963,8 +976,8 @@ namespace PartsApp
             row += 2;
             ExcelApp.Cells[row, column].Font.Name = "Consolas";
             ExcelApp.Cells[row, column] = String.Format("\t\t{0,-40}{1}",
-                                                         sellerLabel.Text + " " + sellerTextBox.Text,
-                                                         customerLabel.Text + " " + customerTextBox.Text);
+                                                         "Продавец : " + agent,
+                                                         "Покупатель : " + sale.Contragent.ContragentName);
 
             #region Вывод таблицы товаров.
 
@@ -998,6 +1011,7 @@ namespace PartsApp
             SetColumnsWidth(operDetList, (ExcelApp.Cells[row, column + 2] as Excel.Range), (ExcelApp.Cells[row, column + 1] as Excel.Range), (ExcelApp.Cells[row, column] as Excel.Range));
 
             //Выводим список товаров.
+            float inTotal = 0;
             foreach (OperationDetails operDet in operDetList)
             {
                 ++row;
@@ -1019,13 +1033,12 @@ namespace PartsApp
                 }//if
 
                 ExcelApp.Cells[row, column] = operDet.SparePart.Manufacturer;
-
                 ExcelApp.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
-                float count = operDet.Count;
-                float price = operDet.Price;
-                ExcelApp.Cells[row, column + 4] = count;
-                ExcelApp.Cells[row, column + 5] = price;
-                ExcelApp.Cells[row, column + 6] = price * count;
+                ExcelApp.Cells[row, column + 4] = operDet.Count;
+                ExcelApp.Cells[row, column + 5] = operDet.Price;
+                float sum = operDet.Price * operDet.Count;
+                inTotal += sum;
+                ExcelApp.Cells[row, column + 6] = sum;
             }//foreach
 
             //Обводим талицу рамкой. 
@@ -1036,11 +1049,11 @@ namespace PartsApp
             ++row;
             //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
             int indent = 0; //отступ
-            if (inTotalNumberLabel.Text.Length <= 9)
+            if (inTotal.ToString("0.00").Length <= 9)
                 indent = 1;
 
-            ExcelApp.Cells[row, column + 4 + indent] = inTotalLabel.Text;
-            ExcelApp.Cells[row, column + 5 + indent] = inTotalNumberLabel.Text;
+            ExcelApp.Cells[row, column + 4 + indent] = "Итого : ";
+            ExcelApp.Cells[row, column + 5 + indent] = inTotal.ToString("0.00");
             (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Underline = true;
             (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Size = (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Size = 12;
             (ExcelApp.Cells[row, column + 5 + indent] as Excel.Range).Font.Bold = (ExcelApp.Cells[row, column + 4 + indent] as Excel.Range).Font.Bold = true;
@@ -1051,8 +1064,8 @@ namespace PartsApp
             row += 2;
             ExcelApp.Cells[row, column].Font.Name = "Consolas";
             ExcelApp.Cells[row, column] = String.Format("\t\t{0,-40}{1}",
-                                                         sellerAgentLabel.Text + " " + sellerAgentTextBox.Text,
-                                                         customerAgentLabel.Text + " " + customerAgentTextBox.Text);
+                                                         "Выписал : " + Form1.CurEmployee.LastName + " " + Form1.CurEmployee.FirstName,
+                                                         "Принял : " + sale.ContragentEmployee);
 
             //Делаем визуальное отделение информации от заметки, с помощью линии.
             row += 2;
@@ -1074,7 +1087,7 @@ namespace PartsApp
             ExcelApp.UserControl = true;
 
             this.Close();
-        }//LoadSaleToExcelFile  
+        }//saveInExcel  
 
         private void AutoFitMergedCellRowHeight(Excel.Range rng)
         {
@@ -1188,7 +1201,7 @@ namespace PartsApp
 
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
 
@@ -1297,12 +1310,8 @@ namespace PartsApp
                         return;
                     }//catch 
 
-                    //LoadsaleToExcelFile(sale, availabilityList);
-                    /*!!!*/
-                    new System.Threading.Thread(BeginLoadSaleToExcelFile).Start(sale); //Сделать по нормальному вызов с потоком.
-
-                    this.Visible = false;
-                    //this.Close();
+                    saveInExcelAsync(sale, sellerTextBox.Text.Trim());
+                    this.Close();
                 }//if
             }//if
         }//

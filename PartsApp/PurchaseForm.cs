@@ -1154,7 +1154,6 @@ namespace PartsApp
 
                     saveInExcelAsync(availList, buyerAgentTextBox.Text.Trim());
 
-                    //this.Visible = false;
                     this.Close();
                 }//if
             }//if
