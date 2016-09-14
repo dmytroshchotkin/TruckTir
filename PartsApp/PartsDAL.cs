@@ -546,7 +546,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает Id вставленной записи в таблицу Purchases.
         /// </summary>
-        /// <param name="sale">Приход который нужно добавить в таблицу.</param>
+        /// <param name="purchase">Приход который нужно добавить в таблицу.</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         /// <returns></returns>
         private static int AddPurchase(Purchase purchase, SQLiteCommand cmd)
@@ -637,7 +637,7 @@ namespace PartsApp
         /// Возвращает Id вставленной записи в табл. Sale.
         /// </summary>
         /// <param name="availabilityList">Список продаваемого товара.</param>
-        /// <param name="sale">Информация о продаже.</param>
+        /// <param name="purchase">Информация о продаже.</param>
         /// <returns></returns>
         public static int AddSale(Sale sale, List<OperationDetails> operDetList)
         {
@@ -683,7 +683,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает Id вставленной записи в таблицу Sales.
         /// </summary>
-        /// <param name="sale">Продажа которую нужно добавить в таблицу.</param>
+        /// <param name="purchase">Продажа которую нужно добавить в таблицу.</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         /// <returns></returns>
         private static int AddSale(Sale sale, SQLiteCommand cmd)
@@ -1680,7 +1680,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает детали операции для заданного прихода.
         /// </summary>
-        /// <param name="sale">Приход.</param>
+        /// <param name="purchase">Приход.</param>
         /// <returns></returns>
         public static List<OperationDetails> FindPurchaseDetails(Purchase purchase)
         {
@@ -1712,7 +1712,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает детали операции для заданного расхода.
         /// </summary>
-        /// <param name="sale">Приход.</param>
+        /// <param name="purchase">Приход.</param>
         /// <returns></returns>
         public static List<OperationDetails> FindSaleDetails(Sale sale)
         {
@@ -2280,7 +2280,7 @@ namespace PartsApp
 
 
 
-        //public static IList<Operation> FindPurchasesByParameters(Operation sale)
+        //public static IList<Operation> FindPurchasesByParameters(Operation purchase)
         //{
         //    IList<Operation> operDetList = new List<Operation>();
 
@@ -2296,10 +2296,10 @@ namespace PartsApp
         //        var dataReader = cmd.ExecuteReader();
         //        while (dataReader.Read())
         //        {
-        //            Operation sale = new Operation();
+        //            Operation purchase = new Operation();
 
 
-        //            operDetList.Add(sale);
+        //            operDetList.Add(purchase);
         //        }//while
         //        connection.Close();
         //    }//using

@@ -672,13 +672,7 @@ namespace PartsApp
             int row = 1, column = 1;
 
             //Выводим Id и Дату. 
-            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
-            excelCells.Merge(true);
-            excelCells.Font.Bold = true;
-            excelCells.Font.Underline = true;
-            excelCells.Font.Size = 18;
-            excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-            excelCells.Value = String.Format("Приходная накладная №{0} от {1}г.", purchase.OperationId, purchase.OperationDate.ToString("dd/MM/yyyy"));
+            OperationIdAndDateExcelOutput(ExcelWorkSheet, purchase, row, column);
 
             //Выводим поставщика и покупателя.
             row += 2;
@@ -699,22 +693,13 @@ namespace PartsApp
             //Делаем визуальное отделение информации от заметки, с помощью линии.
             row += 2;
 
-            ExcelApp.Cells[row, column].Value = "                                                                                                                                                                                                                                 ";//longEmptyString.ToString();
-            (ExcelWorkSheet.Cells[row, column] as Excel.Range).Font.Underline = true;
-            //Выводим заметку
-            row++;
-            // объединим область ячеек  строки "вместе"
-            excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
-            excelCells.Merge(true);
-            excelCells.WrapText = true;
-            excelCells.Value = purchase.Description;
-            AutoFitMergedCellRowHeight((ExcelApp.Cells[row, column] as Excel.Range));
+            //Выводим заметку к операции.
+            DescriptionExcelOutput(ExcelWorkSheet, purchase.Description, ref row, column);
 
             //Вызываем нашу созданную эксельку.
             ExcelApp.Visible = ExcelApp.UserControl = true;
-            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
+            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.            
         }//saveInExcel  
-
 
 
         /// <summary>
@@ -848,6 +833,47 @@ namespace PartsApp
             ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Bold = ExcelWorkSheet.Cells[row, column + 4 + indent].Font.Bold = true;
         }//InTotalExcelOutput
 
+        /// <summary>
+        /// Заполняет заданную строку Id операции и датой.
+        /// </summary>
+        /// <param name="ExcelWorkSheet">Рабочий лист</param>
+        /// <param name="purchase">Объект операции.</param>
+        /// <param name="row">Индекс строки</param>
+        /// <param name="column">Индекс столбца</param>
+        private void OperationIdAndDateExcelOutput(Excel.Worksheet ExcelWorkSheet, Purchase purchase, int row, int column)
+        {
+            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
+            excelCells.Merge(true);
+            excelCells.Font.Bold = true;
+            excelCells.Font.Underline = true;
+            excelCells.Font.Size = 18;
+            excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            excelCells.Value = String.Format("Расходная накладная №{0} от {1}г.", purchase.OperationId, purchase.OperationDate.ToString("dd/MM/yyyy"));
+        }//OperationIdAndDateExcelOutput
+
+        /// <summary>
+        /// Выводит заметку об операции.
+        /// </summary>
+        /// <param name="ExcelWorkSheet">Рабочий лист</param>
+        /// <param name="description">заметка</param>
+        /// <param name="row">Индекс строки</param>
+        /// <param name="column">Индекс столбца</param>
+        private void DescriptionExcelOutput(Excel.Worksheet ExcelWorkSheet, string description, ref int row, int column)
+        {
+            if (description != null)
+            {
+                ExcelWorkSheet.Cells[row, column].Value = "                                                                                                                                                                                                                                 ";//longEmptyString.ToString();
+                ExcelWorkSheet.Cells[row, column].Font.Underline = true;
+                //Выводим заметку
+                row++;
+                // объединим область ячеек  строки "вместе"? для вывода операции.
+                Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "G" + row.ToString());
+                excelCells.Merge(true);
+                excelCells.WrapText = true;
+                excelCells.Value = description;
+                AutoFitMergedCellRowHeight((ExcelWorkSheet.Cells[row, column] as Excel.Range));
+            }//if
+        }//DescriptionExcelOutput
 
 
         /// <summary>
