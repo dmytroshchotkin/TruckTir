@@ -13,7 +13,7 @@ using PartsApp.Models;
 
 namespace PartsApp
 {
-    /*ERROR Добавить в блок finally, закрытие Excel, в случае ошибки.*/
+    
     public partial class Form1 : Form
     {                                    
         /// <summary>
@@ -66,11 +66,6 @@ namespace PartsApp
 
             PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.
 
-            /* Пробная зона */
-            /////////////////////////////////////////////////////////////////////////////            
-
-
-            //////////////////////////////////////////////////////////////////////////////
         }//Form1_Load
 
         #region Работа с Excel.

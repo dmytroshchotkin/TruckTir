@@ -13,20 +13,17 @@ using PartsApp.SupportClasses;
 
 namespace PartsApp
 {
-    /*Задания*/
-    //Передавать inTotal в метод распечатки в Excel.
-
     public partial class PurchaseForm : Form
     {
         bool _isCellEditError = false;
         DataGridViewCell _lastEditCell;
 
 
-
         public PurchaseForm()
         {
             InitializeComponent();
         }//
+
 
         private void PurchaseForm_Load(object sender, EventArgs e)
         {
@@ -632,8 +629,8 @@ namespace PartsApp
         #endregion
 
         #region Методы вывода инф-ции в Excel.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /*ERROR заменить avaiList на operDetList*/
         /// <summary>
         /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
         /// </summary>
@@ -793,6 +790,7 @@ namespace PartsApp
             ExcelWorkSheet.Cells[row, column + 6] = operDet.Price * operDet.Count;
         }//FillExcelRow
 
+
         /// <summary>
         /// Увеличивает ширину строки.
         /// </summary>
@@ -862,6 +860,7 @@ namespace PartsApp
         {
             if (description != null)
             {
+                //Делаем визуальное отделение информации от заметки, с помощью линии.
                 ExcelWorkSheet.Cells[row, column].Value = "                                                                                                                                                                                                                                 ";//longEmptyString.ToString();
                 ExcelWorkSheet.Cells[row, column].Font.Underline = true;
                 //Выводим заметку
@@ -990,7 +989,7 @@ namespace PartsApp
 
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         private void currencyComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1223,6 +1222,7 @@ namespace PartsApp
                         return;
                     }//catch 
 
+                    //Выводим в Excel.
                     saveInExcelAsync(availList.Select(av => av.OperationDetails).ToList(), buyerAgentTextBox.Text.Trim());
 
                     this.Close();

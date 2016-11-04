@@ -982,9 +982,8 @@ namespace PartsApp
                                                          "Выписал : " + Form1.CurEmployee.LastName + " " + Form1.CurEmployee.FirstName,
                                                          "Принял : " + sale.ContragentEmployee);
 
-            //Делаем визуальное отделение информации от заметки, с помощью линии.
+           
             row += 2;
-
             //Выводим заметку к операции.
             DescriptionExcelOutput(ExcelWorkSheet, sale.Description, ref row, column);
 
@@ -1155,6 +1154,7 @@ namespace PartsApp
         {
             if (description != null)
             {
+                //Делаем визуальное отделение информации от заметки, с помощью линии.
                 ExcelWorkSheet.Cells[row, column].Value = "                                                                                                                                                                                                                                 ";//longEmptyString.ToString();
                 ExcelWorkSheet.Cells[row, column].Font.Underline = true;
                 //Выводим заметку

@@ -118,7 +118,7 @@ namespace PartsApp
             //Если есть выбранная строка.
             if (OperationsInfoDGV.SelectedRows.Count != 0)
             {
-                int operId = (int)OperationsInfoDGV.SelectedRows[0].Cells[OperationIdCol.Index].Value; //Находим Id выбранной операции.                
+                int operId    = (int)OperationsInfoDGV.SelectedRows[0].Cells[OperationIdCol.Index].Value; //Находим Id выбранной операции.                
                 int contragId = (int)ContragentsListBox.SelectedValue;
                 IOperation oper = _contragentsOperations[contragId].First(op => op.OperationId == operId); //Находим нужную операцию
                 

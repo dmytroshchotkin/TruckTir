@@ -1666,7 +1666,7 @@ namespace PartsApp
             return new Sale
             (
                 operationId        : Convert.ToInt32(dataReader["OperationId"]),
-                employee           : (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null,
+                employee           : (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader ["EmployeeId"])) : null,
                 contragent         : FindCustomers(Convert.ToInt32(dataReader["ContragentId"])),
                 contragentEmployee : dataReader["ContragentEmployee"] as string,
                 operationDate      : Convert.ToDateTime(dataReader["OD"]),
