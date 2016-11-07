@@ -68,6 +68,12 @@
     <Compile Include="AddEmployeeForm.Designer.cs">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReturnForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReturnForm.Designer.cs">
+      <DependentUpon>ReturnForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SparePartForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,6 +145,9 @@
     <Compile Include="SupportClasses\SortableBindingList.cs" />
     <EmbeddedResource Include="AddEmployeeForm.resx">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReturnForm.resx">
+      <DependentUpon>ReturnForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SparePartForm.resx">
       <DependentUpon>SparePartForm.cs</DependentUpon>
