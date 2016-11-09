@@ -101,7 +101,7 @@ namespace PartsApp
 
         private void buyerTextBox_Leave(object sender, EventArgs e)
         {
-            ControlValidation.IsInputControlEmpty(buyerTextBox, toolTip);            
+            ControlValidation.IsInputControlEmpty(buyerTextBox, toolTip);  
         }//buyerTextBox_Leave
 
 

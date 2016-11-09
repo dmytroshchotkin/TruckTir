@@ -90,17 +90,7 @@ namespace PartsApp
 
         private void sellerTextBox_Leave(object sender, EventArgs e)
         {
-            if (String.IsNullOrWhiteSpace(sellerTextBox.Text))
-            {
-                sellerBackPanel.BackColor = sellerStarLabel.ForeColor = Color.Red;
-                sellerTextBox.Clear();
-                toolTip.Show("Введите имя/название продавца", this, sellerBackPanel.Location, 2000);
-            }//if
-            else
-            {
-                sellerStarLabel.ForeColor = Color.Black;
-                sellerBackPanel.BackColor = SystemColors.Control;
-            }//else
+            ControlValidation.IsInputControlEmpty(sellerTextBox, toolTip);
         }//sellerTextBox_Leave
 
 

@@ -46,7 +46,7 @@ namespace PartsApp
 
         private void ContragentTextBox_Leave(object sender, EventArgs e)
         {
-            //Если такого клиента нет в базе.
+            //Если такого клиента нет в базе, выдаём ошибку.
             string customer = ContragentTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == ContragentTextBox.Text.Trim().ToLower());
             if (customer != null)
             {
