@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PartsApp.SupportClasses;
 
 namespace PartsApp
 {
@@ -25,39 +26,49 @@ namespace PartsApp
             OperationDateTimePicker.Value   = DateTime.Now;
 
             //Заполняем список автоподстановки для ввода контрагента.
-            CustomerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindCustomers().Select(c => c.ContragentName).ToArray());
+            ContragentTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindCustomers().Select(c => c.ContragentName).ToArray());
 
-            AgentEmployeerTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);
+            AgentEmployeerTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);            
         }//ReturnForm_Load
 
 
-        private void CustomerTextBox_Leave(object sender, EventArgs e)
+        #region Валидация вводимых данных.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void ContragentTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (String.IsNullOrWhiteSpace(CustomerTextBox.Text))
+            if (e.KeyCode == Keys.Enter)
             {
-                CustomerBackPanel.BackColor = CustomerStarLabel.ForeColor = Color.Red;
-                CustomerTextBox.Clear();
-                toolTip.Show("Введите имя/название клиента", this, CustomerBackPanel.Location, 2000);
+                ContragentTextBox_Leave(sender, null);
+                descriptionRichTextBox.Select(); //переводим фокус на на другой объект.
+            }//if
+        }//ContragentTextBox_PreviewKeyDown
+
+        private void ContragentTextBox_Leave(object sender, EventArgs e)
+        {
+            //Если такого клиента нет в базе.
+            string customer = ContragentTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == ContragentTextBox.Text.Trim().ToLower());
+            if (customer != null)
+            {
+                ControlValidation.CorrectValueInput(toolTip, ContragentTextBox);
+                ContragentTextBox.Text = customer; //Выводим корректное имя контрагента.
             }//if
             else
-            {
-                CustomerStarLabel.ForeColor = Color.Black;
-                CustomerBackPanel.BackColor = SystemColors.Control;
-
-                //Если такой клиен в базе отсутствует, выводим сообщение об этом.
-                string customer = CustomerTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == CustomerTextBox.Text.Trim().ToLower());
-                if (customer == null)
-                    toolTip.Show("Такого клиента нет в базе! Он будет добавлен.", this, CustomerBackPanel.Location, 2000);
-                else
-                    CustomerTextBox.Text = customer; //Выводим корректное имя контрагента. 
+            {                
+                ControlValidation.WrongValueInput(toolTip, ContragentTextBox, "Поле \"Клиент\" заполнено некорректно");
             }//else      
-        }//CustomerTextBox_Leave
+        }//ContragentTextBox_Leave
+
+        private void AgentTextBox_Leave(object sender, EventArgs e)
+        {
+            ControlValidation.IsInputControlEmpty(AgentTextBox, toolTip);
+        }//AgentTextBox_Leave
 
 
 
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
 
 
 
@@ -67,6 +78,8 @@ namespace PartsApp
         {
 
         }
+
+        
 
         
 
