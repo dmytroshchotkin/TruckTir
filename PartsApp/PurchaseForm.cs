@@ -75,44 +75,33 @@ namespace PartsApp
                 supplierTextBox_Leave(sender, null);
                 PurchaseDGV.Select(); //переводим фокус на таблицу приходов.
             }//if
-        }//supplierTextBox_PreviewKeyDown
+        }//ContragentTextBox_PreviewKeyDown
 
         private void supplierTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(supplierTextBox.Text))
             {
-                supplierBackPanel.BackColor = supplierStarLabel.ForeColor = Color.Red;
-                supplierTextBox.Clear();
-                toolTip.Show("Введите имя/название поставщика", this, supplierBackPanel.Location, 2000);
+                ControlValidation.WrongValueInput(toolTip, supplierTextBox);
             }//if
             else
-            {
-                supplierStarLabel.ForeColor = Color.Black;
-                supplierBackPanel.BackColor = SystemColors.Control;
-
+            {                
                 //Если такой контрагент в базе отсутствует, выводим сообщение об этом.
-                string text = supplierTextBox.Text.Trim().ToLower();
-                string supplier = supplierTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == text);
-                if (supplier == null)
-                    toolTip.Show("Такого клиента нет в базе! Он будет добавлен.", this, supplierBackPanel.Location, 2000);
-                else
+                string supplier = supplierTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == supplierTextBox.Text.Trim().ToLower());
+                if (supplier != null)
+                {
+                    ControlValidation.CorrectValueInput(toolTip, supplierTextBox);
                     supplierTextBox.Text = supplier; //Выводим корректное имя контрагента.
+                }//if
+                else
+                {
+                    ControlValidation.WrongValueInput(toolTip, supplierTextBox, "Такого клиента нет в базе! Он будет добавлен.", Color.Yellow);
+                }//else
             }//else  
-        }//supplierTextBox_Leave
+        }//AgentTextBox_Leave
 
         private void buyerTextBox_Leave(object sender, EventArgs e)
         {
-            if (String.IsNullOrWhiteSpace(buyerTextBox.Text))
-            {
-                buyerBackPanel.BackColor = buyerStarLabel.ForeColor = Color.Red;
-                buyerTextBox.Clear();
-                toolTip.Show("Введите имя/название покупателя", this, buyerBackPanel.Location, 2000);
-            }//if
-            else
-            {
-                buyerStarLabel.ForeColor = Color.Black;
-                buyerBackPanel.BackColor = SystemColors.Control;
-            }//else
+            ControlValidation.IsInputControlEmpty(buyerTextBox, toolTip);            
         }//buyerTextBox_Leave
 
 
