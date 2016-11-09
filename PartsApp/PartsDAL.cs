@@ -546,7 +546,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает Id вставленной записи в таблицу Purchases.
         /// </summary>
-        /// <param name="purchase">Приход который нужно добавить в таблицу.</param>
+        /// <param name="sale">Приход который нужно добавить в таблицу.</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         /// <returns></returns>
         private static int AddPurchase(Purchase purchase, SQLiteCommand cmd)
@@ -637,7 +637,7 @@ namespace PartsApp
         /// Возвращает Id вставленной записи в табл. Sale.
         /// </summary>
         /// <param name="availabilityList">Список продаваемого товара.</param>
-        /// <param name="purchase">Информация о продаже.</param>
+        /// <param name="sale">Информация о продаже.</param>
         /// <returns></returns>
         public static int AddSale(Sale sale, List<OperationDetails> operDetList)
         {
@@ -683,7 +683,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает Id вставленной записи в таблицу Sales.
         /// </summary>
-        /// <param name="purchase">Продажа которую нужно добавить в таблицу.</param>
+        /// <param name="sale">Продажа которую нужно добавить в таблицу.</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         /// <returns></returns>
         private static int AddSale(Sale sale, SQLiteCommand cmd)
@@ -1485,6 +1485,11 @@ namespace PartsApp
         #region Поиск по таблице Purchases и Sales.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Возвращает объект типа Purchase, найденный по заданному Id.
+        /// </summary>
+        /// <param name="saleId">Id поставки</param>
+        /// <returns></returns>
         public static Purchase FindPurchase(int purchaseId)
         {
             Purchase purchase = null;
@@ -1511,6 +1516,38 @@ namespace PartsApp
 
             return purchase;
         }//FindPurchase
+
+        /// <summary>
+        /// Возвращает объект типа Sale, найденный по заданному Id.
+        /// </summary>
+        /// <param name="saleId">Id продажи</param>
+        /// <returns></returns>
+        public static Sale FindSale(int saleId)
+        {
+            Sale sale = null;
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
+                                   + "FROM Sales WHERE OperationId = @SaleId;";
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@SaleId", saleId);
+
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            sale = CreateSale(dataReader);
+                    }//using dataReader
+                }//using cmd
+
+                connection.Close();
+            }//using
+
+            return sale;
+        }//FindSale
 
         public static List<IOperation> FindPurchases(int supplierId, SparePart spr)
         {
@@ -1680,7 +1717,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает детали операции для заданного прихода.
         /// </summary>
-        /// <param name="purchase">Приход.</param>
+        /// <param name="sale">Приход.</param>
         /// <returns></returns>
         public static List<OperationDetails> FindPurchaseDetails(Purchase purchase)
         {
@@ -1712,7 +1749,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает детали операции для заданного расхода.
         /// </summary>
-        /// <param name="purchase">Приход.</param>
+        /// <param name="sale">Приход.</param>
         /// <returns></returns>
         public static List<OperationDetails> FindSaleDetails(Sale sale)
         {
@@ -2280,7 +2317,7 @@ namespace PartsApp
 
 
 
-        //public static IList<Operation> FindPurchasesByParameters(Operation purchase)
+        //public static IList<Operation> FindPurchasesByParameters(Operation sale)
         //{
         //    IList<Operation> operDetList = new List<Operation>();
 
@@ -2296,10 +2333,10 @@ namespace PartsApp
         //        var dataReader = cmd.ExecuteReader();
         //        while (dataReader.Read())
         //        {
-        //            Operation purchase = new Operation();
+        //            Operation sale = new Operation();
 
 
-        //            operDetList.Add(purchase);
+        //            operDetList.Add(sale);
         //        }//while
         //        connection.Close();
         //    }//using
