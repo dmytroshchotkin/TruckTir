@@ -29,22 +29,16 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             this.purchaseIdLabel = new System.Windows.Forms.Label();
             this.purchaseDateLabel = new System.Windows.Forms.Label();
             this.AgentLabel = new System.Windows.Forms.Label();
             this.ContragentLabel = new System.Windows.Forms.Label();
-            this.purchaseGroupBox = new System.Windows.Forms.GroupBox();
-            this.PurchaseDGV = new System.Windows.Forms.DataGridView();
-            this.SparePartIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ArticulCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TitleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MeasureUnitCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ReturnGroupBox = new System.Windows.Forms.GroupBox();
+            this.ReturnDGV = new System.Windows.Forms.DataGridView();
             this.inTotalLabel = new System.Windows.Forms.Label();
             this.supplierAgentLabel = new System.Windows.Forms.Label();
             this.AgentEmployeerLabel = new System.Windows.Forms.Label();
@@ -66,8 +60,15 @@
             this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.AgentStarLabel = new System.Windows.Forms.Label();
-            this.purchaseGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PurchaseDGV)).BeginInit();
+            this.SparePartIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArticulCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TitleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MeasureUnitCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ReturnGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ReturnDGV)).BeginInit();
             this.AgentBackPanel.SuspendLayout();
             this.ContragentBackPanel.SuspendLayout();
             this.purchaseContextMenuStrip.SuspendLayout();
@@ -109,24 +110,24 @@
             this.ContragentLabel.TabIndex = 3;
             this.ContragentLabel.Text = "Клиент :";
             // 
-            // purchaseGroupBox
+            // ReturnGroupBox
             // 
-            this.purchaseGroupBox.Controls.Add(this.PurchaseDGV);
-            this.purchaseGroupBox.Location = new System.Drawing.Point(25, 155);
-            this.purchaseGroupBox.Name = "purchaseGroupBox";
-            this.purchaseGroupBox.Size = new System.Drawing.Size(854, 211);
-            this.purchaseGroupBox.TabIndex = 6;
-            this.purchaseGroupBox.TabStop = false;
-            this.purchaseGroupBox.Text = "Лист возврата.";
+            this.ReturnGroupBox.Controls.Add(this.ReturnDGV);
+            this.ReturnGroupBox.Location = new System.Drawing.Point(25, 155);
+            this.ReturnGroupBox.Name = "ReturnGroupBox";
+            this.ReturnGroupBox.Size = new System.Drawing.Size(854, 211);
+            this.ReturnGroupBox.TabIndex = 6;
+            this.ReturnGroupBox.TabStop = false;
+            this.ReturnGroupBox.Text = "Лист возврата.";
             // 
-            // PurchaseDGV
+            // ReturnDGV
             // 
-            this.PurchaseDGV.AllowUserToAddRows = false;
-            this.PurchaseDGV.AllowUserToDeleteRows = false;
-            this.PurchaseDGV.AllowUserToResizeRows = false;
-            this.PurchaseDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.PurchaseDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.PurchaseDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ReturnDGV.AllowUserToAddRows = false;
+            this.ReturnDGV.AllowUserToDeleteRows = false;
+            this.ReturnDGV.AllowUserToResizeRows = false;
+            this.ReturnDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.ReturnDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ReturnDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SparePartIdCol,
             this.ArticulCol,
             this.TitleCol,
@@ -134,79 +135,16 @@
             this.CountCol,
             this.PriceCol,
             this.SumCol});
-            this.PurchaseDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PurchaseDGV.Enabled = false;
-            this.PurchaseDGV.Location = new System.Drawing.Point(3, 16);
-            this.PurchaseDGV.Name = "PurchaseDGV";
-            this.PurchaseDGV.Size = new System.Drawing.Size(848, 192);
-            this.PurchaseDGV.TabIndex = 0;
-            // 
-            // SparePartIdCol
-            // 
-            this.SparePartIdCol.HeaderText = "Ид";
-            this.SparePartIdCol.Name = "SparePartIdCol";
-            this.SparePartIdCol.Visible = false;
-            // 
-            // ArticulCol
-            // 
-            this.ArticulCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.ArticulCol.HeaderText = "Артикул";
-            this.ArticulCol.MinimumWidth = 130;
-            this.ArticulCol.Name = "ArticulCol";
-            this.ArticulCol.Width = 130;
-            // 
-            // TitleCol
-            // 
-            this.TitleCol.HeaderText = "Название";
-            this.TitleCol.Name = "TitleCol";
-            // 
-            // MeasureUnitCol
-            // 
-            this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle4;
-            this.MeasureUnitCol.HeaderText = "Ед. изм.";
-            this.MeasureUnitCol.MinimumWidth = 35;
-            this.MeasureUnitCol.Name = "MeasureUnitCol";
-            this.MeasureUnitCol.ReadOnly = true;
-            this.MeasureUnitCol.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.MeasureUnitCol.ToolTipText = "Единица измерения";
-            this.MeasureUnitCol.Width = 35;
-            // 
-            // CountCol
-            // 
-            this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.CountCol.HeaderText = "Кол-во";
-            this.CountCol.Name = "CountCol";
-            this.CountCol.ReadOnly = true;
-            this.CountCol.ToolTipText = "Количество";
-            this.CountCol.Width = 66;
-            // 
-            // PriceCol
-            // 
-            this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "C2";
-            dataGridViewCellStyle5.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle5;
-            this.PriceCol.HeaderText = "Цена";
-            this.PriceCol.MinimumWidth = 100;
-            this.PriceCol.Name = "PriceCol";
-            this.PriceCol.ReadOnly = true;
-            this.PriceCol.ToolTipText = " Цена возврата";
-            // 
-            // SumCol
-            // 
-            this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "C2";
-            dataGridViewCellStyle6.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle6;
-            this.SumCol.HeaderText = "Сумма";
-            this.SumCol.MinimumWidth = 100;
-            this.SumCol.Name = "SumCol";
-            this.SumCol.ReadOnly = true;
-            this.SumCol.ToolTipText = "Сумма возврата";
+            this.ReturnDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ReturnDGV.Location = new System.Drawing.Point(3, 16);
+            this.ReturnDGV.Name = "ReturnDGV";
+            this.ReturnDGV.Size = new System.Drawing.Size(848, 192);
+            this.ReturnDGV.TabIndex = 0;
+            this.ReturnDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.ReturnDGV_CellBeginEdit);
+            this.ReturnDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.ReturnDGV_CellEndEdit);
+            this.ReturnDGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.ReturnDGV_CellFormatting);
+            this.ReturnDGV.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.ReturnDGV_DataError);            
+            this.ReturnDGV.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.ReturnDGV_RowsAdded);
             // 
             // inTotalLabel
             // 
@@ -386,6 +324,83 @@
             this.AgentStarLabel.TabIndex = 14;
             this.AgentStarLabel.Text = "*";
             // 
+            // SparePartIdCol
+            // 
+            this.SparePartIdCol.HeaderText = "Ид";
+            this.SparePartIdCol.Name = "SparePartIdCol";
+            this.SparePartIdCol.ReadOnly = true;
+            this.SparePartIdCol.Visible = false;
+            // 
+            // ArticulCol
+            // 
+            this.ArticulCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.ArticulCol.DataPropertyName = "SparePart.Articul";
+            this.ArticulCol.HeaderText = "Артикул";
+            this.ArticulCol.MinimumWidth = 130;
+            this.ArticulCol.Name = "ArticulCol";
+            this.ArticulCol.ReadOnly = true;
+            this.ArticulCol.Width = 130;
+            // 
+            // TitleCol
+            // 
+            this.TitleCol.DataPropertyName = "SparePart.Title";
+            this.TitleCol.HeaderText = "Название";
+            this.TitleCol.Name = "TitleCol";
+            this.TitleCol.ReadOnly = true;
+            // 
+            // MeasureUnitCol
+            // 
+            this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.MeasureUnitCol.DataPropertyName = "SparePart.MeasureUnit";
+            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle21;
+            this.MeasureUnitCol.HeaderText = "Ед. изм.";
+            this.MeasureUnitCol.MinimumWidth = 35;
+            this.MeasureUnitCol.Name = "MeasureUnitCol";
+            this.MeasureUnitCol.ReadOnly = true;
+            this.MeasureUnitCol.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.MeasureUnitCol.ToolTipText = "Единица измерения";
+            this.MeasureUnitCol.Width = 35;
+            // 
+            // CountCol
+            // 
+            this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.CountCol.DataPropertyName = "Count";
+            dataGridViewCellStyle22.ForeColor = System.Drawing.Color.Gray;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle22;
+            this.CountCol.HeaderText = "Кол-во";
+            this.CountCol.Name = "CountCol";
+            this.CountCol.ToolTipText = "Количество";
+            this.CountCol.Width = 66;
+            // 
+            // PriceCol
+            // 
+            this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.PriceCol.DataPropertyName = "Price";
+            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle23.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle23.Format = "C2";
+            dataGridViewCellStyle23.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle23;
+            this.PriceCol.HeaderText = "Цена";
+            this.PriceCol.MinimumWidth = 100;
+            this.PriceCol.Name = "PriceCol";
+            this.PriceCol.ReadOnly = true;
+            this.PriceCol.ToolTipText = " Цена возврата";
+            // 
+            // SumCol
+            // 
+            this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle24.Format = "C2";
+            dataGridViewCellStyle24.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle24;
+            this.SumCol.HeaderText = "Сумма";
+            this.SumCol.MinimumWidth = 100;
+            this.SumCol.Name = "SumCol";
+            this.SumCol.ReadOnly = true;
+            this.SumCol.ToolTipText = "Сумма возврата";
+            // 
             // ReturnForm
             // 
             this.AcceptButton = this.okButton;
@@ -406,7 +421,7 @@
             this.Controls.Add(this.AgentEmployeerLabel);
             this.Controls.Add(this.supplierAgentLabel);
             this.Controls.Add(this.inTotalLabel);
-            this.Controls.Add(this.purchaseGroupBox);
+            this.Controls.Add(this.ReturnGroupBox);
             this.Controls.Add(this.ContragentLabel);
             this.Controls.Add(this.AgentLabel);
             this.Controls.Add(this.purchaseDateLabel);
@@ -419,8 +434,8 @@
             this.Name = "ReturnForm";
             this.Text = "Форма возврата товара.";
             this.Load += new System.EventHandler(this.ReturnForm_Load);
-            this.purchaseGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.PurchaseDGV)).EndInit();
+            this.ReturnGroupBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ReturnDGV)).EndInit();
             this.AgentBackPanel.ResumeLayout(false);
             this.AgentBackPanel.PerformLayout();
             this.ContragentBackPanel.ResumeLayout(false);
@@ -437,8 +452,8 @@
         private System.Windows.Forms.Label purchaseDateLabel;
         private System.Windows.Forms.Label AgentLabel;
         private System.Windows.Forms.Label ContragentLabel;
-        private System.Windows.Forms.GroupBox purchaseGroupBox;
-        private System.Windows.Forms.DataGridView PurchaseDGV;
+        private System.Windows.Forms.GroupBox ReturnGroupBox;
+        private System.Windows.Forms.DataGridView ReturnDGV;
         private System.Windows.Forms.Label inTotalLabel;
         private System.Windows.Forms.Label supplierAgentLabel;
         private System.Windows.Forms.Label AgentEmployeerLabel;
@@ -459,6 +474,7 @@
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.RichTextBox descriptionRichTextBox;
         private System.Windows.Forms.Label descriptionLabel;
+        private System.Windows.Forms.Label AgentStarLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn SparePartIdCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ArticulCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TitleCol;
@@ -466,6 +482,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CountCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
-        private System.Windows.Forms.Label AgentStarLabel;
     }
 }

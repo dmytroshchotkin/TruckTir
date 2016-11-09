@@ -824,7 +824,7 @@ namespace PartsApp
         /// Заполняет заданную строку Id операции и датой.
         /// </summary>
         /// <param name="ExcelWorkSheet">Рабочий лист</param>
-        /// <param name="purchase">Объект операции.</param>
+        /// <param name="sale">Объект операции.</param>
         /// <param name="row">Индекс строки</param>
         /// <param name="column">Индекс столбца</param>
         private void OperationIdAndDateExcelOutput(Excel.Worksheet ExcelWorkSheet, Purchase purchase, int row, int column)

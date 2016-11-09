@@ -804,7 +804,7 @@ namespace PartsApp
                     e.Value = val;
                 }//if
             }//if
-        }//extPartsDGV_CellFormatting
+        }//ReturnDGV_CellFormatting
 
         private void extPartsDGV_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {

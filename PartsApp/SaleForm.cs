@@ -145,7 +145,7 @@ namespace PartsApp
             //Обрабатываем ввод в ячейку 'Количествo'.
             if (_lastEditCell.OwningColumn == CountCol)
                 SetCustomValueToCell(_lastEditCell, null); //очищаем ячейку для ввода значения пользователем.
-        }//SaleDGV_CellBeginEdit
+        }//ReturnDGV_CellBeginEdit
 
         /// <summary>
         /// Событие для добавления обработчиков на ввод текста в ячейку.
@@ -596,13 +596,9 @@ namespace PartsApp
             float inTotal = 0;
             foreach (DataGridViewRow row in SaleDGV.Rows)
             {
-                //Если в строке указана и цена и количестов.
+                //Если в строке заполнена ячейка 'Сумма'.
                 if (row.Cells[SumCol.Index].Value != null)
-                {
-                    float sellPrice = Convert.ToSingle(row.Cells[SellingPriceCol.Index].Value);
-                    float sellCount = Convert.ToSingle(row.Cells[CountCol.Index].Value);
-                    inTotal += sellPrice * sellCount;
-                }//if
+                    inTotal += Convert.ToSingle(row.Cells[SumCol.Index].Value);
             }//foreach
 
             //Заполняем InTotalLabel расчитанным значением.
@@ -938,7 +934,7 @@ namespace PartsApp
         /// <summary>
         /// Метод вывода расходной информации в Excel-файл.
         /// </summary>
-        /// <param name="purchase">Информация о расходе.</param>
+        /// <param name="sale">Информация о расходе.</param>
         /// <param name="agent">Фирма-продавец.</param>
         private void saveInExcel(Sale sale, string agent)
         {
@@ -1120,7 +1116,7 @@ namespace PartsApp
         /// Заполняет заданную строку Id операции и датой.
         /// </summary>
         /// <param name="ExcelWorkSheet">Рабочий лист</param>
-        /// <param name="purchase">Объект операции.</param>
+        /// <param name="sale">Объект операции.</param>
         /// <param name="row">Индекс строки</param>
         /// <param name="column">Индекс столбца</param>
         private void OperationIdAndDateExcelOutput(Excel.Worksheet ExcelWorkSheet, Sale sale, int row, int column)

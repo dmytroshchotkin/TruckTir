@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PartsApp.SupportClasses;
+using PartsApp.Models;
 
 namespace PartsApp
 {
@@ -28,7 +29,15 @@ namespace PartsApp
             //Заполняем список автоподстановки для ввода контрагента.
             ContragentTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindCustomers().Select(c => c.ContragentName).ToArray());
 
-            AgentEmployeerTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);            
+            AgentEmployeerTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);
+
+            ReturnDGV.AutoGenerateColumns = false;
+            /////////////////////////////////////////////////////////
+            
+            var sales = PartsDAL.FindSale(15);
+            ReturnDGV.DataSource = sales.OperationDetailsList;
+
+            /////////////////////////////////////////////////////////
         }//ReturnForm_Load
 
 
@@ -70,6 +79,206 @@ namespace PartsApp
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
+        #region Методы работы с таблицей.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Метод для корректной binding-привязки вложенных эл-тов объекта.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ReturnDGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            DataGridView grid = (DataGridView)sender;
+            DataGridViewRow row = grid.Rows[e.RowIndex];
+            DataGridViewColumn col = grid.Columns[e.ColumnIndex];
+
+            if (row.DataBoundItem != null)
+            {
+                if (col.DataPropertyName.Contains("."))
+                {
+                    string[] props = col.DataPropertyName.Split('.');
+                    Type type = row.DataBoundItem.GetType();
+                    System.Reflection.PropertyInfo propInfo = type.GetProperty(props[0]);
+                    object val = propInfo.GetValue(row.DataBoundItem, null);
+                    for (int i = 1; i < props.Length; i++)
+                    {
+                        Type valueType = val.GetType();
+                        propInfo = valueType.GetProperty(props[i]);
+                        val = propInfo.GetValue(val, null);
+                    }//for
+                    e.Value = val;
+                }//if
+            }//if
+        }//ReturnDGV_CellFormatting
+        
+        /// <summary>
+        /// Для запоминания в св-во Tag кол-ва проданного товара.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ReturnDGV_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            DataGridViewCell countCell = ReturnDGV[CountCol.Index, e.RowIndex];
+            //Запоминаем кол-во проданного товара в св-во Tag ячейки.
+            countCell.Tag = countCell.Value;
+        }//ReturnDGV_RowsAdded
+
+        /// <summary>
+        /// Событие для обработки начала ввода в ячейку "Количество".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param> 
+        private void ReturnDGV_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            //Обрабатываем ввод в ячейку 'Количествo'.
+            DataGridViewCell cell = ReturnDGV[e.ColumnIndex, e.RowIndex];
+            if (cell.OwningColumn == CountCol)
+                SetCustomValueToCell(cell, null); //очищаем ячейку для ввода значения пользователем.
+        }//ReturnDGV_CellBeginEdit
+
+        /// <summary>
+        /// Валидация ввода в ячейку "Количество".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ReturnDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            CountCellFilled(ReturnDGV[e.ColumnIndex, e.RowIndex]);
+        }//SaleDGV_CellEndEdit
+
+        /// <summary>
+        /// Событие для обработки стандартного сообщения об ошибке.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ReturnDGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            CountCellFilled(ReturnDGV[e.ColumnIndex, e.RowIndex]);
+            e.Cancel = false;
+        }//ReturnDGV_DataError
+
+
+        /// <summary>
+        /// Производит необх. действия при окончании редактирования ячейки столбца 'Количество'.
+        /// </summary>
+        /// <param name="extCountCell">Редактируемая ячейка.</param>
+        private void CountCellFilled(DataGridViewCell cell)
+        {
+            //Проверяем корректность ввода.
+            string measureUnit = (cell.OwningRow.DataBoundItem as OperationDetails).SparePart.MeasureUnit;
+            if (!IsCountCellValueCorrect(cell, measureUnit))            
+            {
+                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.
+                SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
+            }//if
+
+            //Заполняем столбец 'Сумма'.
+            FillTheSumCell(cell.OwningRow);    
+        }//CountCellFilled
+
+        /// <summary>
+        /// Возвращает число или генерирует исключение если введенное значение в ячейку 'Кол-во' некорректно.
+        /// </summary>
+        /// <param name="countCell">Ячейка столбца 'Кол-во'.</param>
+        /// <returns></returns>
+        private bool IsCountCellValueCorrect(DataGridViewCell countCell, string measureUnit)
+        {
+            float count;
+            //Если введено не числовое значение, это ошибка.
+            if (countCell.Value == null || (Single.TryParse(countCell.Value.ToString(), out count) == false))
+                return false;
+
+            //Ввод значения не более 0, или больше чем было приобретено, является ошибкой. 
+            float totalCount = Convert.ToSingle(countCell.Tag);
+            if (count <= 0 || count > totalCount)
+                return false;
+
+            //Проверяем является ли введенное число корректным для продажи, т.е. кратно ли оно минимальной единице продажи.     
+            if (count % Models.MeasureUnit.GetMinUnitSale(measureUnit) != 0)
+                return false;
+
+            return true;
+        }//IsCountCellValueCorrect
+
+        /// <summary>
+        /// Записывает дефолтное значения в переданную ячейку.
+        /// </summary>
+        /// <param name="cell">Ячейка.</param>
+        private void SetDefaultValueToCell(DataGridViewCell cell)
+        {
+            cell.Style.ForeColor = Color.Gray;
+            cell.Value = cell.Tag;
+        }//SetDefaultValueToCell
+
+        /// <summary>
+        /// Записывает кастомное значения в переданную ячейку.
+        /// </summary>
+        /// <param name="cell">Ячейка.</param>
+        private void SetCustomValueToCell(DataGridViewCell cell, object value)
+        {
+            cell.Style.ForeColor = Color.Black;
+            cell.Value = value;
+        }//SetCustomValueToCell
+
+        /// <summary>
+        /// Заполняет ячейку 'Сумма' заданной строки и общую сумму.
+        /// </summary>
+        /// <param name="extRow">Строка дял которой производятся вычисления и заполнение.</param>
+        private void FillTheSumCell(DataGridViewRow row)
+        {
+            if (row.Cells[CountCol.Index].Style.ForeColor == Color.Black)
+            {
+                float price = Convert.ToSingle(row.Cells[PriceCol.Index].Value);
+                float count = Convert.ToSingle(row.Cells[CountCol.Index].Value);
+                row.Cells[SumCol.Index].Value = price * count;
+            }//if
+            else
+            {
+                row.Cells[SumCol.Index].Value = null;//очищаем ячейку. 
+            }//else
+
+            FillTheInTotal(); //Заполняем общую сумму операции.
+        }//FillTheSumCell
+
+        /// <summary>
+        /// Заполняет InTotalLabel корретным значением.
+        /// </summary>
+        private void FillTheInTotal()
+        {
+            float inTotal = 0;
+            foreach (DataGridViewRow row in ReturnDGV.Rows)
+            {
+                //Если в строке заполнена ячейка 'Сумма'.
+                if (row.Cells[SumCol.Index].Value != null)
+                    inTotal += Convert.ToSingle(row.Cells[SumCol.Index].Value);
+            }//foreach
+
+            //Заполняем InTotalLabel расчитанным значением.
+            inTotalNumberLabel.Text = String.Format("{0}(руб)", Math.Round(inTotal, 2, MidpointRounding.AwayFromZero));
+        }//FillTheInTotal
+
+        /// <summary>
+        /// Возвращает абсолютный location области сразу под позицией клетки из saleDGV. 
+        /// </summary>
+        /// <param name="countCell">Клетка под чьей location необходимо вернуть</param>
+        /// <returns></returns>
+        private Point GetCellBelowLocation(DataGridViewCell cell)
+        {
+            Point cellLoc = ReturnDGV.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
+            Point dgvLoc  = ReturnDGV.Location;
+            Point gbLoc   = ReturnGroupBox.Location;
+            return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);
+        }//GetCellBelowLocation
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
+
 
 
 
@@ -78,6 +287,12 @@ namespace PartsApp
         {
 
         }
+
+        
+
+        
+
+        
 
         
 
