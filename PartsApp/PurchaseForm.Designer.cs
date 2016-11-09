@@ -163,6 +163,7 @@
             // 
             // PurchaseDGV
             // 
+            this.PurchaseDGV.AllowUserToResizeRows = false;
             this.PurchaseDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.PurchaseDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.PurchaseDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -185,7 +186,7 @@
             this.PurchaseDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.PurchaseDGV_CellEndEdit);
             this.PurchaseDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.PurchaseDGV_CellMouseClick);
             this.PurchaseDGV.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.PurchaseDGV_EditingControlShowing);
-            this.PurchaseDGV.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.PurchaseDGV_RowPostPaint);            
+            this.PurchaseDGV.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.PurchaseDGV_RowPostPaint);
             this.PurchaseDGV.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.PurchaseDGV_RowsAdded);
             this.PurchaseDGV.SelectionChanged += new System.EventHandler(this.PurchaseDGV_SelectionChanged);
             // 

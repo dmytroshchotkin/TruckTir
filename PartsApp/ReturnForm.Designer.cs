@@ -37,7 +37,7 @@
             this.purchaseIdLabel = new System.Windows.Forms.Label();
             this.purchaseDateLabel = new System.Windows.Forms.Label();
             this.supplierLabel = new System.Windows.Forms.Label();
-            this.buyerLabel = new System.Windows.Forms.Label();
+            this.CustomerLabel = new System.Windows.Forms.Label();
             this.purchaseGroupBox = new System.Windows.Forms.GroupBox();
             this.PurchaseDGV = new System.Windows.Forms.DataGridView();
             this.SparePartIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,18 +51,18 @@
             this.SellingPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.inTotalLabel = new System.Windows.Forms.Label();
             this.supplierAgentLabel = new System.Windows.Forms.Label();
-            this.buyerAgentLabel = new System.Windows.Forms.Label();
+            this.AgentEmployeerLabel = new System.Windows.Forms.Label();
             this.purchaseIdTextBox = new System.Windows.Forms.TextBox();
-            this.purchaseDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.OperationDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.supplierStarLabel = new System.Windows.Forms.Label();
             this.supplierBackPanel = new System.Windows.Forms.Panel();
             this.supplierTextBox = new System.Windows.Forms.TextBox();
-            this.buyerBackPanel = new System.Windows.Forms.Panel();
-            this.buyerTextBox = new System.Windows.Forms.TextBox();
-            this.buyerStarLabel = new System.Windows.Forms.Label();
+            this.CustomerBackPanel = new System.Windows.Forms.Panel();
+            this.CustomerTextBox = new System.Windows.Forms.TextBox();
+            this.CustomerStarLabel = new System.Windows.Forms.Label();
             this.inTotalNumberLabel = new System.Windows.Forms.Label();
             this.supplierAgentTextBox = new System.Windows.Forms.TextBox();
-            this.buyerAgentTextBox = new System.Windows.Forms.TextBox();
+            this.AgentEmployeerTextBox = new System.Windows.Forms.TextBox();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -73,7 +73,7 @@
             this.purchaseGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PurchaseDGV)).BeginInit();
             this.supplierBackPanel.SuspendLayout();
-            this.buyerBackPanel.SuspendLayout();
+            this.CustomerBackPanel.SuspendLayout();
             this.purchaseContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -100,18 +100,18 @@
             this.supplierLabel.AutoSize = true;
             this.supplierLabel.Location = new System.Drawing.Point(33, 64);
             this.supplierLabel.Name = "supplierLabel";
-            this.supplierLabel.Size = new System.Drawing.Size(71, 13);
+            this.supplierLabel.Size = new System.Drawing.Size(72, 13);
             this.supplierLabel.TabIndex = 2;
-            this.supplierLabel.Text = "Поставщик :";
+            this.supplierLabel.Text = "Получатель :";
             // 
-            // buyerLabel
+            // CustomerLabel
             // 
-            this.buyerLabel.AutoSize = true;
-            this.buyerLabel.Location = new System.Drawing.Point(33, 109);
-            this.buyerLabel.Name = "buyerLabel";
-            this.buyerLabel.Size = new System.Drawing.Size(73, 13);
-            this.buyerLabel.TabIndex = 3;
-            this.buyerLabel.Text = "Покупатель :";
+            this.CustomerLabel.AutoSize = true;
+            this.CustomerLabel.Location = new System.Drawing.Point(33, 109);
+            this.CustomerLabel.Name = "CustomerLabel";
+            this.CustomerLabel.Size = new System.Drawing.Size(49, 13);
+            this.CustomerLabel.TabIndex = 3;
+            this.CustomerLabel.Text = "Клиент :";
             // 
             // purchaseGroupBox
             // 
@@ -121,10 +121,13 @@
             this.purchaseGroupBox.Size = new System.Drawing.Size(854, 211);
             this.purchaseGroupBox.TabIndex = 6;
             this.purchaseGroupBox.TabStop = false;
-            this.purchaseGroupBox.Text = "Лист прихода.";
+            this.purchaseGroupBox.Text = "Лист возврата.";
             // 
             // PurchaseDGV
             // 
+            this.PurchaseDGV.AllowUserToAddRows = false;
+            this.PurchaseDGV.AllowUserToDeleteRows = false;
+            this.PurchaseDGV.AllowUserToResizeRows = false;
             this.PurchaseDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.PurchaseDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.PurchaseDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -250,14 +253,14 @@
             this.supplierAgentLabel.TabIndex = 10;
             this.supplierAgentLabel.Text = "Выписал :";
             // 
-            // buyerAgentLabel
+            // AgentEmployeerLabel
             // 
-            this.buyerAgentLabel.AutoSize = true;
-            this.buyerAgentLabel.Location = new System.Drawing.Point(505, 473);
-            this.buyerAgentLabel.Name = "buyerAgentLabel";
-            this.buyerAgentLabel.Size = new System.Drawing.Size(51, 13);
-            this.buyerAgentLabel.TabIndex = 11;
-            this.buyerAgentLabel.Text = "Принял :";
+            this.AgentEmployeerLabel.AutoSize = true;
+            this.AgentEmployeerLabel.Location = new System.Drawing.Point(505, 473);
+            this.AgentEmployeerLabel.Name = "AgentEmployeerLabel";
+            this.AgentEmployeerLabel.Size = new System.Drawing.Size(51, 13);
+            this.AgentEmployeerLabel.TabIndex = 11;
+            this.AgentEmployeerLabel.Text = "Принял :";
             // 
             // purchaseIdTextBox
             // 
@@ -267,15 +270,15 @@
             this.purchaseIdTextBox.Size = new System.Drawing.Size(100, 20);
             this.purchaseIdTextBox.TabIndex = 12;
             // 
-            // purchaseDateTimePicker
+            // OperationDateTimePicker
             // 
-            this.purchaseDateTimePicker.CustomFormat = "";
-            this.purchaseDateTimePicker.Location = new System.Drawing.Point(465, 16);
-            this.purchaseDateTimePicker.MinDate = new System.DateTime(2015, 10, 10, 0, 0, 0, 0);
-            this.purchaseDateTimePicker.Name = "purchaseDateTimePicker";
-            this.purchaseDateTimePicker.Size = new System.Drawing.Size(200, 20);
-            this.purchaseDateTimePicker.TabIndex = 13;
-            this.purchaseDateTimePicker.Value = new System.DateTime(2015, 10, 13, 0, 0, 0, 0);
+            this.OperationDateTimePicker.CustomFormat = "";
+            this.OperationDateTimePicker.Location = new System.Drawing.Point(465, 16);
+            this.OperationDateTimePicker.MinDate = new System.DateTime(2015, 10, 10, 0, 0, 0, 0);
+            this.OperationDateTimePicker.Name = "OperationDateTimePicker";
+            this.OperationDateTimePicker.Size = new System.Drawing.Size(200, 20);
+            this.OperationDateTimePicker.TabIndex = 13;
+            this.OperationDateTimePicker.Value = new System.DateTime(2015, 10, 13, 0, 0, 0, 0);
             // 
             // supplierStarLabel
             // 
@@ -303,36 +306,37 @@
             this.supplierTextBox.Name = "supplierTextBox";
             this.supplierTextBox.Size = new System.Drawing.Size(196, 20);
             this.supplierTextBox.TabIndex = 0;
+            this.supplierTextBox.Text = "Truck Tir";
             // 
-            // buyerBackPanel
+            // CustomerBackPanel
             // 
-            this.buyerBackPanel.Controls.Add(this.buyerTextBox);
-            this.buyerBackPanel.Location = new System.Drawing.Point(108, 101);
-            this.buyerBackPanel.Name = "buyerBackPanel";
-            this.buyerBackPanel.Size = new System.Drawing.Size(200, 24);
-            this.buyerBackPanel.TabIndex = 16;
+            this.CustomerBackPanel.Controls.Add(this.CustomerTextBox);
+            this.CustomerBackPanel.Location = new System.Drawing.Point(108, 101);
+            this.CustomerBackPanel.Name = "CustomerBackPanel";
+            this.CustomerBackPanel.Size = new System.Drawing.Size(200, 24);
+            this.CustomerBackPanel.TabIndex = 16;
             // 
-            // buyerTextBox
+            // CustomerTextBox
             // 
-            this.buyerTextBox.AutoCompleteCustomSource.AddRange(new string[] {
+            this.CustomerTextBox.AutoCompleteCustomSource.AddRange(new string[] {
             "Truck Tir",
             "ФЛП Тунеев А. С."});
-            this.buyerTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.buyerTextBox.Location = new System.Drawing.Point(2, 2);
-            this.buyerTextBox.Name = "buyerTextBox";
-            this.buyerTextBox.Size = new System.Drawing.Size(196, 20);
-            this.buyerTextBox.TabIndex = 0;
-            this.buyerTextBox.Text = "Truck Tir";
+            this.CustomerTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.CustomerTextBox.Location = new System.Drawing.Point(2, 2);
+            this.CustomerTextBox.Name = "CustomerTextBox";
+            this.CustomerTextBox.Size = new System.Drawing.Size(196, 20);
+            this.CustomerTextBox.TabIndex = 0;
+            this.CustomerTextBox.Leave += new System.EventHandler(this.CustomerTextBox_Leave);
             // 
-            // buyerStarLabel
+            // CustomerStarLabel
             // 
-            this.buyerStarLabel.AutoSize = true;
-            this.buyerStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buyerStarLabel.Location = new System.Drawing.Point(20, 100);
-            this.buyerStarLabel.Name = "buyerStarLabel";
-            this.buyerStarLabel.Size = new System.Drawing.Size(20, 25);
-            this.buyerStarLabel.TabIndex = 17;
-            this.buyerStarLabel.Text = "*";
+            this.CustomerStarLabel.AutoSize = true;
+            this.CustomerStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CustomerStarLabel.Location = new System.Drawing.Point(20, 100);
+            this.CustomerStarLabel.Name = "CustomerStarLabel";
+            this.CustomerStarLabel.Size = new System.Drawing.Size(20, 25);
+            this.CustomerStarLabel.TabIndex = 17;
+            this.CustomerStarLabel.Text = "*";
             // 
             // inTotalNumberLabel
             // 
@@ -348,16 +352,16 @@
             // 
             this.supplierAgentTextBox.Location = new System.Drawing.Point(169, 473);
             this.supplierAgentTextBox.Name = "supplierAgentTextBox";
-            this.supplierAgentTextBox.ReadOnly = true;
             this.supplierAgentTextBox.Size = new System.Drawing.Size(237, 20);
             this.supplierAgentTextBox.TabIndex = 23;
             // 
-            // buyerAgentTextBox
+            // AgentEmployeerTextBox
             // 
-            this.buyerAgentTextBox.Location = new System.Drawing.Point(562, 473);
-            this.buyerAgentTextBox.Name = "buyerAgentTextBox";
-            this.buyerAgentTextBox.Size = new System.Drawing.Size(232, 20);
-            this.buyerAgentTextBox.TabIndex = 24;
+            this.AgentEmployeerTextBox.Location = new System.Drawing.Point(562, 473);
+            this.AgentEmployeerTextBox.Name = "AgentEmployeerTextBox";
+            this.AgentEmployeerTextBox.ReadOnly = true;
+            this.AgentEmployeerTextBox.Size = new System.Drawing.Size(232, 20);
+            this.AgentEmployeerTextBox.TabIndex = 24;
             // 
             // okButton
             // 
@@ -367,6 +371,7 @@
             this.okButton.TabIndex = 25;
             this.okButton.Text = "Ок";
             this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.okButton_MouseClick);
             // 
             // cancelButton
             // 
@@ -417,34 +422,35 @@
             this.Controls.Add(this.descriptionRichTextBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
-            this.Controls.Add(this.buyerAgentTextBox);
+            this.Controls.Add(this.AgentEmployeerTextBox);
             this.Controls.Add(this.supplierAgentTextBox);
             this.Controls.Add(this.inTotalNumberLabel);
-            this.Controls.Add(this.buyerBackPanel);
+            this.Controls.Add(this.CustomerBackPanel);
             this.Controls.Add(this.supplierBackPanel);
-            this.Controls.Add(this.purchaseDateTimePicker);
+            this.Controls.Add(this.OperationDateTimePicker);
             this.Controls.Add(this.purchaseIdTextBox);
-            this.Controls.Add(this.buyerAgentLabel);
+            this.Controls.Add(this.AgentEmployeerLabel);
             this.Controls.Add(this.supplierAgentLabel);
             this.Controls.Add(this.inTotalLabel);
             this.Controls.Add(this.purchaseGroupBox);
-            this.Controls.Add(this.buyerLabel);
+            this.Controls.Add(this.CustomerLabel);
             this.Controls.Add(this.supplierLabel);
             this.Controls.Add(this.purchaseDateLabel);
             this.Controls.Add(this.purchaseIdLabel);
             this.Controls.Add(this.supplierStarLabel);
-            this.Controls.Add(this.buyerStarLabel);
+            this.Controls.Add(this.CustomerStarLabel);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "ReturnForm";
             this.Text = "Форма прихода товара.";
+            this.Load += new System.EventHandler(this.ReturnForm_Load);
             this.purchaseGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PurchaseDGV)).EndInit();
             this.supplierBackPanel.ResumeLayout(false);
             this.supplierBackPanel.PerformLayout();
-            this.buyerBackPanel.ResumeLayout(false);
-            this.buyerBackPanel.PerformLayout();
+            this.CustomerBackPanel.ResumeLayout(false);
+            this.CustomerBackPanel.PerformLayout();
             this.purchaseContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -456,23 +462,23 @@
         private System.Windows.Forms.Label purchaseIdLabel;
         private System.Windows.Forms.Label purchaseDateLabel;
         private System.Windows.Forms.Label supplierLabel;
-        private System.Windows.Forms.Label buyerLabel;
+        private System.Windows.Forms.Label CustomerLabel;
         private System.Windows.Forms.GroupBox purchaseGroupBox;
         private System.Windows.Forms.DataGridView PurchaseDGV;
         private System.Windows.Forms.Label inTotalLabel;
         private System.Windows.Forms.Label supplierAgentLabel;
-        private System.Windows.Forms.Label buyerAgentLabel;
+        private System.Windows.Forms.Label AgentEmployeerLabel;
         private System.Windows.Forms.TextBox purchaseIdTextBox;
-        private System.Windows.Forms.DateTimePicker purchaseDateTimePicker;
+        private System.Windows.Forms.DateTimePicker OperationDateTimePicker;
         private System.Windows.Forms.Label supplierStarLabel;
         private System.Windows.Forms.Panel supplierBackPanel;
         private System.Windows.Forms.TextBox supplierTextBox;
-        private System.Windows.Forms.Panel buyerBackPanel;
-        private System.Windows.Forms.TextBox buyerTextBox;
-        private System.Windows.Forms.Label buyerStarLabel;
+        private System.Windows.Forms.Panel CustomerBackPanel;
+        private System.Windows.Forms.TextBox CustomerTextBox;
+        private System.Windows.Forms.Label CustomerStarLabel;
         private System.Windows.Forms.Label inTotalNumberLabel;
         private System.Windows.Forms.TextBox supplierAgentTextBox;
-        private System.Windows.Forms.TextBox buyerAgentTextBox;
+        private System.Windows.Forms.TextBox AgentEmployeerTextBox;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ToolTip toolTip;
