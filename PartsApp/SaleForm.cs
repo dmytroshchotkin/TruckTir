@@ -70,21 +70,22 @@ namespace PartsApp
         {            
             if (String.IsNullOrWhiteSpace(customerTextBox.Text))
             {
-                customerBackPanel.BackColor = customerStarLabel.ForeColor = Color.Red;
-                customerTextBox.Clear();
-                toolTip.Show("Введите имя/название клиента", this, customerBackPanel.Location, 2000);
+                ControlValidation.WrongValueInput(toolTip, customerTextBox);
             }//if
             else
             {
-                customerStarLabel.ForeColor = Color.Black;
-                customerBackPanel.BackColor = SystemColors.Control;
-      
-                //Если такой клиен в базе отсутствует, выводим сообщение об этом.
+                //Если такой контрагент в базе отсутствует, выводим сообщение об этом.
                 string customer = customerTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == customerTextBox.Text.Trim().ToLower());
-                if (customer == null)
-                    toolTip.Show("Такого клиента нет в базе! Он будет добавлен.", this, customerBackPanel.Location, 2000);
+                if (customer != null)
+                {
+                    ControlValidation.CorrectValueInput(toolTip, customerTextBox);
+                    customerTextBox.Text = customer; //Выводим корректное имя контрагента.
+                }//if
                 else
-                    customerTextBox.Text = customer; //Выводим корректное имя контрагента. 
+                {
+                    ControlValidation.WrongValueInput(toolTip, customerTextBox, "Такого клиента нет в базе! Он будет добавлен.", Color.Yellow);
+                }//else
+
             }//else            
         }//customerTextBox_Leave
 
@@ -1284,7 +1285,7 @@ namespace PartsApp
         {
             //Находим контрагента. Если такого ещё нет в базе, то создаем новый объект.
             IContragent customer = PartsDAL.FindCustomers(customerTextBox.Text.Trim());
-            customer = (customer == null) ? new Supplier(0, customerTextBox.Text.Trim(), null, null, null, null) : customer;
+            customer = (customer == null) ? new Customer(0, customerTextBox.Text.Trim(), null, null, null, null) : customer;
 
              Sale sale = new Sale
             (
