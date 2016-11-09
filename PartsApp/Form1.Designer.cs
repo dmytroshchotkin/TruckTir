@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -111,6 +111,7 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ReturnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -207,7 +208,8 @@
             this.supplierToolStripMenuItem,
             this.customerToolStripMenuItem,
             this.purchaseToolStripMenuItem,
-            this.saleToolStripMenuItem});
+            this.saleToolStripMenuItem,
+            this.ReturnToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(979, 24);
@@ -620,8 +622,8 @@
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.MeasureUnitCol.DataPropertyName = "MeasureUnit";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle1;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -632,8 +634,8 @@
             // AvaliabilityCol
             // 
             this.AvaliabilityCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AvaliabilityCol.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AvaliabilityCol.DefaultCellStyle = dataGridViewCellStyle2;
             this.AvaliabilityCol.HeaderText = "Наличие";
             this.AvaliabilityCol.Name = "AvaliabilityCol";
             this.AvaliabilityCol.ReadOnly = true;
@@ -642,10 +644,10 @@
             // SellingPriceCol
             // 
             this.SellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle10.Format = "C2";
-            dataGridViewCellStyle10.NullValue = null;
-            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "C2";
+            dataGridViewCellStyle3.NullValue = null;
+            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle3;
             this.SellingPriceCol.HeaderText = "Цена (руб.)";
             this.SellingPriceCol.MinimumWidth = 75;
             this.SellingPriceCol.Name = "SellingPriceCol";
@@ -734,9 +736,9 @@
             // 
             this.PurchaseDateExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.PurchaseDateExtCol.DataPropertyName = "OperationDetails.Operation.OperationDate";
-            dataGridViewCellStyle11.Format = "dd.MM.yyyy \'г.\'   HH:mm";
-            dataGridViewCellStyle11.NullValue = null;
-            this.PurchaseDateExtCol.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle4.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            dataGridViewCellStyle4.NullValue = null;
+            this.PurchaseDateExtCol.DefaultCellStyle = dataGridViewCellStyle4;
             this.PurchaseDateExtCol.HeaderText = "Дата поставки";
             this.PurchaseDateExtCol.Name = "PurchaseDateExtCol";
             this.PurchaseDateExtCol.ReadOnly = true;
@@ -756,8 +758,8 @@
             // 
             this.MeasureUnitExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.MeasureUnitExtCol.DataPropertyName = "OperationDetails.SparePart.MeasureUnit";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitExtCol.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitExtCol.DefaultCellStyle = dataGridViewCellStyle5;
             this.MeasureUnitExtCol.HeaderText = "Ед. изм.";
             this.MeasureUnitExtCol.MinimumWidth = 35;
             this.MeasureUnitExtCol.Name = "MeasureUnitExtCol";
@@ -769,8 +771,8 @@
             // 
             this.AvailabilityExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.AvailabilityExtCol.DataPropertyName = "OperationDetails.Count";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AvailabilityExtCol.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AvailabilityExtCol.DefaultCellStyle = dataGridViewCellStyle6;
             this.AvailabilityExtCol.HeaderText = "Наличие";
             this.AvailabilityExtCol.Name = "AvailabilityExtCol";
             this.AvailabilityExtCol.ReadOnly = true;
@@ -788,10 +790,10 @@
             // 
             this.SellingPriceExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.SellingPriceExtCol.DataPropertyName = "SellingPrice";
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle14.Format = "C2";
-            dataGridViewCellStyle14.NullValue = null;
-            this.SellingPriceExtCol.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "C2";
+            dataGridViewCellStyle7.NullValue = null;
+            this.SellingPriceExtCol.DefaultCellStyle = dataGridViewCellStyle7;
             this.SellingPriceExtCol.HeaderText = "Цена продажи";
             this.SellingPriceExtCol.Name = "SellingPriceExtCol";
             this.SellingPriceExtCol.ReadOnly = true;
@@ -892,6 +894,13 @@
             this.editEmployeeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
             this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
+            // 
+            // ReturnToolStripMenuItem
+            // 
+            this.ReturnToolStripMenuItem.Name = "ReturnToolStripMenuItem";
+            this.ReturnToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
+            this.ReturnToolStripMenuItem.Text = "Возврат";
+            this.ReturnToolStripMenuItem.Click += new System.EventHandler(this.ReturnToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -1015,6 +1024,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn MarkupExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SellingPriceExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn NoteExtCol;
+        private System.Windows.Forms.ToolStripMenuItem ReturnToolStripMenuItem;
 
     }
 }

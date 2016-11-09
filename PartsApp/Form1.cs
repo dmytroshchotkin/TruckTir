@@ -1027,13 +1027,13 @@ namespace PartsApp
         private void editEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AddEmployeeForm(CurEmployee).ShowDialog();
-        }
+        }//editEmployeeToolStripMenuItem_Click
 
         private void посмотретьПередвижениеТовараToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SparePart sparePart = PartsDGV.SelectedCells[0].OwningRow.DataBoundItem as SparePart;
             new SparePartOperationsInfoForm(sparePart).Show();
-        }//
+        }//посмотретьПередвижениеТовараToolStripMenuItem_Click
 
         private void ViewInfoByContragentToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1041,6 +1041,11 @@ namespace PartsApp
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
             Type contragentType = (menuItem == ViewSuppliersInfoToolStripMenuItem) ? typeof(Supplier) : typeof(Customer);       
             new ContragentOperationsInfoForm(contragentType).Show();
+        }//ViewInfoByContragentToolStripMenuItem_Click
+
+        private void ReturnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new ReturnForm().Show();
         }//
 
         
