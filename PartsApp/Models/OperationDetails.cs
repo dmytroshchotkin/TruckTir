@@ -14,6 +14,10 @@ namespace PartsApp.Models
         public IOperation Operation { get; set; }//{ return _purchase.Value; } }
         public float Count { get; set; }
         public float Price { get; set; }
+        /// <summary>
+        /// Используется для запоминания любой дополнительной информации по объекту.
+        /// </summary>
+        public object Tag  { get; set; }
 
         public OperationDetails() { }
         public OperationDetails(SparePart sparePart, IOperation operation, float count, float price)
