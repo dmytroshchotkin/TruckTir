@@ -35,8 +35,9 @@ namespace PartsApp
             /////////////////////////////////////////////////////////
             
             var sales = PartsDAL.FindSale(15);
+            sales.OperationDetailsList.ToList().ForEach(od => od.Tag = od.Count); //Запоминаем в Tag каждого объекта его начальное значение количества.
             ReturnDGV.DataSource = sales.OperationDetailsList;
-
+                        
             /////////////////////////////////////////////////////////
         }//ReturnForm_Load
 
@@ -113,18 +114,6 @@ namespace PartsApp
         }//ReturnDGV_CellFormatting
 
         /// <summary>
-        /// Для запоминания в св-во Tag кол-ва проданного товара.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ReturnDGV_DataSourceChanged(object sender, EventArgs e)
-        {
-            //Запоминаем кол-во проданного товара в св-во Tag ячейки.
-            foreach (DataGridViewRow row in ReturnDGV.Rows)
-                row.Cells[CountCol.Index].Tag = row.Cells[CountCol.Index].Value;
-        }//ReturnDGV_DataSourceChanged
-
-        /// <summary>
         /// Событие для обработки начала ввода в ячейку "Количество".
         /// </summary>
         /// <param name="sender"></param>
@@ -169,15 +158,18 @@ namespace PartsApp
 
             if (!IsCountCellValueCorrect(cell, measureUnit))            
             {
-                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.
-                SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
+                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.                
                 //Если ячейка была корректно заполнена, перемещаем её вниз.
-                if (cell.RowIndex >= lastCorrectRowIndex)
-                {
+                if (cell.RowIndex < lastCorrectRowIndex)
+                {                    
                     var list = ReturnDGV.DataSource as List<OperationDetails>;
-                    list.Insert(lastCorrectRowIndex, cell.OwningRow.DataBoundItem as OperationDetails);                    
+                    OperationDetails operDet = cell.OwningRow.DataBoundItem as OperationDetails;
+                    list.Remove(operDet);
+                    list.Insert(lastCorrectRowIndex, operDet);
+                    FillTheSumCell(cell.OwningRow); //заполняем заново столбец 'Сумма'
                     cell = ReturnDGV[CountCol.Index, lastCorrectRowIndex];
-                }//if                
+                }//if                 
+                SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
             }//if
             else
             {
@@ -185,13 +177,15 @@ namespace PartsApp
                 if (cell.RowIndex != lastCorrectRowIndex)
                 {
                     var list = ReturnDGV.DataSource as List<OperationDetails>;
-                    list.Insert(lastCorrectRowIndex, cell.OwningRow.DataBoundItem as OperationDetails);
+                    OperationDetails operDet = cell.OwningRow.DataBoundItem as OperationDetails;
+                    list.Remove(operDet);
+                    list.Insert(lastCorrectRowIndex, operDet);
                     ReturnDGV[CountCol.Index, cell.RowIndex].Style.ForeColor = Color.Gray; //Возвращаем дефолтный цвет в ячейку строки на который был осущ-лен ввод.
                     cell = ReturnDGV[CountCol.Index, lastCorrectRowIndex];
                     cell.Style.ForeColor = Color.Black;
                 }//if
             }//else
-            
+
             //Заполняем столбец 'Сумма'.
             FillTheSumCell(cell.OwningRow);    
         }//CountCellFilled
@@ -209,7 +203,7 @@ namespace PartsApp
                 return false;
 
             //Ввод значения не более 0, или больше чем было приобретено, является ошибкой. 
-            float totalCount = Convert.ToSingle(countCell.Tag);
+            float totalCount = (float)(countCell.OwningRow.DataBoundItem as OperationDetails).Tag;
             if (count <= 0 || count > totalCount)
                 return false;
 
@@ -227,7 +221,7 @@ namespace PartsApp
         private void SetDefaultValueToCell(DataGridViewCell cell)
         {
             cell.Style.ForeColor = Color.Gray;
-            cell.Value = cell.Tag;
+            cell.Value = (cell.OwningRow.DataBoundItem as OperationDetails).Tag;
         }//SetDefaultValueToCell
 
         /// <summary>

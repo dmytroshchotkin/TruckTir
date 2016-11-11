@@ -15,6 +15,10 @@ namespace PartsApp.Models
         public float Count { get; set; }
         public float Price { get; set; }
         /// <summary>
+        /// Сумма операции
+        /// </summary>
+        public float Sum { get { return Count * Price; } }
+        /// <summary>
         /// Используется для запоминания любой дополнительной информации по объекту.
         /// </summary>
         public object Tag  { get; set; }
