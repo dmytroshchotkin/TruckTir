@@ -166,7 +166,6 @@ namespace PartsApp
                     OperationDetails operDet = cell.OwningRow.DataBoundItem as OperationDetails;
                     list.Remove(operDet);
                     list.Insert(lastCorrectRowIndex, operDet);
-                    FillTheSumCell(cell.OwningRow); //заполняем заново столбец 'Сумма'
                     cell = ReturnDGV[CountCol.Index, lastCorrectRowIndex];
                 }//if                 
                 SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
@@ -186,8 +185,8 @@ namespace PartsApp
                 }//if
             }//else
 
-            //Заполняем столбец 'Сумма'.
-            FillTheSumCell(cell.OwningRow);    
+            //Заполняем ячейки столбца 'Сумма' и считаем 'итого' 
+            FillTheInTotal();  
         }//CountCellFilled
 
         /// <summary>
@@ -235,26 +234,6 @@ namespace PartsApp
         }//SetCustomValueToCell
 
         /// <summary>
-        /// Заполняет ячейку 'Сумма' заданной строки и общую сумму.
-        /// </summary>
-        /// <param name="extRow">Строка дял которой производятся вычисления и заполнение.</param>
-        private void FillTheSumCell(DataGridViewRow row)
-        {
-            if (row.Cells[CountCol.Index].Style.ForeColor == Color.Black)
-            {
-                float price = Convert.ToSingle(row.Cells[PriceCol.Index].Value);
-                float count = Convert.ToSingle(row.Cells[CountCol.Index].Value);
-                row.Cells[SumCol.Index].Value = price * count;
-            }//if
-            else
-            {
-                row.Cells[SumCol.Index].Value = null;//очищаем ячейку. 
-            }//else
-
-            FillTheInTotal(); //Заполняем общую сумму операции.
-        }//FillTheSumCell
-
-        /// <summary>
         /// Заполняет InTotalLabel корретным значением.
         /// </summary>
         private void FillTheInTotal()
@@ -262,9 +241,17 @@ namespace PartsApp
             float inTotal = 0;
             foreach (DataGridViewRow row in ReturnDGV.Rows)
             {
-                //Если в строке заполнена ячейка 'Сумма'.
-                if (row.Cells[SumCol.Index].Value != null)
-                    inTotal += Convert.ToSingle(row.Cells[SumCol.Index].Value);
+                if (row.Cells[CountCol.Index].Style.ForeColor == Color.Black)
+                {
+                    OperationDetails operDet = row.DataBoundItem as OperationDetails;
+
+                    row.Cells[SumCol.Index].Value = operDet.Sum;
+                    inTotal += operDet.Sum;
+                }//if
+                else
+                {
+                    row.Cells[SumCol.Index].Value = null;
+                }//else
             }//foreach
 
             //Заполняем InTotalLabel расчитанным значением.

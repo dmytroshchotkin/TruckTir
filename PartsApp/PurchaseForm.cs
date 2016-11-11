@@ -520,7 +520,7 @@ namespace PartsApp
             }//else
 
             FillTheInTotal(); //Заполняем общую сумму операции.
-        }//FillTheSumCell
+        }//FillTheSumCells
 
         /// <summary>
         /// Заполняет InTotalLabel корретным значением.
