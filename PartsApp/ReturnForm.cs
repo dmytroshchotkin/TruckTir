@@ -111,18 +111,18 @@ namespace PartsApp
                 }//if
             }//if
         }//ReturnDGV_CellFormatting
-        
+
         /// <summary>
         /// Для запоминания в св-во Tag кол-ва проданного товара.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ReturnDGV_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void ReturnDGV_DataSourceChanged(object sender, EventArgs e)
         {
-            DataGridViewCell countCell = ReturnDGV[CountCol.Index, e.RowIndex];
             //Запоминаем кол-во проданного товара в св-во Tag ячейки.
-            countCell.Tag = countCell.Value;
-        }//ReturnDGV_RowsAdded
+            foreach (DataGridViewRow row in ReturnDGV.Rows)
+                row.Cells[CountCol.Index].Tag = row.Cells[CountCol.Index].Value;
+        }//ReturnDGV_DataSourceChanged
 
         /// <summary>
         /// Событие для обработки начала ввода в ячейку "Количество".
@@ -132,9 +132,7 @@ namespace PartsApp
         private void ReturnDGV_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             //Обрабатываем ввод в ячейку 'Количествo'.
-            DataGridViewCell cell = ReturnDGV[e.ColumnIndex, e.RowIndex];
-            if (cell.OwningColumn == CountCol)
-                SetCustomValueToCell(cell, null); //очищаем ячейку для ввода значения пользователем.
+            ReturnDGV[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Black;
         }//ReturnDGV_CellBeginEdit
 
         /// <summary>
@@ -167,12 +165,33 @@ namespace PartsApp
         {
             //Проверяем корректность ввода.
             string measureUnit = (cell.OwningRow.DataBoundItem as OperationDetails).SparePart.MeasureUnit;
+            int lastCorrectRowIndex = ReturnDGV.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black).Count() - 1;
+
             if (!IsCountCellValueCorrect(cell, measureUnit))            
             {
                 toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.
                 SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
+                //Если ячейка была корректно заполнена, перемещаем её вниз.
+                if (cell.RowIndex >= lastCorrectRowIndex)
+                {
+                    var list = ReturnDGV.DataSource as List<OperationDetails>;
+                    list.Insert(lastCorrectRowIndex, cell.OwningRow.DataBoundItem as OperationDetails);                    
+                    cell = ReturnDGV[CountCol.Index, lastCorrectRowIndex];
+                }//if                
             }//if
-
+            else
+            {
+                //Если индекс строки не равен необходимому, перемещаем её вверх.
+                if (cell.RowIndex != lastCorrectRowIndex)
+                {
+                    var list = ReturnDGV.DataSource as List<OperationDetails>;
+                    list.Insert(lastCorrectRowIndex, cell.OwningRow.DataBoundItem as OperationDetails);
+                    ReturnDGV[CountCol.Index, cell.RowIndex].Style.ForeColor = Color.Gray; //Возвращаем дефолтный цвет в ячейку строки на который был осущ-лен ввод.
+                    cell = ReturnDGV[CountCol.Index, lastCorrectRowIndex];
+                    cell.Style.ForeColor = Color.Black;
+                }//if
+            }//else
+            
             //Заполняем столбец 'Сумма'.
             FillTheSumCell(cell.OwningRow);    
         }//CountCellFilled
@@ -287,6 +306,8 @@ namespace PartsApp
         {
 
         }
+
+        
 
         
 
