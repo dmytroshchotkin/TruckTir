@@ -124,7 +124,6 @@ namespace PartsApp
             ReturnDGV[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Black;
         }//ReturnDGV_CellBeginEdit
 
-
         /// <summary>
         /// Валидация ввода в ячейку "Количество".
         /// </summary>
@@ -142,6 +141,7 @@ namespace PartsApp
         /// <param name="e"></param>
         private void ReturnDGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
+            //Подаём звуковой сигнал и запрещаем выходи из ячейки
             System.Media.SystemSounds.Beep.Play();
             e.Cancel = true;
         }//ReturnDGV_DataError
@@ -180,7 +180,9 @@ namespace PartsApp
             }//else
 
             //Заполняем ячейки столбца 'Сумма' и считаем 'итого' 
-            FillTheInTotal();  
+            FillTheInTotal();
+
+            SetDivider(); //Устанавливаем разделитель в таблице
         }//CountCellFilled
 
         /// <summary>
@@ -279,6 +281,23 @@ namespace PartsApp
             cell = ReturnDGV[CountCol.Index, lastCorrectRowIndex];
         }//RowsSort
 
+        /// <summary>
+        /// Устанавливает разделитель в нужную позицию.
+        /// </summary>
+        private void SetDivider()
+        { 
+            //Возвращаем стандартный разделитель всем строкам.
+            foreach(DataGridViewRow row in ReturnDGV.Rows)
+            {
+                row.Height = ReturnDGV.RowTemplate.Height;
+                row.DividerHeight = 0;
+            }//foreach
+
+            //Выставляем разделитель в крайнюю позицию.
+            DataGridViewRow lastCorrectRow = ReturnDGV.Rows.Cast<DataGridViewRow>().LastOrDefault(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black);
+            lastCorrectRow.Height += 10;
+            lastCorrectRow.DividerHeight = 10;
+        }//SetDivider
 
 
 
