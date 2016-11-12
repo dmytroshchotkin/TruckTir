@@ -19,6 +19,18 @@ namespace PartsApp
             InitializeComponent();
 
             ReturnDGV.AutoGenerateColumns = false;
+
+            List<OperationDetails> returnList = PartsDAL.FindReturnDetails(sale.OperationId); //Находим список товара кот. уже был возвращен по данной расходу.
+            
+            //Отнимаем из всего списка продажи, товар кот. уже был возвращен.
+            foreach (OperationDetails operDet in returnList)
+            {
+                OperationDetails opDet = sale.OperationDetailsList.First(od => od.SparePart.SparePartId == operDet.SparePart.SparePartId);
+                opDet.Count -= operDet.Count;
+                if (opDet.Count == 0)
+                    sale.OperationDetailsList.Remove(opDet);
+            }//foreach  
+          
             //Заполняем таблицу
             sale.OperationDetailsList.ToList().ForEach(od => od.Tag = od.Count); //Запоминаем в Tag каждого объекта его начальное значение количества.
             ReturnDGV.DataSource = sale.OperationDetailsList;

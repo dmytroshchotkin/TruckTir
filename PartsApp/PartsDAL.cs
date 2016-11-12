@@ -1673,9 +1673,7 @@ namespace PartsApp
             }//using
 
             return salesList;
-        }//FindSales
-
-
+        }//FindSales        
 
 
         /// <summary>
@@ -1848,6 +1846,39 @@ namespace PartsApp
 
             return operDetList;
         }//FindSaleDetails
+
+        /// <summary>
+        /// Находит список возвращенного товара по заданному Id продажи.
+        /// </summary>
+        /// <param name="saleId">Id продажи</param>
+        /// <returns></returns>
+        public static List<OperationDetails> FindReturnDetails(int saleId)
+        {
+            List<OperationDetails> operDetList = new List<OperationDetails>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                const string query = "SELECT * FROM Returns as r JOIN PurchaseDetails as pd "
+                                   + "ON r.PurchaseId = pd.OperationId "
+                                   + "WHERE r.SaleId = @SaleId;";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@SaleId", saleId);
+
+                    using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                            operDetList.Add(CreateOperationDetails(dataReader, (IOperation)null));
+                    }//using dataReader
+                }//using cmd
+
+                connection.Close();
+            }//using
+
+            return operDetList;
+        }//FindReturnDetails
 
         /// <summary>
         /// Возвращает минимальную закупочную цену для переданного товара.
