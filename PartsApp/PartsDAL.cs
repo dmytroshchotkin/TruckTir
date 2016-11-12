@@ -943,7 +943,80 @@ namespace PartsApp
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
-        
+
+        #region Модификация таблицы Returns.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Осуществляет возврат товара.
+        /// </summary>
+        /// <param name="operDetList">Список возвращаемого товара</param>
+        /// <param name="note">Заметка по возврату</param>
+        public static void AddReturn(Purchase purchase, string note)
+        {
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                using (SQLiteTransaction trans = connection.BeginTransaction())
+                {
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
+                    {
+                        try
+                        {
+                            AddContragent(new Supplier(0, "Возврат", null, null, null, null), cmd);
+                            //Вставляем запись в таблицу Purchases.
+                            purchase.OperationId = AddPurchase(purchase, cmd);
+                           
+                            foreach (OperationDetails operDet in purchase.OperationDetailsList)
+                            {
+                                //Присваиваем мин. цену прихода для данного товара.
+                                operDet.Price = FindMinSparePartPurchasePrice(operDet.SparePart.SparePartId);
+                                //Вставляем записи в PurchaseDetails и Avaliability.
+                                AddPurchaseDetail(operDet, cmd);
+                                AddSparePartAvaliability(new Availability(operDet, null, (float)Markup.Types.Retail), cmd);
+                            }//foreach
+
+                            //Добавляем запись в таблицу Returns
+                            AddReturn(purchase, note);
+
+                            trans.Commit();  //фиксируем изменения.
+                        }//try
+                        catch (Exception ex)
+                        {
+                            trans.Rollback(); //Отменяем изменения.
+                            throw new Exception(ex.Message);
+                        }//catch
+                    }//using cmd
+                }//using transaction
+
+                connection.Close();
+            }//using connection
+        }//AddReturn
+
+        /// <summary>
+        /// Добавляет запись в таблицу Returns.
+        /// </summary>
+        /// <param name="purchase">Новый приход, возвращенного товара</param>
+        /// <param name="note">Заметка по возврату</param>
+        /// <param name="cmd"></param>
+        private static void AddReturn(Purchase purchase, string note, SQLiteCommand cmd)
+        {
+            string query = "INSERT INTO Returns (PurchaseId, SaleId, Note) "
+                         + "VALUES (@PurchaseId, @SaleId, @Note);";
+
+            cmd.CommandText = query;
+
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@PurchaseId", purchase.OperationId);
+            cmd.Parameters.AddWithValue("@SaleId", purchase.OperationDetailsList[0].Operation.OperationId);
+            cmd.Parameters.AddWithValue("@Note", note); 
+        }//AddReturn
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
 
 
 
@@ -956,12 +1029,7 @@ namespace PartsApp
 
 
 
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
         #region ************Точный поиск по БД.*********************************************************************************
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////       
@@ -1778,6 +1846,33 @@ namespace PartsApp
             return operDetList;
         }//FindSaleDetails
 
+        /// <summary>
+        /// Возвращает минимальную закупочную цену для переданного товара.
+        /// </summary>
+        /// <param name="sparePartId">Ид товара для которого находится мин. закупочная цена</param>
+        /// <returns></returns>
+        public static float FindMinSparePartPurchasePrice(int sparePartId)
+        {
+            float minPrice = 0;
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                const string query = "SELECT MIN(Price) FROM PurchaseDetails "
+                                   + "WHERE SparePartId = @SparePartId;";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
+
+                    minPrice = Convert.ToSingle(cmd.ExecuteScalar());
+                }//using cmd
+
+                connection.Close();
+            }//using
+
+            return minPrice;
+        }//FindMinSparePartPurchasePrice
 
 
         private static OperationDetails CreateOperationDetails(SQLiteDataReader dataReader, SparePart sparePart)
