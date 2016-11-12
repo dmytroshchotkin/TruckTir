@@ -964,22 +964,23 @@ namespace PartsApp
                     {
                         try
                         {
-                            AddContragent(new Supplier(0, "Возврат", null, null, null, null), cmd);
                             //Вставляем запись в таблицу Purchases.
                             purchase.OperationId = AddPurchase(purchase, cmd);
-                           
+
+                            //Добавляем запись в таблицу Returns
+                            AddReturn(purchase, note, cmd);
+
+                            purchase.OperationDetailsList[0].Operation.OperationId = purchase.OperationId; //Меняем на Id нового прихода
                             foreach (OperationDetails operDet in purchase.OperationDetailsList)
                             {
                                 //Присваиваем мин. цену прихода для данного товара.
                                 operDet.Price = FindMinSparePartPurchasePrice(operDet.SparePart.SparePartId);
+                                
                                 //Вставляем записи в PurchaseDetails и Avaliability.
                                 AddPurchaseDetail(operDet, cmd);
                                 AddSparePartAvaliability(new Availability(operDet, null, (float)Markup.Types.Retail), cmd);
                             }//foreach
-
-                            //Добавляем запись в таблицу Returns
-                            AddReturn(purchase, note);
-
+                           
                             trans.Commit();  //фиксируем изменения.
                         }//try
                         catch (Exception ex)
@@ -1010,7 +1011,9 @@ namespace PartsApp
             cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@PurchaseId", purchase.OperationId);
             cmd.Parameters.AddWithValue("@SaleId", purchase.OperationDetailsList[0].Operation.OperationId);
-            cmd.Parameters.AddWithValue("@Note", note); 
+            cmd.Parameters.AddWithValue("@Note", note);
+
+            cmd.ExecuteNonQuery();
         }//AddReturn
 
 

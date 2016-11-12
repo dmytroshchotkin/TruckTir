@@ -31,6 +31,11 @@ namespace PartsApp
             InitializeComponent();
 
             _changedMarkupList = new List<Availability>();
+
+
+            addReturnInputIdToolStripTextBox.GotFocus += ToolStripTextBox_GotFocus;
+            addReturnInputIdToolStripTextBox.LostFocus += ToolStripTextBox_LostFocus;
+            ToolStripTextBox_LostFocus(addReturnInputIdToolStripTextBox, null);
         }//
 
         private void Form1_Load(object sender, EventArgs e)
@@ -1043,10 +1048,55 @@ namespace PartsApp
             new ContragentOperationsInfoForm(contragentType).Show();
         }//ViewInfoByContragentToolStripMenuItem_Click
 
-        private void ReturnToolStripMenuItem_Click(object sender, EventArgs e)
+        private void addReturnInputIdToolStripTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            new ReturnForm().Show();
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true; //предотвращаем звуковой сигнал.
+                if (!String.IsNullOrWhiteSpace(addReturnInputIdToolStripTextBox.Text))
+                {
+                    //Получаем введённое значение.
+                    string txt = addReturnInputIdToolStripTextBox.Text.Trim();
+                    int saleId = 0;
+                    Sale sale = null;
+                    //Проверяем на корректность ввода и что есть такая продажа в базе.
+                    if (Int32.TryParse(txt, out saleId) && (sale = PartsDAL.FindSale(saleId)) != null )
+                    {
+                        new ReturnForm(sale).Show();
+                        addReturnInputIdToolStripTextBox.Text = addReturnInputIdToolStripTextBox.Tag as string;
+                        addReturnInputIdToolStripTextBox.ForeColor = Color.Gray;
+                    }//if
+                    else
+                    {
+                        //Если введены некорректные данные, выводим сообщение об ошибке.
+                        System.Media.SystemSounds.Beep.Play();                        
+                        toolTip.Show("Такого Л/С нет в базе.", this, new Point(200, 200), 3000); //!!!/*ERROR!!!*/Не работает.
+                    }//else
+                }//if                
+            }//if
+        }//addReturnInputIdToolStripTextBox_KeyPress
+
+        private void ToolStripTextBox_GotFocus(object sender, EventArgs e)
+        {
+            ToolStripTextBox item = sender as ToolStripTextBox;
+            if (item.ForeColor == Color.Gray)
+            {
+                item.Text = null;
+                item.ForeColor = Color.Black;
+            }//if
+        }//ToolStripTextBox_GotFocus
+
+        private void ToolStripTextBox_LostFocus(object sender, EventArgs e)
+        {
+            ToolStripTextBox item = sender as ToolStripTextBox;
+            //Если ничего не введено, выводим внутренний текст подсказки.
+            if (String.IsNullOrWhiteSpace(item.Text))
+            {
+                item.Text = item.Tag as string;
+                item.ForeColor = Color.Gray;
+            }//if
         }//
+
 
         
 

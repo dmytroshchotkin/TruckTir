@@ -14,9 +14,17 @@ namespace PartsApp
 {
     public partial class ReturnForm : Form
     {
-        public ReturnForm()
+        public ReturnForm(Sale sale)
         {
             InitializeComponent();
+
+            ReturnDGV.AutoGenerateColumns = false;
+            //Заполняем таблицу
+            sale.OperationDetailsList.ToList().ForEach(od => od.Tag = od.Count); //Запоминаем в Tag каждого объекта его начальное значение количества.
+            ReturnDGV.DataSource = sale.OperationDetailsList;
+
+            operationIdTextBox.Text = sale.OperationId.ToString();
+            ContragentTextBox.Text  = sale.Contragent.ContragentName;
         }//
 
         private void ReturnForm_Load(object sender, EventArgs e)
@@ -29,16 +37,8 @@ namespace PartsApp
             //Заполняем список автоподстановки для ввода контрагента.
             ContragentTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindCustomers().Select(c => c.ContragentName).ToArray());
 
-            AgentEmployeerTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);
+            AgentEmployeerTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);            
 
-            ReturnDGV.AutoGenerateColumns = false;
-            /////////////////////////////////////////////////////////
-            
-            var sales = PartsDAL.FindSale(15);
-            sales.OperationDetailsList.ToList().ForEach(od => od.Tag = od.Count); //Запоминаем в Tag каждого объекта его начальное значение количества.
-            ReturnDGV.DataSource = sales.OperationDetailsList;
-                        
-            /////////////////////////////////////////////////////////
         }//ReturnForm_Load
 
 
@@ -50,7 +50,7 @@ namespace PartsApp
             if (e.KeyCode == Keys.Enter)
             {
                 ContragentTextBox_Leave(sender, null);
-                descriptionRichTextBox.Select(); //переводим фокус на на другой объект.
+                noteRichTextBox.Select(); //переводим фокус на на другой объект.
             }//if
         }//ContragentTextBox_PreviewKeyDown
 
@@ -295,8 +295,11 @@ namespace PartsApp
 
             //Выставляем разделитель в крайнюю позицию.
             DataGridViewRow lastCorrectRow = ReturnDGV.Rows.Cast<DataGridViewRow>().LastOrDefault(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black);
-            lastCorrectRow.Height += 10;
-            lastCorrectRow.DividerHeight = 10;
+            if (lastCorrectRow != null)
+            {
+                lastCorrectRow.Height += 10;
+                lastCorrectRow.DividerHeight = 10;
+            }//if
         }//SetDivider
 
 
@@ -306,13 +309,65 @@ namespace PartsApp
         #endregion
 
 
+        /// <summary>
+        /// Возвращает объект типа Operation, созданный из данных формы.
+        /// </summary>
+        /// <returns></returns>
+        public Purchase CreatePurchaseFromForm()
+        {
+            //Находим весь возвращаемый товар.
+            List<OperationDetails> operDetList = new List<OperationDetails>();
+            var correctRows = ReturnDGV.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black);
+            correctRows.ToList().ForEach(r => operDetList.Add(r.DataBoundItem as OperationDetails));
+
+            Purchase purchase = new Purchase
+            (
+                employee           : Form1.CurEmployee,
+                contragent         : PartsDAL.FindSuppliers("Возврат"),
+                contragentEmployee : (!String.IsNullOrWhiteSpace(ContragentEmployeeTextBox.Text)) ? ContragentEmployeeTextBox.Text.Trim() : null,
+                operationDate      : OperationDateTimePicker.Value,
+                description        : (!String.IsNullOrWhiteSpace(noteRichTextBox.Text)) ? noteRichTextBox.Text.Trim() : null,
+                operDetList        : operDetList
+            );
+
+            return purchase;
+        }//CreatePurchaseFromForm
 
 
+
+        private void cancelButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    this.Close();
+            }//if
+        }//CancelButton_MouseClick
 
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
+            //Если в таблице нет ни одной корректной записи, выдаём ошибку.
+            if (!ReturnDGV.Rows.Cast<DataGridViewRow>().Any(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black))
+            {
+                toolTip.Show("Выберети хотя бы один товар из таблицы.", this, okButton.Location, 3000);
+                return;
+            }//if
+            
+            //Записываем данные в базу
+            Purchase purchase = CreatePurchaseFromForm();
+            string note = (String.IsNullOrWhiteSpace(noteRichTextBox.Text)) ? null : noteRichTextBox.Text.Trim();
+            try
+            {
+                PartsDAL.AddReturn(purchase, note);
+            }//try
+            catch (Exception)
+            {
+                MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                return;
+            }//catch 
 
-        }
+            this.Close();
+        }//
 
        
 

@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.purchaseIdLabel = new System.Windows.Forms.Label();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.operationIdLabel = new System.Windows.Forms.Label();
             this.purchaseDateLabel = new System.Windows.Forms.Label();
             this.AgentLabel = new System.Windows.Forms.Label();
             this.ContragentLabel = new System.Windows.Forms.Label();
@@ -47,9 +47,9 @@
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.inTotalLabel = new System.Windows.Forms.Label();
-            this.supplierAgentLabel = new System.Windows.Forms.Label();
+            this.ContragentEmployeeLabel = new System.Windows.Forms.Label();
             this.AgentEmployeerLabel = new System.Windows.Forms.Label();
-            this.purchaseIdTextBox = new System.Windows.Forms.TextBox();
+            this.operationIdTextBox = new System.Windows.Forms.TextBox();
             this.OperationDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.AgentBackPanel = new System.Windows.Forms.Panel();
             this.AgentTextBox = new System.Windows.Forms.TextBox();
@@ -57,14 +57,14 @@
             this.ContragentTextBox = new System.Windows.Forms.TextBox();
             this.ContragentStarLabel = new System.Windows.Forms.Label();
             this.inTotalNumberLabel = new System.Windows.Forms.Label();
-            this.supplierAgentTextBox = new System.Windows.Forms.TextBox();
+            this.ContragentEmployeeTextBox = new System.Windows.Forms.TextBox();
             this.AgentEmployeerTextBox = new System.Windows.Forms.TextBox();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.purchaseContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
+            this.noteRichTextBox = new System.Windows.Forms.RichTextBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.AgentStarLabel = new System.Windows.Forms.Label();
             this.ReturnGroupBox.SuspendLayout();
@@ -74,19 +74,19 @@
             this.purchaseContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // purchaseIdLabel
+            // operationIdLabel
             // 
-            this.purchaseIdLabel.AutoSize = true;
-            this.purchaseIdLabel.Location = new System.Drawing.Point(212, 19);
-            this.purchaseIdLabel.Name = "purchaseIdLabel";
-            this.purchaseIdLabel.Size = new System.Drawing.Size(77, 13);
-            this.purchaseIdLabel.TabIndex = 0;
-            this.purchaseIdLabel.Text = "Накладная №";
+            this.operationIdLabel.AutoSize = true;
+            this.operationIdLabel.Location = new System.Drawing.Point(179, 15);
+            this.operationIdLabel.Name = "operationIdLabel";
+            this.operationIdLabel.Size = new System.Drawing.Size(135, 13);
+            this.operationIdLabel.TabIndex = 0;
+            this.operationIdLabel.Text = "Возврат по накладной №";
             // 
             // purchaseDateLabel
             // 
             this.purchaseDateLabel.AutoSize = true;
-            this.purchaseDateLabel.Location = new System.Drawing.Point(425, 19);
+            this.purchaseDateLabel.Location = new System.Drawing.Point(450, 15);
             this.purchaseDateLabel.Name = "purchaseDateLabel";
             this.purchaseDateLabel.Size = new System.Drawing.Size(24, 13);
             this.purchaseDateLabel.TabIndex = 1;
@@ -174,8 +174,8 @@
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.MeasureUnitCol.DataPropertyName = "SparePart.MeasureUnit";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle9;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -188,8 +188,9 @@
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.CountCol.DataPropertyName = "Count";
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Gray;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.Gray;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle10;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ToolTipText = "Количество";
@@ -199,11 +200,11 @@
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.PriceCol.DataPropertyName = "Price";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle7.Format = "C2";
-            dataGridViewCellStyle7.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle11.Format = "C2";
+            dataGridViewCellStyle11.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle11;
             this.PriceCol.HeaderText = "Цена";
             this.PriceCol.MinimumWidth = 100;
             this.PriceCol.Name = "PriceCol";
@@ -213,10 +214,10 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "C2";
-            dataGridViewCellStyle8.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle12.Format = "C2";
+            dataGridViewCellStyle12.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle12;
             this.SumCol.HeaderText = "Сумма";
             this.SumCol.MinimumWidth = 100;
             this.SumCol.Name = "SumCol";
@@ -232,14 +233,14 @@
             this.inTotalLabel.TabIndex = 9;
             this.inTotalLabel.Text = "Итого :";
             // 
-            // supplierAgentLabel
+            // ContragentEmployeeLabel
             // 
-            this.supplierAgentLabel.AutoSize = true;
-            this.supplierAgentLabel.Location = new System.Drawing.Point(92, 571);
-            this.supplierAgentLabel.Name = "supplierAgentLabel";
-            this.supplierAgentLabel.Size = new System.Drawing.Size(58, 13);
-            this.supplierAgentLabel.TabIndex = 10;
-            this.supplierAgentLabel.Text = "Выписал :";
+            this.ContragentEmployeeLabel.AutoSize = true;
+            this.ContragentEmployeeLabel.Location = new System.Drawing.Point(92, 571);
+            this.ContragentEmployeeLabel.Name = "ContragentEmployeeLabel";
+            this.ContragentEmployeeLabel.Size = new System.Drawing.Size(58, 13);
+            this.ContragentEmployeeLabel.TabIndex = 10;
+            this.ContragentEmployeeLabel.Text = "Выписал :";
             // 
             // AgentEmployeerLabel
             // 
@@ -250,18 +251,19 @@
             this.AgentEmployeerLabel.TabIndex = 11;
             this.AgentEmployeerLabel.Text = "Принял :";
             // 
-            // purchaseIdTextBox
+            // operationIdTextBox
             // 
-            this.purchaseIdTextBox.Location = new System.Drawing.Point(295, 16);
-            this.purchaseIdTextBox.Name = "purchaseIdTextBox";
-            this.purchaseIdTextBox.ReadOnly = true;
-            this.purchaseIdTextBox.Size = new System.Drawing.Size(100, 20);
-            this.purchaseIdTextBox.TabIndex = 12;
+            this.operationIdTextBox.Location = new System.Drawing.Point(320, 12);
+            this.operationIdTextBox.Name = "operationIdTextBox";
+            this.operationIdTextBox.ReadOnly = true;
+            this.operationIdTextBox.Size = new System.Drawing.Size(100, 20);
+            this.operationIdTextBox.TabIndex = 12;
+            this.operationIdTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // OperationDateTimePicker
             // 
             this.OperationDateTimePicker.CustomFormat = "";
-            this.OperationDateTimePicker.Location = new System.Drawing.Point(455, 16);
+            this.OperationDateTimePicker.Location = new System.Drawing.Point(480, 12);
             this.OperationDateTimePicker.MinDate = new System.DateTime(2015, 10, 10, 0, 0, 0, 0);
             this.OperationDateTimePicker.Name = "OperationDateTimePicker";
             this.OperationDateTimePicker.Size = new System.Drawing.Size(200, 20);
@@ -302,6 +304,7 @@
             this.ContragentTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.ContragentTextBox.Location = new System.Drawing.Point(2, 2);
             this.ContragentTextBox.Name = "ContragentTextBox";
+            this.ContragentTextBox.ReadOnly = true;
             this.ContragentTextBox.Size = new System.Drawing.Size(196, 20);
             this.ContragentTextBox.TabIndex = 0;
             this.ContragentTextBox.Leave += new System.EventHandler(this.ContragentTextBox_Leave);
@@ -327,12 +330,12 @@
             this.inTotalNumberLabel.TabIndex = 22;
             this.inTotalNumberLabel.Text = "0 (руб)";
             // 
-            // supplierAgentTextBox
+            // ContragentEmployeeTextBox
             // 
-            this.supplierAgentTextBox.Location = new System.Drawing.Point(156, 571);
-            this.supplierAgentTextBox.Name = "supplierAgentTextBox";
-            this.supplierAgentTextBox.Size = new System.Drawing.Size(237, 20);
-            this.supplierAgentTextBox.TabIndex = 23;
+            this.ContragentEmployeeTextBox.Location = new System.Drawing.Point(156, 571);
+            this.ContragentEmployeeTextBox.Name = "ContragentEmployeeTextBox";
+            this.ContragentEmployeeTextBox.Size = new System.Drawing.Size(237, 20);
+            this.ContragentEmployeeTextBox.TabIndex = 23;
             // 
             // AgentEmployeerTextBox
             // 
@@ -360,6 +363,7 @@
             this.cancelButton.TabIndex = 26;
             this.cancelButton.Text = "Отмена";
             this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.cancelButton_MouseClick);
             // 
             // purchaseContextMenuStrip
             // 
@@ -374,13 +378,13 @@
             this.removeToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeToolStripMenuItem.Text = "удалить";
             // 
-            // descriptionRichTextBox
+            // noteRichTextBox
             // 
-            this.descriptionRichTextBox.Location = new System.Drawing.Point(12, 510);
-            this.descriptionRichTextBox.Name = "descriptionRichTextBox";
-            this.descriptionRichTextBox.Size = new System.Drawing.Size(848, 39);
-            this.descriptionRichTextBox.TabIndex = 33;
-            this.descriptionRichTextBox.Text = "";
+            this.noteRichTextBox.Location = new System.Drawing.Point(12, 510);
+            this.noteRichTextBox.Name = "noteRichTextBox";
+            this.noteRichTextBox.Size = new System.Drawing.Size(848, 39);
+            this.noteRichTextBox.TabIndex = 33;
+            this.noteRichTextBox.Text = "";
             // 
             // descriptionLabel
             // 
@@ -408,24 +412,24 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 660);
             this.Controls.Add(this.descriptionLabel);
-            this.Controls.Add(this.descriptionRichTextBox);
+            this.Controls.Add(this.noteRichTextBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.AgentEmployeerTextBox);
-            this.Controls.Add(this.supplierAgentTextBox);
+            this.Controls.Add(this.ContragentEmployeeTextBox);
             this.Controls.Add(this.inTotalNumberLabel);
             this.Controls.Add(this.ContragentBackPanel);
             this.Controls.Add(this.AgentBackPanel);
             this.Controls.Add(this.OperationDateTimePicker);
-            this.Controls.Add(this.purchaseIdTextBox);
+            this.Controls.Add(this.operationIdTextBox);
             this.Controls.Add(this.AgentEmployeerLabel);
-            this.Controls.Add(this.supplierAgentLabel);
+            this.Controls.Add(this.ContragentEmployeeLabel);
             this.Controls.Add(this.inTotalLabel);
             this.Controls.Add(this.ReturnGroupBox);
             this.Controls.Add(this.ContragentLabel);
             this.Controls.Add(this.AgentLabel);
             this.Controls.Add(this.purchaseDateLabel);
-            this.Controls.Add(this.purchaseIdLabel);
+            this.Controls.Add(this.operationIdLabel);
             this.Controls.Add(this.AgentStarLabel);
             this.Controls.Add(this.ContragentStarLabel);
             this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -448,16 +452,16 @@
 
         #endregion
 
-        private System.Windows.Forms.Label purchaseIdLabel;
+        private System.Windows.Forms.Label operationIdLabel;
         private System.Windows.Forms.Label purchaseDateLabel;
         private System.Windows.Forms.Label AgentLabel;
         private System.Windows.Forms.Label ContragentLabel;
         private System.Windows.Forms.GroupBox ReturnGroupBox;
         private System.Windows.Forms.DataGridView ReturnDGV;
         private System.Windows.Forms.Label inTotalLabel;
-        private System.Windows.Forms.Label supplierAgentLabel;
+        private System.Windows.Forms.Label ContragentEmployeeLabel;
         private System.Windows.Forms.Label AgentEmployeerLabel;
-        private System.Windows.Forms.TextBox purchaseIdTextBox;
+        private System.Windows.Forms.TextBox operationIdTextBox;
         private System.Windows.Forms.DateTimePicker OperationDateTimePicker;
         private System.Windows.Forms.Panel AgentBackPanel;
         private System.Windows.Forms.TextBox AgentTextBox;
@@ -465,14 +469,14 @@
         private System.Windows.Forms.TextBox ContragentTextBox;
         private System.Windows.Forms.Label ContragentStarLabel;
         private System.Windows.Forms.Label inTotalNumberLabel;
-        private System.Windows.Forms.TextBox supplierAgentTextBox;
+        private System.Windows.Forms.TextBox ContragentEmployeeTextBox;
         private System.Windows.Forms.TextBox AgentEmployeerTextBox;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.ContextMenuStrip purchaseContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
-        private System.Windows.Forms.RichTextBox descriptionRichTextBox;
+        private System.Windows.Forms.RichTextBox noteRichTextBox;
         private System.Windows.Forms.Label descriptionLabel;
         private System.Windows.Forms.Label AgentStarLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn SparePartIdCol;
