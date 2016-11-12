@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.purchaseIdLabel = new System.Windows.Forms.Label();
             this.purchaseDateLabel = new System.Windows.Forms.Label();
             this.AgentLabel = new System.Windows.Forms.Label();
@@ -77,7 +77,7 @@
             // purchaseIdLabel
             // 
             this.purchaseIdLabel.AutoSize = true;
-            this.purchaseIdLabel.Location = new System.Drawing.Point(222, 19);
+            this.purchaseIdLabel.Location = new System.Drawing.Point(212, 19);
             this.purchaseIdLabel.Name = "purchaseIdLabel";
             this.purchaseIdLabel.Size = new System.Drawing.Size(77, 13);
             this.purchaseIdLabel.TabIndex = 0;
@@ -86,7 +86,7 @@
             // purchaseDateLabel
             // 
             this.purchaseDateLabel.AutoSize = true;
-            this.purchaseDateLabel.Location = new System.Drawing.Point(435, 19);
+            this.purchaseDateLabel.Location = new System.Drawing.Point(425, 19);
             this.purchaseDateLabel.Name = "purchaseDateLabel";
             this.purchaseDateLabel.Size = new System.Drawing.Size(24, 13);
             this.purchaseDateLabel.TabIndex = 1;
@@ -95,7 +95,7 @@
             // AgentLabel
             // 
             this.AgentLabel.AutoSize = true;
-            this.AgentLabel.Location = new System.Drawing.Point(33, 64);
+            this.AgentLabel.Location = new System.Drawing.Point(23, 64);
             this.AgentLabel.Name = "AgentLabel";
             this.AgentLabel.Size = new System.Drawing.Size(72, 13);
             this.AgentLabel.TabIndex = 2;
@@ -104,7 +104,7 @@
             // ContragentLabel
             // 
             this.ContragentLabel.AutoSize = true;
-            this.ContragentLabel.Location = new System.Drawing.Point(33, 109);
+            this.ContragentLabel.Location = new System.Drawing.Point(23, 109);
             this.ContragentLabel.Name = "ContragentLabel";
             this.ContragentLabel.Size = new System.Drawing.Size(49, 13);
             this.ContragentLabel.TabIndex = 3;
@@ -113,9 +113,9 @@
             // ReturnGroupBox
             // 
             this.ReturnGroupBox.Controls.Add(this.ReturnDGV);
-            this.ReturnGroupBox.Location = new System.Drawing.Point(25, 155);
+            this.ReturnGroupBox.Location = new System.Drawing.Point(15, 155);
             this.ReturnGroupBox.Name = "ReturnGroupBox";
-            this.ReturnGroupBox.Size = new System.Drawing.Size(854, 211);
+            this.ReturnGroupBox.Size = new System.Drawing.Size(854, 311);
             this.ReturnGroupBox.TabIndex = 6;
             this.ReturnGroupBox.TabStop = false;
             this.ReturnGroupBox.Text = "Лист возврата.";
@@ -139,7 +139,7 @@
             this.ReturnDGV.Location = new System.Drawing.Point(3, 16);
             this.ReturnDGV.Name = "ReturnDGV";
             this.ReturnDGV.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.ReturnDGV.Size = new System.Drawing.Size(848, 192);
+            this.ReturnDGV.Size = new System.Drawing.Size(848, 292);
             this.ReturnDGV.TabIndex = 0;
             this.ReturnDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.ReturnDGV_CellBeginEdit);
             this.ReturnDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.ReturnDGV_CellEndEdit);
@@ -174,8 +174,8 @@
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.MeasureUnitCol.DataPropertyName = "SparePart.MeasureUnit";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle5;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -188,8 +188,8 @@
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.CountCol.DataPropertyName = "Count";
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Gray;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Gray;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle6;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ToolTipText = "Количество";
@@ -199,11 +199,11 @@
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.PriceCol.DataPropertyName = "Price";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.Format = "C2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle7.Format = "C2";
+            dataGridViewCellStyle7.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle7;
             this.PriceCol.HeaderText = "Цена";
             this.PriceCol.MinimumWidth = 100;
             this.PriceCol.Name = "PriceCol";
@@ -213,10 +213,10 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "C2";
-            dataGridViewCellStyle4.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "C2";
+            dataGridViewCellStyle8.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle8;
             this.SumCol.HeaderText = "Сумма";
             this.SumCol.MinimumWidth = 100;
             this.SumCol.Name = "SumCol";
@@ -226,7 +226,7 @@
             // inTotalLabel
             // 
             this.inTotalLabel.AutoSize = true;
-            this.inTotalLabel.Location = new System.Drawing.Point(710, 369);
+            this.inTotalLabel.Location = new System.Drawing.Point(697, 467);
             this.inTotalLabel.Name = "inTotalLabel";
             this.inTotalLabel.Size = new System.Drawing.Size(43, 13);
             this.inTotalLabel.TabIndex = 9;
@@ -235,7 +235,7 @@
             // supplierAgentLabel
             // 
             this.supplierAgentLabel.AutoSize = true;
-            this.supplierAgentLabel.Location = new System.Drawing.Point(105, 473);
+            this.supplierAgentLabel.Location = new System.Drawing.Point(92, 571);
             this.supplierAgentLabel.Name = "supplierAgentLabel";
             this.supplierAgentLabel.Size = new System.Drawing.Size(58, 13);
             this.supplierAgentLabel.TabIndex = 10;
@@ -244,7 +244,7 @@
             // AgentEmployeerLabel
             // 
             this.AgentEmployeerLabel.AutoSize = true;
-            this.AgentEmployeerLabel.Location = new System.Drawing.Point(505, 473);
+            this.AgentEmployeerLabel.Location = new System.Drawing.Point(492, 571);
             this.AgentEmployeerLabel.Name = "AgentEmployeerLabel";
             this.AgentEmployeerLabel.Size = new System.Drawing.Size(51, 13);
             this.AgentEmployeerLabel.TabIndex = 11;
@@ -252,7 +252,7 @@
             // 
             // purchaseIdTextBox
             // 
-            this.purchaseIdTextBox.Location = new System.Drawing.Point(305, 16);
+            this.purchaseIdTextBox.Location = new System.Drawing.Point(295, 16);
             this.purchaseIdTextBox.Name = "purchaseIdTextBox";
             this.purchaseIdTextBox.ReadOnly = true;
             this.purchaseIdTextBox.Size = new System.Drawing.Size(100, 20);
@@ -261,7 +261,7 @@
             // OperationDateTimePicker
             // 
             this.OperationDateTimePicker.CustomFormat = "";
-            this.OperationDateTimePicker.Location = new System.Drawing.Point(465, 16);
+            this.OperationDateTimePicker.Location = new System.Drawing.Point(455, 16);
             this.OperationDateTimePicker.MinDate = new System.DateTime(2015, 10, 10, 0, 0, 0, 0);
             this.OperationDateTimePicker.Name = "OperationDateTimePicker";
             this.OperationDateTimePicker.Size = new System.Drawing.Size(200, 20);
@@ -271,7 +271,7 @@
             // AgentBackPanel
             // 
             this.AgentBackPanel.Controls.Add(this.AgentTextBox);
-            this.AgentBackPanel.Location = new System.Drawing.Point(110, 56);
+            this.AgentBackPanel.Location = new System.Drawing.Point(100, 56);
             this.AgentBackPanel.Name = "AgentBackPanel";
             this.AgentBackPanel.Size = new System.Drawing.Size(200, 24);
             this.AgentBackPanel.TabIndex = 15;
@@ -288,7 +288,7 @@
             // ContragentBackPanel
             // 
             this.ContragentBackPanel.Controls.Add(this.ContragentTextBox);
-            this.ContragentBackPanel.Location = new System.Drawing.Point(108, 101);
+            this.ContragentBackPanel.Location = new System.Drawing.Point(98, 101);
             this.ContragentBackPanel.Name = "ContragentBackPanel";
             this.ContragentBackPanel.Size = new System.Drawing.Size(200, 24);
             this.ContragentBackPanel.TabIndex = 16;
@@ -311,7 +311,7 @@
             // 
             this.ContragentStarLabel.AutoSize = true;
             this.ContragentStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ContragentStarLabel.Location = new System.Drawing.Point(20, 100);
+            this.ContragentStarLabel.Location = new System.Drawing.Point(10, 100);
             this.ContragentStarLabel.Name = "ContragentStarLabel";
             this.ContragentStarLabel.Size = new System.Drawing.Size(20, 25);
             this.ContragentStarLabel.TabIndex = 17;
@@ -321,7 +321,7 @@
             // 
             this.inTotalNumberLabel.AutoSize = true;
             this.inTotalNumberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.inTotalNumberLabel.Location = new System.Drawing.Point(758, 369);
+            this.inTotalNumberLabel.Location = new System.Drawing.Point(745, 467);
             this.inTotalNumberLabel.Name = "inTotalNumberLabel";
             this.inTotalNumberLabel.Size = new System.Drawing.Size(39, 13);
             this.inTotalNumberLabel.TabIndex = 22;
@@ -329,14 +329,14 @@
             // 
             // supplierAgentTextBox
             // 
-            this.supplierAgentTextBox.Location = new System.Drawing.Point(169, 473);
+            this.supplierAgentTextBox.Location = new System.Drawing.Point(156, 571);
             this.supplierAgentTextBox.Name = "supplierAgentTextBox";
             this.supplierAgentTextBox.Size = new System.Drawing.Size(237, 20);
             this.supplierAgentTextBox.TabIndex = 23;
             // 
             // AgentEmployeerTextBox
             // 
-            this.AgentEmployeerTextBox.Location = new System.Drawing.Point(562, 473);
+            this.AgentEmployeerTextBox.Location = new System.Drawing.Point(549, 571);
             this.AgentEmployeerTextBox.Name = "AgentEmployeerTextBox";
             this.AgentEmployeerTextBox.ReadOnly = true;
             this.AgentEmployeerTextBox.Size = new System.Drawing.Size(232, 20);
@@ -344,7 +344,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(333, 527);
+            this.okButton.Location = new System.Drawing.Point(320, 625);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 25;
@@ -354,7 +354,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(508, 527);
+            this.cancelButton.Location = new System.Drawing.Point(495, 625);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 26;
@@ -376,7 +376,7 @@
             // 
             // descriptionRichTextBox
             // 
-            this.descriptionRichTextBox.Location = new System.Drawing.Point(25, 412);
+            this.descriptionRichTextBox.Location = new System.Drawing.Point(12, 510);
             this.descriptionRichTextBox.Name = "descriptionRichTextBox";
             this.descriptionRichTextBox.Size = new System.Drawing.Size(848, 39);
             this.descriptionRichTextBox.TabIndex = 33;
@@ -385,7 +385,7 @@
             // descriptionLabel
             // 
             this.descriptionLabel.AutoSize = true;
-            this.descriptionLabel.Location = new System.Drawing.Point(22, 396);
+            this.descriptionLabel.Location = new System.Drawing.Point(9, 494);
             this.descriptionLabel.Name = "descriptionLabel";
             this.descriptionLabel.Size = new System.Drawing.Size(83, 13);
             this.descriptionLabel.TabIndex = 34;
@@ -395,7 +395,7 @@
             // 
             this.AgentStarLabel.AutoSize = true;
             this.AgentStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AgentStarLabel.Location = new System.Drawing.Point(20, 55);
+            this.AgentStarLabel.Location = new System.Drawing.Point(10, 55);
             this.AgentStarLabel.Name = "AgentStarLabel";
             this.AgentStarLabel.Size = new System.Drawing.Size(20, 25);
             this.AgentStarLabel.TabIndex = 14;
@@ -406,7 +406,7 @@
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(882, 560);
+            this.ClientSize = new System.Drawing.Size(882, 660);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.descriptionRichTextBox);
             this.Controls.Add(this.cancelButton);
