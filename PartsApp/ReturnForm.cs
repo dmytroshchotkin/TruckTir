@@ -124,6 +124,7 @@ namespace PartsApp
             ReturnDGV[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Black;
         }//ReturnDGV_CellBeginEdit
 
+
         /// <summary>
         /// Валидация ввода в ячейку "Количество".
         /// </summary>
@@ -141,8 +142,8 @@ namespace PartsApp
         /// <param name="e"></param>
         private void ReturnDGV_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            CountCellFilled(ReturnDGV[e.ColumnIndex, e.RowIndex]);
-            e.Cancel = false;
+            System.Media.SystemSounds.Beep.Play();
+            e.Cancel = true;
         }//ReturnDGV_DataError
 
 
@@ -156,33 +157,26 @@ namespace PartsApp
             string measureUnit = (cell.OwningRow.DataBoundItem as OperationDetails).SparePart.MeasureUnit;
             int lastCorrectRowIndex = ReturnDGV.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black).Count() - 1;
 
-            if (!IsCountCellValueCorrect(cell, measureUnit))            
+            //Если данные введены верно
+            if (IsCountCellValueCorrect(cell, measureUnit))            
             {
-                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.                
-                //Если ячейка была корректно заполнена, перемещаем её вниз.
-                if (cell.RowIndex < lastCorrectRowIndex)
-                {                    
-                    var list = ReturnDGV.DataSource as List<OperationDetails>;
-                    OperationDetails operDet = cell.OwningRow.DataBoundItem as OperationDetails;
-                    list.Remove(operDet);
-                    list.Insert(lastCorrectRowIndex, operDet);
-                    cell = ReturnDGV[CountCol.Index, lastCorrectRowIndex];
-                }//if                 
-                SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
-            }//if
-            else
-            {
-                //Если индекс строки не равен необходимому, перемещаем её вверх.
-                if (cell.RowIndex != lastCorrectRowIndex)
+                //Если индекс строки больше необходимого, перемещаем её вверх.
+                if (cell.RowIndex > lastCorrectRowIndex)
                 {
-                    var list = ReturnDGV.DataSource as List<OperationDetails>;
-                    OperationDetails operDet = cell.OwningRow.DataBoundItem as OperationDetails;
-                    list.Remove(operDet);
-                    list.Insert(lastCorrectRowIndex, operDet);
                     ReturnDGV[CountCol.Index, cell.RowIndex].Style.ForeColor = Color.Gray; //Возвращаем дефолтный цвет в ячейку строки на который был осущ-лен ввод.
-                    cell = ReturnDGV[CountCol.Index, lastCorrectRowIndex];
+                    RowsSort(ref cell, lastCorrectRowIndex);
+
                     cell.Style.ForeColor = Color.Black;
                 }//if
+            }//if
+            else
+            {                
+                toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.                
+                //Если ячейка была до этого корректно заполнена, перемещаем её вниз.
+                if (cell.RowIndex < lastCorrectRowIndex)
+                    RowsSort(ref cell, lastCorrectRowIndex);
+              
+                SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
             }//else
 
             //Заполняем ячейки столбца 'Сумма' и считаем 'итого' 
@@ -271,6 +265,19 @@ namespace PartsApp
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);
         }//GetCellBelowLocation
 
+        /// <summary>
+        /// Метод сортировки строк по возврату.
+        /// </summary>
+        /// <param name="cell">Измененная ячейка</param>
+        /// <param name="lastCorrectRowIndex">Индекс последней корректно заполненной строки.</param>
+        private void RowsSort(ref DataGridViewCell cell, int lastCorrectRowIndex)
+        {
+            List<OperationDetails> operDetList = ReturnDGV.DataSource as List<OperationDetails>;
+            OperationDetails operDet = cell.OwningRow.DataBoundItem as OperationDetails;
+            operDetList.Remove(operDet);
+            operDetList.Insert(lastCorrectRowIndex, operDet);
+            cell = ReturnDGV[CountCol.Index, lastCorrectRowIndex];
+        }//RowsSort
 
 
 
@@ -287,6 +294,8 @@ namespace PartsApp
         {
 
         }
+
+       
 
         
 
