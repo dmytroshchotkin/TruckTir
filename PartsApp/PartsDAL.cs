@@ -428,8 +428,21 @@ namespace PartsApp
 
 
 
+        /// <summary>
+        /// Удаляет запись с заданным Id из таблицы ContactInfo.
+        /// </summary>
+        /// <param name="contactInfoId">Id удаляемой записи</param>
+        /// <param name="cmd"></param>
+        private static void DeleteContactInfo(int contactInfoId, SQLiteCommand cmd)
+        {
+            cmd.CommandText = "DELETE FROM ContactInfo "
+                            + "WHERE ContactInfoId = @ContactInfoId;";
 
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@ContactInfoId", contactInfoId);
 
+            cmd.ExecuteNonQuery();
+        }//DeleteContactInfo
 
 
 
