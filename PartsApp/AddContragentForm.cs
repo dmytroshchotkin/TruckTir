@@ -94,32 +94,19 @@ namespace PartsApp
                 //Проверяем корректность ввода.
                 if (codeMaskedTextBox.MaskCompleted == true && codeMaskedTextBox.Text.Length != 9)
                 {
-
                     //Проверяем существует ли уже такой code в базе.
-                    if (PartsDAL.IsSupplierCodeExist(codeMaskedTextBox.Text) == true)
-                    {
-                        codeBackPanel.BackColor = Color.Red;
-                        toolTip.SetToolTip(codeMaskedTextBox, "Такой ИНН/ОКПО уже есть в базе!");
-                        toolTip.Show("Такой ИНН/ОКПО уже есть в базе!", this, codeBackPanel.Location, 5000);
-                    }
+                    if ((_contragent.ContragentId != 0 && _contragent.Code == codeMaskedTextBox.Text) || PartsDAL.IsSupplierCodeExist(codeMaskedTextBox.Text) == false)
+                        ControlValidation.CorrectValueInput(toolTip, codeMaskedTextBox);                        
                     else
-                    {
-                        codeBackPanel.BackColor = SystemColors.Control;
-                        toolTip.SetToolTip(codeMaskedTextBox, String.Empty);
-                    }
+                        ControlValidation.WrongValueInput(toolTip, codeMaskedTextBox, String.Format("Такой ИНН/ОКПО уже есть в базе!", _contragentType));
                 }//if
                 else
                 {
-                    codeBackPanel.BackColor = Color.Red;
-                    toolTip.SetToolTip(codeMaskedTextBox, "Введенный ИНН/ОКПО является некорректным!");
-                    toolTip.Show("Введенный ИНН/ОКПО является некорректным!", this, codeBackPanel.Location, 5000);
-                }
+                    ControlValidation.WrongValueInput(toolTip, codeMaskedTextBox, String.Format("Введенный ИНН/ОКПО является некорректным!", _contragentType));
+                }//else
             }//if
             else 
-            {
-                codeBackPanel.BackColor = SystemColors.Control;
-                toolTip.SetToolTip(codeMaskedTextBox, String.Empty);
-            }
+                ControlValidation.CorrectValueInput(toolTip, codeMaskedTextBox);
         }//codeMaskedTextBox_Leave
 
 
