@@ -60,7 +60,7 @@ namespace PartsApp
             if (!String.IsNullOrWhiteSpace(contragentNameTextBox.Text))
             {
                 IContragent contragent = (_contragent is Customer) ? PartsDAL.FindCustomers(contragentNameTextBox.Text.Trim())
-                                                   : PartsDAL.FindSuppliers(contragentNameTextBox.Text.Trim());
+                                                                   : PartsDAL.FindSuppliers(contragentNameTextBox.Text.Trim());
 
                 string text = contragentNameTextBox.Text.Trim().ToLower();
                 //Если контрагент с таким именем уже есть в базе и это не его редактирование, выдаём ошибку.

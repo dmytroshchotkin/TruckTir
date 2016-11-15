@@ -1446,10 +1446,10 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT * FROM Suppliers WHERE ContragentName LIKE @ContragentName;";
+                const string query = "SELECT * FROM Suppliers WHERE ToLower(ContragentName) LIKE @ContragentName;";
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@ContragentName", supplierName);
+                cmd.Parameters.AddWithValue("@ContragentName", supplierName.ToLower());
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
@@ -1567,21 +1567,21 @@ namespace PartsApp
             {
                 connection.Open();
 
-                const string query = "SELECT * FROM Customers WHERE ContragentName LIKE @ContragentName;";
+                const string query = "SELECT * FROM Customers WHERE ToLower(ContragentName) LIKE @ContragentName;";
                 var cmd = new SQLiteCommand(query, connection);
 
-                cmd.Parameters.AddWithValue("@ContragentName", customerName);
+                cmd.Parameters.AddWithValue("@ContragentName", customerName.ToLower());
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
-                {
+                {                    
                     customer = new Customer();
-                    customer.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
+                    customer.ContragentId   = Convert.ToInt32(dataReader["ContragentId"]);
                     customer.ContragentName = dataReader["ContragentName"] as string;
-                    customer.Code        = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    customer.Entity      = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
+                    customer.Code           = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
+                    customer.Entity         = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
+                    customer.ContactInfo    = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
+                    customer.Description    = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
                 }//while
 
                 connection.Close();
