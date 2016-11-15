@@ -94,6 +94,11 @@ namespace PartsApp
             }//if
         }//ContragentsListBox_MouseDown
 
+        private void EditContragentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AddContragentForm(ContragentsListBox.SelectedItem as IContragent).Show();
+        }//EditContragentToolStripMenuItem_Click
+
 
         /// <summary>
         /// Заполняет таблицу Операций данными из переданного списка.
@@ -162,6 +167,8 @@ namespace PartsApp
             }//foreach                          
 
         }//FillTheOperationDetailsDGV
+
+       
 
         
 
