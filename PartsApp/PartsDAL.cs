@@ -363,27 +363,79 @@ namespace PartsApp
             return Convert.ToInt32(cmd.ExecuteScalar());
         }//AddContragent
 
+        /// <summary>
+        /// Обновляет контрагента в таблице.
+        /// </summary>
+        /// <param name="contragent">Обновляемый контрагент</param>
+        public static void UpdateContragent(IContragent contragent)
+        {
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                
+                using (SQLiteTransaction trans = connection.BeginTransaction())
+                {
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
+                    {
+                        try
+                        {
+                            //Вставляем запись в ContactInfo, если требуется.
+                            ContactInfo contactInfo = FindContactInfo(contragent); 
+                            if (contragent.ContactInfo != null)
+                            {
+                                //Если есть у объекта, но нет в базе -- добавляем запись в таблицу. Если есть в базе -- обновляем запись.
+                                if (contactInfo == null)
+                                    contragent.ContactInfo.ContactInfoId = AddContactInfo(contragent.ContactInfo, cmd);
+                                else
+                                    UpdateContactInfo(contragent.ContactInfo, cmd);
+                            }//if
+
+                            //Вставляем запись в Customers или Suppliers.
+                            UpdateContragent(contragent, cmd);
+
+                            //Если есть в базе, но нет у объекта -- удаляем запись с базы
+                                if (contactInfo != null && contragent.ContactInfo == null)
+                                    DeleteContactInfo(contactInfo.ContactInfoId, cmd);
+
+                            trans.Commit();
+                        }//try
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new Exception(ex.Message);
+                        }//catch
+                    }//using cmd
+                }//using transaction
+
+                connection.Close();
+            }//using connection
+        }//UpdateContragent
 
 
 
+        /// <summary>
+        /// Обновляет контрагента в таблице.
+        /// </summary>
+        /// <param name="contragent">Обновляемый контрагент</param>
+        /// <param name="cmd"></param>
+        public static void UpdateContragent(IContragent contragent, SQLiteCommand cmd)
+        {
+            string tableName = (contragent is Supplier) ? "Suppliers " : "Customers ";
+            cmd.CommandText = "UPDATE " + tableName
+                            + "SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
+                            + "ContactInfoId = @ContactInfoId, Description = @Description "
+                            + "WHERE ContragentId = @ContragentId;";
 
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@ContragentId",   contragent.ContragentId);
+            cmd.Parameters.AddWithValue("@ContragentName", contragent.ContragentName);
+            cmd.Parameters.AddWithValue("@Code",           contragent.Code);
+            cmd.Parameters.AddWithValue("@Entity",         contragent.Entity);
+            cmd.Parameters.AddWithValue("@ContactInfoId", (contragent.ContactInfo != null) ? contragent.ContactInfo.ContactInfoId : (int?)null);
+            cmd.Parameters.AddWithValue("@Description",    contragent.Description);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            cmd.ExecuteNonQuery();
+        }//UpdateContragent
 
 
 
@@ -417,29 +469,20 @@ namespace PartsApp
 
 
 
-        /// <summary>
-        /// Обновляет контрагента в таблице.
-        /// </summary>
-        /// <param name="contragent">Обновляемый контрагент</param>
-        /// <param name="cmd"></param>
-        public static void UpdateContragent(IContragent contragent, SQLiteCommand cmd)
-        {
-            string tableName = (contragent is Supplier) ? "Suppliers " : "Customers ";
-            cmd.CommandText = "UPDATE " + tableName
-                            + "SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
-                            + "ContactInfoId = @ContactInfoId, Description = @Description "
-                            + "WHERE ContragentId = @ContragentId;";
 
-            cmd.Parameters.Clear();
-            cmd.Parameters.AddWithValue("@ContragentId",   contragent.ContragentId);
-            cmd.Parameters.AddWithValue("@ContragentName", contragent.ContragentName);
-            cmd.Parameters.AddWithValue("@Code",           contragent.Code);
-            cmd.Parameters.AddWithValue("@Entity",         contragent.Entity);
-            cmd.Parameters.AddWithValue("@ContactInfoId", (contragent.ContactInfo != null) ? contragent.ContactInfo.ContactInfoId : (int?)null);
-            cmd.Parameters.AddWithValue("@Description",    contragent.Description);
 
-            cmd.ExecuteNonQuery();
-        }//UpdateContragent
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
