@@ -22,8 +22,22 @@ namespace PartsApp
         public PurchaseForm()
         {
             InitializeComponent();
+
+            //Устанавливаем параметры дат, для DateTimePicker.            
+            purchaseDateTimePicker.MaxDate = purchaseDateTimePicker.Value = DateTime.Now;
         }//
 
+        public PurchaseForm(Purchase purchase)
+        {
+            InitializeComponent();
+
+            PurchaseDGV.AllowUserToAddRows = PurchaseDGV.AllowUserToDeleteRows = false;
+            FillFormFromObject(purchase);//заполняем форму
+
+            markupCheckBox.Visible = storageLabel.Visible = storageComboBox.Visible = false;
+            purchaseDateTimePicker.Enabled = false;
+            buyerTextBox.ReadOnly = supplierAgentTextBox.ReadOnly = supplierTextBox.ReadOnly = PurchaseDGV.ReadOnly = true;            
+        }//
 
         private void PurchaseForm_Load(object sender, EventArgs e)
         {
@@ -31,10 +45,7 @@ namespace PartsApp
             currencyComboBox.SelectedIndex = 0;
 
             //Заполняем список автоподстановки для ввода контрагента.
-            supplierTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindSuppliers().Select(c => c.ContragentName).ToArray());
-
-            //Устанавливаем параметры дат, для DateTimePicker.            
-            purchaseDateTimePicker.MaxDate = purchaseDateTimePicker.Value = DateTime.Now;
+            supplierTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindSuppliers().Select(c => c.ContragentName).ToArray());            
             
             //Вносим все типы наценок в markupComboBox             
             markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
@@ -1096,6 +1107,34 @@ namespace PartsApp
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
+
+        /// <summary>
+        /// Заполняет форму данными переданного объекта.
+        /// </summary>
+        /// <param name="purchase">Объект даными которого заполняется форма</param>
+        private void FillFormFromObject(Purchase purchase)
+        {
+            purchaseIdTextBox.Text       = purchase.OperationId.ToString();
+            purchaseDateTimePicker.Value = purchase.OperationDate;
+            supplierTextBox.Text         = purchase.Contragent.ContragentName;
+            descriptionRichTextBox.Text  = purchase.Description;
+            supplierAgentTextBox.Text    = purchase.ContragentEmployee;
+            buyerAgentTextBox.Text       = purchase.Employee.GetShortFullName();
+
+            //Заполняем таблицу.            
+            foreach (OperationDetails operDet in purchase.OperationDetailsList)
+            {
+                int newRowIndex = PurchaseDGV.Rows.Add();
+                DataGridViewRow row = PurchaseDGV.Rows[newRowIndex];
+                row.Cells[TitleCol.Index].Value       = operDet.SparePart.Title;
+                row.Cells[ArticulCol.Index].Value     = operDet.SparePart.Articul;
+                row.Cells[MeasureUnitCol.Index].Value = operDet.SparePart.MeasureUnit;
+                row.Cells[CountCol.Index].Value = operDet.Count;
+                row.Cells[PriceCol.Index].Value = operDet.Price;
+                row.Cells[SumCol.Index].Value   = operDet.Sum;
+            }//foreach
+            FillTheInTotal();
+        }//FillFormFromObject
 
         /// <summary>
         /// Возвращает объект типа Operation, созданный из данных формы.

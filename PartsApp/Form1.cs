@@ -1007,7 +1007,8 @@ namespace PartsApp
 
         private void addNewPurchaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new PurchaseForm().Show(this);
+            //new PurchaseForm().Show(this);
+            new PurchaseForm(PartsDAL.FindPurchase(52)).Show(this);
         }//addNewPurchaseToolStripMenuItem_Click
 
         private void addNewSaleToolStripMenuItem_Click(object sender, EventArgs e)
