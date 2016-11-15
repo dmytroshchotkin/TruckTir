@@ -2125,7 +2125,39 @@ namespace PartsApp
             return contactInfo;
         }//FindContactInfo
 
+        /// <summary>
+        /// Возвращает объект типа ContactInfo, найденный по заданному Id контрагента, или null если ничего не найдено.
+        /// </summary>
+        /// <param name="employeeId">Id сотрудника.</param>
+        /// <returns></returns>
+        public static ContactInfo FindContactInfo(IContragent contragent)
+        {
+            ContactInfo contactInfo = null;
 
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                string tableName = (contragent is Supplier) ? "Suppliers" : "Customers";
+                string query = "SELECT ci.* FROM " + tableName + " as c "
+                             + "JOIN ContactInfo as ci "
+                             + "ON c.ContactInfoId = ci.ContactInfoId "
+                             + "WHERE ContragentId = @ContragentId;";
+
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@ContragentId", contragent.ContragentId);
+
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                        contactInfo = CreateContactInfo(dataReader);
+                }//using dataReader
+
+                connection.Close();
+            }//using
+
+            return contactInfo;
+        }//FindContactInfo
 
 
 
