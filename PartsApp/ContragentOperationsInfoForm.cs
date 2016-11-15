@@ -81,6 +81,20 @@ namespace PartsApp
             FillTheOperationsInfoDGV(operList); //Заполняем таблицу Операций.
         }//ContragentsListBox_SelectedIndexChanged
 
+        private void ContragentsListBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            //Если ПКМ по выделенному объекту, выводим контекстное меню.
+            if (e.Button == MouseButtons.Right)
+            {
+                Rectangle rect = ContragentsListBox.GetItemRectangle(ContragentsListBox.SelectedIndex);
+                rect.Y += ContragentsGroupBox.Location.Y;
+
+                if (e.Y >= rect.Top && e.Y <= rect.Bottom)
+                    editContragentContextMenuStrip.Show(ContragentsListBox, e.Location, ToolStripDropDownDirection.BelowRight);
+            }//if
+        }//ContragentsListBox_MouseDown
+
+
         /// <summary>
         /// Заполняет таблицу Операций данными из переданного списка.
         /// </summary>
@@ -148,6 +162,10 @@ namespace PartsApp
             }//foreach                          
 
         }//FillTheOperationDetailsDGV
+
+        
+
+        
 
 
 
