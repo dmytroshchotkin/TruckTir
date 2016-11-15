@@ -428,21 +428,8 @@ namespace PartsApp
 
 
 
-        /// <summary>
-        /// Удаляет запись с заданным Id из таблицы ContactInfo.
-        /// </summary>
-        /// <param name="contactInfoId">Id удаляемой записи</param>
-        /// <param name="cmd"></param>
-        private static void DeleteContactInfo(int contactInfoId, SQLiteCommand cmd)
-        {
-            cmd.CommandText = "DELETE FROM ContactInfo "
-                            + "WHERE ContactInfoId = @ContactInfoId;";
 
-            cmd.Parameters.Clear();
-            cmd.Parameters.AddWithValue("@ContactInfoId", contactInfoId);
 
-            cmd.ExecuteNonQuery();
-        }//DeleteContactInfo
 
 
 
@@ -498,7 +485,49 @@ namespace PartsApp
 
 
 
+        /// <summary>
+        /// Обновляем запись в таблице ContactInfo.
+        /// </summary>
+        /// <param name="contactInfo">Инф-ция для обновления.</param>
+        /// <param name="cmd"></param>
+        private static void UpdateContactInfo(ContactInfo contactInfo, SQLiteCommand cmd)
+        {
+            cmd.CommandText = "UPDATE ContactInfo "
+                            + "SET Country = @Country, Region = @Region, City = @City, Street = @Street, House = @House, "
+                            + "Room = @Room, Phone = @Phone, ExtPhone = @ExtPhone, Website = @Website, Email = @Email "
+                            + "WHERE ContactInfoId = @ContactInfoId;";
 
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@ContactInfoId", contactInfo.ContactInfoId);
+            cmd.Parameters.AddWithValue("@Country", contactInfo.Country);
+            cmd.Parameters.AddWithValue("@Region", contactInfo.Region);
+            cmd.Parameters.AddWithValue("@City", contactInfo.City);
+            cmd.Parameters.AddWithValue("@Street", contactInfo.Street);
+            cmd.Parameters.AddWithValue("@House", contactInfo.House);
+            cmd.Parameters.AddWithValue("@Room", contactInfo.Room);
+            cmd.Parameters.AddWithValue("@Phone", contactInfo.Phone);
+            cmd.Parameters.AddWithValue("@ExtPhone", contactInfo.ExtPhone);
+            cmd.Parameters.AddWithValue("@Website", contactInfo.Website);
+            cmd.Parameters.AddWithValue("@Email", contactInfo.Email);
+
+            cmd.ExecuteNonQuery();
+        }//UpdateContactInfo
+
+        /// <summary>
+        /// Удаляет запись с заданным Id из таблицы ContactInfo.
+        /// </summary>
+        /// <param name="contactInfoId">Id удаляемой записи</param>
+        /// <param name="cmd"></param>
+        private static void DeleteContactInfo(int contactInfoId, SQLiteCommand cmd)
+        {
+            cmd.CommandText = "DELETE FROM ContactInfo "
+                            + "WHERE ContactInfoId = @ContactInfoId;";
+
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@ContactInfoId", contactInfoId);
+
+            cmd.ExecuteNonQuery();
+        }//DeleteContactInfo
 
 
 
