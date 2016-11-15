@@ -20,16 +20,21 @@ namespace PartsApp
         {
             InitializeComponent();
 
-            _contragent = contragent;
-            string contragentType = (contragent is Supplier) ? "поставщик" : "клиент";
-            this.Text = String.Format("Форма добавления нового {0}а", contragentType);
-            descrLabel.Text += String.Format("{0}е :", contragentType);
+            _contragent = contragent;            
         }//
 
         private void AddcontragentForm_Load(object sender, EventArgs e)
         {
+            string contragentType = (_contragent is Supplier) ? "поставщик" : "клиент";
+            this.Text = String.Format("Форма добавления нового {0}а", contragentType);
+            descrLabel.Text += String.Format("{0}е :", contragentType);
+
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
-            codeMaskedTextBox.SelectionStart = 1;            
+            codeMaskedTextBox.SelectionStart = 1; 
+           
+            //Если у переданного объекта задан Id, то происходит редактирование контрагента.
+            if (_contragent.ContragentId != 0)
+                FillFormFromObject();//Заполняем форму инф-цией.
         }//AddcontragentForm_Load
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
@@ -180,6 +185,39 @@ namespace PartsApp
             return false;
         }//isThereContactInfo
 
+        /// <summary>
+        /// Заполняет форму инф-цией переданного в конст-ор объекта.
+        /// </summary>
+        private void FillFormFromObject()
+        {
+            //Заполняем форму данными объекта  
+            contragentNameTextBox.Text =   _contragent.ContragentName; 
+            codeMaskedTextBox.Text     =   _contragent.Code; 
+            entityComboBox.Text        =   _contragent.Entity; 
+            descrRichTextBox.Text      =   _contragent.Description;
+            FillTheContactInfoPanel(_contragent.ContactInfo);           
+        }//FillFormFromObject
+
+        /// <summary>
+        /// Метод заполнения ContactInfoPanel информацией из заданного ContactInfo.
+        /// </summary>
+        /// <param name="contactInfo">Oбъект по которому заполняются поля в ContactInfoPanel.</param>
+        private void FillTheContactInfoPanel(ContactInfo contactInfo)
+        {
+            if (contactInfo != null)
+            {
+                countryTextBox.Text  = contactInfo.Country;
+                regionTextBox.Text   = contactInfo.Region;
+                cityTextBox.Text     = contactInfo.City;
+                streetTextBox.Text   = contactInfo.Street;
+                houseTextBox.Text    = contactInfo.House;
+                roomTextBox.Text     = contactInfo.Room;
+                phoneTextBox.Text    = contactInfo.Phone;
+                extPhoneTextBox.Text = contactInfo.ExtPhone;
+                emailTextBox.Text    = contactInfo.Email; ;
+                websiteTextBox.Text  = contactInfo.Website;
+            }//if
+        }//FillTheContactInfoPanel   
 
         /// <summary>
         /// Возвращает объект заполненный данными с формы.

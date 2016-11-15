@@ -407,6 +407,7 @@ namespace PartsApp
 
             SetTheAccessLayerConstraints(employee);
         }//FillTheForm
+
         /// <summary>
         /// Метод заполнения ContactInfoPanel информацией из заданного ContactInfo.
         /// </summary>
