@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -40,13 +41,13 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
-            this.OperationDetailsGroupBox = new System.Windows.Forms.GroupBox();
-            this.OperationDetailsDGV = new System.Windows.Forms.DataGridView();
             this.OperationIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ContragentEmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TotalSumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OperationDetailsGroupBox = new System.Windows.Forms.GroupBox();
+            this.OperationDetailsDGV = new System.Windows.Forms.DataGridView();
             this.ManufacturerCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ArticulCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TitleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,6 +55,8 @@
             this.CountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.editContragentContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editContragentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -67,6 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.OperationsInfoDGV)).BeginInit();
             this.OperationDetailsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OperationDetailsDGV)).BeginInit();
+            this.editContragentContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -102,6 +106,7 @@
             // 
             // ContragentsListBox
             // 
+            this.ContragentsListBox.ContextMenuStrip = this.editContragentContextMenuStrip;
             this.ContragentsListBox.DisplayMember = "ContragentName";
             this.ContragentsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ContragentsListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -168,37 +173,6 @@
             this.OperationsInfoDGV.TabIndex = 1;
             this.OperationsInfoDGV.SelectionChanged += new System.EventHandler(this.OperationsInfoDGV_SelectionChanged);
             // 
-            // OperationDetailsGroupBox
-            // 
-            this.OperationDetailsGroupBox.Controls.Add(this.OperationDetailsDGV);
-            this.OperationDetailsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OperationDetailsGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.OperationDetailsGroupBox.Name = "OperationDetailsGroupBox";
-            this.OperationDetailsGroupBox.Size = new System.Drawing.Size(739, 187);
-            this.OperationDetailsGroupBox.TabIndex = 1;
-            this.OperationDetailsGroupBox.TabStop = false;
-            this.OperationDetailsGroupBox.Text = "Доп. инф-ция по операции.";
-            // 
-            // OperationDetailsDGV
-            // 
-            this.OperationDetailsDGV.AllowUserToAddRows = false;
-            this.OperationDetailsDGV.AllowUserToDeleteRows = false;
-            this.OperationDetailsDGV.AllowUserToResizeRows = false;
-            this.OperationDetailsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.OperationDetailsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ManufacturerCol,
-            this.ArticulCol,
-            this.TitleCol,
-            this.MeasureUnitCol,
-            this.CountCol,
-            this.PriceCol,
-            this.SumCol});
-            this.OperationDetailsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OperationDetailsDGV.Location = new System.Drawing.Point(3, 16);
-            this.OperationDetailsDGV.Name = "OperationDetailsDGV";
-            this.OperationDetailsDGV.Size = new System.Drawing.Size(733, 168);
-            this.OperationDetailsDGV.TabIndex = 0;
-            // 
             // OperationIdCol
             // 
             this.OperationIdCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -240,6 +214,37 @@
             this.TotalSumCol.HeaderText = "Сумма (руб.)";
             this.TotalSumCol.Name = "TotalSumCol";
             this.TotalSumCol.ReadOnly = true;
+            // 
+            // OperationDetailsGroupBox
+            // 
+            this.OperationDetailsGroupBox.Controls.Add(this.OperationDetailsDGV);
+            this.OperationDetailsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.OperationDetailsGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.OperationDetailsGroupBox.Name = "OperationDetailsGroupBox";
+            this.OperationDetailsGroupBox.Size = new System.Drawing.Size(739, 187);
+            this.OperationDetailsGroupBox.TabIndex = 1;
+            this.OperationDetailsGroupBox.TabStop = false;
+            this.OperationDetailsGroupBox.Text = "Доп. инф-ция по операции.";
+            // 
+            // OperationDetailsDGV
+            // 
+            this.OperationDetailsDGV.AllowUserToAddRows = false;
+            this.OperationDetailsDGV.AllowUserToDeleteRows = false;
+            this.OperationDetailsDGV.AllowUserToResizeRows = false;
+            this.OperationDetailsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.OperationDetailsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ManufacturerCol,
+            this.ArticulCol,
+            this.TitleCol,
+            this.MeasureUnitCol,
+            this.CountCol,
+            this.PriceCol,
+            this.SumCol});
+            this.OperationDetailsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.OperationDetailsDGV.Location = new System.Drawing.Point(3, 16);
+            this.OperationDetailsDGV.Name = "OperationDetailsDGV";
+            this.OperationDetailsDGV.Size = new System.Drawing.Size(733, 168);
+            this.OperationDetailsDGV.TabIndex = 0;
             // 
             // ManufacturerCol
             // 
@@ -305,6 +310,19 @@
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
             // 
+            // editContragentContextMenuStrip
+            // 
+            this.editContragentContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editContragentToolStripMenuItem});
+            this.editContragentContextMenuStrip.Name = "editContragentContextMenuStrip";
+            this.editContragentContextMenuStrip.Size = new System.Drawing.Size(155, 26);
+            // 
+            // editContragentToolStripMenuItem
+            // 
+            this.editContragentToolStripMenuItem.Name = "editContragentToolStripMenuItem";
+            this.editContragentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.editContragentToolStripMenuItem.Text = "Редактировать";
+            // 
             // ContragentOperationsInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -328,6 +346,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.OperationsInfoDGV)).EndInit();
             this.OperationDetailsGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.OperationDetailsDGV)).EndInit();
+            this.editContragentContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -354,6 +373,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CountCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
+        private System.Windows.Forms.ContextMenuStrip editContragentContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem editContragentToolStripMenuItem;
 
     }
 }
