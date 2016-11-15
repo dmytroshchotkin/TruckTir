@@ -96,7 +96,10 @@ namespace PartsApp
 
         private void EditContragentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddContragentForm(ContragentsListBox.SelectedItem as IContragent).Show();
+            IContragent contragent = ContragentsListBox.SelectedItem as IContragent;
+            contragent = (contragent is Supplier) ? PartsDAL.FindSuppliers(contragent.ContragentId) : PartsDAL.FindCustomers(contragent.ContragentId);
+            //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
+            new AddContragentForm(contragent).Show();
         }//EditContragentToolStripMenuItem_Click
 
 

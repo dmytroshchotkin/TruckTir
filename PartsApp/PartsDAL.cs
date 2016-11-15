@@ -384,18 +384,21 @@ namespace PartsApp
                             if (contragent.ContactInfo != null)
                             {
                                 //Если есть у объекта, но нет в базе -- добавляем запись в таблицу. Если есть в базе -- обновляем запись.
-                                if (contactInfo == null)
-                                    contragent.ContactInfo.ContactInfoId = AddContactInfo(contragent.ContactInfo, cmd);
-                                else
+                                if (contactInfo != null)
+                                {
+                                    contragent.ContactInfo.ContactInfoId = contactInfo.ContactInfoId;
                                     UpdateContactInfo(contragent.ContactInfo, cmd);
+                                }//if
+                                else
+                                    contragent.ContactInfo.ContactInfoId = AddContactInfo(contragent.ContactInfo, cmd);                                
                             }//if
 
                             //Вставляем запись в Customers или Suppliers.
                             UpdateContragent(contragent, cmd);
 
                             //Если есть в базе, но нет у объекта -- удаляем запись с базы
-                                if (contactInfo != null && contragent.ContactInfo == null)
-                                    DeleteContactInfo(contactInfo.ContactInfoId, cmd);
+                            if (contactInfo != null && contragent.ContactInfo == null)
+                                DeleteContactInfo(contactInfo.ContactInfoId, cmd);
 
                             trans.Commit();
                         }//try

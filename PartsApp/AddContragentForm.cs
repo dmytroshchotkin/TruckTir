@@ -264,7 +264,7 @@ namespace PartsApp
                     _contragent = GetContragentFromForm();
 
                     //Добавляем новую запись или редактируем существующую.
-                    if (_contragent.ContragentId != 0)
+                    if (_contragent.ContragentId == 0)
                         PartsDAL.AddContragent(_contragent);
                     else
                         PartsDAL.UpdateContragent(_contragent);
