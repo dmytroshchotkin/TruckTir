@@ -33,10 +33,10 @@ namespace PartsApp
             _changedMarkupList = new List<Availability>();
 
 
-            editPurchaseToolStripTextBox.GotFocus += ToolStripTextBox_GotFocus;
-            editPurchaseToolStripTextBox.LostFocus += ToolStripTextBox_LostFocus;
-            addReturnInputIdToolStripTextBox.GotFocus += ToolStripTextBox_GotFocus;
-            addReturnInputIdToolStripTextBox.LostFocus += ToolStripTextBox_LostFocus;
+            editPurchaseToolStripTextBox.GotFocus       += ToolStripTextBox_GotFocus;
+            editPurchaseToolStripTextBox.LostFocus      += ToolStripTextBox_LostFocus;
+            addReturnInputIdToolStripTextBox.GotFocus   += ToolStripTextBox_GotFocus;
+            addReturnInputIdToolStripTextBox.LostFocus  += ToolStripTextBox_LostFocus;
             ToolStripTextBox_LostFocus(editPurchaseToolStripTextBox, null);
             ToolStripTextBox_LostFocus(addReturnInputIdToolStripTextBox, null);
         }//
