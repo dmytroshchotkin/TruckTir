@@ -668,7 +668,7 @@ namespace PartsApp
         /// Обновляет запись в БД, данными из переданного объекта.
         /// </summary>
         /// <param name="purchase">Объект. данными которого будет обновлена запись в БД</param>
-        private static void UpdatePurchase(Purchase purchase)
+        public static void UpdatePurchase(int purchaseId, string description)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
             {
@@ -683,8 +683,8 @@ namespace PartsApp
                             string query = "UPDATE Purchases SET Description = @Description "
                                          + "WHERE OperationId = @OperationId;";
                             cmd.CommandText = query;
-                            cmd.Parameters.AddWithValue("@Description", purchase.Description);
-                            cmd.Parameters.AddWithValue("@OperationId", purchase.OperationId);
+                            cmd.Parameters.AddWithValue("@Description", description);
+                            cmd.Parameters.AddWithValue("@OperationId", purchaseId);
 
                             cmd.ExecuteNonQuery();
 

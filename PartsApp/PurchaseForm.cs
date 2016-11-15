@@ -1236,25 +1236,33 @@ namespace PartsApp
         {
             if (e.Button == MouseButtons.Left)
             {
-                //Если всё заполненно корректно.
-                if (IsRequiredFieldsValid())
+                //Если идет редактирование записи, то обновляем её в базе.
+                if (purchaseIdTextBox.Text != String.Empty)
+                    PartsDAL.UpdatePurchase(Convert.ToInt32(purchaseIdTextBox.Text), (String.IsNullOrWhiteSpace(descriptionRichTextBox.Text) ? null : descriptionRichTextBox.Text.Trim()));
+                else
                 {
-                    List<Availability> availList = CreateAvailabilityListFromForm();
-                    try
-                    {                        
-                        availList[0].OperationDetails.Operation.OperationId = PartsDAL.AddPurchase(availList);
-                    }//try
-                    catch (Exception)
+                    //Если всё заполненно корректно.
+                    if (IsRequiredFieldsValid())
                     {
-                        MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
-                        return;
-                    }//catch 
+                        List<Availability> availList = CreateAvailabilityListFromForm();
+                        try
+                        {
+                            availList[0].OperationDetails.Operation.OperationId = PartsDAL.AddPurchase(availList);
+                        }//try
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                            return;
+                        }//catch 
 
-                    //Выводим в Excel.
-                    saveInExcelAsync(availList.Select(av => av.OperationDetails).ToList(), buyerAgentTextBox.Text.Trim());
+                        //Выводим в Excel.
+                        saveInExcelAsync(availList.Select(av => av.OperationDetails).ToList(), buyerAgentTextBox.Text.Trim());
 
-                    this.Close();
-                }//if
+                        
+                    }//if
+                }//else
+
+                this.Close();
             }//if
         }//
 
