@@ -664,6 +664,44 @@ namespace PartsApp
             return Convert.ToInt32(cmd.ExecuteScalar());       
         }//AddPurchase
 
+        /// <summary>
+        /// Обновляет запись в БД, данными из переданного объекта.
+        /// </summary>
+        /// <param name="purchase">Объект. данными которого будет обновлена запись в БД</param>
+        private static void UpdatePurchase(Purchase purchase)
+        {
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                using (SQLiteTransaction trans = connection.BeginTransaction())
+                {
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
+                    {
+                        try
+                        {
+                            string query = "UPDATE Purchases SET Description = @Description "
+                                         + "WHERE OperationId = @OperationId;";
+                            cmd.CommandText = query;
+                            cmd.Parameters.AddWithValue("@Description", purchase.Description);
+                            cmd.Parameters.AddWithValue("@OperationId", purchase.OperationId);
+
+                            cmd.ExecuteNonQuery();
+
+                            trans.Commit();
+                        }//try
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new Exception(ex.Message);
+                        }//catch
+                    }//using cmd
+                }//using transaction
+
+                connection.Close();
+            }//using connection
+        }//UpdatePurchase
+
         #region Модификация таблицы PurchaseDetails
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
