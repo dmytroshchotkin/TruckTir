@@ -33,8 +33,11 @@ namespace PartsApp
             _changedMarkupList = new List<Availability>();
 
 
+            editPurchaseToolStripTextBox.GotFocus += ToolStripTextBox_GotFocus;
+            editPurchaseToolStripTextBox.LostFocus += ToolStripTextBox_LostFocus;
             addReturnInputIdToolStripTextBox.GotFocus += ToolStripTextBox_GotFocus;
             addReturnInputIdToolStripTextBox.LostFocus += ToolStripTextBox_LostFocus;
+            ToolStripTextBox_LostFocus(editPurchaseToolStripTextBox, null);
             ToolStripTextBox_LostFocus(addReturnInputIdToolStripTextBox, null);
         }//
 
@@ -1007,8 +1010,7 @@ namespace PartsApp
 
         private void addNewPurchaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //new PurchaseForm().Show(this);
-            new PurchaseForm(PartsDAL.FindPurchase(52)).Show(this);
+            new PurchaseForm().Show(this);            
         }//addNewPurchaseToolStripMenuItem_Click
 
         private void addNewSaleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1071,11 +1073,39 @@ namespace PartsApp
                     {
                         //Если введены некорректные данные, выводим сообщение об ошибке.
                         System.Media.SystemSounds.Beep.Play();                        
-                        toolTip.Show("Такого Л/С нет в базе.", this, new Point(200, 200), 3000); //!!!/*ERROR!!!*/Не работает.
+                        toolTip.Show("Такого номера накладной нет в базе.", this, new Point(200, 200), 3000); //!!!/*ERROR!!!*/Не работает.
                     }//else
                 }//if                
             }//if
         }//addReturnInputIdToolStripTextBox_KeyPress
+
+        private void editPurchaseToolStripTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true; //предотвращаем звуковой сигнал.
+                if (!String.IsNullOrWhiteSpace(editPurchaseToolStripTextBox.Text))
+                {
+                    //Получаем введённое значение.
+                    string txt = editPurchaseToolStripTextBox.Text.Trim();
+                    int purchaseId = 0;
+                    Purchase purchase = null;
+                    //Проверяем на корректность ввода и что есть такая продажа в базе.
+                    if (Int32.TryParse(txt, out purchaseId) && (purchase = PartsDAL.FindPurchase(purchaseId)) != null)
+                    {
+                        new PurchaseForm(purchase).Show(this); ;
+                        editPurchaseToolStripTextBox.Text = editPurchaseToolStripTextBox.Tag as string;
+                        editPurchaseToolStripTextBox.ForeColor = Color.Gray;
+                    }//if
+                    else
+                    {
+                        //Если введены некорректные данные, выводим сообщение об ошибке.
+                        System.Media.SystemSounds.Beep.Play();
+                        toolTip.Show("Такого номера накладной нет в базе.", this, new Point(200, 200), 3000); //!!!/*ERROR!!!*/Не работает.
+                    }//else
+                }//if                
+            }//if
+        }//
 
         private void ToolStripTextBox_GotFocus(object sender, EventArgs e)
         {
@@ -1096,7 +1126,9 @@ namespace PartsApp
                 item.Text = item.Tag as string;
                 item.ForeColor = Color.Gray;
             }//if
-        }//
+        }
+
+
 
 
         

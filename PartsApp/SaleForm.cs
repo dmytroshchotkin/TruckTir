@@ -934,7 +934,7 @@ namespace PartsApp
         /// <summary>
         /// Метод вывода расходной информации в Excel-файл.
         /// </summary>
-        /// <param name="sale">Информация о расходе.</param>
+        /// <param name="purchase">Информация о расходе.</param>
         /// <param name="agent">Фирма-продавец.</param>
         private void saveInExcel(Sale sale, string agent)
         {
@@ -1116,7 +1116,7 @@ namespace PartsApp
         /// Заполняет заданную строку Id операции и датой.
         /// </summary>
         /// <param name="ExcelWorkSheet">Рабочий лист</param>
-        /// <param name="sale">Объект операции.</param>
+        /// <param name="purchase">Объект операции.</param>
         /// <param name="row">Индекс строки</param>
         /// <param name="column">Индекс столбца</param>
         private void OperationIdAndDateExcelOutput(Excel.Worksheet ExcelWorkSheet, Sale sale, int row, int column)
