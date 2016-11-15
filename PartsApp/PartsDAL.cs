@@ -417,20 +417,29 @@ namespace PartsApp
 
 
 
+        /// <summary>
+        /// Обновляет контрагента в таблице.
+        /// </summary>
+        /// <param name="contragent">Обновляемый контрагент</param>
+        /// <param name="cmd"></param>
+        public static void UpdateContragent(IContragent contragent, SQLiteCommand cmd)
+        {
+            string tableName = (contragent is Supplier) ? "Suppliers " : "Customers ";
+            cmd.CommandText = "UPDATE " + tableName
+                            + "SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
+                            + "ContactInfoId = @ContactInfoId, Description = @Description "
+                            + "WHERE ContragentId = @ContragentId;";
 
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@ContragentId",   contragent.ContragentId);
+            cmd.Parameters.AddWithValue("@ContragentName", contragent.ContragentName);
+            cmd.Parameters.AddWithValue("@Code",           contragent.Code);
+            cmd.Parameters.AddWithValue("@Entity",         contragent.Entity);
+            cmd.Parameters.AddWithValue("@ContactInfoId", (contragent.ContactInfo != null) ? contragent.ContactInfo.ContactInfoId : (int?)null);
+            cmd.Parameters.AddWithValue("@Description",    contragent.Description);
 
-
-
-
-
-
-
-
-
-
-
-
-
+            cmd.ExecuteNonQuery();
+        }//UpdateContragent
 
 
 
@@ -468,19 +477,6 @@ namespace PartsApp
 
             return Convert.ToInt32(cmd.ExecuteScalar());
         }//AddContactInfo
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -528,6 +524,19 @@ namespace PartsApp
 
             cmd.ExecuteNonQuery();
         }//DeleteContactInfo
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
