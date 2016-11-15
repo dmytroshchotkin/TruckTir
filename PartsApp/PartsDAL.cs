@@ -1568,27 +1568,20 @@ namespace PartsApp
                 connection.Open();
 
                 const string query = "SELECT * FROM Customers WHERE ToLower(ContragentName) LIKE @ContragentName;";
-                var cmd = new SQLiteCommand(query, connection);
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
 
                 cmd.Parameters.AddWithValue("@ContragentName", customerName.ToLower());
 
-                var dataReader = cmd.ExecuteReader();
-                while (dataReader.Read())
-                {                    
-                    customer = new Customer();
-                    customer.ContragentId   = Convert.ToInt32(dataReader["ContragentId"]);
-                    customer.ContragentName = dataReader["ContragentName"] as string;
-                    customer.Code           = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    customer.Entity         = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo    = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    customer.Description    = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
-                }//while
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                        customer = CreateCustomers(dataReader);
+                }//using dataReader
 
                 connection.Close();
             }//using
 
             return customer; 
-
         }//FindCustomers
 
         /// <summary>
@@ -1635,7 +1628,18 @@ namespace PartsApp
 
 
 
-
+        private static Customer CreateCustomers(SQLiteDataReader dataReader)
+        {
+            return new Customer
+            (
+                contragentId   : Convert.ToInt32(dataReader["ContragentId"]),
+                contragentName : dataReader["ContragentName"] as string,
+                code           : dataReader["Code"] as string,
+                entity         : dataReader["Entity"] as string,
+                contactInfo    : (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
+                description    : dataReader["Description"] as string
+            );
+        }//CreateCustomers
 
 
 
