@@ -15,19 +15,24 @@ namespace PartsApp
     public partial class AddContragentForm : Form
     {
         IContragent _contragent;
+        /// <summary>
+        /// тип контрагента на русском.
+        /// </summary>
+        string _contragentType;
 
         public AddContragentForm(IContragent contragent)
         {
             InitializeComponent();
 
-            _contragent = contragent;            
+            _contragent = contragent;
+            _contragentType = (_contragent is Supplier) ? "поставщик" : "клиент";
         }//
 
         private void AddcontragentForm_Load(object sender, EventArgs e)
         {
-            string contragentType = (_contragent is Supplier) ? "поставщик" : "клиент";
-            this.Text = String.Format("Форма добавления нового {0}а", contragentType);
-            descrLabel.Text += String.Format("{0}е :", contragentType);
+            
+            this.Text = String.Format("Форма {0} {1}а", (_contragent.ContragentId == 0) ? "добавления" : "редактирования",_contragentType);
+            descrLabel.Text += String.Format("{0}е :", _contragentType);
 
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
             codeMaskedTextBox.SelectionStart = 1; 
@@ -52,32 +57,20 @@ namespace PartsApp
 
         private void contragentNameTextBox_Leave(object sender, EventArgs e)
         {
-            if (String.IsNullOrWhiteSpace(contragentNameTextBox.Text))
+            if (!String.IsNullOrWhiteSpace(contragentNameTextBox.Text))
             {
-                contragentNameStarLabel.ForeColor = contragentNameBackPanel.BackColor = Color.Red;
+                IContragent contragent = (_contragent is Customer) ? PartsDAL.FindCustomers(contragentNameTextBox.Text.Trim())
+                                                   : PartsDAL.FindSuppliers(contragentNameTextBox.Text.Trim());
 
-                toolTip.SetToolTip(contragentNameTextBox, "Введите название компании или ФИО поставщика");
-                toolTip.Show("Введите название компании или ФИО поставщика", this, contragentNameBackPanel.Location, 3000);
-            }
-            else //если название введено корректно
-            {
-                IContragent contragent = (_contragent is Customer) ? PartsDAL.FindCustomers(contragentNameTextBox.Text.Trim()) 
-                                                                   : PartsDAL.FindSuppliers(contragentNameTextBox.Text.Trim());  
-                //проверяем есть ли уже такое ContragentName в базе.
-                if (contragent != null)
-                {
-                    contragentNameStarLabel.ForeColor = contragentNameBackPanel.BackColor = Color.Red;
-
-                    toolTip.SetToolTip(contragentNameTextBox, "Введите другое название компании или ФИО поставщика");
-                    toolTip.Show("Такое имя(название) уже есть в базе.", this, contragentNameBackPanel.Location, 3000);
-                }
+                string text = contragentNameTextBox.Text.Trim().ToLower();
+                //Если контрагент с таким именем уже есть в базе и это не его редактирование, выдаём ошибку.
+                if ((_contragent.ContragentId != 0 && _contragent.ContragentName.ToLower() == text) || contragent == null)
+                    ControlValidation.CorrectValueInput(toolTip, contragentNameTextBox);
                 else
-                {
-                    contragentNameStarLabel.ForeColor = Color.Black;
-                    contragentNameBackPanel.BackColor = SystemColors.Control;
-                    toolTip.SetToolTip(contragentNameTextBox, String.Empty);
-                }//else
-            }//else
+                    ControlValidation.WrongValueInput(toolTip, contragentNameTextBox, String.Format("Введите другое название или ФИО {0}а", _contragentType));
+            }//if
+            else //если название введено некорректно
+                ControlValidation.WrongValueInput(toolTip, contragentNameTextBox);
         }//contragentNameTextBox_Leave
 
         /// <summary>
@@ -283,8 +276,11 @@ namespace PartsApp
                     //Присваиваем объект заполненный данными с формы.
                     _contragent = GetContragentFromForm();
 
-                    //Добавляем новую запись в таблицу.
-                    PartsDAL.AddContragent(_contragent);
+                    //Добавляем новую запись или редактируем существующую.
+                    if (_contragent.ContragentId != 0)
+                        PartsDAL.AddContragent(_contragent);
+                    else
+                        PartsDAL.UpdateContragent(_contragent);
 
                     this.DialogResult = DialogResult.OK;
                     this.Close();
