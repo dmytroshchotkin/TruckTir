@@ -103,6 +103,20 @@ namespace PartsApp
         }//EditContragentToolStripMenuItem_Click
 
 
+        private void OperationsInfoDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            //Если ПКМ по ячейке столбца 'Комментарий', выводи контекстное меню.
+            if (e.Button == MouseButtons.Right && e.ColumnIndex == DescriptionCol.Index)
+            {
+                Rectangle rect = OperationsInfoDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                Point loc = new Point(rect.Left + e.X, rect.Top + e.Y);
+                editOperDescriptContextMenuStrip.Show(OperationsInfoDGV, loc, ToolStripDropDownDirection.BelowRight);
+                OperationsInfoDGV.Rows[e.RowIndex].Cells[DescriptionCol.Index].Selected = true;
+            }//if
+        }//OperationsInfoDGV_CellMouseClick
+
+
+
         /// <summary>
         /// Заполняет таблицу Операций данными из переданного списка.
         /// </summary>
@@ -118,10 +132,11 @@ namespace PartsApp
                 DataGridViewRow row = OperationsInfoDGV.Rows[rowIndx];
 
                 row.Cells[OperationIdCol.Index].Value = oper.OperationId;
-                row.Cells[DateCol.Index].Value = oper.OperationDate;
-                row.Cells[EmployeeCol.Index].Value = (oper.Employee != null) ? oper.Employee.GetShortFullName() : null;
+                row.Cells[DateCol.Index].Value        = oper.OperationDate;
+                row.Cells[EmployeeCol.Index].Value    = (oper.Employee != null) ? oper.Employee.GetShortFullName() : null;
                 row.Cells[ContragentEmployeeCol.Index].Value = oper.ContragentEmployee;
-                row.Cells[TotalSumCol.Index].Value = oper.OperationDetailsList.Sum(sp => sp.Price * sp.Count);
+                row.Cells[DescriptionCol.Index].Value = oper.Description;
+                row.Cells[TotalSumCol.Index].Value    = oper.OperationDetailsList.Sum(od => od.Sum);
 
                 OperationsInfoDGV.ClearSelection();
                 OperationsInfoDGV.SelectionChanged += OperationsInfoDGV_SelectionChanged;
@@ -170,6 +185,8 @@ namespace PartsApp
             }//foreach                          
 
         }//FillTheOperationDetailsDGV
+
+        
 
        
 
