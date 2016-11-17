@@ -47,7 +47,7 @@ namespace PartsApp
         /// Обновляет количество в заданной записи таблицы Avaliability.
         /// </summary>
         /// <param name="sparePartId">Ид товара искомой записи</param>
-        /// <param name="purchaseId">Ид прихода искомой записи</param>        
+        /// <param name="saleId">Ид прихода искомой записи</param>        
         /// <param name="newCount">Новое кол-во, которое будет записано в базу.</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         public static void UpdateSparePartСountAvaliability(int sparePartId, int purchaseId, double newCount, SQLiteCommand cmd)
@@ -66,7 +66,7 @@ namespace PartsApp
         /// Метод обновления значения Markup у записей с заданным SparePartId и PurchaseId.
         /// </summary>
         /// <param name="sparePartId">Id запчасти с изменяемой наценкой</param>
-        /// <param name="purchaseId">Id прихода с изменяемой наценкой</param>
+        /// <param name="saleId">Id прихода с изменяемой наценкой</param>
         /// <param name="markup">Значение наценки на которое стоит поменять текущее значение.</param>
         /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
         public static void UpdateSparePartMarkup(int sparePartId, int purchaseId, double markup, SQLiteCommand cmd)
@@ -85,7 +85,7 @@ namespace PartsApp
         /// <summary>
         /// Изменяет наценку у записей с заданными SparePartId и PurchaseId на заданную Markup
         /// </summary>
-        /// <param name="changeMarkupDict">Словарь типа (sparePartId, IDictionary(purchaseId, markup))</param>
+        /// <param name="changeMarkupDict">Словарь типа (sparePartId, IDictionary(saleId, markup))</param>
         public static void UpdateSparePartMarkup(List<Availability> availList)
         {
             using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
@@ -124,7 +124,7 @@ namespace PartsApp
         /// Удаляет заданную запись из таблицы Avaliability.
         /// </summary>
         /// <param name="sparePartId">Ид товара искомой записи</param>
-        /// <param name="purchaseId">Ид прихода искомой записи</param>
+        /// <param name="saleId">Ид прихода искомой записи</param>
         /// <param name="cmd">Команда, без CommandText и Параметров.</param>
         public static void DeleteSparePartAvaliability(int sparePartId, int purchaseId, SQLiteCommand cmd)
         {
@@ -844,13 +844,54 @@ namespace PartsApp
             return saleId;
         }//AddSale
 
+
+        /// <summary>
+        /// Обновляет запись в БД, данными из переданного объекта.
+        /// </summary>
+        /// <param name="saleId">Ид обновляемой записи в базе.</param>
+        /// <param name="description">новое описание</param>
+        public static void UpdateSale(int saleId, string description)
+        {
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                using (SQLiteTransaction trans = connection.BeginTransaction())
+                {
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
+                    {
+                        try
+                        {
+                            string query = "UPDATE Sales SET Description = @Description "
+                                         + "WHERE OperationId = @OperationId;";
+
+                            cmd.CommandText = query;
+                            cmd.Parameters.AddWithValue("@Description", description);
+                            cmd.Parameters.AddWithValue("@OperationId", saleId);
+
+                            cmd.ExecuteNonQuery();
+
+                            trans.Commit();
+                        }//try
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new Exception(ex.Message);
+                        }//catch
+                    }//using cmd
+                }//using transaction
+
+                connection.Close();
+            }//using connection
+        }//UpdateSale
+
         #region Модификация таблицы SaleDetails.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Добавляет запись в таблицу SaleDetails.
         /// </summary>
-        /// <param name="purchaseId">Ид продажи</param>
+        /// <param name="saleId">Ид продажи</param>
         /// <param name="sparePartId">Ид товара</param>
         /// <param name="price">Отпускная цена товара</param>
         /// <param name="quantity">Кол-во товара</param>
@@ -1698,7 +1739,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает объект типа Purchase, найденный по заданному Id.
         /// </summary>
-        /// <param name="purchaseId">Id поставки</param>
+        /// <param name="saleId">Id поставки</param>
         /// <returns></returns>
         public static Purchase FindPurchase(int purchaseId)
         {
@@ -1730,7 +1771,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает объект типа Sale, найденный по заданному Id.
         /// </summary>
-        /// <param name="purchaseId">Id продажи</param>
+        /// <param name="saleId">Id продажи</param>
         /// <returns></returns>
         public static Sale FindSale(int saleId)
         {
@@ -1989,7 +2030,7 @@ namespace PartsApp
         /// <summary>
         /// Находит список возвращенного товара по заданному Id продажи.
         /// </summary>
-        /// <param name="purchaseId">Id продажи</param>
+        /// <param name="saleId">Id продажи</param>
         /// <returns></returns>
         public static List<OperationDetails> FindReturnDetails(int saleId)
         {
