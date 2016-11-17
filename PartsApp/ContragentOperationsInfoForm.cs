@@ -129,6 +129,25 @@ namespace PartsApp
             OperationsInfoDGV.Columns[DescriptionCol.Index].ReadOnly = true;
 
             //Обновляем запись в базе.
+            DataGridViewCell cell = OperationsInfoDGV[e.ColumnIndex, e.RowIndex];
+            int operId = (int)OperationsInfoDGV[OperationIdCol.Index, e.RowIndex].Value;
+            string descr = (cell.Value == null || String.IsNullOrWhiteSpace(cell.Value.ToString())) ? null : cell.Value.ToString().Trim();
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                if (_contragType == typeof(Supplier))
+                    PartsDAL.UpdatePurchase(operId, descr);
+                else
+                    PartsDAL.UpdateSale(operId, descr);
+
+                (cell.OwningRow.Tag as IOperation).Description = descr;
+                Cursor = Cursors.Default;
+            }//try
+            catch
+            {
+                MessageBox.Show("Не удалось редактировать запись. Попробуйте ещё раз.");
+                cell.Value = (cell.OwningRow.Tag as IOperation).Description;
+            }//catch
         }//OperationsInfoDGV_CellEndEdit
 
 
@@ -146,6 +165,7 @@ namespace PartsApp
                 int rowIndx = OperationsInfoDGV.Rows.Add();                
                 DataGridViewRow row = OperationsInfoDGV.Rows[rowIndx];
 
+                row.Tag = oper;
                 row.Cells[OperationIdCol.Index].Value = oper.OperationId;
                 row.Cells[DateCol.Index].Value        = oper.OperationDate;
                 row.Cells[EmployeeCol.Index].Value    = (oper.Employee != null) ? oper.Employee.GetShortFullName() : null;
