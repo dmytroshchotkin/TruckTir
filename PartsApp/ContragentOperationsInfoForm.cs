@@ -115,6 +115,21 @@ namespace PartsApp
             }//if
         }//OperationsInfoDGV_CellMouseClick
 
+        private void editOperDescriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Открываем ячейку для редактирования. (Вся строка становится не readonly)
+            DataGridViewCell cell = OperationsInfoDGV.SelectedRows[0].Cells[DescriptionCol.Index];
+            cell.ReadOnly = false;
+            OperationsInfoDGV.BeginEdit(false);  //Активируем для редактирования
+        }//editOperDescriptToolStripMenuItem_Click
+
+        private void OperationsInfoDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            //Делаем недоступными для редактирования все ячейки столбца 'Комментарий'.
+            OperationsInfoDGV.Columns[DescriptionCol.Index].ReadOnly = true;
+
+            //Обновляем запись в базе.
+        }//OperationsInfoDGV_CellEndEdit
 
 
         /// <summary>
@@ -185,6 +200,10 @@ namespace PartsApp
             }//foreach                          
 
         }//FillTheOperationDetailsDGV
+
+        
+
+        
 
         
 
