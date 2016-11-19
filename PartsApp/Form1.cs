@@ -401,6 +401,12 @@ namespace PartsApp
                 case Keys.Up:
                     AutoCompleteListBox.KeyUpPress(autoCompleteListBox);                    
                     break;
+                case Keys.Left:
+                    searchTextBox.SelectionStart -= (searchTextBox.SelectionStart != 0) ? 1 : 0;
+                    break;
+                case Keys.Right:
+                    searchTextBox.SelectionStart += 1;
+                    break;
                 case Keys.Enter:
                     KeyEnterPress();
                     break;
