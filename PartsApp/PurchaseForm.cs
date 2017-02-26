@@ -846,7 +846,7 @@ namespace PartsApp
             excelCells.Font.Underline = true;
             excelCells.Font.Size = 18;
             excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-            excelCells.Value = String.Format("Расходная накладная №{0} от {1}г.", purchase.OperationId, purchase.OperationDate.ToString("dd/MM/yyyy"));
+            excelCells.Value = String.Format("Приходная накладная №{0} от {1}г.", purchase.OperationId, purchase.OperationDate.ToString("dd/MM/yyyy"));
         }//OperationIdAndDateExcelOutput
 
         /// <summary>
