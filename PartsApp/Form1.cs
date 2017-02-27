@@ -70,17 +70,32 @@ namespace PartsApp
             //Выводим окно авторизации.
             CurEmployee = PartsDAL.FindEmployees().First();
             //new AuthorizationForm().ShowDialog(this);
-            userNameLabel.Text = String.Format("{0} {1}", CurEmployee.LastName, CurEmployee.FirstName);
+            userNameLabel.Text = $"{CurEmployee.LastName} {CurEmployee.FirstName}";
+
+            FormInitialize(); //Инициализация формы в зависимости от уровня доступа юзера.
 
             PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.
 
         }//Form1_Load
 
+        /// <summary>
+        /// Визуальная инициализация формы в зависимости от правд доступа текущего юзера.
+        /// </summary>
+        private void FormInitialize()
+        {
+            //Если пользователь не обладает правами админа.
+            if (CurEmployee.AccessLayer == Employee.AccessLayers.User.ToDescription())
+            {
+                //Блокируем возможность приходовать товар
+                purchaseToolStripMenuItem.Enabled = false;
+            }//if
+        }//FormInitialize
+
         #region Работа с Excel.
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         #region Вывод в Excel товара из таблицы.
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         /// <summary>
         /// 
@@ -530,7 +545,12 @@ namespace PartsApp
             {
                 //узнаем процент заданной наценки.
                 float markup = (markupComboBox.SelectedValue != null) ? Convert.ToSingle(markupComboBox.SelectedValue) : Convert.ToSingle(markupComboBox.Text.Trim());
-                MarkupChanged(markup); //Меняем наценку.
+
+                //Если юзер не обладает правами админа, то запрещаем ему делать наценку менее чем "Крупный опт".
+                if (CurEmployee.AccessLayer == Employee.AccessLayers.User.ToDescription() && markup < (float)Markup.Types.LargeWholesale)
+                    throw new Exception();
+
+                MarkupChanged(markup); //Меняем наценку.              
             }//try                
             catch 
             { 
@@ -552,7 +572,7 @@ namespace PartsApp
                 if (ex.Message == "database is locked\r\ndatabase is locked") 
                     MessageBox.Show("Вероятно кто-то другой сейчас осуществляет запись в базу\nПопробуйте ещё раз.", "База данных занята в данный момент." );
                 else 
-                    MessageBox.Show(String.Format("Ошибка записи изменения наценки\n{0}", ex.Message));
+                    MessageBox.Show($"Ошибка записи изменения наценки\n{ex.Message}");
             }//catch    
 
             Cursor = Cursors.Default;

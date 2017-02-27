@@ -50,7 +50,7 @@ namespace PartsApp
             //Вносим все типы наценок в markupComboBox             
             markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
             
-            buyerAgentTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);
+            buyerAgentTextBox.Text = $"{Form1.CurEmployee.LastName} {Form1.CurEmployee.FirstName}";
         }//PurchaseForm_Load
 
         private void storageComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -551,7 +551,7 @@ namespace PartsApp
             }//foreach
 
             //Заполняем InTotalLabel расчитанным значением.
-            inTotalNumberLabel.Text = String.Format("{0}(руб)", Math.Round(inTotal, 2, MidpointRounding.AwayFromZero));
+            inTotalNumberLabel.Text = $"{Math.Round(inTotal, 2, MidpointRounding.AwayFromZero)}(руб)";
         }//FillTheInTotal
 
 
@@ -1009,32 +1009,7 @@ namespace PartsApp
 
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            if (excRateNumericUpDown.Value > excRateNumericUpDown.Minimum)
-            {
-                PurchaseDGV.Enabled = true;
-            }
-            else PurchaseDGV.Enabled = false;
-            //foreach (DataGridViewRow extRow in PurchaseDGV.Rows)
-            //{
-            //    if (extRow.Cells["Price"].Value != null)
-            //    {
-            //        extRow.Cells["Price"].Value = Math.Round(((double)extRow.Cells["Price"].Value * (double)excRateNumericUpDown.Value), 2, MidpointRounding.AwayFromZero);                                                           
-            //        double price = Convert.ToDouble(extRow.Cells["Price"].Value);
-            //        double excRate = (double)excRateNumericUpDown.Value;
-            //        double newPrice = Math.Round(price * excRate, 2, MidpointRounding.AwayFromZero);
-            //        extRow.Cells["Price"].Value = newPrice;
-            //        if (extRow.Cells["Count"].Value != null)
-            //        {
-            //            //Узнаем была ли уже до этого введена цена, для изменения строки "итого".
-            //            if (extRow.Cells["Sum"].Value != null)
-            //                inTotal -= Convert.ToDouble((extRow.Cells["Sum"].Value));
-
-            //            extRow.Cells["Sum"].Value = newPrice * Convert.ToDouble(extRow.Cells["Count"].Value);
-            //            inTotal += newPrice * Convert.ToDouble(extRow.Cells["Count"].Value);
-            //            inTotalNumberLabel.Text = String.Format("{0}({1})", inTotal, currencyComboBox.Text);
-            //        }//if
-            //    }//if
-            //}//foreach
+            PurchaseDGV.Enabled = excRateNumericUpDown.Value > excRateNumericUpDown.Minimum;                     
         }//excRateNumericUpDown_ValueChanged
 
         private void excRateNumericUpDown_Leave(object sender, EventArgs e)
@@ -1231,7 +1206,6 @@ namespace PartsApp
                 }
             }//if
         }//CancelButton_MouseClick
-
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -1268,13 +1242,7 @@ namespace PartsApp
 
 
 
-
-
-        
-
-        
-
-
+       
     }//PurchaseForm
     
 

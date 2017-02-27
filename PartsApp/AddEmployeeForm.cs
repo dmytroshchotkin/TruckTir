@@ -482,7 +482,7 @@ namespace PartsApp
             if (employee.EmployeeId == Form1.CurEmployee.EmployeeId)
             {
                 //Если права "Админ"  
-                if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+                if (Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
                 {
                     //Если пароль не менялся, обновляем без пароля, иначе обновляем полностью.
                     if (passwordTextBox.Text.Trim() == Form1.CurEmployee.Password)                    
