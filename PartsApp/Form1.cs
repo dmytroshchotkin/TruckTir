@@ -85,9 +85,12 @@ namespace PartsApp
         {
             //Если пользователь не обладает правами админа.
             if (CurEmployee.AccessLayer == Employee.AccessLayers.User.ToDescription())
-            {
-                //Блокируем возможность приходовать товар
-                purchaseToolStripMenuItem.Enabled = false;
+            {                
+                purchaseToolStripMenuItem.Enabled = false; //Блокируем возможность приходовать товар
+                addNewSpToolStripMenuItem.Enabled = false; //Блокируем возм-ть добавлять новые единицы товара
+                editSparePartToolStripMenuItem.Enabled = false;  //Блокируем возм-ть редактировать данные об единиице товара.
+                addNewSupplierToolStripMenuItem.Enabled = false; //Блок-ем вози-ть добавлять нового поставщика.
+                addNewCustomerToolStripMenuItem.Enabled = false; //Блок-ем вози-ть добавлять нового клиента.
             }//if
         }//FormInitialize
 
