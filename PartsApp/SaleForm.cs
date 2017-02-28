@@ -355,10 +355,19 @@ namespace PartsApp
             {
                 float sellPrice = Convert.ToSingle(cell.Value);
                 if (sellPrice == 0) 
-                    throw new Exception();  //ввод нуля также является ошибкой.
+                    throw new Exception();  //ввод нуля также является ошибкой.                
 
                 int sparePartId = (cell.OwningRow.Tag as SparePart).SparePartId;
                 SparePart sparePart = SaleDGV.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (r.Tag as SparePart).SparePartId == sparePartId).Tag as SparePart;
+
+                //Если юзер не обладает правами админа, то запрещаем ему выставлять цену продажи ниже чем с наценкой "Крупный опт".
+                if (Form1.CurEmployee.AccessLayer == Employee.AccessLayers.User.ToDescription())
+                {
+                    //Если установленная юзером цена продажи ниже чем цена продажи данного товара с наценкой "Крупный опт" хотя бы по одному приходу.
+                    if (sparePart.AvailabilityList.Any(av => (av.OperationDetails.Price + (av.OperationDetails.Price * (float)Markup.Types.LargeWholesale / 100) > sellPrice)))
+                        throw new Exception();
+                }//if
+
                 //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
                 if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= sellPrice))
                     if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
