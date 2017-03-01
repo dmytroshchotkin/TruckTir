@@ -89,9 +89,10 @@ namespace PartsApp
                 purchaseToolStripMenuItem.Enabled = false; //Блокируем возможность приходовать товар
                 addNewSpToolStripMenuItem.Enabled = false; //Блокируем возм-ть добавлять новые единицы товара
                 editSparePartToolStripMenuItem.Enabled = false;  //Блокируем возм-ть редактировать данные об единиице товара.
-                addNewSupplierToolStripMenuItem.Enabled = false; //Блок-ем вози-ть добавлять нового поставщика.
-                addNewCustomerToolStripMenuItem.Enabled = false; //Блок-ем вози-ть добавлять нового клиента.
-            }//if
+                addNewSupplierToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять нового поставщика.
+                addNewCustomerToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять нового клиента.
+                addNewEmployeeToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять сотрудников.
+            }//if        
         }//FormInitialize
 
         #region Работа с Excel.
@@ -704,7 +705,15 @@ namespace PartsApp
             SaveAndCancelChangesButtonsSetEnable(_changedMarkupList.Count > 0); 
         }//MarkupChanged
 
+        private void Foo()
+        {
+            this.Visible = !(6 > 4 || 5 > 3 && 10 < 8);
 
+            if (this.Visible == true)
+                this.Visible = false;
+            else
+                this.Visible = true;
+        }//
 
 
 
