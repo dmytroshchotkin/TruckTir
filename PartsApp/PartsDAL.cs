@@ -2637,6 +2637,28 @@ namespace PartsApp
             );     
         }//CreateSparePart
 
+        /// <summary>
+        /// Метод создания бэкапа
+        /// </summary>
+        public static void CreateBackup()
+        {           
+            //Если нет папки для бэкапа, создаём её.
+            if (System.IO.Directory.Exists(@"Data\Backup") == false)            
+                System.IO.Directory.CreateDirectory(@"Data\Backup");                
+
+            //Создаём новый бэкап или обновляем существующий.
+            using (SQLiteConnection source = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                using (SQLiteConnection dest = GetDatabaseConnection("BackupConfig") as SQLiteConnection)
+                {
+                    source.Open();
+                    dest.Open();
+                    source.BackupDatabase(dest, "main", "main", -1, null, 0);
+                }//using
+            }//using
+
+        }//CreateBackup
+
 
         /// <summary>
         /// Коннект к базе данных.

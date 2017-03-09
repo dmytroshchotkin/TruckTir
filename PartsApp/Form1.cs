@@ -76,6 +76,7 @@ namespace PartsApp
 
             PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.
 
+            PartsDAL.CreateBackup();
         }//Form1_Load
 
         /// <summary>
@@ -705,15 +706,6 @@ namespace PartsApp
             SaveAndCancelChangesButtonsSetEnable(_changedMarkupList.Count > 0); 
         }//MarkupChanged
 
-        private void Foo()
-        {
-            this.Visible = !(6 > 4 || 5 > 3 && 10 < 8);
-
-            if (this.Visible == true)
-                this.Visible = false;
-            else
-                this.Visible = true;
-        }//
 
 
 
