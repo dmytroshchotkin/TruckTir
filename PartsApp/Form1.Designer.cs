@@ -958,6 +958,7 @@
             this.Controls.Add(this.currencyComboBox);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.partsStatusStrip.ResumeLayout(false);
             this.partsStatusStrip.PerformLayout();

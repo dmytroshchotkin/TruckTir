@@ -8,6 +8,11 @@ using System.Data.SQLite;
 using Excel = Microsoft.Office.Interop.Excel;
 using PartsApp.SupportClasses;
 using PartsApp.Models;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
+using Google.Apis.Drive.v3.Data;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
 
 namespace PartsApp
 {
@@ -2677,35 +2682,113 @@ namespace PartsApp
         }//GetDatabaseConnection
 
 
+        #region GoogleDriveAPI 
+
+        public static void CreateBackupInGoogleDrive()
+        {                        
+            UserCredential credential = GetCredential();
+            DriveService service = GetService(credential);
+
+            //Находим существующий файл бэкапа
+            string fileName = "TruckTirDB.db";
+            Google.Apis.Drive.v3.Data.File backupFile = GetFile(service, fileName);
+
+            //Записываем новый файл.
+            UploadFileToDrive(service, fileName);
+
+            //Удаляем старый файл бэкапа, если он существует.            
+            if (backupFile?.Id != null)
+                service.Files.Delete(backupFile?.Id).Execute();
+        }//CreateBackupInGoogleDrive
+
+
+        private static UserCredential GetCredential()
+        {
+            string[] Scopes = { DriveService.Scope.Drive };
+            
+            using (var stream = new System.IO.FileStream("client_secret.json", System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            {
+                string credPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+                credPath = System.IO.Path.Combine(credPath, ".credentials/drive-dotnet-quickstart.json");
+                Console.WriteLine(credPath);
+                return GoogleWebAuthorizationBroker.AuthorizeAsync(
+                            GoogleClientSecrets.Load(stream).Secrets,
+                            Scopes,
+                            "user",
+                            System.Threading.CancellationToken.None,
+                            new FileDataStore(credPath, true)).Result;
+            }//using
+        }//GetCredential
+
+        private static DriveService GetService(UserCredential credential)
+        {
+            return new DriveService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = "Drive API .NET Quickstart"
+            });
+        }//GetService
+
+
+        /// <summary>
+        /// Возвращаем файл по заданному имени.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="fileName">Имя файла</param>
+        /// <returns></returns>
+        private static Google.Apis.Drive.v3.Data.File GetFile(DriveService service, string fileName)
+        {
+            // Define parameters of request.
+            FilesResource.ListRequest listRequest = service.Files.List();
+            //listRequest.PageSize = 5;
+            listRequest.Fields = "nextPageToken, files(id, name)";
+
+            // List files.
+            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
+
+            if (files != null && files.Count > 0)
+            {
+                //Перебираем все файлы и возвращаем Id нужного.
+                foreach (Google.Apis.Drive.v3.Data.File file in files)
+                {
+                    if (file.Name == fileName)
+                        return file;
+                }//foreach                    
+            }//if         
+
+            return null;
+        }//GetFile
+
+        private static void DeleteFile(DriveService service)
+        {           
+            string fileId = "0B4jQdT8KbxhbVUxEMHRvanY5dDA";
+            //Google.Apis.Drive.v3.FilesResource.CreateRequest request = service.Files.Get()
+
+            Google.Apis.Drive.v3.FilesResource.DeleteRequest request = service.Files.Delete(fileId);
+
+            request.Execute();            
+        }//DeleteFile
+
+        private static void UploadFileToDrive(DriveService service, string fileName)
+        {
+            var fileMetadata = new Google.Apis.Drive.v3.Data.File();
+            fileMetadata.Name = fileName;            
+
+            FilesResource.CreateMediaUpload request;
+            using (var stream = new System.IO.FileStream("Data\\" + fileName, System.IO.FileMode.Open))
+            {
+                request = service.Files.Create(fileMetadata, stream, "application/zip");   //Работает только с типом "application/zip", c др. типами не загружает в облако.
+                request.Upload();
+            }//using
+
+            Google.Apis.Drive.v3.Data.File file = request.ResponseBody;
+            //return file.Id;
+        }//UploadFileToDrive
+
+        #endregion
 
 
 
-        //public static IList<Operation> FindPurchasesByParameters(Operation purchase)
-        //{
-        //    IList<Operation> operDetList = new List<Operation>();
-
-        //    using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-        //    {
-        //        connection.Open();
-
-        //        const string query = "SELECT * FROM Purchases WHERE PurchaseId = @PurchaseId AND ";
-        //        SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM Avaliability as av JOIN SpareParts as sp ON av.SparePartId = sp.SparePartId AND sp.Articul LIKE @Articul", connection);
-
-        //        cmd.Parameters.AddWithValue("@Articul", articul + "%");
-
-        //        var dataReader = cmd.ExecuteReader();
-        //        while (dataReader.Read())
-        //        {
-        //            Operation purchase = new Operation();
-
-
-        //            operDetList.Add(purchase);
-        //        }//while
-        //        connection.Close();
-        //    }//using
-
-        //    return operDetList;
-        //}//FindPurchasesByParameters
 
 
 
@@ -2727,9 +2810,7 @@ namespace PartsApp
 
 
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
     }//PartsDAL
