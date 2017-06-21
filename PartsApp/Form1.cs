@@ -51,7 +51,7 @@ namespace PartsApp
             /*Закомментированные строки выполнены через дизайнер.*/
             PartsDGV.AutoGenerateColumns    = false;
             ExtPartsDGV.AutoGenerateColumns = false;
-            
+
 
             //SupplierExtCol.DataPropertyName       = "OperationDetails.Operation.Contragent.ContragentName";
             //PurchaseIdExtCol.DataPropertyName     = "OperationDetails.Operation.OperationId";
@@ -62,21 +62,20 @@ namespace PartsApp
             //AvailabilityExtCol.DataPropertyName   = "OperationDetails.Count";
             //SellingPriceExtCol.DataPropertyName   = "SellingPrice";
             //NoteExtCol.DataPropertyName           = "OperationDetails.Operation.Description";
-            
+
             //extPartsDGV.DataMember = "AvailabilityList";
 
             #endregion
-            
+
             //Выводим окно авторизации.
-            CurEmployee = PartsDAL.FindEmployees().First();
+            CurEmployee = PartsDAL.FindEmployees(2);
             //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = $"{CurEmployee.LastName} {CurEmployee.FirstName}";
 
             FormInitialize(); //Инициализация формы в зависимости от уровня доступа юзера.
 
-            PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.
+            PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.            
 
-            PartsDAL.CreateBackup();
         }//Form1_Load
 
         /// <summary>
@@ -1195,7 +1194,13 @@ namespace PartsApp
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            PartsDAL.CreateBackupInGoogleDrive(); //Копируем базу в облако.
+            //Если Титор, тогда делаем бэкап (Для проверки на Lock conflict)
+            if (CurEmployee?.EmployeeId == 1)
+            {
+                PartsDAL.CreateBackupInGoogleDrive(); //Копируем базу в облако.          
+
+                PartsDAL.CreateLocalBackup(); //создаём локальный бэкап.
+            }//if
         }//
 
 

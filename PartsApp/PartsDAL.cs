@@ -2645,7 +2645,7 @@ namespace PartsApp
         /// <summary>
         /// Метод создания бэкапа
         /// </summary>
-        public static void CreateBackup()
+        public static void CreateLocalBackup()
         {           
             //Если нет папки для бэкапа, создаём её.
             if (System.IO.Directory.Exists(@"Data\Backup") == false)            
@@ -2662,7 +2662,7 @@ namespace PartsApp
                 }//using
             }//using
 
-        }//CreateBackup
+        }//CreateLocalBackup
 
 
         /// <summary>
@@ -2708,9 +2708,10 @@ namespace PartsApp
             
             using (var stream = new System.IO.FileStream("client_secret.json", System.IO.FileMode.Open, System.IO.FileAccess.Read))
             {
-                string credPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-                credPath = System.IO.Path.Combine(credPath, ".credentials/drive-dotnet-quickstart.json");
-                Console.WriteLine(credPath);
+                string credPath = @"Data\Backup";
+                //string credPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+                //credPath = System.IO.Path.Combine(credPath, ".credentials/drive-dotnet-quickstart.json");
+
                 return GoogleWebAuthorizationBroker.AuthorizeAsync(
                             GoogleClientSecrets.Load(stream).Secrets,
                             Scopes,
