@@ -31,6 +31,8 @@ namespace PartsApp.Models
         public string    Login         { get; set; }
         public string    Password      { get; set; }
 
+        public string FullName { get { return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName); } }
+
         private Lazy<ContactInfo> _contactInfo;
         public ContactInfo ContactInfo { get { return _contactInfo.Value; } }
 
@@ -100,16 +102,6 @@ namespace PartsApp.Models
         }//
 
 
-
-
-        /// <summary>
-        /// Возвращает полное ФИО. Пример : 'Иванов Иван Иванович'.
-        /// </summary>
-        /// <returns></returns>
-        public string GetFullName()
-        {
-            return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName);
-        }//GetFullName
         /// <summary>
         /// Возвращает фамилию и инициалы. Пример : 'Иванов И. И.'.
         /// </summary>
@@ -119,6 +111,7 @@ namespace PartsApp.Models
             string shortMiddleName = (MiddleName != null) ? MiddleName.ToUpper()[0] + "." : "";
             return String.Format("{0} {1}. {2}", LastName, FirstName.ToUpper()[0], shortMiddleName);
         }//GetShortFullName
+
     }//Employee
   
 }//namespace

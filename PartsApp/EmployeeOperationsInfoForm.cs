@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PartsApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +18,13 @@ namespace PartsApp
             InitializeComponent();
         }
 
+        private void EmployeeOperationsInfoForm_Load(object sender, EventArgs e)
+        {
+            //Находим список всех сотрудников (сортируем по фамилии и имени) и делаем источником данных для ListBox.
+            EmployeeListBox.DataSource = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();            
+        }//EmployeeOperationsInfoForm_Load
+
+
 
         /// <summary>
         /// Изменяем доступность DTP в зависимости от состояния CheckBox-ов.
@@ -30,7 +38,7 @@ namespace PartsApp
             dtp.Enabled = !dtp.Enabled;
         }//BeginDateCheckBox_CheckedChanged
 
-
+        
     }//EmployeeOperationsInfoForm
 
 }//namespace
