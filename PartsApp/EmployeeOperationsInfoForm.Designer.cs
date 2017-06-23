@@ -29,29 +29,28 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.BeginDatePanel = new System.Windows.Forms.Panel();
-            this.BeginDateCheckBox = new System.Windows.Forms.CheckBox();
-            this.BeginDateDTP = new System.Windows.Forms.DateTimePicker();
+            this.EmployeeDGV = new System.Windows.Forms.DataGridView();
             this.BottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.OperationsStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.OperationsCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.OperationsDGV = new System.Windows.Forms.DataGridView();
             this.PurchaseCheckBox = new System.Windows.Forms.CheckBox();
             this.SaleCheckBox = new System.Windows.Forms.CheckBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label1 = new System.Windows.Forms.Label();
+            this.BeginDatePanel = new System.Windows.Forms.Panel();
+            this.BeginDateCheckBox = new System.Windows.Forms.CheckBox();
+            this.BeginDateDTP = new System.Windows.Forms.DateTimePicker();
             this.EndDatePanel = new System.Windows.Forms.Panel();
             this.EndDateCheckBox = new System.Windows.Forms.CheckBox();
             this.EndDateDTP = new System.Windows.Forms.DateTimePicker();
-            this.label2 = new System.Windows.Forms.Label();
-            this.EmployeeDGV = new System.Windows.Forms.DataGridView();
             this.OperationDetailsGroupBox = new System.Windows.Forms.GroupBox();
             this.OperationDetailsDGV = new System.Windows.Forms.DataGridView();
             this.ManufacturerCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -61,11 +60,12 @@
             this.CountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.BeginDatePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.EmployeeDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BottomSplitContainer)).BeginInit();
             this.BottomSplitContainer.Panel1.SuspendLayout();
             this.BottomSplitContainer.Panel2.SuspendLayout();
@@ -73,8 +73,8 @@
             this.OperationsGroupBox.SuspendLayout();
             this.OperationsStatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OperationsDGV)).BeginInit();
+            this.BeginDatePanel.SuspendLayout();
             this.EndDatePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.EmployeeDGV)).BeginInit();
             this.OperationDetailsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OperationDetailsDGV)).BeginInit();
             this.SuspendLayout();
@@ -99,36 +99,17 @@
             this.splitContainer1.SplitterDistance = 191;
             this.splitContainer1.TabIndex = 0;
             // 
-            // BeginDatePanel
+            // EmployeeDGV
             // 
-            this.BeginDatePanel.Controls.Add(this.BeginDateCheckBox);
-            this.BeginDatePanel.Controls.Add(this.BeginDateDTP);
-            this.BeginDatePanel.Location = new System.Drawing.Point(342, -1);
-            this.BeginDatePanel.Name = "BeginDatePanel";
-            this.BeginDatePanel.Size = new System.Drawing.Size(108, 18);
-            this.BeginDatePanel.TabIndex = 7;
-            // 
-            // BeginDateCheckBox
-            // 
-            this.BeginDateCheckBox.AutoSize = true;
-            this.BeginDateCheckBox.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.BeginDateCheckBox.Location = new System.Drawing.Point(59, 2);
-            this.BeginDateCheckBox.Name = "BeginDateCheckBox";
-            this.BeginDateCheckBox.Size = new System.Drawing.Size(15, 14);
-            this.BeginDateCheckBox.TabIndex = 6;
-            this.BeginDateCheckBox.UseVisualStyleBackColor = false;
-            // 
-            // BeginDateDTP
-            // 
-            this.BeginDateDTP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BeginDateDTP.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.BeginDateDTP.Location = new System.Drawing.Point(0, 0);
-            this.BeginDateDTP.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
-            this.BeginDateDTP.Name = "BeginDateDTP";
-            this.BeginDateDTP.Size = new System.Drawing.Size(108, 20);
-            this.BeginDateDTP.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.BeginDateDTP, "Начальная дата");
-            this.BeginDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
+            this.EmployeeDGV.AllowUserToAddRows = false;
+            this.EmployeeDGV.AllowUserToDeleteRows = false;
+            this.EmployeeDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.EmployeeDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.EmployeeDGV.Location = new System.Drawing.Point(0, 0);
+            this.EmployeeDGV.Name = "EmployeeDGV";
+            this.EmployeeDGV.ReadOnly = true;
+            this.EmployeeDGV.Size = new System.Drawing.Size(779, 191);
+            this.EmployeeDGV.TabIndex = 0;
             // 
             // BottomSplitContainer
             // 
@@ -169,6 +150,24 @@
             this.OperationsGroupBox.TabIndex = 0;
             this.OperationsGroupBox.TabStop = false;
             this.OperationsGroupBox.Text = "Операции";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(476, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(25, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "до :";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(312, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(24, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "от :";
             // 
             // OperationsStatusStrip
             // 
@@ -229,14 +228,39 @@
             this.SaleCheckBox.Text = "Расход";
             this.SaleCheckBox.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // BeginDatePanel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(312, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(24, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "от :";
+            this.BeginDatePanel.Controls.Add(this.BeginDateCheckBox);
+            this.BeginDatePanel.Controls.Add(this.BeginDateDTP);
+            this.BeginDatePanel.Location = new System.Drawing.Point(342, -1);
+            this.BeginDatePanel.Name = "BeginDatePanel";
+            this.BeginDatePanel.Size = new System.Drawing.Size(108, 18);
+            this.BeginDatePanel.TabIndex = 7;
+            // 
+            // BeginDateCheckBox
+            // 
+            this.BeginDateCheckBox.AutoSize = true;
+            this.BeginDateCheckBox.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.BeginDateCheckBox.Checked = true;
+            this.BeginDateCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.BeginDateCheckBox.Location = new System.Drawing.Point(59, 2);
+            this.BeginDateCheckBox.Name = "BeginDateCheckBox";
+            this.BeginDateCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.BeginDateCheckBox.TabIndex = 6;
+            this.BeginDateCheckBox.UseVisualStyleBackColor = false;
+            this.BeginDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
+            // 
+            // BeginDateDTP
+            // 
+            this.BeginDateDTP.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BeginDateDTP.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.BeginDateDTP.Location = new System.Drawing.Point(0, 0);
+            this.BeginDateDTP.MinDate = new System.DateTime(2015, 1, 1, 0, 0, 0, 0);
+            this.BeginDateDTP.Name = "BeginDateDTP";
+            this.BeginDateDTP.Size = new System.Drawing.Size(108, 20);
+            this.BeginDateDTP.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.BeginDateDTP, "Начальная дата");
+            this.BeginDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
             // 
             // EndDatePanel
             // 
@@ -251,11 +275,14 @@
             // 
             this.EndDateCheckBox.AutoSize = true;
             this.EndDateCheckBox.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.EndDateCheckBox.Checked = true;
+            this.EndDateCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.EndDateCheckBox.Location = new System.Drawing.Point(59, 2);
             this.EndDateCheckBox.Name = "EndDateCheckBox";
             this.EndDateCheckBox.Size = new System.Drawing.Size(15, 14);
             this.EndDateCheckBox.TabIndex = 6;
             this.EndDateCheckBox.UseVisualStyleBackColor = false;
+            this.EndDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
             // 
             // EndDateDTP
             // 
@@ -268,27 +295,6 @@
             this.EndDateDTP.TabIndex = 5;
             this.toolTip1.SetToolTip(this.EndDateDTP, "Начальная дата");
             this.EndDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(476, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(25, 13);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "до :";
-            // 
-            // EmployeeDGV
-            // 
-            this.EmployeeDGV.AllowUserToAddRows = false;
-            this.EmployeeDGV.AllowUserToDeleteRows = false;
-            this.EmployeeDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.EmployeeDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EmployeeDGV.Location = new System.Drawing.Point(0, 0);
-            this.EmployeeDGV.Name = "EmployeeDGV";
-            this.EmployeeDGV.ReadOnly = true;
-            this.EmployeeDGV.Size = new System.Drawing.Size(779, 191);
-            this.EmployeeDGV.TabIndex = 0;
             // 
             // OperationDetailsGroupBox
             // 
@@ -343,8 +349,8 @@
             // MeasureUnitCol
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle9;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -354,8 +360,8 @@
             // CountCol
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle10;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ReadOnly = true;
@@ -364,10 +370,10 @@
             // PriceCol
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle11.Format = "N2";
+            dataGridViewCellStyle11.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle11;
             this.PriceCol.HeaderText = "Цена (руб.)";
             this.PriceCol.MinimumWidth = 50;
             this.PriceCol.Name = "PriceCol";
@@ -377,10 +383,10 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "C2";
-            dataGridViewCellStyle4.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle12.Format = "C2";
+            dataGridViewCellStyle12.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle12;
             this.SumCol.HeaderText = "Сумма (руб.)";
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
@@ -397,8 +403,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.BeginDatePanel.ResumeLayout(false);
-            this.BeginDatePanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.EmployeeDGV)).EndInit();
             this.BottomSplitContainer.Panel1.ResumeLayout(false);
             this.BottomSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.BottomSplitContainer)).EndInit();
@@ -408,9 +413,10 @@
             this.OperationsStatusStrip.ResumeLayout(false);
             this.OperationsStatusStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OperationsDGV)).EndInit();
+            this.BeginDatePanel.ResumeLayout(false);
+            this.BeginDatePanel.PerformLayout();
             this.EndDatePanel.ResumeLayout(false);
             this.EndDatePanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.EmployeeDGV)).EndInit();
             this.OperationDetailsGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.OperationDetailsDGV)).EndInit();
             this.ResumeLayout(false);
