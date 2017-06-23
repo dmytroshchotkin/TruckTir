@@ -29,12 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.EmployeeDGV = new System.Windows.Forms.DataGridView();
             this.BottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -62,11 +61,11 @@
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.EmployeeGroupBox = new System.Windows.Forms.GroupBox();
+            this.EmployeeListBox = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.EmployeeDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BottomSplitContainer)).BeginInit();
             this.BottomSplitContainer.Panel1.SuspendLayout();
             this.BottomSplitContainer.Panel2.SuspendLayout();
@@ -100,18 +99,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(779, 685);
             this.splitContainer1.SplitterDistance = 191;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // EmployeeDGV
-            // 
-            this.EmployeeDGV.AllowUserToAddRows = false;
-            this.EmployeeDGV.AllowUserToDeleteRows = false;
-            this.EmployeeDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.EmployeeDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EmployeeDGV.Location = new System.Drawing.Point(3, 16);
-            this.EmployeeDGV.Name = "EmployeeDGV";
-            this.EmployeeDGV.ReadOnly = true;
-            this.EmployeeDGV.Size = new System.Drawing.Size(773, 172);
-            this.EmployeeDGV.TabIndex = 0;
             // 
             // BottomSplitContainer
             // 
@@ -351,8 +338,8 @@
             // MeasureUnitCol
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle1;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -362,8 +349,8 @@
             // CountCol
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle2;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ReadOnly = true;
@@ -372,10 +359,10 @@
             // PriceCol
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N2";
-            dataGridViewCellStyle7.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N2";
+            dataGridViewCellStyle3.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle3;
             this.PriceCol.HeaderText = "Цена (руб.)";
             this.PriceCol.MinimumWidth = 50;
             this.PriceCol.Name = "PriceCol";
@@ -385,17 +372,17 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "C2";
-            dataGridViewCellStyle8.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "C2";
+            dataGridViewCellStyle4.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle4;
             this.SumCol.HeaderText = "Сумма (руб.)";
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
             // 
             // EmployeeGroupBox
             // 
-            this.EmployeeGroupBox.Controls.Add(this.EmployeeDGV);
+            this.EmployeeGroupBox.Controls.Add(this.EmployeeListBox);
             this.EmployeeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EmployeeGroupBox.Location = new System.Drawing.Point(0, 0);
             this.EmployeeGroupBox.Name = "EmployeeGroupBox";
@@ -403,6 +390,15 @@
             this.EmployeeGroupBox.TabIndex = 1;
             this.EmployeeGroupBox.TabStop = false;
             this.EmployeeGroupBox.Text = "Сотрудники";
+            // 
+            // EmployeeListBox
+            // 
+            this.EmployeeListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.EmployeeListBox.FormattingEnabled = true;
+            this.EmployeeListBox.Location = new System.Drawing.Point(3, 16);
+            this.EmployeeListBox.Name = "EmployeeListBox";
+            this.EmployeeListBox.Size = new System.Drawing.Size(773, 172);
+            this.EmployeeListBox.TabIndex = 0;
             // 
             // EmployeeOperationsInfoForm
             // 
@@ -416,7 +412,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.EmployeeDGV)).EndInit();
             this.BottomSplitContainer.Panel1.ResumeLayout(false);
             this.BottomSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.BottomSplitContainer)).EndInit();
@@ -452,7 +447,6 @@
         private System.Windows.Forms.CheckBox BeginDateCheckBox;
         private System.Windows.Forms.Panel BeginDatePanel;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.DataGridView EmployeeDGV;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel EndDatePanel;
@@ -468,5 +462,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn PriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
         private System.Windows.Forms.GroupBox EmployeeGroupBox;
+        private System.Windows.Forms.ListBox EmployeeListBox;
     }
 }
