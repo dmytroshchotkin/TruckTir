@@ -21,7 +21,9 @@ namespace PartsApp
         private void EmployeeOperationsInfoForm_Load(object sender, EventArgs e)
         {
             //Находим список всех сотрудников (сортируем по фамилии и имени) и делаем источником данных для ListBox.
-            EmployeeListBox.DataSource = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();     
+            EmployeeListBox.DataSource = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+
+            OperationsDGV.DataSource = PartsDAL.FindSales(Form1.CurEmployee, new DateTime(2017, 1, 1), null);        
         }//EmployeeOperationsInfoForm_Load
 
 

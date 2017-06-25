@@ -1932,7 +1932,7 @@ namespace PartsApp
         }//FindSales
 
         /// <summary>
-        /// Возвращает список операций осуществленных данным сотрудником.
+        /// Возвращает список операций приходования осуществленных данным сотрудником.
         /// </summary>
         /// <param name="emp">Сотрудник по которому выдаются данные.</param>
         /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
@@ -1968,7 +1968,42 @@ namespace PartsApp
             return purchases;
         }//FindPurchases
 
+        /// <summary>
+        /// Возвращает список операций продажи осуществленных данным сотрудником.
+        /// </summary>
+        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
+        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <returns></returns>
+        public static List<Sale> FindSales(Employee emp, DateTime? startDate, DateTime? endDate)
+        {
+            List<Sale> salesList = new List<Sale>();
 
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
+                                   + "FROM Sales as s "
+                                   + "WHERE s.EmployeeId = @EmployeeId "
+                                        + "and s.OperationDate BETWEEN strftime('%s', @startDate) AND strftime('%s', @endDate);";
+
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@EmployeeId", emp.EmployeeId);
+                cmd.Parameters.AddWithValue("@startDate", startDate != null ? startDate : new DateTime(1970, 1, 1)); //Если стартовая дата не задана, ищем по минимально возможному значению.
+                cmd.Parameters.AddWithValue("@endDate", endDate != null ? endDate : new DateTime(2038, 1, 19)); //Если конечная дата не задана, ищем по максимально возможному значению.
+
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                        salesList.Add(CreateSale(dataReader));
+                }//using dataReader
+
+                connection.Close();
+            }//using
+
+            return salesList;
+        }//FindSales
 
 
         /// <summary>
