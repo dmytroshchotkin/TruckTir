@@ -257,6 +257,7 @@
             this.PurchaseCheckBox.TabIndex = 3;
             this.PurchaseCheckBox.Text = "Приход";
             this.PurchaseCheckBox.UseVisualStyleBackColor = true;
+            this.PurchaseCheckBox.CheckedChanged += new System.EventHandler(this.OperationsCheckBox_CheckedChanged);
             // 
             // SaleCheckBox
             // 
@@ -269,6 +270,7 @@
             this.SaleCheckBox.TabIndex = 4;
             this.SaleCheckBox.Text = "Расход";
             this.SaleCheckBox.UseVisualStyleBackColor = true;
+            this.SaleCheckBox.CheckedChanged += new System.EventHandler(this.OperationsCheckBox_CheckedChanged);
             // 
             // BeginDatePanel
             // 

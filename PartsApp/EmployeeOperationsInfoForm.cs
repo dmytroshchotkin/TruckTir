@@ -77,6 +77,23 @@ namespace PartsApp
             }//foreach
         }//FillTheOperationDGV
 
+        /// <summary>
+        /// Изменяет видимость строк по типу операции, в зависимости от состояния CheckBox-ов.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OperationsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            //Узнаём тип операции.
+            CheckBox operCheckBox = sender as CheckBox;
+            string operType = operCheckBox.Name == PurchaseCheckBox.Name ? "Приход" : "Расход";
+            //Меняем видимость требуемых строк.
+            foreach (DataGridViewRow row in OperationsInfoDGV.Rows)
+            {
+                if (row.Cells[OperationTypeCol.Index].Value.ToString() == operType);
+                    row.Visible = operCheckBox.Checked;
+            }//foreach
+        }//
 
 
     }//EmployeeOperationsInfoForm
