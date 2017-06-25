@@ -29,10 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.EmployeeGroupBox = new System.Windows.Forms.GroupBox();
             this.EmployeeListBox = new System.Windows.Forms.ListBox();
@@ -45,7 +47,6 @@
             this.OperationsStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.OperationsCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.OperationsDGV = new System.Windows.Forms.DataGridView();
             this.PurchaseCheckBox = new System.Windows.Forms.CheckBox();
             this.SaleCheckBox = new System.Windows.Forms.CheckBox();
             this.BeginDatePanel = new System.Windows.Forms.Panel();
@@ -64,6 +65,15 @@
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
+            this.OperationTypeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OperationIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ContragentCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ContragentEmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DescriptionCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalSumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -75,11 +85,11 @@
             this.BottomSplitContainer.SuspendLayout();
             this.OperationsGroupBox.SuspendLayout();
             this.OperationsStatusStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.OperationsDGV)).BeginInit();
             this.BeginDatePanel.SuspendLayout();
             this.EndDatePanel.SuspendLayout();
             this.OperationDetailsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OperationDetailsDGV)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.OperationsInfoDGV)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -98,8 +108,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.BottomSplitContainer);
-            this.splitContainer1.Size = new System.Drawing.Size(779, 685);
-            this.splitContainer1.SplitterDistance = 191;
+            this.splitContainer1.Size = new System.Drawing.Size(834, 685);
+            this.splitContainer1.SplitterDistance = 129;
             this.splitContainer1.TabIndex = 0;
             // 
             // EmployeeGroupBox
@@ -110,7 +120,7 @@
             this.EmployeeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EmployeeGroupBox.Location = new System.Drawing.Point(0, 0);
             this.EmployeeGroupBox.Name = "EmployeeGroupBox";
-            this.EmployeeGroupBox.Size = new System.Drawing.Size(779, 191);
+            this.EmployeeGroupBox.Size = new System.Drawing.Size(834, 129);
             this.EmployeeGroupBox.TabIndex = 1;
             this.EmployeeGroupBox.TabStop = false;
             this.EmployeeGroupBox.Text = "Сотрудники";
@@ -122,7 +132,7 @@
             this.EmployeeListBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.EmployeeListBox.Location = new System.Drawing.Point(3, 16);
             this.EmployeeListBox.Name = "EmployeeListBox";
-            this.EmployeeListBox.Size = new System.Drawing.Size(773, 172);
+            this.EmployeeListBox.Size = new System.Drawing.Size(828, 110);
             this.EmployeeListBox.TabIndex = 0;
             this.EmployeeListBox.ValueMember = "EmployeeId";
             // 
@@ -171,18 +181,18 @@
             // 
             this.BottomSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.BottomSplitContainer.Panel2.Controls.Add(this.OperationDetailsGroupBox);
-            this.BottomSplitContainer.Size = new System.Drawing.Size(779, 490);
-            this.BottomSplitContainer.SplitterDistance = 249;
+            this.BottomSplitContainer.Size = new System.Drawing.Size(834, 552);
+            this.BottomSplitContainer.SplitterDistance = 280;
             this.BottomSplitContainer.SplitterWidth = 2;
             this.BottomSplitContainer.TabIndex = 0;
             // 
             // OperationsGroupBox
             // 
             this.OperationsGroupBox.BackColor = System.Drawing.SystemColors.Control;
+            this.OperationsGroupBox.Controls.Add(this.OperationsInfoDGV);
             this.OperationsGroupBox.Controls.Add(this.label2);
             this.OperationsGroupBox.Controls.Add(this.label1);
             this.OperationsGroupBox.Controls.Add(this.OperationsStatusStrip);
-            this.OperationsGroupBox.Controls.Add(this.OperationsDGV);
             this.OperationsGroupBox.Controls.Add(this.PurchaseCheckBox);
             this.OperationsGroupBox.Controls.Add(this.SaleCheckBox);
             this.OperationsGroupBox.Controls.Add(this.BeginDatePanel);
@@ -190,7 +200,7 @@
             this.OperationsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.OperationsGroupBox.Name = "OperationsGroupBox";
-            this.OperationsGroupBox.Size = new System.Drawing.Size(779, 249);
+            this.OperationsGroupBox.Size = new System.Drawing.Size(834, 280);
             this.OperationsGroupBox.TabIndex = 0;
             this.OperationsGroupBox.TabStop = false;
             this.OperationsGroupBox.Text = "Операции";
@@ -219,9 +229,9 @@
             this.OperationsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.OperationsCountStatusLabel});
-            this.OperationsStatusStrip.Location = new System.Drawing.Point(3, 228);
+            this.OperationsStatusStrip.Location = new System.Drawing.Point(3, 259);
             this.OperationsStatusStrip.Name = "OperationsStatusStrip";
-            this.OperationsStatusStrip.Size = new System.Drawing.Size(773, 18);
+            this.OperationsStatusStrip.Size = new System.Drawing.Size(828, 18);
             this.OperationsStatusStrip.TabIndex = 1;
             this.OperationsStatusStrip.Text = "statusStrip1";
             // 
@@ -235,18 +245,6 @@
             // 
             this.OperationsCountStatusLabel.Name = "OperationsCountStatusLabel";
             this.OperationsCountStatusLabel.Size = new System.Drawing.Size(0, 13);
-            // 
-            // OperationsDGV
-            // 
-            this.OperationsDGV.AllowUserToAddRows = false;
-            this.OperationsDGV.AllowUserToDeleteRows = false;
-            this.OperationsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.OperationsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OperationsDGV.Location = new System.Drawing.Point(3, 16);
-            this.OperationsDGV.Name = "OperationsDGV";
-            this.OperationsDGV.ReadOnly = true;
-            this.OperationsDGV.Size = new System.Drawing.Size(773, 230);
-            this.OperationsDGV.TabIndex = 0;
             // 
             // PurchaseCheckBox
             // 
@@ -305,6 +303,7 @@
             this.BeginDateDTP.TabIndex = 5;
             this.toolTip1.SetToolTip(this.BeginDateDTP, "Начальная дата");
             this.BeginDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
+            this.BeginDateDTP.ValueChanged += new System.EventHandler(this.DatesDTP_ValueChanged);
             // 
             // EndDatePanel
             // 
@@ -339,7 +338,6 @@
             this.EndDateDTP.TabIndex = 5;
             this.toolTip1.SetToolTip(this.EndDateDTP, "Начальная дата");
             this.EndDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
-            this.EndDateDTP.EnabledChanged += new System.EventHandler(this.DatesDTP_EnabledChanged);
             // 
             // OperationDetailsGroupBox
             // 
@@ -347,7 +345,7 @@
             this.OperationDetailsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationDetailsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.OperationDetailsGroupBox.Name = "OperationDetailsGroupBox";
-            this.OperationDetailsGroupBox.Size = new System.Drawing.Size(779, 239);
+            this.OperationDetailsGroupBox.Size = new System.Drawing.Size(834, 270);
             this.OperationDetailsGroupBox.TabIndex = 2;
             this.OperationDetailsGroupBox.TabStop = false;
             this.OperationDetailsGroupBox.Text = "Доп. инф-ция по операции.";
@@ -369,7 +367,7 @@
             this.OperationDetailsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationDetailsDGV.Location = new System.Drawing.Point(3, 16);
             this.OperationDetailsDGV.Name = "OperationDetailsDGV";
-            this.OperationDetailsDGV.Size = new System.Drawing.Size(773, 220);
+            this.OperationDetailsDGV.Size = new System.Drawing.Size(828, 251);
             this.OperationDetailsDGV.TabIndex = 0;
             // 
             // ManufacturerCol
@@ -394,8 +392,8 @@
             // MeasureUnitCol
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle3;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -405,8 +403,8 @@
             // CountCol
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle4;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ReadOnly = true;
@@ -415,10 +413,10 @@
             // PriceCol
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle5.Format = "N2";
+            dataGridViewCellStyle5.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle5;
             this.PriceCol.HeaderText = "Цена (руб.)";
             this.PriceCol.MinimumWidth = 50;
             this.PriceCol.Name = "PriceCol";
@@ -428,19 +426,103 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "C2";
-            dataGridViewCellStyle4.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "C2";
+            dataGridViewCellStyle6.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle6;
             this.SumCol.HeaderText = "Сумма (руб.)";
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
+            // 
+            // OperationsInfoDGV
+            // 
+            this.OperationsInfoDGV.AllowUserToAddRows = false;
+            this.OperationsInfoDGV.AllowUserToDeleteRows = false;
+            this.OperationsInfoDGV.AllowUserToResizeRows = false;
+            this.OperationsInfoDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.OperationsInfoDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.OperationTypeCol,
+            this.OperationIdCol,
+            this.DateCol,
+            this.EmployeeCol,
+            this.ContragentCol,
+            this.ContragentEmployeeCol,
+            this.DescriptionCol,
+            this.TotalSumCol});
+            this.OperationsInfoDGV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.OperationsInfoDGV.Location = new System.Drawing.Point(3, 16);
+            this.OperationsInfoDGV.MultiSelect = false;
+            this.OperationsInfoDGV.Name = "OperationsInfoDGV";
+            this.OperationsInfoDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.OperationsInfoDGV.Size = new System.Drawing.Size(828, 243);
+            this.OperationsInfoDGV.TabIndex = 10;
+            // 
+            // OperationTypeCol
+            // 
+            this.OperationTypeCol.HeaderText = "Тип операции";
+            this.OperationTypeCol.Name = "OperationTypeCol";
+            this.OperationTypeCol.ReadOnly = true;
+            // 
+            // OperationIdCol
+            // 
+            this.OperationIdCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.OperationIdCol.HeaderText = "№ операции";
+            this.OperationIdCol.Name = "OperationIdCol";
+            this.OperationIdCol.ReadOnly = true;
+            this.OperationIdCol.Width = 60;
+            // 
+            // DateCol
+            // 
+            this.DateCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle1.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            dataGridViewCellStyle1.NullValue = null;
+            this.DateCol.DefaultCellStyle = dataGridViewCellStyle1;
+            this.DateCol.HeaderText = "Дата";
+            this.DateCol.MinimumWidth = 80;
+            this.DateCol.Name = "DateCol";
+            this.DateCol.ReadOnly = true;
+            this.DateCol.Width = 110;
+            // 
+            // EmployeeCol
+            // 
+            this.EmployeeCol.HeaderText = "Сотрудник";
+            this.EmployeeCol.Name = "EmployeeCol";
+            this.EmployeeCol.ReadOnly = true;
+            // 
+            // ContragentCol
+            // 
+            this.ContragentCol.HeaderText = "Контрагент";
+            this.ContragentCol.Name = "ContragentCol";
+            this.ContragentCol.ReadOnly = true;
+            // 
+            // ContragentEmployeeCol
+            // 
+            this.ContragentEmployeeCol.HeaderText = "Представитель контрагента";
+            this.ContragentEmployeeCol.Name = "ContragentEmployeeCol";
+            this.ContragentEmployeeCol.ReadOnly = true;
+            // 
+            // DescriptionCol
+            // 
+            this.DescriptionCol.HeaderText = "Комментарий";
+            this.DescriptionCol.Name = "DescriptionCol";
+            this.DescriptionCol.ReadOnly = true;
+            // 
+            // TotalSumCol
+            // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "C2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.TotalSumCol.DefaultCellStyle = dataGridViewCellStyle2;
+            this.TotalSumCol.HeaderText = "Сумма (руб.)";
+            this.TotalSumCol.MinimumWidth = 100;
+            this.TotalSumCol.Name = "TotalSumCol";
+            this.TotalSumCol.ReadOnly = true;
             // 
             // EmployeeOperationsInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(779, 685);
+            this.ClientSize = new System.Drawing.Size(834, 685);
             this.Controls.Add(this.splitContainer1);
             this.Name = "EmployeeOperationsInfoForm";
             this.Text = "Операции сотрудников";
@@ -459,13 +541,13 @@
             this.OperationsGroupBox.PerformLayout();
             this.OperationsStatusStrip.ResumeLayout(false);
             this.OperationsStatusStrip.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.OperationsDGV)).EndInit();
             this.BeginDatePanel.ResumeLayout(false);
             this.BeginDatePanel.PerformLayout();
             this.EndDatePanel.ResumeLayout(false);
             this.EndDatePanel.PerformLayout();
             this.OperationDetailsGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.OperationDetailsDGV)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.OperationsInfoDGV)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -475,7 +557,6 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer BottomSplitContainer;
         private System.Windows.Forms.GroupBox OperationsGroupBox;
-        private System.Windows.Forms.DataGridView OperationsDGV;
         private System.Windows.Forms.StatusStrip OperationsStatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel OperationsCountStatusLabel;
@@ -503,5 +584,14 @@
         private System.Windows.Forms.ListBox EmployeeListBox;
         private System.Windows.Forms.CheckBox ActivEmployeesCheckBox;
         private System.Windows.Forms.CheckBox InactiveEmployeesCheckBox;
+        private System.Windows.Forms.DataGridView OperationsInfoDGV;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OperationTypeCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OperationIdCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ContragentCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ContragentEmployeeCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DescriptionCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TotalSumCol;
     }
 }

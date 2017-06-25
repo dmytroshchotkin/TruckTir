@@ -44,10 +44,39 @@ namespace PartsApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DatesDTP_EnabledChanged(object sender, EventArgs e)
+        private void DatesDTP_ValueChanged(object sender, EventArgs e)
         {
-            
-        }//DatesDTP_EnabledChanged
+            //Находим начальную и конечную дату требуемых операций.
+            DateTime? beginDate = BeginDateDTP.Enabled ? BeginDateDTP.Value : (DateTime?)null;
+            DateTime? endDate   = EndDateDTP.Enabled   ? EndDateDTP.Value   : (DateTime?)null;
+            //Выводим список операций соответствующий заданным требованиям.
+            List<IOperation> operList = PartsDAL.FindOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate);
+            FillTheOperationDGV(operList);
+
+            //Скрываем, если необходимо ненужный тип операций.
+        }//DatesDTP_ValueChanged
+
+        /// <summary>
+        /// Заполняет таблицу операций переданной инф-цией.
+        /// </summary>
+        /// <param name="operList">Инф-ция для заполнения таблицы.</param>
+        private void FillTheOperationDGV(IList<IOperation> operList)
+        {
+            foreach (IOperation operat in operList.OrderByDescending(p => p.OperationDate))
+            {
+                int rowIndx = OperationsInfoDGV.Rows.Add();
+                DataGridViewRow row = OperationsInfoDGV.Rows[rowIndx];
+
+                row.Cells[OperationTypeCol.Index].Value = (operat.GetType() == typeof(Sale)) ? "Расход" : "Приход";
+                row.DefaultCellStyle.BackColor          = (operat.GetType() == typeof(Sale)) ? Color.LightGreen : Color.Khaki;//Color.Pink;
+                row.Cells[OperationIdCol.Index].Value   = operat.OperationId;
+                row.Cells[DateCol.Index].Value          = operat.OperationDate.ToShortDateString();
+                row.Cells[EmployeeCol.Index].Value      = (operat.Employee != null) ? operat.Employee.GetShortFullName() : null;
+                row.Cells[ContragentCol.Index].Value    = operat.Contragent.ContragentName;
+                row.Cells[ContragentEmployeeCol.Index].Value = operat.ContragentEmployee;
+            }//foreach
+        }//FillTheOperationDGV
+
 
 
     }//EmployeeOperationsInfoForm

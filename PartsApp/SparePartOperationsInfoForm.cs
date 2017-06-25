@@ -67,8 +67,8 @@ namespace PartsApp
                 if (row.Cells[OperationTypeCol.Index].Value.ToString() == "Расход")
                     row.Visible = SaleCheckBox.Checked;
             }//foreach
-            
-        }
+
+        }//SaleCheckBox_CheckedChanged
 
         private void PurchaseCheckBox_CheckedChanged(object sender, EventArgs e)
         {
