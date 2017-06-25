@@ -79,10 +79,6 @@ namespace PartsApp
             }//foreach
         }
 
-        private void SparePartOperationsInfoForm_Load(object sender, EventArgs e)
-        {
-
-        }//
 
 
 

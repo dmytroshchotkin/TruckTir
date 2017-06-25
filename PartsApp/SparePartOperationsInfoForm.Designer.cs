@@ -208,8 +208,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "SparePartOperationsInfoForm";
-            this.Text = "Форма просмотра передвижения товара";
-            this.Load += new System.EventHandler(this.SparePartOperationsInfoForm_Load);
+            this.Text = "Форма просмотра передвижения товара";            
             ((System.ComponentModel.ISupportInitialize)(this.OperationsInfoDGV)).EndInit();
             this.OperationInfoGroupBox.ResumeLayout(false);
             this.OperationInfoGroupBox.PerformLayout();

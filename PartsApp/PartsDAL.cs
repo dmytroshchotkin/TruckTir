@@ -1887,7 +1887,7 @@ namespace PartsApp
                 const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
                                    + "FROM Purchases "
                                    + "WHERE OperationId IN (SELECT OperationId FROM PurchaseDetails "
-                                   + "WHERE SparePartId = @SparePartId);";
+                                                         + "WHERE SparePartId = @SparePartId);";
 
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
                 cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
@@ -1903,7 +1903,6 @@ namespace PartsApp
             
             return purchases;
         }//FindPurchases
-
         public static List<Sale> FindSales(SparePart sparePart)
         {
             List<Sale> salesList = new List<Sale>();
@@ -1915,7 +1914,7 @@ namespace PartsApp
                 const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
                                    + "FROM Sales "
                                    + "WHERE OperationId IN (SELECT OperationId FROM SaleDetails "
-                                   + "WHERE SparePartId = @SparePartId);";
+                                                          + "WHERE SparePartId = @SparePartId);";
 
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
                 cmd.Parameters.AddWithValue("@SparePartId", sparePart.SparePartId);
@@ -1931,6 +1930,39 @@ namespace PartsApp
 
             return salesList;
         }//FindSales
+
+        /// <summary>
+        /// Возвращает список операций осуществленных данным сотрудником.
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <returns></returns>
+        public static List<Purchase> FindPurchases(Employee emp)
+        {
+            List<Purchase> purchases = new List<Purchase>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD"
+                                   + "FROM Purchases as p"
+                                   + "WHERE p.EmployeeId = @EmployeeId;";
+
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@EmployeeId", emp.EmployeeId);
+
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                        purchases.Add(CreatePurchase(dataReader));
+                }//using dataReader
+
+                connection.Close();
+            }//using
+
+            return purchases;
+        }//FindPurchases
+
 
 
 
