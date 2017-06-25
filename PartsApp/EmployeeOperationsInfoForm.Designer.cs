@@ -385,6 +385,8 @@
             this.BeginDateCheckBox.Name = "BeginDateCheckBox";
             this.BeginDateCheckBox.Size = new System.Drawing.Size(15, 14);
             this.BeginDateCheckBox.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.BeginDateCheckBox, "Если панель выбора даты отключена, значит ограничения по нижней дате не установле" +
+        "но.");
             this.BeginDateCheckBox.UseVisualStyleBackColor = false;
             this.BeginDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
             // 
@@ -420,6 +422,8 @@
             this.EndDateCheckBox.Name = "EndDateCheckBox";
             this.EndDateCheckBox.Size = new System.Drawing.Size(15, 14);
             this.EndDateCheckBox.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.EndDateCheckBox, "Если панель выбора даты отключена, значит ограничения по верхней дате не установл" +
+        "ено.");
             this.EndDateCheckBox.UseVisualStyleBackColor = false;
             this.EndDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
             // 
@@ -432,7 +436,7 @@
             this.EndDateDTP.Name = "EndDateDTP";
             this.EndDateDTP.Size = new System.Drawing.Size(108, 20);
             this.EndDateDTP.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.EndDateDTP, "Начальная дата");
+            this.toolTip1.SetToolTip(this.EndDateDTP, "Конечная дата");
             this.EndDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
             // 
             // OperationDetailsGroupBox

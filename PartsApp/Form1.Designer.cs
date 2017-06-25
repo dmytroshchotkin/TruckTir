@@ -116,6 +116,7 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewEmployeeInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -254,7 +255,8 @@
             // employeesToolStripMenuItem
             // 
             this.employeesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addNewEmployeeToolStripMenuItem});
+            this.addNewEmployeeToolStripMenuItem,
+            this.ViewEmployeeInfoToolStripMenuItem});
             this.employeesToolStripMenuItem.Name = "employeesToolStripMenuItem";
             this.employeesToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
             this.employeesToolStripMenuItem.Text = "Сотрудники";
@@ -262,7 +264,7 @@
             // addNewEmployeeToolStripMenuItem
             // 
             this.addNewEmployeeToolStripMenuItem.Name = "addNewEmployeeToolStripMenuItem";
-            this.addNewEmployeeToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.addNewEmployeeToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
             this.addNewEmployeeToolStripMenuItem.Text = "Добавить нового сотрудника";
             this.addNewEmployeeToolStripMenuItem.Click += new System.EventHandler(this.addNewEmployeeToolStripMenuItem_Click);
             // 
@@ -944,6 +946,13 @@
             this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
             this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
+            // ViewEmployeeInfoToolStripMenuItem
+            // 
+            this.ViewEmployeeInfoToolStripMenuItem.Name = "ViewEmployeeInfoToolStripMenuItem";
+            this.ViewEmployeeInfoToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.ViewEmployeeInfoToolStripMenuItem.Text = "Посмотреть инф-цию по сотрудникам";
+            this.ViewEmployeeInfoToolStripMenuItem.Click += new System.EventHandler(this.ViewEmployeeInfoToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1072,7 +1081,7 @@
         private System.Windows.Forms.ToolStripTextBox addReturnInputIdToolStripTextBox;
         private System.Windows.Forms.ToolStripMenuItem editPurchaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox editPurchaseToolStripTextBox;
-
+        private System.Windows.Forms.ToolStripMenuItem ViewEmployeeInfoToolStripMenuItem;
     }
 }
 

@@ -68,8 +68,8 @@ namespace PartsApp
             #endregion
 
             //Выводим окно авторизации.
-            CurEmployee = PartsDAL.FindEmployees(2);
-            //new AuthorizationForm().ShowDialog(this);
+            //CurEmployee = PartsDAL.FindEmployees(2);
+            new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = $"{CurEmployee.LastName} {CurEmployee.FirstName}";
 
             FormInitialize(); //Инициализация формы в зависимости от уровня доступа юзера.
@@ -1017,8 +1017,9 @@ namespace PartsApp
 
 
 
+
         #region Методы вызова дополнительных окон.
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -1053,7 +1054,15 @@ namespace PartsApp
             new SparePartForm(sparePart).Show();
         }//editSparePartToolStripMenuItem_Click
 
-        
+        /// <summary>
+        /// Вызов окна просмотра информации по сотрудникам.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ViewEmployeeInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new EmployeeOperationsInfoForm().ShowDialog();
+        }//ViewEmployeeInfoToolStripMenuItem_Click 
 
 
         private void addNewEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1157,7 +1166,7 @@ namespace PartsApp
             }//if
         }
 
-
+        
 
 
 
@@ -1203,7 +1212,7 @@ namespace PartsApp
             }//if
         }//
 
-
+        
     }//Form1
 
 }//namespace
