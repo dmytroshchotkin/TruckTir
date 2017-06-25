@@ -339,6 +339,7 @@
             this.EndDateDTP.TabIndex = 5;
             this.toolTip1.SetToolTip(this.EndDateDTP, "Начальная дата");
             this.EndDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
+            this.EndDateDTP.EnabledChanged += new System.EventHandler(this.DatesDTP_EnabledChanged);
             // 
             // OperationDetailsGroupBox
             // 

@@ -22,8 +22,7 @@ namespace PartsApp
         {
             //Находим список всех сотрудников (сортируем по фамилии и имени) и делаем источником данных для ListBox.
             EmployeeListBox.DataSource = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
-
-            OperationsDGV.DataSource = PartsDAL.FindSales(Form1.CurEmployee, new DateTime(2017, 1, 1), null);        
+     
         }//EmployeeOperationsInfoForm_Load
 
 
@@ -40,7 +39,17 @@ namespace PartsApp
             dtp.Enabled = !dtp.Enabled;
         }//BeginDateCheckBox_CheckedChanged
 
-        
+        /// <summary>
+        /// Выводим список операций соответствующих установленным требованиям по дате, сотруднику и типу операции.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DatesDTP_EnabledChanged(object sender, EventArgs e)
+        {
+            
+        }//DatesDTP_EnabledChanged
+
+
     }//EmployeeOperationsInfoForm
 
 }//namespace

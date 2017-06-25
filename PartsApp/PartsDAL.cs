@@ -1876,6 +1876,23 @@ namespace PartsApp
             return operationsList;
         }//FindOperations
 
+        /// <summary>
+        /// Возвращает список всех операций осуществлённых данным сотрудником.
+        /// </summary>
+        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
+        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <returns></returns>
+        public static List<IOperation> FindOperations(Employee emp,  DateTime? startDate, DateTime? endDate)
+        {
+            List<IOperation> operationsList = new List<IOperation>();
+
+            FindPurchases(emp, startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
+            FindSales(emp, startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
+
+            return operationsList;
+        }//FindOperations
+
         public static List<Purchase> FindPurchases(SparePart sparePart)
         {
             List<Purchase> purchases = new List<Purchase>();
@@ -1967,7 +1984,6 @@ namespace PartsApp
 
             return purchases;
         }//FindPurchases
-
         /// <summary>
         /// Возвращает список операций продажи осуществленных данным сотрудником.
         /// </summary>
