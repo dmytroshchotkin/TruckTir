@@ -29,11 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.EmployeeGroupBox = new System.Windows.Forms.GroupBox();
+            this.EmployeeListBox = new System.Windows.Forms.ListBox();
+            this.ActivEmployeesCheckBox = new System.Windows.Forms.CheckBox();
+            this.InactiveEmployeesCheckBox = new System.Windows.Forms.CheckBox();
             this.BottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -60,13 +64,11 @@
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.EmployeeGroupBox = new System.Windows.Forms.GroupBox();
-            this.EmployeeListBox = new System.Windows.Forms.ListBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.EmployeeGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BottomSplitContainer)).BeginInit();
             this.BottomSplitContainer.Panel1.SuspendLayout();
             this.BottomSplitContainer.Panel2.SuspendLayout();
@@ -78,7 +80,6 @@
             this.EndDatePanel.SuspendLayout();
             this.OperationDetailsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OperationDetailsDGV)).BeginInit();
-            this.EmployeeGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -100,6 +101,59 @@
             this.splitContainer1.Size = new System.Drawing.Size(779, 685);
             this.splitContainer1.SplitterDistance = 191;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // EmployeeGroupBox
+            // 
+            this.EmployeeGroupBox.Controls.Add(this.EmployeeListBox);
+            this.EmployeeGroupBox.Controls.Add(this.ActivEmployeesCheckBox);
+            this.EmployeeGroupBox.Controls.Add(this.InactiveEmployeesCheckBox);
+            this.EmployeeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.EmployeeGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.EmployeeGroupBox.Name = "EmployeeGroupBox";
+            this.EmployeeGroupBox.Size = new System.Drawing.Size(779, 191);
+            this.EmployeeGroupBox.TabIndex = 1;
+            this.EmployeeGroupBox.TabStop = false;
+            this.EmployeeGroupBox.Text = "Сотрудники";
+            // 
+            // EmployeeListBox
+            // 
+            this.EmployeeListBox.DisplayMember = "FullName";
+            this.EmployeeListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.EmployeeListBox.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.EmployeeListBox.Location = new System.Drawing.Point(3, 16);
+            this.EmployeeListBox.Name = "EmployeeListBox";
+            this.EmployeeListBox.Size = new System.Drawing.Size(773, 172);
+            this.EmployeeListBox.TabIndex = 0;
+            this.EmployeeListBox.ValueMember = "EmployeeId";
+            // 
+            // ActivEmployeesCheckBox
+            // 
+            this.ActivEmployeesCheckBox.AutoSize = true;
+            this.ActivEmployeesCheckBox.Checked = true;
+            this.ActivEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ActivEmployeesCheckBox.Location = new System.Drawing.Point(86, 0);
+            this.ActivEmployeesCheckBox.Name = "ActivEmployeesCheckBox";
+            this.ActivEmployeesCheckBox.Size = new System.Drawing.Size(76, 17);
+            this.ActivEmployeesCheckBox.TabIndex = 1;
+            this.ActivEmployeesCheckBox.Text = "Активные";
+            this.toolTip1.SetToolTip(this.ActivEmployeesCheckBox, "Отображать дейстующих сотрудников");
+            this.ActivEmployeesCheckBox.UseVisualStyleBackColor = true;
+            this.ActivEmployeesCheckBox.Visible = false;
+            // 
+            // InactiveEmployeesCheckBox
+            // 
+            this.InactiveEmployeesCheckBox.AutoSize = true;
+            this.InactiveEmployeesCheckBox.Checked = true;
+            this.InactiveEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.InactiveEmployeesCheckBox.Location = new System.Drawing.Point(179, 0);
+            this.InactiveEmployeesCheckBox.Name = "InactiveEmployeesCheckBox";
+            this.InactiveEmployeesCheckBox.Size = new System.Drawing.Size(92, 17);
+            this.InactiveEmployeesCheckBox.TabIndex = 2;
+            this.InactiveEmployeesCheckBox.Text = "Не активные";
+            this.toolTip1.SetToolTip(this.InactiveEmployeesCheckBox, "Отображать не действующих сотрудников. Неактивным считается сотрудник у которого " +
+        "в профиле заполнено поле \'Дата Увольнения\'.");
+            this.InactiveEmployeesCheckBox.UseVisualStyleBackColor = true;
+            this.InactiveEmployeesCheckBox.Visible = false;
             // 
             // BottomSplitContainer
             // 
@@ -339,8 +393,8 @@
             // MeasureUnitCol
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle1;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -350,8 +404,8 @@
             // CountCol
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle2;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ReadOnly = true;
@@ -360,10 +414,10 @@
             // PriceCol
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle27.Format = "N2";
-            dataGridViewCellStyle27.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N2";
+            dataGridViewCellStyle3.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle3;
             this.PriceCol.HeaderText = "Цена (руб.)";
             this.PriceCol.MinimumWidth = 50;
             this.PriceCol.Name = "PriceCol";
@@ -373,48 +427,13 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle28.Format = "C2";
-            dataGridViewCellStyle28.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "C2";
+            dataGridViewCellStyle4.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle4;
             this.SumCol.HeaderText = "Сумма (руб.)";
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
-            // 
-            // EmployeeGroupBox
-            // 
-            this.EmployeeGroupBox.Controls.Add(this.EmployeeListBox);
-            this.EmployeeGroupBox.Controls.Add(this.checkBox1);
-            this.EmployeeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EmployeeGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.EmployeeGroupBox.Name = "EmployeeGroupBox";
-            this.EmployeeGroupBox.Size = new System.Drawing.Size(779, 191);
-            this.EmployeeGroupBox.TabIndex = 1;
-            this.EmployeeGroupBox.TabStop = false;
-            this.EmployeeGroupBox.Text = "Сотрудники";
-            // 
-            // EmployeeListBox
-            // 
-            this.EmployeeListBox.DisplayMember = "FullName";
-            this.EmployeeListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EmployeeListBox.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.EmployeeListBox.Location = new System.Drawing.Point(3, 16);
-            this.EmployeeListBox.Name = "EmployeeListBox";
-            this.EmployeeListBox.Size = new System.Drawing.Size(773, 172);
-            this.EmployeeListBox.TabIndex = 0;
-            this.EmployeeListBox.ValueMember = "EmployeeId";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.checkBox1.Location = new System.Drawing.Point(86, 0);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(115, 17);
-            this.checkBox1.TabIndex = 1;
-            this.checkBox1.Text = "Только активные";
-            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // EmployeeOperationsInfoForm
             // 
@@ -429,6 +448,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.EmployeeGroupBox.ResumeLayout(false);
+            this.EmployeeGroupBox.PerformLayout();
             this.BottomSplitContainer.Panel1.ResumeLayout(false);
             this.BottomSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.BottomSplitContainer)).EndInit();
@@ -444,8 +465,6 @@
             this.EndDatePanel.PerformLayout();
             this.OperationDetailsGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.OperationDetailsDGV)).EndInit();
-            this.EmployeeGroupBox.ResumeLayout(false);
-            this.EmployeeGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -481,6 +500,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
         private System.Windows.Forms.GroupBox EmployeeGroupBox;
         private System.Windows.Forms.ListBox EmployeeListBox;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox ActivEmployeesCheckBox;
+        private System.Windows.Forms.CheckBox InactiveEmployeesCheckBox;
     }
 }
