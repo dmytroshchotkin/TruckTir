@@ -117,6 +117,7 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.посмотретьИнформациюПоПриходамToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -325,7 +326,8 @@
             // 
             this.purchaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addNewPurchaseToolStripMenuItem,
-            this.editPurchaseToolStripMenuItem});
+            this.editPurchaseToolStripMenuItem,
+            this.посмотретьИнформациюПоПриходамToolStripMenuItem});
             this.purchaseToolStripMenuItem.Name = "purchaseToolStripMenuItem";
             this.purchaseToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.purchaseToolStripMenuItem.Tag = "";
@@ -334,7 +336,7 @@
             // addNewPurchaseToolStripMenuItem
             // 
             this.addNewPurchaseToolStripMenuItem.Name = "addNewPurchaseToolStripMenuItem";
-            this.addNewPurchaseToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
+            this.addNewPurchaseToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
             this.addNewPurchaseToolStripMenuItem.Text = "Поставить товар на приход";
             this.addNewPurchaseToolStripMenuItem.Click += new System.EventHandler(this.addNewPurchaseToolStripMenuItem_Click);
             // 
@@ -343,7 +345,7 @@
             this.editPurchaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editPurchaseToolStripTextBox});
             this.editPurchaseToolStripMenuItem.Name = "editPurchaseToolStripMenuItem";
-            this.editPurchaseToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
+            this.editPurchaseToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
             this.editPurchaseToolStripMenuItem.Text = "Редактировать приходную накладную";
             this.editPurchaseToolStripMenuItem.Visible = false;
             // 
@@ -953,6 +955,12 @@
             this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
             this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
+            // посмотретьИнформациюПоПриходамToolStripMenuItem
+            // 
+            this.посмотретьИнформациюПоПриходамToolStripMenuItem.Name = "посмотретьИнформациюПоПриходамToolStripMenuItem";
+            this.посмотретьИнформациюПоПриходамToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+            this.посмотретьИнформациюПоПриходамToolStripMenuItem.Text = "Посмотреть информацию по приходам";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1082,6 +1090,7 @@
         private System.Windows.Forms.ToolStripMenuItem editPurchaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox editPurchaseToolStripTextBox;
         private System.Windows.Forms.ToolStripMenuItem ViewEmployeeInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem посмотретьИнформациюПоПриходамToolStripMenuItem;
     }
 }
 
