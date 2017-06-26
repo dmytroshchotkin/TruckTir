@@ -68,8 +68,8 @@ namespace PartsApp
             #endregion
 
             //Выводим окно авторизации.
-            //CurEmployee = PartsDAL.FindEmployees(2);
-            new AuthorizationForm().ShowDialog(this);
+            CurEmployee = PartsDAL.FindEmployees(2);
+            //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = $"{CurEmployee.LastName} {CurEmployee.FirstName}";
 
             FormInitialize(); //Инициализация формы в зависимости от уровня доступа юзера.

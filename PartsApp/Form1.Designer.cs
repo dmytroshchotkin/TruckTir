@@ -52,6 +52,7 @@
             this.addNewSpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.employeesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewEmployeeInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supplierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewSupplierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewSuppliersInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,7 +117,6 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ViewEmployeeInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -267,6 +267,13 @@
             this.addNewEmployeeToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
             this.addNewEmployeeToolStripMenuItem.Text = "Добавить нового сотрудника";
             this.addNewEmployeeToolStripMenuItem.Click += new System.EventHandler(this.addNewEmployeeToolStripMenuItem_Click);
+            // 
+            // ViewEmployeeInfoToolStripMenuItem
+            // 
+            this.ViewEmployeeInfoToolStripMenuItem.Name = "ViewEmployeeInfoToolStripMenuItem";
+            this.ViewEmployeeInfoToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
+            this.ViewEmployeeInfoToolStripMenuItem.Text = "Посмотреть инф-цию по сотрудникам";
+            this.ViewEmployeeInfoToolStripMenuItem.Click += new System.EventHandler(this.ViewEmployeeInfoToolStripMenuItem_Click);
             // 
             // supplierToolStripMenuItem
             // 
@@ -945,13 +952,6 @@
             this.editEmployeeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
             this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
-            // 
-            // ViewEmployeeInfoToolStripMenuItem
-            // 
-            this.ViewEmployeeInfoToolStripMenuItem.Name = "ViewEmployeeInfoToolStripMenuItem";
-            this.ViewEmployeeInfoToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
-            this.ViewEmployeeInfoToolStripMenuItem.Text = "Посмотреть инф-цию по сотрудникам";
-            this.ViewEmployeeInfoToolStripMenuItem.Click += new System.EventHandler(this.ViewEmployeeInfoToolStripMenuItem_Click);
             // 
             // Form1
             // 
