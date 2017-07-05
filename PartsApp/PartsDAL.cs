@@ -2872,16 +2872,16 @@ namespace PartsApp
             UserCredential credential = GetCredential();
             DriveService service = GetService(credential);
 
-            //Находим существующий файл бэкапа
             string fileName = "TruckTirDB.db";
-            Google.Apis.Drive.v3.Data.File backupFile = GetFile(service, fileName);
-
+            
+            Google.Apis.Drive.v3.Data.File backupFile = GetFile(service, fileName);  //Находим существующий файл бэкапа (Если строку заккоментировать, выдаёт ошибку "Файл используетс другим процессом", ПОЧЕМУ??)
+                        
             //Записываем новый файл.
             UploadFileToDrive(service, fileName);
 
-            //Удаляем старый файл бэкапа, если он существует.            
-            if (backupFile?.Id != null)
-                service.Files.Delete(backupFile?.Id).Execute();
+            ////Удаляем старый файл бэкапа, если он существует. 
+            //if (backupFile?.Id != null)
+            //    service.Files.Delete(backupFile?.Id).Execute();
         }//CreateBackupInGoogleDrive
 
 
@@ -2955,12 +2955,13 @@ namespace PartsApp
 
         private static void UploadFileToDrive(DriveService service, string fileName)
         {
+            string uploadFileName = $"TruckTirDB_{DateTime.Now.ToShortDateString()}.db";
             var fileMetadata = new Google.Apis.Drive.v3.Data.File();
-            fileMetadata.Name = fileName;            
+            fileMetadata.Name = uploadFileName;            
 
             FilesResource.CreateMediaUpload request;
             using (var stream = new System.IO.FileStream("Data\\" + fileName, System.IO.FileMode.Open))
-            {
+            {                
                 request = service.Files.Create(fileMetadata, stream, "application/zip");   //Работает только с типом "application/zip", c др. типами не загружает в облако.
                 request.Upload();
             }//using
