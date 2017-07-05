@@ -1735,11 +1735,65 @@ namespace PartsApp
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
-             
+
         #region Поиск по таблице Purchases и Sales.
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+
+
+
+        /// <summary>
+        /// Возвращает список всех операций проведённых за указанный период.
+        /// </summary>
+        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <returns></returns>
+        public static List<IOperation> FindOperations(DateTime? startDate, DateTime? endDate)
+        {
+            List<IOperation> operationsList = new List<IOperation>();
+
+            FindPurchases(startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
+            FindSales(startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
+
+            return operationsList;
+        }//FindOperations
+
+        /// <summary>
+        /// Возвращает список всех операций производимых с заданным товаром.
+        /// </summary>
+        /// <param name="sparePartId">Ид искомого товара.</param>
+        /// <returns></returns>
+        public static List<IOperation> FindOperations(SparePart sparePart)
+        {
+            List<IOperation> operationsList = new List<IOperation>();
+
+            FindPurchases(sparePart).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
+            FindSales(sparePart).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
+                                    
+            return operationsList;
+        }//FindOperations
+
+        /// <summary>
+        /// Возвращает список всех операций осуществлённых данным сотрудником.
+        /// </summary>
+        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
+        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <returns></returns>
+        public static List<IOperation> FindOperations(Employee emp,  DateTime? startDate, DateTime? endDate)
+        {
+            List<IOperation> operationsList = new List<IOperation>();
+
+            FindPurchases(emp, startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
+            FindSales(emp, startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
+
+            return operationsList;
+        }//FindOperations
+
+
+
+
 
         /// <summary>
         /// Возвращает объект типа Purchase, найденный по заданному Id.
@@ -1858,40 +1912,8 @@ namespace PartsApp
             }//using
 
             return salesList;
-        }//FindSales        
+        }//FindSales
 
-
-        /// <summary>
-        /// Возвращает список всех операций производимых с заданным товаром.
-        /// </summary>
-        /// <param name="sparePartId">Ид искомого товара.</param>
-        /// <returns></returns>
-        public static List<IOperation> FindOperations(SparePart sparePart)
-        {
-            List<IOperation> operationsList = new List<IOperation>();
-
-            FindPurchases(sparePart).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
-            FindSales(sparePart).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
-                                    
-            return operationsList;
-        }//FindOperations
-
-        /// <summary>
-        /// Возвращает список всех операций осуществлённых данным сотрудником.
-        /// </summary>
-        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
-        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <returns></returns>
-        public static List<IOperation> FindOperations(Employee emp,  DateTime? startDate, DateTime? endDate)
-        {
-            List<IOperation> operationsList = new List<IOperation>();
-
-            FindPurchases(emp, startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
-            FindSales(emp, startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
-
-            return operationsList;
-        }//FindOperations
 
         public static List<Purchase> FindPurchases(SparePart sparePart)
         {
@@ -2020,6 +2042,79 @@ namespace PartsApp
 
             return salesList;
         }//FindSales
+
+        /// <summary>
+        /// Возвращает список операций приходования осуществленных данным сотрудником.
+        /// </summary>
+        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
+        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <returns></returns>
+        public static List<Purchase> FindPurchases(DateTime? startDate, DateTime? endDate)
+        {
+            List<Purchase> purchases = new List<Purchase>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
+                                   + "FROM Purchases as p "
+                                   + "WHERE p.OperationDate BETWEEN strftime('%s', @startDate) AND strftime('%s', @endDate);";
+
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@startDate", startDate != null ? startDate : new DateTime(1970, 1, 1)); //Если стартовая дата не задана, ищем по минимально возможному значению.
+                cmd.Parameters.AddWithValue("@endDate", endDate != null ? endDate : new DateTime(2038, 1, 19)); //Если конечная дата не задана, ищем по максимально возможному значению.
+
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                        purchases.Add(CreatePurchase(dataReader));
+                }//using dataReader
+
+                connection.Close();
+            }//using
+
+            return purchases;
+        }//FindPurchases
+        /// <summary>
+        /// Возвращает список операций продажи осуществленных данным сотрудником.
+        /// </summary>
+        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
+        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <returns></returns>
+        public static List<Sale> FindSales(DateTime? startDate, DateTime? endDate)
+        {
+            List<Sale> salesList = new List<Sale>();
+
+            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                const string query = "SELECT *, datetime(OperationDate, 'unixepoch') as OD "
+                                   + "FROM Sales as s "
+                                   + "WHERE s.OperationDate BETWEEN strftime('%s', @startDate) AND strftime('%s', @endDate);";
+
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@startDate", startDate != null ? startDate : new DateTime(1970, 1, 1)); //Если стартовая дата не задана, ищем по минимально возможному значению.
+                cmd.Parameters.AddWithValue("@endDate", endDate != null ? endDate : new DateTime(2038, 1, 19)); //Если конечная дата не задана, ищем по максимально возможному значению.
+
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                        salesList.Add(CreateSale(dataReader));
+                }//using dataReader
+
+                connection.Close();
+            }//using
+
+            return salesList;
+        }//FindSales
+
+
+
+
 
 
         /// <summary>

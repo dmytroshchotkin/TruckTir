@@ -98,6 +98,12 @@
     <Compile Include="EmployeeOperationsInfoForm.Designer.cs">
       <DependentUpon>EmployeeOperationsInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OperationsInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperationsInfoForm.Designer.cs">
+      <DependentUpon>OperationsInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReturnForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,6 +184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EmployeeOperationsInfoForm.resx">
       <DependentUpon>EmployeeOperationsInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperationsInfoForm.resx">
+      <DependentUpon>OperationsInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReturnForm.resx">
       <DependentUpon>ReturnForm.cs</DependentUpon>

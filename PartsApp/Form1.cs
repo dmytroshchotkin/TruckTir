@@ -1055,6 +1055,18 @@ namespace PartsApp
         }//editSparePartToolStripMenuItem_Click
 
         /// <summary>
+        /// Вызов формы просмотра информации об операциях.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ViewOperationsInfoSaleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new OperationsInfoForm().Show();
+        }//ViewOperationsInfoSaleToolStripMenuItem_Click
+
+
+
+        /// <summary>
         /// Вызов окна просмотра информации по сотрудникам.
         /// </summary>
         /// <param name="sender"></param>
@@ -1198,6 +1210,7 @@ namespace PartsApp
 
 
 
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
@@ -1213,6 +1226,7 @@ namespace PartsApp
         }//
 
         
+
     }//Form1
 
 }//namespace

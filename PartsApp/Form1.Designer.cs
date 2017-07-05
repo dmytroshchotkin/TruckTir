@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -63,6 +63,7 @@
             this.addNewPurchaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editPurchaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editPurchaseToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
+            this.ViewOperationsInfoPurchaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewSaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ReturnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -117,7 +118,7 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.посмотретьИнформациюПоПриходамToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ViewOperationsInfoSaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -327,7 +328,7 @@
             this.purchaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addNewPurchaseToolStripMenuItem,
             this.editPurchaseToolStripMenuItem,
-            this.посмотретьИнформациюПоПриходамToolStripMenuItem});
+            this.ViewOperationsInfoPurchaseToolStripMenuItem});
             this.purchaseToolStripMenuItem.Name = "purchaseToolStripMenuItem";
             this.purchaseToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.purchaseToolStripMenuItem.Tag = "";
@@ -336,7 +337,7 @@
             // addNewPurchaseToolStripMenuItem
             // 
             this.addNewPurchaseToolStripMenuItem.Name = "addNewPurchaseToolStripMenuItem";
-            this.addNewPurchaseToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+            this.addNewPurchaseToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
             this.addNewPurchaseToolStripMenuItem.Text = "Поставить товар на приход";
             this.addNewPurchaseToolStripMenuItem.Click += new System.EventHandler(this.addNewPurchaseToolStripMenuItem_Click);
             // 
@@ -345,7 +346,7 @@
             this.editPurchaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editPurchaseToolStripTextBox});
             this.editPurchaseToolStripMenuItem.Name = "editPurchaseToolStripMenuItem";
-            this.editPurchaseToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+            this.editPurchaseToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
             this.editPurchaseToolStripMenuItem.Text = "Редактировать приходную накладную";
             this.editPurchaseToolStripMenuItem.Visible = false;
             // 
@@ -358,10 +359,18 @@
             this.editPurchaseToolStripTextBox.ToolTipText = "Введите № накладной и нажмите Enter";
             this.editPurchaseToolStripTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.editPurchaseToolStripTextBox_KeyPress);
             // 
+            // ViewOperationsInfoPurchaseToolStripMenuItem
+            // 
+            this.ViewOperationsInfoPurchaseToolStripMenuItem.Name = "ViewOperationsInfoPurchaseToolStripMenuItem";
+            this.ViewOperationsInfoPurchaseToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
+            this.ViewOperationsInfoPurchaseToolStripMenuItem.Text = "Посмотреть информацию по операциям";
+            this.ViewOperationsInfoPurchaseToolStripMenuItem.Click += new System.EventHandler(this.ViewOperationsInfoSaleToolStripMenuItem_Click);
+            // 
             // saleToolStripMenuItem
             // 
             this.saleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addNewSaleToolStripMenuItem});
+            this.addNewSaleToolStripMenuItem,
+            this.ViewOperationsInfoSaleToolStripMenuItem});
             this.saleToolStripMenuItem.Name = "saleToolStripMenuItem";
             this.saleToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.saleToolStripMenuItem.Text = "Продажа";
@@ -369,7 +378,7 @@
             // addNewSaleToolStripMenuItem
             // 
             this.addNewSaleToolStripMenuItem.Name = "addNewSaleToolStripMenuItem";
-            this.addNewSaleToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.addNewSaleToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
             this.addNewSaleToolStripMenuItem.Text = "Продать товар";
             this.addNewSaleToolStripMenuItem.Click += new System.EventHandler(this.addNewSaleToolStripMenuItem_Click);
             // 
@@ -682,8 +691,8 @@
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.MeasureUnitCol.DataPropertyName = "MeasureUnit";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle8;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -694,8 +703,8 @@
             // AvaliabilityCol
             // 
             this.AvaliabilityCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AvaliabilityCol.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AvaliabilityCol.DefaultCellStyle = dataGridViewCellStyle9;
             this.AvaliabilityCol.HeaderText = "Наличие";
             this.AvaliabilityCol.Name = "AvaliabilityCol";
             this.AvaliabilityCol.ReadOnly = true;
@@ -704,10 +713,10 @@
             // SellingPriceCol
             // 
             this.SellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "C2";
-            dataGridViewCellStyle3.NullValue = null;
-            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle10.Format = "C2";
+            dataGridViewCellStyle10.NullValue = null;
+            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle10;
             this.SellingPriceCol.HeaderText = "Цена (руб.)";
             this.SellingPriceCol.MinimumWidth = 75;
             this.SellingPriceCol.Name = "SellingPriceCol";
@@ -796,9 +805,9 @@
             // 
             this.PurchaseDateExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.PurchaseDateExtCol.DataPropertyName = "OperationDetails.Operation.OperationDate";
-            dataGridViewCellStyle4.Format = "dd.MM.yyyy \'г.\'   HH:mm";
-            dataGridViewCellStyle4.NullValue = null;
-            this.PurchaseDateExtCol.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle11.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            dataGridViewCellStyle11.NullValue = null;
+            this.PurchaseDateExtCol.DefaultCellStyle = dataGridViewCellStyle11;
             this.PurchaseDateExtCol.HeaderText = "Дата поставки";
             this.PurchaseDateExtCol.Name = "PurchaseDateExtCol";
             this.PurchaseDateExtCol.ReadOnly = true;
@@ -818,8 +827,8 @@
             // 
             this.MeasureUnitExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.MeasureUnitExtCol.DataPropertyName = "OperationDetails.SparePart.MeasureUnit";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitExtCol.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitExtCol.DefaultCellStyle = dataGridViewCellStyle12;
             this.MeasureUnitExtCol.HeaderText = "Ед. изм.";
             this.MeasureUnitExtCol.MinimumWidth = 35;
             this.MeasureUnitExtCol.Name = "MeasureUnitExtCol";
@@ -831,8 +840,8 @@
             // 
             this.AvailabilityExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.AvailabilityExtCol.DataPropertyName = "OperationDetails.Count";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AvailabilityExtCol.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AvailabilityExtCol.DefaultCellStyle = dataGridViewCellStyle13;
             this.AvailabilityExtCol.HeaderText = "Наличие";
             this.AvailabilityExtCol.Name = "AvailabilityExtCol";
             this.AvailabilityExtCol.ReadOnly = true;
@@ -850,10 +859,10 @@
             // 
             this.SellingPriceExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.SellingPriceExtCol.DataPropertyName = "SellingPrice";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "C2";
-            dataGridViewCellStyle7.NullValue = null;
-            this.SellingPriceExtCol.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle14.Format = "C2";
+            dataGridViewCellStyle14.NullValue = null;
+            this.SellingPriceExtCol.DefaultCellStyle = dataGridViewCellStyle14;
             this.SellingPriceExtCol.HeaderText = "Цена продажи";
             this.SellingPriceExtCol.Name = "SellingPriceExtCol";
             this.SellingPriceExtCol.ReadOnly = true;
@@ -955,11 +964,12 @@
             this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
             this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
-            // посмотретьИнформациюПоПриходамToolStripMenuItem
+            // ViewOperationsInfoSaleToolStripMenuItem
             // 
-            this.посмотретьИнформациюПоПриходамToolStripMenuItem.Name = "посмотретьИнформациюПоПриходамToolStripMenuItem";
-            this.посмотретьИнформациюПоПриходамToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
-            this.посмотретьИнформациюПоПриходамToolStripMenuItem.Text = "Посмотреть информацию по приходам";
+            this.ViewOperationsInfoSaleToolStripMenuItem.Name = "ViewOperationsInfoSaleToolStripMenuItem";
+            this.ViewOperationsInfoSaleToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
+            this.ViewOperationsInfoSaleToolStripMenuItem.Text = "Посмотреть информацию по операциям";
+            this.ViewOperationsInfoSaleToolStripMenuItem.Click += new System.EventHandler(this.ViewOperationsInfoSaleToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -1090,7 +1100,8 @@
         private System.Windows.Forms.ToolStripMenuItem editPurchaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox editPurchaseToolStripTextBox;
         private System.Windows.Forms.ToolStripMenuItem ViewEmployeeInfoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem посмотретьИнформациюПоПриходамToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewOperationsInfoPurchaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewOperationsInfoSaleToolStripMenuItem;
     }
 }
 
