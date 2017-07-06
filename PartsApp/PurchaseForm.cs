@@ -745,7 +745,7 @@ namespace PartsApp
         private void FillTheTitlesRow(Excel.Worksheet ExcelWorkSheet, int row, int column)
         {
             //Заполняем заголовки строк.
-            ExcelWorkSheet.Cells[row, column] = "Произв.";
+            ExcelWorkSheet.Cells[row, column]     = "Произв.";
             ExcelWorkSheet.Cells[row, column + 1] = "Артикул";
             ExcelWorkSheet.Cells[row, column + 2] = "Название";
             ExcelWorkSheet.Cells[row, column + 3] = "Ед. изм.";

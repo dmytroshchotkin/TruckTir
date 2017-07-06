@@ -68,7 +68,7 @@ namespace PartsApp
             #endregion
 
             //Выводим окно авторизации.
-            CurEmployee = PartsDAL.FindEmployees(1);
+            CurEmployee = PartsDAL.FindEmployees(2);
             //new AuthorizationForm().ShowDialog(this);
             userNameLabel.Text = $"{CurEmployee.LastName} {CurEmployee.FirstName}";
 
