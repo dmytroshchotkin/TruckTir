@@ -14,9 +14,10 @@ namespace PartsApp.Models
         public string Entity           { get; set; }
         public ContactInfo ContactInfo { get; set; }
         public string Description      { get; set; }
+        public double Balance          { get; set; }
 
         public Customer() { }
-        public Customer(int contragentId, string contragentName, string code, string entity, ContactInfo contactInfo, string description)
+        public Customer(int contragentId, string contragentName, string code, string entity, ContactInfo contactInfo, string description, double balance)
         { 
             ContragentId   = contragentId;
             ContragentName = contragentName;
@@ -24,6 +25,7 @@ namespace PartsApp.Models
             Entity         = entity;
             ContactInfo    = contactInfo;
             Description    = description;
+            Balance        = balance;            
         }//      
 
     }//Customer
