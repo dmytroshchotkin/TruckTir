@@ -66,10 +66,13 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.bottomPanel = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.BalanceLabel = new System.Windows.Forms.Label();
+            this.BalanceNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.contragentNameBackPanel.SuspendLayout();
             this.codeBackPanel.SuspendLayout();
             this.contactInfoPanel.SuspendLayout();
             this.bottomPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BalanceNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // entityComboBox
@@ -404,6 +407,22 @@
             this.bottomPanel.Size = new System.Drawing.Size(508, 123);
             this.bottomPanel.TabIndex = 68;
             // 
+            // BalanceLabel
+            // 
+            this.BalanceLabel.AutoSize = true;
+            this.BalanceLabel.Location = new System.Drawing.Point(300, 104);
+            this.BalanceLabel.Name = "BalanceLabel";
+            this.BalanceLabel.Size = new System.Drawing.Size(50, 13);
+            this.BalanceLabel.TabIndex = 69;
+            this.BalanceLabel.Text = "Баланс :";
+            // 
+            // BalanceNumericUpDown
+            // 
+            this.BalanceNumericUpDown.Location = new System.Drawing.Point(356, 102);
+            this.BalanceNumericUpDown.Name = "BalanceNumericUpDown";
+            this.BalanceNumericUpDown.Size = new System.Drawing.Size(76, 20);
+            this.BalanceNumericUpDown.TabIndex = 70;
+            // 
             // AddContragentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -411,6 +430,8 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(533, 565);
+            this.Controls.Add(this.BalanceNumericUpDown);
+            this.Controls.Add(this.BalanceLabel);
             this.Controls.Add(this.entityComboBox);
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.contactInfoPanel);
@@ -434,6 +455,7 @@
             this.contactInfoPanel.PerformLayout();
             this.bottomPanel.ResumeLayout(false);
             this.bottomPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BalanceNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -478,5 +500,7 @@
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.Label roomLabel;
         private System.Windows.Forms.TextBox roomTextBox;
+        private System.Windows.Forms.Label BalanceLabel;
+        private System.Windows.Forms.NumericUpDown BalanceNumericUpDown;
     }
 }

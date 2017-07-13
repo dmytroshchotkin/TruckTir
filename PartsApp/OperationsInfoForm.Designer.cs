@@ -37,6 +37,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
+            this.ExcelOutputButton = new System.Windows.Forms.Button();
             this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
             this.OperationTypeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OperationIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -70,7 +71,6 @@
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.ExcelOutputButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -122,6 +122,18 @@
             this.OperationsGroupBox.TabIndex = 1;
             this.OperationsGroupBox.TabStop = false;
             this.OperationsGroupBox.Text = "Операции";
+            // 
+            // ExcelOutputButton
+            // 
+            this.ExcelOutputButton.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.ExcelOutputButton.Location = new System.Drawing.Point(679, 383);
+            this.ExcelOutputButton.Name = "ExcelOutputButton";
+            this.ExcelOutputButton.Size = new System.Drawing.Size(92, 20);
+            this.ExcelOutputButton.TabIndex = 11;
+            this.ExcelOutputButton.Text = "Excel";
+            this.toolTip1.SetToolTip(this.ExcelOutputButton, "Выгрузить текущую накладную в Excel.");
+            this.ExcelOutputButton.UseVisualStyleBackColor = false;
+            this.ExcelOutputButton.Click += new System.EventHandler(this.ExcelOutputButton_Click);
             // 
             // OperationsInfoDGV
             // 
@@ -451,18 +463,6 @@
             this.SumCol.HeaderText = "Сумма (руб.)";
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
-            // 
-            // ExcelOutputButton
-            // 
-            this.ExcelOutputButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ExcelOutputButton.Location = new System.Drawing.Point(679, 383);
-            this.ExcelOutputButton.Name = "ExcelOutputButton";
-            this.ExcelOutputButton.Size = new System.Drawing.Size(92, 20);
-            this.ExcelOutputButton.TabIndex = 11;
-            this.ExcelOutputButton.Text = "Excel";
-            this.toolTip1.SetToolTip(this.ExcelOutputButton, "Выгрузить текущую накладную в Excel.");
-            this.ExcelOutputButton.UseVisualStyleBackColor = false;
-            this.ExcelOutputButton.Click += new System.EventHandler(this.ExcelOutputButton_Click);
             // 
             // OperationsInfoForm
             // 

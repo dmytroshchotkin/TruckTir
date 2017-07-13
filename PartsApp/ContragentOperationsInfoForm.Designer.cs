@@ -29,18 +29,26 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.ContragentsGroupBox = new System.Windows.Forms.GroupBox();
-            this.ContragentsListBox = new System.Windows.Forms.ListBox();
+            this.ContragentsListView = new System.Windows.Forms.ListView();
+            this.ContragentCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.BalanceCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
+            this.OperationIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ContragentEmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DescriptionCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalSumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OperationDetailsGroupBox = new System.Windows.Forms.GroupBox();
             this.OperationDetailsDGV = new System.Windows.Forms.DataGridView();
             this.ManufacturerCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,12 +60,6 @@
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.editContragentContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editContragentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.OperationIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DateCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ContragentEmployeeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DescriptionCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TotalSumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.editOperDescriptContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editOperDescriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -99,7 +101,7 @@
             // ContragentsGroupBox
             // 
             this.ContragentsGroupBox.BackColor = System.Drawing.SystemColors.Control;
-            this.ContragentsGroupBox.Controls.Add(this.ContragentsListBox);
+            this.ContragentsGroupBox.Controls.Add(this.ContragentsListView);
             this.ContragentsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ContragentsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.ContragentsGroupBox.Name = "ContragentsGroupBox";
@@ -108,20 +110,34 @@
             this.ContragentsGroupBox.TabStop = false;
             this.ContragentsGroupBox.Text = "Контрагенты";
             // 
-            // ContragentsListBox
+            // ContragentsListView
             // 
-            this.ContragentsListBox.DisplayMember = "ContragentName";
-            this.ContragentsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ContragentsListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ContragentsListBox.FormattingEnabled = true;
-            this.ContragentsListBox.ItemHeight = 16;
-            this.ContragentsListBox.Location = new System.Drawing.Point(3, 16);
-            this.ContragentsListBox.Name = "ContragentsListBox";
-            this.ContragentsListBox.Size = new System.Drawing.Size(733, 269);
-            this.ContragentsListBox.TabIndex = 0;
-            this.ContragentsListBox.ValueMember = "ContragentId";
-            this.ContragentsListBox.SelectedIndexChanged += new System.EventHandler(this.ContragentsListBox_SelectedIndexChanged);
-            this.ContragentsListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ContragentsListBox_MouseDown);
+            this.ContragentsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ContragentCol,
+            this.BalanceCol});
+            this.ContragentsListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ContragentsListView.FullRowSelect = true;
+            this.ContragentsListView.GridLines = true;
+            this.ContragentsListView.Location = new System.Drawing.Point(3, 16);
+            this.ContragentsListView.MultiSelect = false;
+            this.ContragentsListView.Name = "ContragentsListView";
+            this.ContragentsListView.Size = new System.Drawing.Size(733, 269);
+            this.ContragentsListView.TabIndex = 1;
+            this.ContragentsListView.UseCompatibleStateImageBehavior = false;
+            this.ContragentsListView.View = System.Windows.Forms.View.Details;
+            this.ContragentsListView.SelectedIndexChanged += new System.EventHandler(this.ContragentsListBox_SelectedIndexChanged);
+            this.ContragentsListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ContragentsListBox_MouseDown);
+            // 
+            // ContragentCol
+            // 
+            this.ContragentCol.Text = "Контрагент";
+            this.ContragentCol.Width = 600;
+            // 
+            // BalanceCol
+            // 
+            this.BalanceCol.Text = "Баланс";
+            this.BalanceCol.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.BalanceCol.Width = 99;
             // 
             // splitContainer2
             // 
@@ -180,6 +196,55 @@
             this.OperationsInfoDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.OperationsInfoDGV_CellMouseClick);
             this.OperationsInfoDGV.SelectionChanged += new System.EventHandler(this.OperationsInfoDGV_SelectionChanged);
             // 
+            // OperationIdCol
+            // 
+            this.OperationIdCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.OperationIdCol.HeaderText = "№ операции";
+            this.OperationIdCol.Name = "OperationIdCol";
+            this.OperationIdCol.ReadOnly = true;
+            this.OperationIdCol.Width = 60;
+            // 
+            // DateCol
+            // 
+            this.DateCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle43.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            dataGridViewCellStyle43.NullValue = null;
+            this.DateCol.DefaultCellStyle = dataGridViewCellStyle43;
+            this.DateCol.HeaderText = "Дата";
+            this.DateCol.MinimumWidth = 80;
+            this.DateCol.Name = "DateCol";
+            this.DateCol.ReadOnly = true;
+            this.DateCol.Width = 110;
+            // 
+            // EmployeeCol
+            // 
+            this.EmployeeCol.HeaderText = "Сотрудник";
+            this.EmployeeCol.Name = "EmployeeCol";
+            this.EmployeeCol.ReadOnly = true;
+            // 
+            // ContragentEmployeeCol
+            // 
+            this.ContragentEmployeeCol.HeaderText = "Представитель контрагента";
+            this.ContragentEmployeeCol.Name = "ContragentEmployeeCol";
+            this.ContragentEmployeeCol.ReadOnly = true;
+            // 
+            // DescriptionCol
+            // 
+            this.DescriptionCol.HeaderText = "Комментарий";
+            this.DescriptionCol.Name = "DescriptionCol";
+            this.DescriptionCol.ReadOnly = true;
+            // 
+            // TotalSumCol
+            // 
+            dataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle44.Format = "C2";
+            dataGridViewCellStyle44.NullValue = null;
+            this.TotalSumCol.DefaultCellStyle = dataGridViewCellStyle44;
+            this.TotalSumCol.HeaderText = "Сумма (руб.)";
+            this.TotalSumCol.MinimumWidth = 100;
+            this.TotalSumCol.Name = "TotalSumCol";
+            this.TotalSumCol.ReadOnly = true;
+            // 
             // OperationDetailsGroupBox
             // 
             this.OperationDetailsGroupBox.Controls.Add(this.OperationDetailsDGV);
@@ -233,8 +298,8 @@
             // MeasureUnitCol
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle45;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -244,8 +309,8 @@
             // CountCol
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle46;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ReadOnly = true;
@@ -254,10 +319,10 @@
             // PriceCol
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle29.Format = "N2";
-            dataGridViewCellStyle29.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle47.Format = "N2";
+            dataGridViewCellStyle47.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle47;
             this.PriceCol.HeaderText = "Цена (руб.)";
             this.PriceCol.MinimumWidth = 50;
             this.PriceCol.Name = "PriceCol";
@@ -267,10 +332,10 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle30.Format = "C2";
-            dataGridViewCellStyle30.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle48.Format = "C2";
+            dataGridViewCellStyle48.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle48;
             this.SumCol.HeaderText = "Сумма (руб.)";
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
@@ -288,55 +353,6 @@
             this.editContragentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.editContragentToolStripMenuItem.Text = "Редактировать";
             this.editContragentToolStripMenuItem.Click += new System.EventHandler(this.EditContragentToolStripMenuItem_Click);
-            // 
-            // OperationIdCol
-            // 
-            this.OperationIdCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.OperationIdCol.HeaderText = "№ операции";
-            this.OperationIdCol.Name = "OperationIdCol";
-            this.OperationIdCol.ReadOnly = true;
-            this.OperationIdCol.Width = 60;
-            // 
-            // DateCol
-            // 
-            this.DateCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle25.Format = "dd.MM.yyyy \'г.\'   HH:mm";
-            dataGridViewCellStyle25.NullValue = null;
-            this.DateCol.DefaultCellStyle = dataGridViewCellStyle25;
-            this.DateCol.HeaderText = "Дата";
-            this.DateCol.MinimumWidth = 80;
-            this.DateCol.Name = "DateCol";
-            this.DateCol.ReadOnly = true;
-            this.DateCol.Width = 110;
-            // 
-            // EmployeeCol
-            // 
-            this.EmployeeCol.HeaderText = "Сотрудник";
-            this.EmployeeCol.Name = "EmployeeCol";
-            this.EmployeeCol.ReadOnly = true;
-            // 
-            // ContragentEmployeeCol
-            // 
-            this.ContragentEmployeeCol.HeaderText = "Представитель контрагента";
-            this.ContragentEmployeeCol.Name = "ContragentEmployeeCol";
-            this.ContragentEmployeeCol.ReadOnly = true;
-            // 
-            // DescriptionCol
-            // 
-            this.DescriptionCol.HeaderText = "Комментарий";
-            this.DescriptionCol.Name = "DescriptionCol";
-            this.DescriptionCol.ReadOnly = true;
-            // 
-            // TotalSumCol
-            // 
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle26.Format = "C2";
-            dataGridViewCellStyle26.NullValue = null;
-            this.TotalSumCol.DefaultCellStyle = dataGridViewCellStyle26;
-            this.TotalSumCol.HeaderText = "Сумма (руб.)";
-            this.TotalSumCol.MinimumWidth = 100;
-            this.TotalSumCol.Name = "TotalSumCol";
-            this.TotalSumCol.ReadOnly = true;
             // 
             // editOperDescriptContextMenuStrip
             // 
@@ -384,7 +400,6 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ListBox ContragentsListBox;
         private System.Windows.Forms.GroupBox ContragentsGroupBox;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.GroupBox OperationsGroupBox;
@@ -408,6 +423,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TotalSumCol;
         private System.Windows.Forms.ContextMenuStrip editOperDescriptContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem editOperDescriptToolStripMenuItem;
-
+        private System.Windows.Forms.ListView ContragentsListView;
+        private System.Windows.Forms.ColumnHeader ContragentCol;
+        private System.Windows.Forms.ColumnHeader BalanceCol;
     }
 }

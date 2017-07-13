@@ -61,24 +61,36 @@ namespace PartsApp
                 ContragentsGroupBox.Text = "Покупатели";
                 OperationsGroupBox.Text = "Покупки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по покупкам.";
-            }//else
+            }//else            
+
+            //Заполняем лист контрагентами.
+            foreach (IContragent contrag in contragList)
+            {
+                ListViewItem item = new ListViewItem(contrag.ContragentName );
+                item.SubItems.Add(contrag.Balance == null ? null : ((double)contrag.Balance).ToString("0.00"));
+                item.Tag = contrag;
+                ContragentsListView.Items.Add(item);                
+            }//foreach
             
-            ContragentsListBox.DataSource = contragList;            
         }//FormInitialize
 
         private void ContragentsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int contragId = (int)ContragentsListBox.SelectedValue;
+            if (ContragentsListView.SelectedItems.Count != 0)
+            {
+                //int contragId = (int)ContragentsListBox.SelectedValue;
+                int contragId = (ContragentsListView.SelectedItems[0].Tag as IContragent).ContragentId;
 
-            //Если инф-ции об операциях данного контрагента ещё нет в коллекции, находим её в базе и добавляем в коллекцию.
-            List<IOperation> operList;
-            if (_contragentsOperations.TryGetValue(contragId, out operList) == false)
-            {                
-                operList = (_contragType == typeof(Supplier)) ? PartsDAL.FindPurchases(contragId, null) : PartsDAL.FindSales(contragId, null);
-                _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.                
+                //Если инф-ции об операциях данного контрагента ещё нет в коллекции, находим её в базе и добавляем в коллекцию.
+                List<IOperation> operList;
+                if (_contragentsOperations.TryGetValue(contragId, out operList) == false)
+                {
+                    operList = (_contragType == typeof(Supplier)) ? PartsDAL.FindPurchases(contragId, null) : PartsDAL.FindSales(contragId, null);
+                    _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.                
+                }//if
+
+                FillTheOperationsInfoDGV(operList); //Заполняем таблицу Операций.
             }//if
-
-            FillTheOperationsInfoDGV(operList); //Заполняем таблицу Операций.
         }//ContragentsListBox_SelectedIndexChanged
 
         private void ContragentsListBox_MouseDown(object sender, MouseEventArgs e)
@@ -86,17 +98,17 @@ namespace PartsApp
             //Если ПКМ по выделенному объекту, выводим контекстное меню.
             if (e.Button == MouseButtons.Right)
             {
-                Rectangle rect = ContragentsListBox.GetItemRectangle(ContragentsListBox.SelectedIndex);
+                Rectangle rect = ContragentsListView.GetItemRect(ContragentsListView.SelectedIndices[0]);
                 rect.Y += ContragentsGroupBox.Location.Y;
 
                 if (e.Y >= rect.Top && e.Y <= rect.Bottom)
-                    editContragentContextMenuStrip.Show(ContragentsListBox, e.Location, ToolStripDropDownDirection.BelowRight);
+                    editContragentContextMenuStrip.Show(ContragentsListView, e.Location, ToolStripDropDownDirection.BelowRight);
             }//if
         }//ContragentsListBox_MouseDown
 
         private void EditContragentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            IContragent contragent = ContragentsListBox.SelectedItem as IContragent;
+            IContragent contragent = ContragentsListView.SelectedItems[0] as IContragent;
             contragent = (contragent is Supplier) ? PartsDAL.FindSuppliers(contragent.ContragentId) : PartsDAL.FindCustomers(contragent.ContragentId);
             //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
             new AddContragentForm(contragent).Show();
@@ -191,7 +203,7 @@ namespace PartsApp
             if (OperationsInfoDGV.SelectedRows.Count != 0)
             {
                 int operId    = (int)OperationsInfoDGV.SelectedRows[0].Cells[OperationIdCol.Index].Value; //Находим Id выбранной операции.                
-                int contragId = (int)ContragentsListBox.SelectedValue;
+                int contragId = (ContragentsListView.SelectedItems[0].Tag as IContragent).ContragentId;
                 IOperation oper = _contragentsOperations[contragId].First(op => op.OperationId == operId); //Находим нужную операцию
                 
                 //Выводим инф-цию в таблицу доп. инф-ции по данной операции.

@@ -1624,17 +1624,8 @@ namespace PartsApp
 
                 
                 while (dataReader.Read())
-                {
-                    Customer customer = new Customer();
-                    customer.ContragentId   = Convert.ToInt32(dataReader["ContragentId"]);
-                    customer.ContragentName = dataReader["ContragentName"] as string;
-                    customer.Code           = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    customer.Entity      = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
+                    customers.Add(CreateCustomers(dataReader));
 
-                    customers.Add(customer);
-                }//while
 
                 connection.Close();
             }//using
@@ -1724,7 +1715,8 @@ namespace PartsApp
                 code           : dataReader["Code"] as string,
                 entity         : dataReader["Entity"] as string,
                 contactInfo    : (dataReader["ContactInfoId"] != DBNull.Value) ? FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
-                description    : dataReader["Description"] as string
+                description    : dataReader["Description"] as string,
+                balance        : (double)dataReader["Balance"]
             );
         }//CreateCustomers
 

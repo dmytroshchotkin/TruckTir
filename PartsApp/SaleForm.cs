@@ -1290,7 +1290,7 @@ namespace PartsApp
         {
             //Находим контрагента. Если такого ещё нет в базе, то создаем новый объект.
             IContragent customer = PartsDAL.FindCustomers(customerTextBox.Text.Trim());
-            customer = (customer == null) ? new Customer(0, customerTextBox.Text.Trim(), null, null, null, null) : customer;
+            customer = (customer == null) ? new Customer(0, customerTextBox.Text.Trim(), null, null, null, null, (double?)null) : customer;
 
              Sale sale = new Sale
             (
