@@ -611,7 +611,13 @@ namespace PartsApp
             }//foreach
 
             //Заполняем InTotalLabel расчитанным значением.
-            inTotalNumberLabel.Text = String.Format("{0}(руб)", Math.Round(inTotal, 2, MidpointRounding.AwayFromZero));
+            inTotalNumberLabel.Text = (Math.Round(inTotal, 2, MidpointRounding.AwayFromZero)).ToString("0.00");
+
+            CurrencyLabel.Left = inTotalNumberLabel.Right - 4; //Перемещаем Label указывающий валюту.
+
+            //меняем значение фактической оплаченной суммы если, галочка о полной оплате стоит.
+            if (PaidCheckBox.Checked == true)
+                PaidNumericUpDown.Value = (decimal)inTotal;
         }//FillTheInTotal
 
         /// <summary>
@@ -1278,8 +1284,16 @@ namespace PartsApp
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
+
+        private void PaidCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            PaidNumericUpDown.Enabled = !PaidCheckBox.Checked;
+
+            //Если галочка стоит, то выводим оплаченную сумму как сумму по всей накладной, иначе выводим 0.
+            PaidNumericUpDown.Value = (PaidCheckBox.Checked ? Convert.ToDecimal(inTotalNumberLabel.Text) : 0);
+        }//PaidCheckBox_CheckedChanged
 
 
         /// <summary>
@@ -1392,10 +1406,6 @@ namespace PartsApp
                 }//if
             }//if
         }//
-
-
-
-
 
         
     }//Form2

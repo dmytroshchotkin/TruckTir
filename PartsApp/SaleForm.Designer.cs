@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             this.autoCompleteListBox = new System.Windows.Forms.ListBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
@@ -85,6 +85,9 @@
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.saleContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PaidCheckBox = new System.Windows.Forms.CheckBox();
+            this.PaidNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.CurrencyLabel = new System.Windows.Forms.Label();
             this.customerBackPanel.SuspendLayout();
             this.sellerBackPanel.SuspendLayout();
             this.saleGroupBox.SuspendLayout();
@@ -92,6 +95,7 @@
             this.extGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ExtSaleDGV)).BeginInit();
             this.saleContextMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PaidNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // autoCompleteListBox
@@ -112,7 +116,7 @@
             // descriptionLabel
             // 
             this.descriptionLabel.AutoSize = true;
-            this.descriptionLabel.Location = new System.Drawing.Point(20, 624);
+            this.descriptionLabel.Location = new System.Drawing.Point(20, 614);
             this.descriptionLabel.Name = "descriptionLabel";
             this.descriptionLabel.Size = new System.Drawing.Size(83, 13);
             this.descriptionLabel.TabIndex = 124;
@@ -120,7 +124,7 @@
             // 
             // descriptionRichTextBox
             // 
-            this.descriptionRichTextBox.Location = new System.Drawing.Point(23, 640);
+            this.descriptionRichTextBox.Location = new System.Drawing.Point(23, 630);
             this.descriptionRichTextBox.Name = "descriptionRichTextBox";
             this.descriptionRichTextBox.Size = new System.Drawing.Size(848, 30);
             this.descriptionRichTextBox.TabIndex = 123;
@@ -129,7 +133,7 @@
             // markupLabel
             // 
             this.markupLabel.AutoSize = true;
-            this.markupLabel.Location = new System.Drawing.Point(544, 437);
+            this.markupLabel.Location = new System.Drawing.Point(194, 425);
             this.markupLabel.Name = "markupLabel";
             this.markupLabel.Size = new System.Drawing.Size(54, 13);
             this.markupLabel.TabIndex = 122;
@@ -140,7 +144,7 @@
             this.markupComboBox.DisplayMember = "Value";
             this.markupComboBox.Enabled = false;
             this.markupComboBox.FormattingEnabled = true;
-            this.markupComboBox.Location = new System.Drawing.Point(604, 434);
+            this.markupComboBox.Location = new System.Drawing.Point(254, 422);
             this.markupComboBox.Name = "markupComboBox";
             this.markupComboBox.Size = new System.Drawing.Size(121, 21);
             this.markupComboBox.TabIndex = 121;
@@ -154,9 +158,9 @@
             this.inTotalNumberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.inTotalNumberLabel.Location = new System.Drawing.Point(758, 376);
             this.inTotalNumberLabel.Name = "inTotalNumberLabel";
-            this.inTotalNumberLabel.Size = new System.Drawing.Size(39, 13);
+            this.inTotalNumberLabel.Size = new System.Drawing.Size(28, 13);
             this.inTotalNumberLabel.TabIndex = 118;
-            this.inTotalNumberLabel.Text = "0 (руб)";
+            this.inTotalNumberLabel.Text = "0,00";
             // 
             // customerBackPanel
             // 
@@ -280,8 +284,8 @@
             // MeasureUnitCol
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle33;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle17;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -293,8 +297,8 @@
             // CountCol
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle34;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle18;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ReadOnly = true;
@@ -304,10 +308,10 @@
             // SellingPriceCol
             // 
             this.SellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle35.Format = "C2";
-            dataGridViewCellStyle35.NullValue = null;
-            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle35;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle19.Format = "C2";
+            dataGridViewCellStyle19.NullValue = null;
+            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle19;
             this.SellingPriceCol.HeaderText = "Цена продажи";
             this.SellingPriceCol.MinimumWidth = 60;
             this.SellingPriceCol.Name = "SellingPriceCol";
@@ -317,10 +321,10 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle36.Format = "C2";
-            dataGridViewCellStyle36.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle36;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle20.Format = "C2";
+            dataGridViewCellStyle20.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle20;
             this.SumCol.HeaderText = "Сумма";
             this.SumCol.MinimumWidth = 60;
             this.SumCol.Name = "SumCol";
@@ -386,7 +390,7 @@
             // extGroupBox
             // 
             this.extGroupBox.Controls.Add(this.ExtSaleDGV);
-            this.extGroupBox.Location = new System.Drawing.Point(20, 451);
+            this.extGroupBox.Location = new System.Drawing.Point(20, 441);
             this.extGroupBox.Name = "extGroupBox";
             this.extGroupBox.Size = new System.Drawing.Size(857, 170);
             this.extGroupBox.TabIndex = 102;
@@ -429,8 +433,8 @@
             // ExtPurchaseDateCol
             // 
             this.ExtPurchaseDateCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle37.Format = "dd.MM.yyyy \'г.\'   HH:mm";
-            this.ExtPurchaseDateCol.DefaultCellStyle = dataGridViewCellStyle37;
+            dataGridViewCellStyle21.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            this.ExtPurchaseDateCol.DefaultCellStyle = dataGridViewCellStyle21;
             this.ExtPurchaseDateCol.HeaderText = "Дата прихода";
             this.ExtPurchaseDateCol.Name = "ExtPurchaseDateCol";
             this.ExtPurchaseDateCol.ReadOnly = true;
@@ -458,8 +462,8 @@
             // ExtMeasureUnitCol
             // 
             this.ExtMeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ExtMeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle38;
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ExtMeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle22;
             this.ExtMeasureUnitCol.HeaderText = "Ед. изм.";
             this.ExtMeasureUnitCol.MinimumWidth = 35;
             this.ExtMeasureUnitCol.Name = "ExtMeasureUnitCol";
@@ -472,8 +476,8 @@
             // ExtCountCol
             // 
             this.ExtCountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ExtCountCol.DefaultCellStyle = dataGridViewCellStyle39;
+            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ExtCountCol.DefaultCellStyle = dataGridViewCellStyle23;
             this.ExtCountCol.HeaderText = "Кол-во";
             this.ExtCountCol.MinimumWidth = 100;
             this.ExtCountCol.Name = "ExtCountCol";
@@ -503,10 +507,10 @@
             // ExtSellingPriceCol
             // 
             this.ExtSellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle40.Format = "C2";
-            dataGridViewCellStyle40.NullValue = null;
-            this.ExtSellingPriceCol.DefaultCellStyle = dataGridViewCellStyle40;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle24.Format = "C2";
+            dataGridViewCellStyle24.NullValue = null;
+            this.ExtSellingPriceCol.DefaultCellStyle = dataGridViewCellStyle24;
             this.ExtSellingPriceCol.HeaderText = "Цена продажи";
             this.ExtSellingPriceCol.MinimumWidth = 100;
             this.ExtSellingPriceCol.Name = "ExtSellingPriceCol";
@@ -522,7 +526,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(509, 717);
+            this.cancelButton.Location = new System.Drawing.Point(512, 706);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 101;
@@ -532,7 +536,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(334, 717);
+            this.okButton.Location = new System.Drawing.Point(337, 706);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 100;
@@ -542,14 +546,14 @@
             // 
             // customerAgentTextBox
             // 
-            this.customerAgentTextBox.Location = new System.Drawing.Point(580, 684);
+            this.customerAgentTextBox.Location = new System.Drawing.Point(583, 673);
             this.customerAgentTextBox.Name = "customerAgentTextBox";
             this.customerAgentTextBox.Size = new System.Drawing.Size(232, 20);
             this.customerAgentTextBox.TabIndex = 99;
             // 
             // sellerAgentTextBox
             // 
-            this.sellerAgentTextBox.Location = new System.Drawing.Point(187, 684);
+            this.sellerAgentTextBox.Location = new System.Drawing.Point(190, 673);
             this.sellerAgentTextBox.Name = "sellerAgentTextBox";
             this.sellerAgentTextBox.ReadOnly = true;
             this.sellerAgentTextBox.Size = new System.Drawing.Size(237, 20);
@@ -558,7 +562,7 @@
             // customerAgentLabel
             // 
             this.customerAgentLabel.AutoSize = true;
-            this.customerAgentLabel.Location = new System.Drawing.Point(523, 684);
+            this.customerAgentLabel.Location = new System.Drawing.Point(526, 673);
             this.customerAgentLabel.Name = "customerAgentLabel";
             this.customerAgentLabel.Size = new System.Drawing.Size(51, 13);
             this.customerAgentLabel.TabIndex = 97;
@@ -567,7 +571,7 @@
             // sellerAgentLabel
             // 
             this.sellerAgentLabel.AutoSize = true;
-            this.sellerAgentLabel.Location = new System.Drawing.Point(123, 684);
+            this.sellerAgentLabel.Location = new System.Drawing.Point(126, 673);
             this.sellerAgentLabel.Name = "sellerAgentLabel";
             this.sellerAgentLabel.Size = new System.Drawing.Size(58, 13);
             this.sellerAgentLabel.TabIndex = 96;
@@ -587,17 +591,60 @@
             this.removeToolStripMenuItem.Text = "Удалить";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
+            // PaidCheckBox
+            // 
+            this.PaidCheckBox.AutoSize = true;
+            this.PaidCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.PaidCheckBox.Checked = true;
+            this.PaidCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.PaidCheckBox.Location = new System.Drawing.Point(635, 402);
+            this.PaidCheckBox.Name = "PaidCheckBox";
+            this.PaidCheckBox.Size = new System.Drawing.Size(75, 17);
+            this.PaidCheckBox.TabIndex = 125;
+            this.PaidCheckBox.Text = "Оплачено";
+            this.toolTip.SetToolTip(this.PaidCheckBox, "Если галочка стоит, значит накладная оплачена полностью, иначе укажите оплаченную" +
+        " сумму.");
+            this.PaidCheckBox.UseVisualStyleBackColor = true;
+            this.PaidCheckBox.CheckedChanged += new System.EventHandler(this.PaidCheckBox_CheckedChanged);
+            // 
+            // PaidNumericUpDown
+            // 
+            this.PaidNumericUpDown.DecimalPlaces = 2;
+            this.PaidNumericUpDown.Enabled = false;
+            this.PaidNumericUpDown.Location = new System.Drawing.Point(716, 399);
+            this.PaidNumericUpDown.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.PaidNumericUpDown.Name = "PaidNumericUpDown";
+            this.PaidNumericUpDown.Size = new System.Drawing.Size(81, 20);
+            this.PaidNumericUpDown.TabIndex = 126;
+            this.toolTip.SetToolTip(this.PaidNumericUpDown, "Укажите оплаченную сумму");
+            // 
+            // CurrencyLabel
+            // 
+            this.CurrencyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CurrencyLabel.Location = new System.Drawing.Point(782, 376);
+            this.CurrencyLabel.Name = "CurrencyLabel";
+            this.CurrencyLabel.Size = new System.Drawing.Size(35, 13);
+            this.CurrencyLabel.TabIndex = 0;
+            this.CurrencyLabel.Text = "(руб)";
+            // 
             // SaleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(896, 733);
+            this.Controls.Add(this.CurrencyLabel);
+            this.Controls.Add(this.inTotalNumberLabel);
+            this.Controls.Add(this.PaidNumericUpDown);
+            this.Controls.Add(this.PaidCheckBox);
             this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.descriptionRichTextBox);
             this.Controls.Add(this.markupLabel);
             this.Controls.Add(this.markupComboBox);
-            this.Controls.Add(this.inTotalNumberLabel);
             this.Controls.Add(this.customerBackPanel);
             this.Controls.Add(this.sellerBackPanel);
             this.Controls.Add(this.saleDateTimePicker);
@@ -631,6 +678,7 @@
             this.extGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ExtSaleDGV)).EndInit();
             this.saleContextMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.PaidNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -686,5 +734,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ExtMarkupCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ExtSellingPriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ExtNoteCol;
+        private System.Windows.Forms.CheckBox PaidCheckBox;
+        private System.Windows.Forms.NumericUpDown PaidNumericUpDown;
+        private System.Windows.Forms.Label CurrencyLabel;
     }
 }
