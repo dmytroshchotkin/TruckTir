@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
             this.autoCompleteListBox = new System.Windows.Forms.ListBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.descriptionRichTextBox = new System.Windows.Forms.RichTextBox();
@@ -152,7 +152,7 @@
             // 
             this.inTotalNumberLabel.AutoSize = true;
             this.inTotalNumberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.inTotalNumberLabel.Location = new System.Drawing.Point(758, 406);
+            this.inTotalNumberLabel.Location = new System.Drawing.Point(758, 376);
             this.inTotalNumberLabel.Name = "inTotalNumberLabel";
             this.inTotalNumberLabel.Size = new System.Drawing.Size(39, 13);
             this.inTotalNumberLabel.TabIndex = 118;
@@ -219,7 +219,7 @@
             // inTotalLabel
             // 
             this.inTotalLabel.AutoSize = true;
-            this.inTotalLabel.Location = new System.Drawing.Point(710, 406);
+            this.inTotalLabel.Location = new System.Drawing.Point(710, 376);
             this.inTotalLabel.Name = "inTotalLabel";
             this.inTotalLabel.Size = new System.Drawing.Size(43, 13);
             this.inTotalLabel.TabIndex = 110;
@@ -228,7 +228,7 @@
             // saleGroupBox
             // 
             this.saleGroupBox.Controls.Add(this.SaleDGV);
-            this.saleGroupBox.Location = new System.Drawing.Point(23, 156);
+            this.saleGroupBox.Location = new System.Drawing.Point(23, 126);
             this.saleGroupBox.Name = "saleGroupBox";
             this.saleGroupBox.Size = new System.Drawing.Size(854, 247);
             this.saleGroupBox.TabIndex = 107;
@@ -280,8 +280,8 @@
             // MeasureUnitCol
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle33;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -293,8 +293,8 @@
             // CountCol
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle34;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ReadOnly = true;
@@ -304,10 +304,10 @@
             // SellingPriceCol
             // 
             this.SellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle27.Format = "C2";
-            dataGridViewCellStyle27.NullValue = null;
-            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle35.Format = "C2";
+            dataGridViewCellStyle35.NullValue = null;
+            this.SellingPriceCol.DefaultCellStyle = dataGridViewCellStyle35;
             this.SellingPriceCol.HeaderText = "Цена продажи";
             this.SellingPriceCol.MinimumWidth = 60;
             this.SellingPriceCol.Name = "SellingPriceCol";
@@ -317,10 +317,10 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle28.Format = "C2";
-            dataGridViewCellStyle28.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle36.Format = "C2";
+            dataGridViewCellStyle36.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle36;
             this.SumCol.HeaderText = "Сумма";
             this.SumCol.MinimumWidth = 60;
             this.SumCol.Name = "SumCol";
@@ -429,8 +429,8 @@
             // ExtPurchaseDateCol
             // 
             this.ExtPurchaseDateCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle29.Format = "dd.MM.yyyy \'г.\'   HH:mm";
-            this.ExtPurchaseDateCol.DefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle37.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            this.ExtPurchaseDateCol.DefaultCellStyle = dataGridViewCellStyle37;
             this.ExtPurchaseDateCol.HeaderText = "Дата прихода";
             this.ExtPurchaseDateCol.Name = "ExtPurchaseDateCol";
             this.ExtPurchaseDateCol.ReadOnly = true;
@@ -458,8 +458,8 @@
             // ExtMeasureUnitCol
             // 
             this.ExtMeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ExtMeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ExtMeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle38;
             this.ExtMeasureUnitCol.HeaderText = "Ед. изм.";
             this.ExtMeasureUnitCol.MinimumWidth = 35;
             this.ExtMeasureUnitCol.Name = "ExtMeasureUnitCol";
@@ -472,8 +472,8 @@
             // ExtCountCol
             // 
             this.ExtCountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ExtCountCol.DefaultCellStyle = dataGridViewCellStyle31;
+            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ExtCountCol.DefaultCellStyle = dataGridViewCellStyle39;
             this.ExtCountCol.HeaderText = "Кол-во";
             this.ExtCountCol.MinimumWidth = 100;
             this.ExtCountCol.Name = "ExtCountCol";
@@ -503,10 +503,10 @@
             // ExtSellingPriceCol
             // 
             this.ExtSellingPriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle32.Format = "C2";
-            dataGridViewCellStyle32.NullValue = null;
-            this.ExtSellingPriceCol.DefaultCellStyle = dataGridViewCellStyle32;
+            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle40.Format = "C2";
+            dataGridViewCellStyle40.NullValue = null;
+            this.ExtSellingPriceCol.DefaultCellStyle = dataGridViewCellStyle40;
             this.ExtSellingPriceCol.HeaderText = "Цена продажи";
             this.ExtSellingPriceCol.MinimumWidth = 100;
             this.ExtSellingPriceCol.Name = "ExtSellingPriceCol";
