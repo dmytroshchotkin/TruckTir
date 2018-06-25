@@ -431,7 +431,7 @@ namespace PartsApp
             string tableName = (contragent is Supplier) ? "Suppliers " : "Customers ";
             cmd.CommandText = "UPDATE " + tableName
                             + "SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
-                            + "ContactInfoId = @ContactInfoId, Description = @Description "
+                            + "ContactInfoId = @ContactInfoId, Description = @Description, Balance = @Balance "
                             + "WHERE ContragentId = @ContragentId;";
 
             cmd.Parameters.Clear();
@@ -441,6 +441,7 @@ namespace PartsApp
             cmd.Parameters.AddWithValue("@Entity",         contragent.Entity);
             cmd.Parameters.AddWithValue("@ContactInfoId", (contragent.ContactInfo != null) ? contragent.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description",    contragent.Description);
+            cmd.Parameters.AddWithValue("@Balance",        contragent.Balance);
 
             cmd.ExecuteNonQuery();
         }//UpdateContragent
@@ -791,9 +792,12 @@ namespace PartsApp
                     {
                         try
                         {
-                            //Добавляем контрагента, если такого нет в базе.
+                            //Добавляем контрагента, если такого нет в базе, иначе обновляем его баланс.
                             if (sale.Contragent.ContragentId == 0)
-                                sale.Contragent.ContragentId =  AddContragent(sale.Contragent, cmd);
+                                sale.Contragent.ContragentId = AddContragent(sale.Contragent, cmd);
+                            else
+                                UpdateContragent(sale.Contragent);
+
                             //вставляем запись в таблицу Sales.
                             sale.OperationId = AddSale(sale, cmd);
                             //вставляем записи в SaleDetails.

@@ -623,7 +623,7 @@ namespace PartsApp
         /// <summary>
         /// Возвращает дефолтные значения во все ячейки столбца 'Кол-во' доп. таблицы.
         /// </summary>
-        /// <param name="sparePartId">Ид товара.</param>
+        /// <param name="sparePartId">Ид товара.</param>Vf
         private void SetDefaultValuesToExtSaleDGV(int sparePartId)
         {
             foreach (DataGridViewRow extRow in ExtSaleDGV.Rows)
@@ -1304,9 +1304,14 @@ namespace PartsApp
         {
             //Находим контрагента. Если такого ещё нет в базе, то создаем новый объект.
             IContragent customer = PartsDAL.FindCustomers(customerTextBox.Text.Trim());
-            customer = (customer == null) ? new Customer(0, customerTextBox.Text.Trim(), null, null, null, null, (double?)null) : customer;
+            customer = (customer == null) ? new Customer(0, customerTextBox.Text.Trim(), null, null, null, null, 0) : customer;
 
-             Sale sale = new Sale
+            //Если внесена сумма отличающаяся от требуемой (галочка выключена), меняем баланс клиента.
+            if (PaidCheckBox.Checked == false)
+                customer.Balance += (double)PaidNumericUpDown.Value - Convert.ToDouble(inTotalNumberLabel.Text); 
+            
+
+            Sale sale = new Sale
             (
                 employee            : Form1.CurEmployee,
                 contragent          : customer,
