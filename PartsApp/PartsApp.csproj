@@ -105,6 +105,7 @@
     <Compile Include="EmployeeOperationsInfoForm.Designer.cs">
       <DependentUpon>EmployeeOperationsInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\Validator.cs" />
     <Compile Include="OperationsInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
