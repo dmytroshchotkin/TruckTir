@@ -45,7 +45,7 @@ namespace PartsApp
         {
             //Вносим все типы наценок в markupComboBox             
             markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
-
+            markupComboBox.SelectedIndexChanged += markupComboBox_SelectedIndexChanged;
             #region Настройки таблиц.
 
             /*Закомментированные строки выполнены через дизайнер.*/
