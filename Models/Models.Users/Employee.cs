@@ -98,7 +98,8 @@ namespace PartsApp.Models
             : this(employeeId, lastName, firstName, middleName, birthDate, hireDate, dismissalDate,
                    photo, note, passportNum, title, accessLayer, login, password, null)
         {
-            _contactInfo = new Lazy<ContactInfo>(() => PartsDAL.FindContactInfo(this));
+           // исключить обращение к бд из домена
+           //_contactInfo = new Lazy<ContactInfo>(() => PartsDAL.FindContactInfo(this));
         }//
 
 
@@ -111,6 +112,15 @@ namespace PartsApp.Models
             string shortMiddleName = (MiddleName != null) ? MiddleName.ToUpper()[0] + "." : "";
             return String.Format("{0} {1}. {2}", LastName, FirstName.ToUpper()[0], shortMiddleName);
         }//GetShortFullName
+
+        public void TrySetContactInfo(Lazy<ContactInfo> info)
+        {
+            if (info != null)
+            {
+                _contactInfo = info;
+            }
+            
+        }
 
     }//Employee
   

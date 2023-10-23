@@ -17,6 +17,8 @@ namespace PartsApp.Models
 
         IList<OperationDetails> OperationDetailsList { get;}
 
+        void TrySetOperationDetails(Lazy<IList<OperationDetails>> operationDetails);
+
     }//IOperation
 
 }//namespace

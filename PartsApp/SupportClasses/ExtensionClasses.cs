@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Forms;
+using Models.Helper;
 
 namespace PartsApp.SupportClasses
 {
@@ -22,16 +23,6 @@ namespace PartsApp.SupportClasses
                 .Aggregate((max, next) => next.Item2.CompareTo(max.Item2) < 0 ? next : max).Item1;
         }//MinBy
 
-        /// <summary>
-        /// Возвращает заданное описание для данного перечислителя.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static string ToDescription(this Enum value)
-        {
-            var da = (DescriptionAttribute[])(value.GetType().GetField(value.ToString())).GetCustomAttributes(typeof(DescriptionAttribute), false);
-            return da.Length > 0 ? da[0].Description : value.ToString();
-        }//ToDescription
 
 
         /// <summary>

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using PartsApp.Models;
 using PartsApp.SupportClasses;
 using Excel = Microsoft.Office.Interop.Excel;
+using static Models.Helper.PropertiesHelper;
 
 namespace PartsApp
 {

@@ -2121,7 +2121,7 @@ namespace PartsApp
         /// <returns></returns>
         private static Purchase CreatePurchase(SQLiteDataReader dataReader)
         {
-            return new Purchase
+            var result = new Purchase
             (
                 operationId        : Convert.ToInt32(dataReader["OperationId"]),
                 employee           : (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null,
@@ -2130,11 +2130,15 @@ namespace PartsApp
                 operationDate      : Convert.ToDateTime(dataReader["OD"]),
                 description        : dataReader["Description"] as string
             );
+
+            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => PartsDAL.FindPurchaseDetails(result)));
+            return result;
+
         }//CreatePurchase
 
         private static Sale CreateSale(SQLiteDataReader dataReader)
         {            
-            return new Sale
+            var result = new Sale
             (
                 operationId        : Convert.ToInt32(dataReader["OperationId"]),
                 employee           : (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader ["EmployeeId"])) : null,
@@ -2143,6 +2147,9 @@ namespace PartsApp
                 operationDate      : Convert.ToDateTime(dataReader["OD"]),
                 description        : dataReader["Description"] as string
             );
+
+            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => PartsDAL.FindSaleDetails(result)));
+            return result;
         }//CreateSale
 
 
@@ -2398,7 +2405,7 @@ namespace PartsApp
         /// <returns></returns>
         private static Employee CreateEmployee(SQLiteDataReader dataReader)
         { 
-            return new Employee
+            var result = new Employee
             (
                 employeeId     : Convert.ToInt32(dataReader["EmployeeId"]),
                 lastName       : dataReader["LastName"] as string,
@@ -2415,6 +2422,9 @@ namespace PartsApp
                 login          : dataReader["Login"] as string,
                 password       : dataReader["Password"] as string               
             );
+
+            result.TrySetContactInfo(new Lazy<ContactInfo>(() => PartsDAL.FindContactInfo(result)));
+            return result;
         }//CreateEmployee
 
 
@@ -2809,8 +2819,8 @@ namespace PartsApp
         /// <param name="dataReader"></param>
         /// <returns></returns>
         private static SparePart CreateSparePart(SQLiteDataReader dataReader)
-        {
-            return new SparePart
+        {            
+            var result = new SparePart
             (
                 sparePartId    : Convert.ToInt32(dataReader["SparePartId"]),
                 photo          : dataReader["Photo"] as string,
@@ -2819,7 +2829,10 @@ namespace PartsApp
                 description    : dataReader["Description"] as string,
                 manufacturer   : dataReader["ManufacturerName"] as string,
                 measureUnit    : dataReader["MeasureUnit"] as string             
-            );     
+            );
+
+            result.TrySetAvailabilities(new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(result)));
+            return result;
         }//CreateSparePart
 
         /// <summary>

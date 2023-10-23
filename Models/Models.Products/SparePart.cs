@@ -34,7 +34,8 @@ namespace PartsApp.Models
             Description  = description;
             MeasureUnit  = measureUnit;
 
-            _availabilityList = new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(this));
+            // исключить из домена
+            //_availabilityList = new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(this));
         }//
 
         public SparePart(SparePart sparePart)
@@ -58,6 +59,14 @@ namespace PartsApp.Models
 
             return newSparePartsList;
         }//GetNewSparePartsList
+
+        public void TrySetAvailabilities(Lazy<List<Availability>> availabilities)
+        {
+            if (availabilities != null)
+            {
+                _availabilityList = availabilities;
+            }
+        }
     }//SparePart
 
 }//namespace
