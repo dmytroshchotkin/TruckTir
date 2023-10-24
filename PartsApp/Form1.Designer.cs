@@ -471,7 +471,6 @@
             this.markupComboBox.Size = new System.Drawing.Size(121, 21);
             this.markupComboBox.TabIndex = 7;
             this.markupComboBox.ValueMember = "Key";
-            this.markupComboBox.SelectedIndexChanged += new System.EventHandler(this.markupComboBox_SelectedIndexChanged);
             this.markupComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.markupComboBox_KeyDown);
             // 
             // cancelChangesButton
