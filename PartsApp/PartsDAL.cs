@@ -13,6 +13,7 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
+using static PartsApp.Helper.Validator;
 
 namespace PartsApp
 {
@@ -2403,9 +2404,9 @@ namespace PartsApp
                 lastName       : dataReader["LastName"] as string,
                 firstName      : dataReader["FirstName"] as string,
                 middleName     : dataReader["MiddleName"] as string,
-                birthDate      : (dataReader["BirthDate"] != DBNull.Value)     ? Convert.ToDateTime(dataReader["BirthDate"]) : (DateTime?)null,
-                hireDate       : (dataReader["HireDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["HD"]) : (DateTime?)null,
-                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? Convert.ToDateTime(dataReader["DD"]) : (DateTime?)null,                
+                birthDate      : (dataReader["BirthDate"] != DBNull.Value) ? GetDateTime(dataReader["BirthDate"] as string) : (DateTime?)null,
+                hireDate       : (dataReader["HireDate"] != DBNull.Value) ? GetDateTime(dataReader["HD"] as string) : (DateTime?)null,
+                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
                 photo          : dataReader["Photo"] as string,
                 note           : dataReader["Note"] as string,
                 passportNum    : dataReader["PassportNum"] as string,
@@ -2778,7 +2779,7 @@ namespace PartsApp
         #endregion
 
 
-
+        
 
 
         #region Вспомогательные методы.
