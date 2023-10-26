@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Models.Helper
 {
-    public static class PropertiesHelper
+    public static class EnumExtensions
     {
         /// <summary>
         /// Возвращает заданное описание для данного перечислителя.

@@ -13,11 +13,10 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
-using static PartsApp.Helper.Helper;
 
 namespace PartsApp
 {
-    static class PartsDAL
+    public static class PartsDAL
     {
         private const string SparePartConfig = "SparePartConfig";
 
@@ -2131,7 +2130,7 @@ namespace PartsApp
                 description        : dataReader["Description"] as string
             );
 
-            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => PartsDAL.FindPurchaseDetails(result)));
+            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => FindPurchaseDetails(result)));
             return result;
 
         }//CreatePurchase
@@ -2411,9 +2410,9 @@ namespace PartsApp
                 lastName       : dataReader["LastName"] as string,
                 firstName      : dataReader["FirstName"] as string,
                 middleName     : dataReader["MiddleName"] as string,
-                birthDate      : (dataReader["BirthDate"] != DBNull.Value) ? GetDateTime(dataReader["BirthDate"] as string) : (DateTime?)null,
-                hireDate       : (dataReader["HireDate"] != DBNull.Value) ? GetDateTime(dataReader["HD"] as string) : (DateTime?)null,
-                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
+                birthDate      : (dataReader["BirthDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["BirthDate"] as string) : (DateTime?)null,
+                hireDate       : (dataReader["HireDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["HD"] as string) : (DateTime?)null,
+                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
                 photo          : dataReader["Photo"] as string,
                 note           : dataReader["Note"] as string,
                 passportNum    : dataReader["PassportNum"] as string,
@@ -2423,7 +2422,7 @@ namespace PartsApp
                 password       : dataReader["Password"] as string               
             );
 
-            result.TrySetContactInfo(new Lazy<ContactInfo>(() => PartsDAL.FindContactInfo(result)));
+            result.TrySetContactInfo(FindContactInfo(result));
             return result;
         }//CreateEmployee
 

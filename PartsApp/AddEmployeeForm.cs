@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PartsApp.Models;
 using PartsApp.SupportClasses;
-using static Models.Helper.PropertiesHelper;
+using Models.Helper;
 
 namespace PartsApp
 {
