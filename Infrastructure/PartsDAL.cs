@@ -2130,7 +2130,7 @@ namespace PartsApp
                 description        : dataReader["Description"] as string
             );
 
-            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => FindPurchaseDetails(result)));
+            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => PartsDAL.FindPurchaseDetails(result)));
             return result;
 
         }//CreatePurchase
@@ -2422,7 +2422,7 @@ namespace PartsApp
                 password       : dataReader["Password"] as string               
             );
 
-            result.TrySetContactInfo(FindContactInfo(result));
+            result.TrySetContactInfo(new Lazy<ContactInfo>(() => PartsDAL.FindContactInfo(result)));
             return result;
         }//CreateEmployee
 
