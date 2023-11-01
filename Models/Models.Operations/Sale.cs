@@ -41,9 +41,16 @@ namespace PartsApp.Models
             OperationDate         = operationDate;
             Description           = description;
 
-            _operationDetailsList = new Lazy<IList<OperationDetails>>(() => PartsDAL.FindSaleDetails(this));
+            //_operationDetailsList = new Lazy<IList<OperationDetails>>(() => PartsDAL.FindSaleDetails(this));
         }//
 
+        public void TrySetOperationDetails(Lazy<IList<OperationDetails>> operationDetails)
+        {
+            if (operationDetails != null)
+            {
+                _operationDetailsList = operationDetails;
+            }
+        }
     }//Sale
 
 

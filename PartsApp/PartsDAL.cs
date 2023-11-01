@@ -13,11 +13,10 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
-using static PartsApp.Helper.Validator;
 
 namespace PartsApp
 {
-    static class PartsDAL
+    public static class PartsDAL
     {
         private const string SparePartConfig = "SparePartConfig";
 
@@ -2121,7 +2120,7 @@ namespace PartsApp
         /// <returns></returns>
         private static Purchase CreatePurchase(SQLiteDataReader dataReader)
         {
-            return new Purchase
+            var result = new Purchase
             (
                 operationId        : Convert.ToInt32(dataReader["OperationId"]),
                 employee           : (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null,
@@ -2130,11 +2129,15 @@ namespace PartsApp
                 operationDate      : Convert.ToDateTime(dataReader["OD"]),
                 description        : dataReader["Description"] as string
             );
+
+            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => FindPurchaseDetails(result)));
+            return result;
+
         }//CreatePurchase
 
         private static Sale CreateSale(SQLiteDataReader dataReader)
         {            
-            return new Sale
+            var result = new Sale
             (
                 operationId        : Convert.ToInt32(dataReader["OperationId"]),
                 employee           : (dataReader["EmployeeId"] != DBNull.Value) ? FindEmployees(Convert.ToInt32(dataReader ["EmployeeId"])) : null,
@@ -2143,6 +2146,9 @@ namespace PartsApp
                 operationDate      : Convert.ToDateTime(dataReader["OD"]),
                 description        : dataReader["Description"] as string
             );
+
+            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => PartsDAL.FindSaleDetails(result)));
+            return result;
         }//CreateSale
 
 
@@ -2398,15 +2404,15 @@ namespace PartsApp
         /// <returns></returns>
         private static Employee CreateEmployee(SQLiteDataReader dataReader)
         { 
-            return new Employee
+            var result = new Employee
             (
                 employeeId     : Convert.ToInt32(dataReader["EmployeeId"]),
                 lastName       : dataReader["LastName"] as string,
                 firstName      : dataReader["FirstName"] as string,
                 middleName     : dataReader["MiddleName"] as string,
-                birthDate      : (dataReader["BirthDate"] != DBNull.Value) ? GetDateTime(dataReader["BirthDate"] as string) : (DateTime?)null,
-                hireDate       : (dataReader["HireDate"] != DBNull.Value) ? GetDateTime(dataReader["HD"] as string) : (DateTime?)null,
-                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
+                birthDate      : (dataReader["BirthDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["BirthDate"] as string) : (DateTime?)null,
+                hireDate       : (dataReader["HireDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["HD"] as string) : (DateTime?)null,
+                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
                 photo          : dataReader["Photo"] as string,
                 note           : dataReader["Note"] as string,
                 passportNum    : dataReader["PassportNum"] as string,
@@ -2415,6 +2421,9 @@ namespace PartsApp
                 login          : dataReader["Login"] as string,
                 password       : dataReader["Password"] as string               
             );
+
+            result.TrySetContactInfo(FindContactInfo(result));
+            return result;
         }//CreateEmployee
 
 
@@ -2809,8 +2818,8 @@ namespace PartsApp
         /// <param name="dataReader"></param>
         /// <returns></returns>
         private static SparePart CreateSparePart(SQLiteDataReader dataReader)
-        {
-            return new SparePart
+        {            
+            var result = new SparePart
             (
                 sparePartId    : Convert.ToInt32(dataReader["SparePartId"]),
                 photo          : dataReader["Photo"] as string,
@@ -2819,7 +2828,10 @@ namespace PartsApp
                 description    : dataReader["Description"] as string,
                 manufacturer   : dataReader["ManufacturerName"] as string,
                 measureUnit    : dataReader["MeasureUnit"] as string             
-            );     
+            );
+
+            result.TrySetAvailabilities(new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(result)));
+            return result;
         }//CreateSparePart
 
         /// <summary>

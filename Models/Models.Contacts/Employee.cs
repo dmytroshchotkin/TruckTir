@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PartsApp;
 
 namespace PartsApp.Models
 {
@@ -32,9 +33,8 @@ namespace PartsApp.Models
         public string    Password      { get; set; }
 
         public string FullName { get { return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName); } }
-
-        private Lazy<ContactInfo> _contactInfo;
-        public ContactInfo ContactInfo { get { return _contactInfo.Value; } }
+                
+        public ContactInfo ContactInfo { get; private set; }    
 
         /// <summary>
         /// Конструктор для добавления нового объекта в БД.
@@ -72,7 +72,7 @@ namespace PartsApp.Models
             Login         = login;
             Password      = password;
 
-            _contactInfo = new Lazy<ContactInfo>(() => contactInfo);
+            ContactInfo = contactInfo;
         }//
 
         /// <summary>
@@ -97,9 +97,7 @@ namespace PartsApp.Models
                         string title, string accessLayer, string login, string password)
             : this(employeeId, lastName, firstName, middleName, birthDate, hireDate, dismissalDate,
                    photo, note, passportNum, title, accessLayer, login, password, null)
-        {
-            _contactInfo = new Lazy<ContactInfo>(() => PartsDAL.FindContactInfo(this));
-        }//
+        { }
 
 
         /// <summary>
@@ -111,6 +109,14 @@ namespace PartsApp.Models
             string shortMiddleName = (MiddleName != null) ? MiddleName.ToUpper()[0] + "." : "";
             return String.Format("{0} {1}. {2}", LastName, FirstName.ToUpper()[0], shortMiddleName);
         }//GetShortFullName
+
+        public void TrySetContactInfo(ContactInfo info)
+        {
+            if (info != null)
+            {
+                ContactInfo = info;
+            }            
+        }
 
     }//Employee
   

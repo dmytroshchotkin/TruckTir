@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartsApp", "PartsApp\PartsApp.csproj", "{7FE15D5F-699F-4460-BFF5-A4AC4DD42F8A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{4561BDF6-A883-4C7E-BE88-0D4009A365F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{7FE15D5F-699F-4460-BFF5-A4AC4DD42F8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FE15D5F-699F-4460-BFF5-A4AC4DD42F8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FE15D5F-699F-4460-BFF5-A4AC4DD42F8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4561BDF6-A883-4C7E-BE88-0D4009A365F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4561BDF6-A883-4C7E-BE88-0D4009A365F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4561BDF6-A883-4C7E-BE88-0D4009A365F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4561BDF6-A883-4C7E-BE88-0D4009A365F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7FBA81AF-353D-4366-97CF-51ADBB4F078C}
 	EndGlobalSection
 EndGlobal

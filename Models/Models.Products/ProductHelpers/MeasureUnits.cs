@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
-using PartsApp.SupportClasses;
+using Models.Helper;
 
 namespace PartsApp.Models
 {
