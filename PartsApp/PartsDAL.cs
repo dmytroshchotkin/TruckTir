@@ -2130,7 +2130,11 @@ namespace PartsApp
                 description        : dataReader["Description"] as string
             );
 
-            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => FindPurchaseDetails(result)));
+            var operationDetails = FindPurchaseDetails(result);
+            if (operationDetails != null)
+            {
+                result.TrySetOperationDetails(operationDetails);
+            }            
             return result;
 
         }//CreatePurchase
@@ -2147,12 +2151,13 @@ namespace PartsApp
                 description        : dataReader["Description"] as string
             );
 
-            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => PartsDAL.FindSaleDetails(result)));
+            var operationDetails = PartsDAL.FindSaleDetails(result);
+            if (operationDetails != null)
+            {
+                result.TrySetOperationDetails(operationDetails);
+            } 
             return result;
         }//CreateSale
-
-
-
 
         /// <summary>
         /// Возвращает детали операции для заданного прихода.
@@ -2403,26 +2408,30 @@ namespace PartsApp
         /// <param name="dataReader"></param>
         /// <returns></returns>
         private static Employee CreateEmployee(SQLiteDataReader dataReader)
-        { 
+        {
             var result = new Employee
             (
-                employeeId     : Convert.ToInt32(dataReader["EmployeeId"]),
-                lastName       : dataReader["LastName"] as string,
-                firstName      : dataReader["FirstName"] as string,
-                middleName     : dataReader["MiddleName"] as string,
-                birthDate      : (dataReader["BirthDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["BirthDate"] as string) : (DateTime?)null,
-                hireDate       : (dataReader["HireDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["HD"] as string) : (DateTime?)null,
-                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
-                photo          : dataReader["Photo"] as string,
-                note           : dataReader["Note"] as string,
-                passportNum    : dataReader["PassportNum"] as string,
-                title          : dataReader["Title"] as string,
-                accessLayer    : dataReader["AccessLayer"] as string,
-                login          : dataReader["Login"] as string,
-                password       : dataReader["Password"] as string               
+                employeeId: Convert.ToInt32(dataReader["EmployeeId"]),
+                lastName: dataReader["LastName"] as string,
+                firstName: dataReader["FirstName"] as string,
+                middleName: dataReader["MiddleName"] as string,
+                birthDate: (dataReader["BirthDate"] != DBNull.Value) ? DateTimeParser.GetDateTime(dataReader["BirthDate"] as string) : (DateTime?)null,
+                hireDate: (dataReader["HireDate"] != DBNull.Value) ? DateTimeParser.GetDateTime(dataReader["HD"] as string) : (DateTime?)null,
+                dismissalDate: (dataReader["DismissalDate"] != DBNull.Value) ? DateTimeParser.GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
+                photo: dataReader["Photo"] as string,
+                note: dataReader["Note"] as string,
+                passportNum: dataReader["PassportNum"] as string,
+                title: dataReader["Title"] as string,
+                accessLayer: dataReader["AccessLayer"] as string,
+                login: dataReader["Login"] as string,
+                password: dataReader["Password"] as string
             );
 
-            result.TrySetContactInfo(FindContactInfo(result));
+            var contactInfo = FindContactInfo(result);
+            if (contactInfo != null)
+            {
+                result.TrySetContactInfo(FindContactInfo(result));
+            }            
             return result;
         }//CreateEmployee
 
@@ -2830,7 +2839,11 @@ namespace PartsApp
                 measureUnit    : dataReader["MeasureUnit"] as string             
             );
 
-            result.TrySetAvailabilities(new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(result)));
+            var availabilities = FindAvailability(result);
+            if (availabilities != null)
+            {
+                result.TrySetAvailabilities(availabilities);
+            }            
             return result;
         }//CreateSparePart
 

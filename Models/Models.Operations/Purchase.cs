@@ -14,14 +14,9 @@ namespace PartsApp.Models
         public string       ContragentEmployee  { get; set; }
         public DateTime     OperationDate       { get; set; }
         public string       Description         { get; set; }
+        public IList<OperationDetails> OperationDetailsList { get; set; } = new List<OperationDetails>();
 
-        private Lazy<IList<OperationDetails>> _operationDetailsList;
-        public IList<OperationDetails> OperationDetailsList { get { return _operationDetailsList.Value; } }
-
-        public Purchase() 
-        {
-            _operationDetailsList = new Lazy<IList<OperationDetails>>();
-        }//
+        public Purchase() { }
 
         public Purchase(Employee employee, IContragent contragent, string contragentEmployee,
                         DateTime operationDate, string description, List<OperationDetails> operDetList)
@@ -31,12 +26,11 @@ namespace PartsApp.Models
             ContragentEmployee = contragentEmployee;
             OperationDate = operationDate;
             Description = description;
-
-            _operationDetailsList = new Lazy<IList<OperationDetails>>(() => operDetList);
-        }//
+            OperationDetailsList = operDetList;
+        }
 
         public Purchase(int operationId, Employee employee, IContragent contragent, string contragentEmployee,
-                        DateTime operationDate, string description ) 
+                        DateTime operationDate, string description) 
         {
             OperationId           = operationId;
             Employee              = employee;
@@ -44,17 +38,11 @@ namespace PartsApp.Models
             ContragentEmployee    = contragentEmployee;
             OperationDate         = operationDate;
             Description           = description;
-
-            //_operationDetailsList = new Lazy<IList<OperationDetails>>(() => PartsDAL.FindPurchaseDetails(this));
-        }//
-
-        public void TrySetOperationDetails(Lazy<IList<OperationDetails>> operationDetails)
-        {
-            if (operationDetails != null)
-            {
-                _operationDetailsList = operationDetails;
-            }
         }
-    }//Operation 
 
-}//namespace
+        public void TrySetOperationDetails(IList<OperationDetails> operationDetails)
+        {
+            OperationDetailsList = operationDetails ?? throw new ArgumentNullException();
+        }
+    } 
+}

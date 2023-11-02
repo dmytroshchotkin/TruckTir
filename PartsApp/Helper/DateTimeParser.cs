@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PartsApp
 {
-    public static class Helper
+    public static class DateTimeParser
     {
         /// <summary>
         /// Returns DateTime value if it is successfully parsed using any culture
