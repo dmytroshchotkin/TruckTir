@@ -12,18 +12,20 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
+using Infrastructure;
 
 namespace PartsApp
 {
     public static class PartsDAL
     {
         private const string SparePartConfig = "SparePartConfig";
+        private readonly static EmployeeRepository _employeeRepository = new EmployeeRepository();
 
         #region ************Модификация данных в БД.****************************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         #region Модификация таблицы Avaliability.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Добавляет запись в таблицу Avaliability.
@@ -961,67 +963,17 @@ namespace PartsApp
 
         public static void AddEmployee(Employee employee)
         {
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                using (SQLiteTransaction trans = connection.BeginTransaction())
-                {
-                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
-                    {
-                        try
-                        {
-                            //Вставляем запись в таблицу ContactInfo, если требуется.
-                            if (employee.ContactInfo != null)
-                                employee.ContactInfo.ContactInfoId = AddContactInfo(employee.ContactInfo, cmd);
-                            //Вставляем записm в табл. Employees.
-                            AddEmployee(employee, cmd);
-                            
-
-                            trans.Commit();
-                        }//try
-                        catch (Exception ex)
-                        {
-                            trans.Rollback();
-                            throw new Exception(ex.Message);
-                        }//catch
-                    }//using cmd
-                }//using transaction
-
-                connection.Close();
-            }//using connection
-        }//AddEmployee
+            _employeeRepository.AddEmployee(employee);
+        }
 
         /// <summary>
         /// Добавляет объект типа Employee в таблицу Employees.
         /// </summary>
         /// <param name="employee">объект типа Employee добавляемый в БД.</param>
-        private static void AddEmployee(Employee employee, SQLiteCommand cmd)
+        public static void AddEmployee(Employee employee, SQLiteCommand cmd)
         {
-
-            cmd.CommandText = "INSERT INTO Employees (LastName, FirstName, MiddleName, BirthDate, HireDate, DismissalDate, "
-                            + "ContactInfoId, Photo, Note, PassportNum, Title, AccessLayer, Login, Password) "
-                            + "VALUES (@LastName, @FirstName, @MiddleName, @BirthDate, strftime('%s', @HireDate), "
-                            + "strftime('%s', @DismissalDate), @ContactInfoId, @Photo, @Note, @PassportNum, @Title, @AccessLayer, @Login, @Password);";
-
-            cmd.Parameters.Clear();
-            cmd.Parameters.AddWithValue("@LastName",      employee.LastName);
-            cmd.Parameters.AddWithValue("@FirstName",     employee.FirstName);
-            cmd.Parameters.AddWithValue("@MiddleName",    employee.MiddleName);
-            cmd.Parameters.AddWithValue("@BirthDate",     (employee.BirthDate     != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
-            cmd.Parameters.AddWithValue("@HireDate",      (employee.HireDate      != null) ? employee.HireDate : null);
-            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
-            cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo   != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
-            cmd.Parameters.AddWithValue("@Photo",         employee.Photo);
-            cmd.Parameters.AddWithValue("@Note",          employee.Note);
-            cmd.Parameters.AddWithValue("@PassportNum",   employee.PassportNum);
-            cmd.Parameters.AddWithValue("@Title",         employee.Title);
-            cmd.Parameters.AddWithValue("@AccessLayer",   employee.AccessLayer);
-            cmd.Parameters.AddWithValue("@Login",         employee.Login);
-            cmd.Parameters.AddWithValue("@Password",      employee.Password);
-
-            cmd.ExecuteNonQuery();
-        }//AddEmployee
+            _employeeRepository.AddEmployee(employee, cmd);
+        }
 
         /// <summary>
         /// Метод обновляющий значения заданного сотрудника.
@@ -1029,98 +981,17 @@ namespace PartsApp
         /// <param name="employee">Сотрудник, значения которого необходимо обновить в базе.</param>
         public static void UpdateEmployee(Employee employee)
         {
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
+            _employeeRepository.UpdateEmployee(employee);            
+        }
 
-                const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
-                                   + "BirthDate = @BirthDate, HireDate = strftime('%s', @HireDate), ContactInfoId = @ContactInfoId, "
-                                   + "Photo = @Photo, Note = @Note, PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, "
-                                   + "Login = @Login, Password = @Password, DismissalDate = strftime('%s', @DismissalDate) "
-                                   + "WHERE EmployeeId = @EmployeeId;";
-
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@EmployeeId",    employee.EmployeeId);
-                cmd.Parameters.AddWithValue("@LastName",      employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName",     employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName",    employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate",     (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
-                cmd.Parameters.AddWithValue("@HireDate",      (employee.HireDate != null) ? employee.HireDate : null);
-                cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
-                cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
-                cmd.Parameters.AddWithValue("@Photo",         employee.Photo);
-                cmd.Parameters.AddWithValue("@Note",          employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum",   employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title",         employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer",   employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Login",         employee.Login);
-                cmd.Parameters.AddWithValue("@Password",      employee.Password);
-
-                cmd.ExecuteNonQuery();
-
-                connection.Close();
-            }//using
-        }//UpdateEmployee
         /// <summary>
         /// Метод обновляющий значения заданного сотрудника, без обновления его пароля.
         /// </summary>
         /// <param name="employee">Сотрудник, значения которого необходимо обновить в базе.</param>
         public static void UpdateEmployeeWithoutPassword(Employee employee)
         {
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
-                                   + "BirthDate = @BirthDate, HireDate = strftime('%s', @HireDate), ContactInfoId = @ContactInfoId, "
-                                   + "Photo = @Photo, Note = @Note, PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, "
-                                   + "Login = @Login, DismissalDate = strftime('%s', @DismissalDate) "
-                                   + "WHERE EmployeeId = @EmployeeId;";
-
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
-                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
-                cmd.Parameters.AddWithValue("@HireDate", (employee.HireDate != null) ? employee.HireDate : null);
-                cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
-                cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
-                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
-                cmd.Parameters.AddWithValue("@Note", employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title", employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Login", employee.Login);
-
-
-                cmd.ExecuteNonQuery();
-
-                connection.Close();
-            }//using
-        }//UpdateEmployeeWithoutPassword
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
+            _employeeRepository.UpdateEmployeeWithoutPassword(employee);            
+        }      
 
 
 
@@ -2313,27 +2184,9 @@ namespace PartsApp
         /// <returns></returns>
         public static List<Employee> FindEmployees()
         {
-            List<Employee> employeesList = new List<Employee>();
+            return _employeeRepository.FindEmployees();
+        }
 
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                
-                const string query = "SELECT date(HireDate, \"Unixepoch\") AS 'HD', date(DismissalDate, \"Unixepoch\") AS 'DD', * "
-                                   + "FROM Employees;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-
-                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
-                {
-                    while (dataReader.Read())
-                        employeesList.Add(CreateEmployee(dataReader));
-                }//using dataReader
-
-                connection.Close();
-            }//using
-
-            return employeesList;
-        }//FindAllEmployees
         /// <summary>
         /// Возвращает объект типа Employee, найденный по заданному Id.
         /// </summary>
@@ -2341,55 +2194,13 @@ namespace PartsApp
         /// <returns></returns>
         public static Employee FindEmployees(int employeeId)
         {
-            Employee employee = null;
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-                const string query = "SELECT date(HireDate, \"Unixepoch\") AS 'HD', date(DismissalDate, \"Unixepoch\") AS 'DD', * "
-                                   + "FROM Employees WHERE EmployeeId = @EmployeeId;";
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@EmployeeId", employeeId);
-
-                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
-                {
-                    while (dataReader.Read())
-                        employee = CreateEmployee(dataReader);
-                }//using dataReader
-
-                connection.Close();
-            }//using
-
-            return employee;
-        }//FindEmployeeById
+            return _employeeRepository.FindEmployees(employeeId);    
+        }
 
         public static IList<Employee> FindEmployees(string lastName, string firstName = null)
         {
-            IList<Employee> employees = new List<Employee>();
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "SELECT date(HireDate, \"Unixepoch\") AS 'HD', date(DismissalDate, \"Unixepoch\") AS 'DD', * "
-                                   + "FROM Employees WHERE LastName LIKE @LastName AND FirstName ;";
-
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@LastName", lastName);
-
-                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
-                {
-                    while (dataReader.Read())
-                        employees.Add(CreateEmployee(dataReader));
-                }//using dataReader
-
-                connection.Close();
-            }//using
-
-            return employees;       
-        }//FindEmployees
+            return _employeeRepository.FindEmployees(lastName, null);      
+        }
 
 
 
@@ -2402,28 +2213,9 @@ namespace PartsApp
         /// <param name="dataReader"></param>
         /// <returns></returns>
         private static Employee CreateEmployee(SQLiteDataReader dataReader)
-        { 
-            var result = new Employee
-            (
-                employeeId     : Convert.ToInt32(dataReader["EmployeeId"]),
-                lastName       : dataReader["LastName"] as string,
-                firstName      : dataReader["FirstName"] as string,
-                middleName     : dataReader["MiddleName"] as string,
-                birthDate      : (dataReader["BirthDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["BirthDate"] as string) : (DateTime?)null,
-                hireDate       : (dataReader["HireDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["HD"] as string) : (DateTime?)null,
-                dismissalDate  : (dataReader["DismissalDate"] != DBNull.Value) ? Helper.GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
-                photo          : dataReader["Photo"] as string,
-                note           : dataReader["Note"] as string,
-                passportNum    : dataReader["PassportNum"] as string,
-                title          : dataReader["Title"] as string,
-                accessLayer    : dataReader["AccessLayer"] as string,
-                login          : dataReader["Login"] as string,
-                password       : dataReader["Password"] as string               
-            );
-
-            result.TrySetContactInfo(FindContactInfo(result));
-            return result;
-        }//CreateEmployee
+        {
+            return _employeeRepository.CreateEmployee(dataReader);
+        }
 
 
 
@@ -2462,41 +2254,7 @@ namespace PartsApp
 
             return contactInfo;
         }//FindContactInfo
-
-        /// <summary>
-        /// Возвращает объект типа ContactInfo, найденный по заданному Id сотрудника, или null если ничего не найдено.
-        /// </summary>
-        /// <param name="employeeId">Id сотрудника.</param>
-        /// <returns></returns>
-        public static ContactInfo FindContactInfo(Employee employee)
-        {
-            ContactInfo contactInfo = null;
-
-            using (SQLiteConnection connection = GetDatabaseConnection(SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
-
-                const string query = "SELECT ci.* FROM Employees as e "
-                                   + "JOIN ContactInfo as ci "
-                                   + "ON e.ContactInfoId = ci.ContactInfoId "
-                                   + "WHERE EmployeeId = @EmployeeId;";
-
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
-
-                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
-                {
-                    while (dataReader.Read())
-                    {
-                        contactInfo = CreateContactInfo(dataReader);
-                    }//while 
-                }//using dataReader
-
-                connection.Close();
-            }//using
-
-            return contactInfo;
-        }//FindContactInfo
+                
 
         /// <summary>
         /// Возвращает объект типа ContactInfo, найденный по заданному Id контрагента, или null если ничего не найдено.

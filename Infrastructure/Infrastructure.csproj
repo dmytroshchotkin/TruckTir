@@ -84,9 +84,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper\Helper.cs" />
+    <Compile Include="Helper\DateTimeParser.cs" />
     <Compile Include="PartsDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Storage\BaseRepository.cs" />
+    <Compile Include="Storage\EmployeeRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

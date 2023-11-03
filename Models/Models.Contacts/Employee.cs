@@ -33,9 +33,9 @@ namespace PartsApp.Models
         public string    Password      { get; set; }
 
         public string FullName { get { return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName); } }
+    
+        public ContactInfo ContactInfo { get; set; }    
                 
-        public ContactInfo ContactInfo { get; private set; }    
-
         /// <summary>
         /// Конструктор для добавления нового объекта в БД.
         /// </summary>
@@ -96,7 +96,7 @@ namespace PartsApp.Models
                         DateTime? hireDate, DateTime? dismissalDate, string photo, string note, string passportNum,
                         string title, string accessLayer, string login, string password)
             : this(employeeId, lastName, firstName, middleName, birthDate, hireDate, dismissalDate,
-                   photo, note, passportNum, title, accessLayer, login, password, null)
+                   photo, note, passportNum, title, accessLayer, login, password, new ContactInfo())
         { }
 
 
