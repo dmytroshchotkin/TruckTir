@@ -15,7 +15,9 @@ namespace PartsApp.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string MeasureUnit { get; set; }
-        public List<Availability> AvailabilityList { get; set; } = new List<Availability>();
+
+        private Lazy<List<Availability>> _availabilityList;
+        public List<Availability> AvailabilityList { get { return _availabilityList.Value; } }
 
         public SparePart() { }
         /// <summary>
@@ -24,19 +26,24 @@ namespace PartsApp.Models
         public SparePart(int sparePartId, string photo, string manufacturer, string articul,
                          string title, string description, string measureUnit)
         {
-            SparePartId = sparePartId;
-            Photo = photo;
+            SparePartId  = sparePartId;
+            Photo        = photo;
             Manufacturer = manufacturer;
-            Articul = articul;
-            Title = title;
-            Description = description;
-            MeasureUnit = measureUnit;
-        }
+            Articul      = articul;
+            Title        = title;
+            Description  = description;
+            MeasureUnit  = measureUnit;
+
+            // исключить из домена
+            //_availabilityList = new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(this));
+        }//
 
         public SparePart(SparePart sparePart)
-            : this(sparePart.SparePartId, sparePart.Photo, sparePart.Manufacturer, sparePart.Articul, sparePart.Title,
+            : this (sparePart.SparePartId, sparePart.Photo, sparePart.Manufacturer, sparePart.Articul, sparePart.Title,
                     sparePart.Description, sparePart.MeasureUnit)
-        { }
+        {
+           
+        }//
 
         /// <summary>
         /// Возвращает список новых объектов созданного на основании переданного списка.
@@ -51,11 +58,15 @@ namespace PartsApp.Models
                 newSparePartsList.Add(new SparePart(sparePartsList[i]));
 
             return newSparePartsList;
-        }
+        }//GetNewSparePartsList
 
-        public void TrySetAvailabilities(List<Availability> availabilities)
+        public void TrySetAvailabilities(Lazy<List<Availability>> availabilities)
         {
-            AvailabilityList = availabilities ?? throw new ArgumentNullException();
+            if (availabilities != null)
+            {
+                _availabilityList = availabilities;
+            }
         }
-    }
-}
+    }//SparePart
+
+}//namespace

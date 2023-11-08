@@ -14,9 +14,11 @@ namespace PartsApp.Models
         public string ContragentEmployee { get; set; }
         public DateTime OperationDate { get; set; }
         public string Description { get; set; }
-        public IList<OperationDetails> OperationDetailsList { get; set; } = new List<OperationDetails>();
 
-        public Sale() { }
+        private Lazy<IList<OperationDetails>> _operationDetailsList;
+        public IList<OperationDetails> OperationDetailsList { get { return _operationDetailsList.Value; } }
+
+        public Sale(){}
         public Sale(Employee employee, IContragent contragent, string contragentEmployee,
                         DateTime operationDate, string description, List<OperationDetails> operDetList)
         {
@@ -25,23 +27,31 @@ namespace PartsApp.Models
             ContragentEmployee = contragentEmployee;
             OperationDate = operationDate;
             Description = description;
-            OperationDetailsList = operDetList;
-        }
+
+            _operationDetailsList = new Lazy<IList<OperationDetails>>(() => operDetList);
+        }//
 
         public Sale(int operationId, Employee employee, IContragent contragent, string contragentEmployee,
-                    DateTime operationDate, string description)
+                    DateTime operationDate, string description ) 
         {
-            OperationId = operationId;
-            Employee = employee;
-            Contragent = contragent;
-            ContragentEmployee = contragentEmployee;
-            OperationDate = operationDate;
-            Description = description;
-        }
+            OperationId           = operationId;
+            Employee              = employee;
+            Contragent            = contragent;
+            ContragentEmployee    = contragentEmployee;
+            OperationDate         = operationDate;
+            Description           = description;
 
-        public void TrySetOperationDetails(IList<OperationDetails> operationDetails)
+            //_operationDetailsList = new Lazy<IList<OperationDetails>>(() => PartsDAL.FindSaleDetails(this));
+        }//
+
+        public void TrySetOperationDetails(Lazy<IList<OperationDetails>> operationDetails)
         {
-            OperationDetailsList = operationDetails ?? throw new ArgumentNullException();
+            if (operationDetails != null)
+            {
+                _operationDetailsList = operationDetails;
+            }
         }
-    }
-}
+    }//Sale
+
+
+}//namespace

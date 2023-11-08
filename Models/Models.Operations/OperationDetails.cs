@@ -30,6 +30,8 @@ namespace PartsApp.Models
             Operation = operation;
             Count     = count;
             Price     = price;
-        }
-    }
-}
+        }//
+
+    }//OperationDetails
+
+}//namespace
