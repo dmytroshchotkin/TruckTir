@@ -797,7 +797,7 @@ namespace PartsApp
                             if (sale.Contragent.ContragentId == 0)
                                 sale.Contragent.ContragentId = AddContragent(sale.Contragent, cmd);
                             else
-                                UpdateContragent(sale.Contragent);
+                                UpdateContragent(sale.Contragent, cmd);
 
                             //вставляем запись в таблицу Sales.
                             sale.OperationId = AddSale(sale, cmd);
