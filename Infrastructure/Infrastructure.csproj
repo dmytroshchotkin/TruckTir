@@ -87,8 +87,15 @@
     <Compile Include="Helper\DateTimeParser.cs" />
     <Compile Include="PartsDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\BaseRepository.cs" />
+    <Compile Include="Storage\DbConnectionHelper\DbConnectionHelper.cs" />
+    <Compile Include="Storage\CustomerRepository.cs" />
+    <Compile Include="Storage\PropertiesHandlers\AvailabilityHandler.cs" />
+    <Compile Include="Storage\PropertiesHandlers\ContactInfoHandler.cs" />
     <Compile Include="Storage\EmployeeRepository.cs" />
+    <Compile Include="Storage\PurchaseRepository.cs" />
+    <Compile Include="Storage\SaleRepository.cs" />
+    <Compile Include="Storage\SparePartRepository.cs" />
+    <Compile Include="Storage\SupplierRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
