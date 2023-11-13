@@ -22,32 +22,42 @@ namespace PartsApp.Models
 
             [System.ComponentModel.Description("Розница")]
             Retail = 100
-        }//Types
+        }
 
         public static string GetDescription(float markup)
         {
             if (markup <= 0)
+            {
                 return "Уценка";
+            }                
 
             int errorMargin = 5; //погрешность от значения Markup.Types.
             //Если 'Розница'.
             if (markup >= (int)Types.Retail - errorMargin && markup <= (int)Types.Retail + errorMargin)
+            {
                 return Types.Retail.ToDescription();
+            }                
 
             //Если 'Малый опт'.
             if (markup >= (int)Types.SmallWholesale - errorMargin && markup <= (int)Types.SmallWholesale + errorMargin)
+            {
                 return Types.SmallWholesale.ToDescription();
+            }                
 
             //Если 'Средний опт'.
             if (markup >= (int)Types.AverageWholesale - errorMargin && markup <= (int)Types.AverageWholesale + errorMargin)
+            {
                 return Types.AverageWholesale.ToDescription();
+            }                
 
             //Если 'Крупный опт'.
             if (markup >= (int)Types.LargeWholesale - errorMargin && markup <= (int)Types.LargeWholesale + errorMargin)
+            {
                 return Types.LargeWholesale.ToDescription();
+            }                
 
             return "Другая наценка";
-        }//GetDescription
+        }
 
         public static IEnumerable<KeyValuePair<int, string>> GetValues()
         {
@@ -56,11 +66,11 @@ namespace PartsApp.Models
             foreach (Markup.Types item in Enum.GetValues(typeof(Markup.Types)))
             {
                 dict.Add((int)item, item.ToDescription());
-            }//foreach
+            }
 
             return dict.Reverse();
-        }//GetValues
-    }//Markup
+        }
+    }
 
 
-}//namespace
+}

@@ -515,7 +515,9 @@ namespace PartsApp
         {
             //Если нет папки для бэкапа, создаём её.
             if (System.IO.Directory.Exists(@"Data\Backup") == false)
+            {
                 System.IO.Directory.CreateDirectory(@"Data\Backup");
+            }                
 
             //Создаём новый бэкап или обновляем существующий.
             using (SQLiteConnection source = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
@@ -599,7 +601,9 @@ namespace PartsApp
                 foreach (Google.Apis.Drive.v3.Data.File file in files)
                 {
                     if (file.Name == fileName)
+                    {
                         return file;
+                    }                        
                 }
             }
 

@@ -108,7 +108,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         contactInfo = CreateContactInfo(dataReader);
+                    }                        
                 }
 
                 connection.Close();

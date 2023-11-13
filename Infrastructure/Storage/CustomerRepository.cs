@@ -30,7 +30,9 @@ namespace Infrastructure.Storage
                         {
                             //Вставляем запись в ContactInfo, если требуется.
                             if (customer.ContactInfo != null)
+                            {
                                 customer.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(customer.ContactInfo, cmd);
+                            }                                
 
                             //Вставляем запись в Customers или Suppliers.
                             AddCustomer(customer, cmd);
@@ -97,7 +99,9 @@ namespace Infrastructure.Storage
                                     ContactInfoHandler.UpdateContactInfo(customer.ContactInfo, cmd);
                                 }
                                 else
+                                {
                                     customer.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(customer.ContactInfo, cmd);
+                                }                                    
                             }
 
                             //Вставляем запись в Customers или Suppliers.
@@ -105,7 +109,9 @@ namespace Infrastructure.Storage
 
                             //Если есть в базе, но нет у объекта -- удаляем запись с базы
                             if (contactInfo != null && customer.ContactInfo == null)
+                            {
                                 ContactInfoHandler.DeleteContactInfo(contactInfo.ContactInfoId, cmd);
+                            }                                
 
                             trans.Commit();
                         }
@@ -168,10 +174,10 @@ namespace Infrastructure.Storage
 
                 var dataReader = cmd.ExecuteReader();
 
-
                 while (dataReader.Read())
+                {
                     customers.Add(CreateCustomers(dataReader));
-
+                }                
 
                 connection.Close();
             }
@@ -200,7 +206,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         customer = CreateCustomers(dataReader);
+                    }                        
                 }
 
                 connection.Close();
@@ -286,7 +294,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         contactInfo = ContactInfoHandler.CreateContactInfo(dataReader);
+                    }                       
                 }
 
                 connection.Close();

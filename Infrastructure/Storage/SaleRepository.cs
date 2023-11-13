@@ -206,7 +206,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             sale = CreateSale(dataReader);
+                        }                            
                     }
                 }
 
@@ -239,7 +241,9 @@ namespace Infrastructure.Storage
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
+                {
                     salesList.Add(CreateSale(dataReader));
+                }                   
 
                 connection.Close();
             }
@@ -266,7 +270,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         salesList.Add(CreateSale(dataReader));
+                    }                       
                 }
 
                 connection.Close();
@@ -303,7 +309,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         salesList.Add(CreateSale(dataReader));
+                    }                        
                 }
 
                 connection.Close();
@@ -338,7 +346,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         salesList.Add(CreateSale(dataReader));
+                    }                        
                 }
 
                 connection.Close();
@@ -385,7 +395,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             operDetList.Add(CreateOperationDetails(dataReader, sale));
+                        }                            
                     }
                 }
 

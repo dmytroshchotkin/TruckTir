@@ -115,7 +115,9 @@ namespace Infrastructure.Storage
                 cmd.Parameters.AddWithValue("@Code", code);
 
                 if (cmd.ExecuteScalar() != null)
+                {
                     isCodeExist = true;
+                }                    
 
                 connection.Close();
             }
@@ -157,7 +159,9 @@ namespace Infrastructure.Storage
                         {
                             //Вставляем запись в ContactInfo, если требуется.
                             if (supplier.ContactInfo != null)
+                            {
                                 supplier.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(supplier.ContactInfo, cmd);
+                            }                                
 
                             //Вставляем запись в Customers или Suppliers.
                             AddSupplier(supplier, cmd);
@@ -224,7 +228,9 @@ namespace Infrastructure.Storage
                                     ContactInfoHandler.UpdateContactInfo(supplier.ContactInfo, cmd);
                                 }
                                 else
+                                {
                                     supplier.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(supplier.ContactInfo, cmd);
+                                }                                    
                             }
 
                             //Вставляем запись в Customers или Suppliers.
@@ -232,7 +238,9 @@ namespace Infrastructure.Storage
 
                             //Если есть в базе, но нет у объекта -- удаляем запись с базы
                             if (contactInfo != null && supplier.ContactInfo == null)
+                            {
                                 ContactInfoHandler.DeleteContactInfo(contactInfo.ContactInfoId, cmd);
+                            }                                
 
                             trans.Commit();
                         }
@@ -300,7 +308,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         contactInfo = ContactInfoHandler.CreateContactInfo(dataReader);
+                    }                       
                 }
 
                 connection.Close();

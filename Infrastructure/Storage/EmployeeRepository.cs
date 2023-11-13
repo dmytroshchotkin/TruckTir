@@ -25,7 +25,9 @@ namespace Infrastructure
                         {
                             //Вставляем запись в таблицу ContactInfo, если требуется.
                             if (employee.ContactInfo != null)
+                            {
                                 employee.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(employee.ContactInfo, cmd);
+                            }                                
                             //Вставляем записm в табл. Employees.
                             AddEmployee(employee, cmd);
 
@@ -211,7 +213,9 @@ namespace Infrastructure
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         employeesList.Add(CreateEmployee(dataReader));
+                    }                        
                 }
 
                 connection.Close();
@@ -242,7 +246,9 @@ namespace Infrastructure
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         employee = CreateEmployee(dataReader);
+                    }                        
                 }
 
                 connection.Close();
@@ -268,7 +274,9 @@ namespace Infrastructure
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         employees.Add(CreateEmployee(dataReader));
+                    }                        
                 }
 
                 connection.Close();

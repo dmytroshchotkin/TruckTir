@@ -146,9 +146,13 @@ namespace Infrastructure.Storage.PropertiesHandlers
 
             //Если кол-во продаваемого товара с данного прихода равно всему кол-во товара данной записи, удаляем из таблицы эту запись, иначе обновляем кол-во товара в базе.
             if (availCount == operDet.Count)
+            {
                 DeleteSparePartAvaliability(operDet.SparePart.SparePartId, operDet.Operation.OperationId, cmd);
+            }                    
             else
+            {
                 UpdateSparePartСountAvaliability(operDet.SparePart.SparePartId, operDet.Operation.OperationId, availCount - operDet.Count, cmd);
+            }                
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,7 +179,9 @@ namespace Infrastructure.Storage.PropertiesHandlers
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             availabilityList.Add(CreateAvailability(dataReader, sparePart));
+                        }                            
                     }
                 }
 

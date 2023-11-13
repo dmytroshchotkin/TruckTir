@@ -31,7 +31,7 @@ namespace PartsApp.Models
                 //Меняем наценку.
                 Markup = (value * 100 / OperationDetails.Price) - 100; 
             }
-        }//
+        }
 
         /// <summary>
         /// Возвращает или задает объект, содержащий данные об элементе управления.
@@ -44,13 +44,13 @@ namespace PartsApp.Models
             OperationDetails = operationDetails;
             StorageAddress   = storageAddress;
             Markup           = markup;
-        }//
+        }
 
         public Availability(Availability avail)
             : this(avail.OperationDetails, avail.StorageAddress, avail.Markup)
         {
 
-        }//
+        }
 
 
         /// <summary>
@@ -61,7 +61,8 @@ namespace PartsApp.Models
         public static float GetMaxSellingPrice(IList<Availability> availabilityList)
         {
             return availabilityList.Max(av => av.SellingPrice);
-        }//GetMaxSellingPrice
+        }
+
         /// <summary>
         /// Возвращает общее кол-во товара с основного и виртуального склада.
         /// </summary>
@@ -70,7 +71,8 @@ namespace PartsApp.Models
         public static float GetTotalCount(IList<Availability> availabilityList)
         {
             return availabilityList.Sum(av => av.OperationDetails.Count);
-        }//GetTotalCount
+        }
+
         /// <summary>
         /// Возвращает список новых объектов созданного на основании переданного списка.
         /// </summary>
@@ -80,11 +82,13 @@ namespace PartsApp.Models
         {
             List<Availability> newAvailList = new List<Availability>();
             foreach (Availability avail in availabilityList)
+            {
                 newAvailList.Add(new Availability(avail));
+            }                
 
             return newAvailList;
-        }//GetNewAvailabilityList
+        }
 
-    }//Availability
+    }
 
-}//namespace
+}

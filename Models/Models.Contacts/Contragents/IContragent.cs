@@ -15,7 +15,7 @@ namespace PartsApp.Models
         ContactInfo ContactInfo { get; set; }
         string Description      { get; set; }
         double? Balance         { get; set; }
-    }//IContragent
+    }
 
-}//namespace
+}
 

@@ -31,33 +31,32 @@ namespace Infrastructure.Storage
                     {
                         try
                         {
-                            //Если такого контрагента нет в базе, то добавляем.
+                            //Если такого контрагента нет в базе, то добавляем.    
                             if (purchase.Contragent.ContragentId == 0)
-                                if (purchase.Contragent.ContragentId == 0)
+                            {
+                                if (purchase.Contragent is Supplier)
                                 {
-                                    if (purchase.Contragent is Supplier)
-                                    {
-                                        purchase.Contragent.ContragentId = SupplierRepository.AddSupplier(purchase.Contragent as Supplier, cmd);
-                                    }
-
-                                    else if (purchase.Contragent is Customer)
-                                    {
-                                        purchase.Contragent.ContragentId = CustomerRepository.AddCustomer(purchase.Contragent as Customer, cmd);
-                                    }
+                                    purchase.Contragent.ContragentId = SupplierRepository.AddSupplier(purchase.Contragent as Supplier, cmd);
                                 }
 
-                                else
+                                else if (purchase.Contragent is Customer)
                                 {
-                                    if (purchase.Contragent is Supplier)
-                                    {
-                                        SupplierRepository.UpdateSupplier(purchase.Contragent as Supplier, cmd);
-                                    }
-
-                                    else if (purchase.Contragent is Customer)
-                                    {
-                                        CustomerRepository.UpdateCustomer(purchase.Contragent as Customer, cmd);
-                                    }
+                                    purchase.Contragent.ContragentId = CustomerRepository.AddCustomer(purchase.Contragent as Customer, cmd);
                                 }
+                            }
+
+                            else
+                            {
+                                if (purchase.Contragent is Supplier)
+                                {
+                                    SupplierRepository.UpdateSupplier(purchase.Contragent as Supplier, cmd);
+                                }
+
+                                else if (purchase.Contragent is Customer)
+                                {
+                                    CustomerRepository.UpdateCustomer(purchase.Contragent as Customer, cmd);
+                                }
+                            }
                             //вставляем запись в таблицу Operation.
                             purchase.OperationId = AddPurchase(purchase, cmd);
                             //вставляем записи в PurchaseDetails и Avaliability.
@@ -270,7 +269,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             purchase = CreatePurchase(dataReader);
+                        }                            
                     }
                 }
 
@@ -297,7 +298,9 @@ namespace Infrastructure.Storage
 
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
+                {
                     purchases.Add(CreatePurchase(dataReader));
+                }                   
 
                 connection.Close();
             }
@@ -324,7 +327,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         purchases.Add(CreatePurchase(dataReader));
+                    }                        
                 }
 
                 connection.Close();
@@ -361,7 +366,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         purchases.Add(CreatePurchase(dataReader));
+                    }                        
                 }
 
                 connection.Close();
@@ -396,7 +403,9 @@ namespace Infrastructure.Storage
                 using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                 {
                     while (dataReader.Read())
+                    {
                         purchases.Add(CreatePurchase(dataReader));
+                    }                       
                 }
 
                 connection.Close();
@@ -448,7 +457,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             operDetList.Add(CreateOperationDetails(dataReader, purchase));
+                        }                            
                     }
                 }
 
@@ -481,7 +492,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             operDetList.Add(CreateOperationDetails(dataReader, (Purchase)null));
+                        }                            
                     }
                 }
 

@@ -37,7 +37,6 @@ namespace Infrastructure.Storage
                             cmd.Parameters.AddWithValue("@Description", sparePart.Description);
                             cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
 
-
                             cmd.ExecuteNonQuery();
 
                             trans.Commit();
@@ -146,7 +145,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             sparePart = CreateSparePart(dataReader);
+                        }                            
                     }
                 }
 
@@ -178,7 +179,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             sparePartsList.Add(CreateSparePart(dataReader));
+                        }                            
                     }
                 }
 
@@ -236,7 +239,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             spareParts.Add(CreateSparePart(dataReader));
+                        }                            
                     }
                 }
 
@@ -265,10 +270,14 @@ namespace Infrastructure.Storage
                 //Формируем строку с Id товара который пропускается при поиске.                
                 StringBuilder notIn = new StringBuilder();
                 foreach (int id in withoutIDs)
+                {
                     notIn.Append(id + ", ");
+                }                   
 
                 if (withoutIDs.Count > 0)
+                {
                     notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
+                }                    
 
                 string query = "SELECT sp.*, m.* FROM SpareParts AS sp "
                              + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
@@ -286,7 +295,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             spareParts.Add(CreateSparePart(dataReader));
+                        }                            
                     }
                 }
 
@@ -315,10 +326,14 @@ namespace Infrastructure.Storage
                 //Формируем строку с Id товара который пропускается при поиске.                
                 StringBuilder notIn = new StringBuilder();
                 foreach (int id in withoutIDs)
+                {
                     notIn.Append(id + ", ");
+                }                    
 
                 if (withoutIDs.Count > 0)
+                {
                     notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
+                }                    
 
                 string query = "SELECT sp.*, m.* FROM SpareParts AS sp "
                              + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
@@ -336,7 +351,9 @@ namespace Infrastructure.Storage
                     using (SQLiteDataReader dataReader = cmd.ExecuteReader())
                     {
                         while (dataReader.Read())
+                        {
                             spareParts.Add(CreateSparePart(dataReader));
+                        }                            
                     }
                 }
 
@@ -416,7 +433,9 @@ namespace Infrastructure.Storage
             //создаём массив string.
             string[] manuf = new string[manufacturers.Count];
             for (int i = 0; i < manuf.Length; ++i)
+            {
                 manuf[i] = manufacturers[i];
+            }                
 
             return manuf;
         }

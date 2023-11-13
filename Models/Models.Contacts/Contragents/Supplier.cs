@@ -25,8 +25,8 @@ namespace PartsApp.Models
             Entity          = entity;
             ContactInfo     = contactInfo;
             Description     = description;
-        }//                             
-    }//Supplier
+        }                             
+    }
 
 
-}//namespace
+}
