@@ -108,11 +108,13 @@ namespace PartsApp
 
         private void EditContragentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            IContragent contragent = ContragentsListView.SelectedItems[0] as IContragent;
-            contragent = (contragent is Supplier) ? PartsDAL.FindSuppliers(contragent.ContragentId) : PartsDAL.FindCustomers(contragent.ContragentId);
-            //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
-            new AddContragentForm(contragent).Show();
-        }//EditContragentToolStripMenuItem_Click
+            if (ContragentsListView.SelectedItems[0].Tag is IContragent contragent)
+            {
+                contragent = (contragent is Supplier) ? PartsDAL.FindSuppliers(contragent.ContragentId) : PartsDAL.FindCustomers(contragent.ContragentId);
+                //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
+                new AddContragentForm(contragent).Show();
+            }
+        }
 
 
         private void OperationsInfoDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
