@@ -132,7 +132,7 @@ namespace Infrastructure.Storage
                 contragentName: dataReader["ContragentName"] as string,
                 code: dataReader["Code"] as string,
                 entity: dataReader["Entity"] as string,
-                contactInfo: (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
+                contactInfo: (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
                 description: dataReader["Description"] as string
             );
         }
@@ -160,7 +160,7 @@ namespace Infrastructure.Storage
                             //Вставляем запись в ContactInfo, если требуется.
                             if (supplier.ContactInfo != null)
                             {
-                                supplier.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(supplier.ContactInfo, cmd);
+                                supplier.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(supplier.ContactInfo, cmd);
                             }                                
 
                             //Вставляем запись в Customers или Suppliers.
@@ -225,11 +225,11 @@ namespace Infrastructure.Storage
                                 if (contactInfo != null)
                                 {
                                     supplier.ContactInfo.ContactInfoId = contactInfo.ContactInfoId;
-                                    ContactInfoHandler.UpdateContactInfo(supplier.ContactInfo, cmd);
+                                    ContactInfoDatabaseHandler.UpdateContactInfo(supplier.ContactInfo, cmd);
                                 }
                                 else
                                 {
-                                    supplier.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(supplier.ContactInfo, cmd);
+                                    supplier.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(supplier.ContactInfo, cmd);
                                 }                                    
                             }
 
@@ -239,7 +239,7 @@ namespace Infrastructure.Storage
                             //Если есть в базе, но нет у объекта -- удаляем запись с базы
                             if (contactInfo != null && supplier.ContactInfo == null)
                             {
-                                ContactInfoHandler.DeleteContactInfo(contactInfo.ContactInfoId, cmd);
+                                ContactInfoDatabaseHandler.DeleteContactInfo(contactInfo.ContactInfoId, cmd);
                             }                                
 
                             trans.Commit();
@@ -309,7 +309,7 @@ namespace Infrastructure.Storage
                 {
                     while (dataReader.Read())
                     {
-                        contactInfo = ContactInfoHandler.CreateContactInfo(dataReader);
+                        contactInfo = ContactInfoDatabaseHandler.CreateContactInfo(dataReader);
                     }                       
                 }
 

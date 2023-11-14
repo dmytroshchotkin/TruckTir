@@ -61,7 +61,7 @@ namespace Infrastructure.Storage
                             sale.OperationId = AddSale(sale, cmd);
                             //вставляем записи в SaleDetails.
                             foreach (OperationDetails operDet in operDetList)
-                                AvailabilityHandler.SaleSparePartAvaliability(operDet, cmd);
+                                AvailabilityDatabaseHandler.SaleSparePartAvaliability(operDet, cmd);
                             // и модифицируем Avaliability.
                             foreach (OperationDetails operDet in sale.OperationDetailsList)
                                 AddSaleDetail(sale.OperationId, operDet, cmd);
