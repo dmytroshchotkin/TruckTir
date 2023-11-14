@@ -28,7 +28,7 @@ namespace PartsApp
         /// <param name="changeMarkupDict">Словарь типа (sparePartId, IDictionary(saleId, markup))</param>
         public static void UpdateSparePartMarkup(List<Availability> availList)
         {
-            AvailabilityHandler.UpdateSparePartMarkup(availList);
+            AvailabilityDatabaseHandler.UpdateSparePartMarkup(availList);
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

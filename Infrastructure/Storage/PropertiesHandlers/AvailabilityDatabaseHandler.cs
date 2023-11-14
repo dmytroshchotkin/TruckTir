@@ -9,7 +9,7 @@ namespace Infrastructure.Storage.PropertiesHandlers
     /// <summary>
     /// Методы извлечения и обновления Availability для классов IOperation
     /// </summary>
-    internal static class AvailabilityHandler
+    internal static class AvailabilityDatabaseHandler
     {
         #region Модификация таблицы Avaliability.
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ namespace Infrastructure.Storage.PropertiesHandlers
         /// <param name="saleId">Id прихода с изменяемой наценкой</param>
         /// <param name="markup">Значение наценки на которое стоит поменять текущее значение.</param>
         /// <param name="openConnection">Открытый connection. В методе не закрывается!</param>
-        internal static void UpdateSparePartMarkup(int sparePartId, int purchaseId, double markup, SQLiteCommand cmd)
+        private static void UpdateSparePartMarkup(int sparePartId, int purchaseId, double markup, SQLiteCommand cmd)
         {
             const string query = "UPDATE Avaliability SET Markup = @Markup WHERE SparePartId = @SparePartId AND OperationId = @OperationId;";
             cmd.CommandText = query;

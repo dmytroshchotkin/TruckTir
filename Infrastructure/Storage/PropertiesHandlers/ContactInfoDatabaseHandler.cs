@@ -7,7 +7,7 @@ namespace Infrastructure.Storage
     /// <summary>
     /// Методы извлечения и обновления ContactInfo для классов IContragent и Customer
     /// </summary>
-    internal static class ContactInfoHandler
+    internal static class ContactInfoDatabaseHandler
     {
         #region Модификация таблицы ContactInfo.
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

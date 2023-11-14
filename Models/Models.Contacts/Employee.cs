@@ -96,7 +96,7 @@ namespace PartsApp.Models
                         DateTime? hireDate, DateTime? dismissalDate, string photo, string note, string passportNum,
                         string title, string accessLayer, string login, string password)
             : this(employeeId, lastName, firstName, middleName, birthDate, hireDate, dismissalDate,
-                   photo, note, passportNum, title, accessLayer, login, password, new ContactInfo())
+                   photo, note, passportNum, title, accessLayer, login, password, null)
         { }
 
 

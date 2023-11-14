@@ -113,7 +113,7 @@ namespace Infrastructure.Storage
                 measureUnit: dataReader["MeasureUnit"] as string
             );
 
-            result.TrySetAvailabilities(new Lazy<List<Availability>>(() => AvailabilityHandler.FindAvailability(result)));
+            result.TrySetAvailabilities(new Lazy<List<Availability>>(() => AvailabilityDatabaseHandler.FindAvailability(result)));
             return result;
         }
 

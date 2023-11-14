@@ -26,7 +26,7 @@ namespace Infrastructure
                             //Вставляем запись в таблицу ContactInfo, если требуется.
                             if (employee.ContactInfo != null)
                             {
-                                employee.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(employee.ContactInfo, cmd);
+                                employee.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(employee.ContactInfo, cmd);
                             }                                
                             //Вставляем записm в табл. Employees.
                             AddEmployee(employee, cmd);
@@ -50,7 +50,7 @@ namespace Infrastructure
         /// </summary>
         /// <param name="dataReader"></param>
         /// <returns></returns>
-        public static Employee CreateEmployee(SQLiteDataReader dataReader)
+        private static Employee CreateEmployee(SQLiteDataReader dataReader)
         {
             var result = new Employee
             (
@@ -83,7 +83,7 @@ namespace Infrastructure
         /// Добавляет объект типа Employee в таблицу Employees.
         /// </summary>
         /// <param name="employee">объект типа Employee добавляемый в БД.</param>
-        public static void AddEmployee(Employee employee, SQLiteCommand cmd)
+        private static void AddEmployee(Employee employee, SQLiteCommand cmd)
         {
             cmd.CommandText = "INSERT INTO Employees (LastName, FirstName, MiddleName, BirthDate, HireDate, DismissalDate, "
                         + "ContactInfoId, Photo, Note, PassportNum, Title, AccessLayer, Login, Password) "
@@ -314,7 +314,7 @@ namespace Infrastructure
                 {
                     while (dataReader.Read())
                     {
-                        contactInfo = ContactInfoHandler.CreateContactInfo(dataReader);
+                        contactInfo = ContactInfoDatabaseHandler.CreateContactInfo(dataReader);
                     }
                 }
 

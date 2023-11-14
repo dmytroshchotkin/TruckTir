@@ -63,7 +63,7 @@ namespace Infrastructure.Storage
                             foreach (Availability avail in availList)
                             {
                                 AddPurchaseDetail(avail.OperationDetails, cmd);
-                                AvailabilityHandler.AddSparePartAvaliability(avail, cmd);
+                                AvailabilityDatabaseHandler.AddSparePartAvaliability(avail, cmd);
                             }
 
                             trans.Commit();
@@ -205,7 +205,7 @@ namespace Infrastructure.Storage
 
                                 //Вставляем записи в PurchaseDetails и Avaliability.
                                 AddPurchaseDetail(operDet, cmd);
-                                AvailabilityHandler.AddSparePartAvaliability(new Availability(operDet, null, (float)Markup.Types.Retail), cmd);
+                                AvailabilityDatabaseHandler.AddSparePartAvaliability(new Availability(operDet, null, (float)Markup.Types.Retail), cmd);
                             }
 
                             trans.Commit();  //фиксируем изменения.

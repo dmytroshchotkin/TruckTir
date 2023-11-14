@@ -31,7 +31,7 @@ namespace Infrastructure.Storage
                             //Вставляем запись в ContactInfo, если требуется.
                             if (customer.ContactInfo != null)
                             {
-                                customer.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(customer.ContactInfo, cmd);
+                                customer.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(customer.ContactInfo, cmd);
                             }                                
 
                             //Вставляем запись в Customers или Suppliers.
@@ -56,7 +56,7 @@ namespace Infrastructure.Storage
         /// </summary>
         /// <param name="customer">Контрагент.</param>
         /// <param name="cmd"></param>
-        public static int AddCustomer(Customer customer, SQLiteCommand cmd)
+        internal static int AddCustomer(Customer customer, SQLiteCommand cmd)
         {
             cmd.CommandText = "INSERT INTO " + TableName + " (ContragentName, Code, Entity, ContactInfoId, Description) "
                             + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description); "
@@ -96,11 +96,11 @@ namespace Infrastructure.Storage
                                 if (contactInfo != null)
                                 {
                                     customer.ContactInfo.ContactInfoId = contactInfo.ContactInfoId;
-                                    ContactInfoHandler.UpdateContactInfo(customer.ContactInfo, cmd);
+                                    ContactInfoDatabaseHandler.UpdateContactInfo(customer.ContactInfo, cmd);
                                 }
                                 else
                                 {
-                                    customer.ContactInfo.ContactInfoId = ContactInfoHandler.AddContactInfo(customer.ContactInfo, cmd);
+                                    customer.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(customer.ContactInfo, cmd);
                                 }                                    
                             }
 
@@ -110,7 +110,7 @@ namespace Infrastructure.Storage
                             //Если есть в базе, но нет у объекта -- удаляем запись с базы
                             if (contactInfo != null && customer.ContactInfo == null)
                             {
-                                ContactInfoHandler.DeleteContactInfo(contactInfo.ContactInfoId, cmd);
+                                ContactInfoDatabaseHandler.DeleteContactInfo(contactInfo.ContactInfoId, cmd);
                             }                                
 
                             trans.Commit();
@@ -132,7 +132,7 @@ namespace Infrastructure.Storage
         /// </summary>
         /// <param name="customer">Обновляемый контрагент</param>
         /// <param name="cmd"></param>
-        public static void UpdateCustomer(Customer customer, SQLiteCommand cmd)
+        internal static void UpdateCustomer(Customer customer, SQLiteCommand cmd)
         {
             cmd.CommandText = "UPDATE " + TableName
                             + " SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
@@ -242,7 +242,7 @@ namespace Infrastructure.Storage
                     customer.ContragentName = dataReader["ContragentName"] as string;
                     customer.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
                     customer.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
+                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
                     customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
                 }
 
@@ -259,7 +259,7 @@ namespace Infrastructure.Storage
                 contragentName: dataReader["ContragentName"] as string,
                 code: dataReader["Code"] as string,
                 entity: dataReader["Entity"] as string,
-                contactInfo: (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
+                contactInfo: (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
                 description: dataReader["Description"] as string,
                 balance: (double)dataReader["Balance"]
             );
@@ -295,7 +295,7 @@ namespace Infrastructure.Storage
                 {
                     while (dataReader.Read())
                     {
-                        contactInfo = ContactInfoHandler.CreateContactInfo(dataReader);
+                        contactInfo = ContactInfoDatabaseHandler.CreateContactInfo(dataReader);
                     }                       
                 }
 
