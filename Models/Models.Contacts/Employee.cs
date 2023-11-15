@@ -15,7 +15,7 @@ namespace PartsApp.Models
             Admin,
             [System.ComponentModel.Description("Обычный")]
             User
-        }//AccessLayers
+        }
 
         public int       EmployeeId    { get; set; }
         public string    LastName      { get; set; }
@@ -33,9 +33,9 @@ namespace PartsApp.Models
         public string    Password      { get; set; }
 
         public string FullName { get { return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName); } }
+    
+        public ContactInfo ContactInfo { get; set; }    
                 
-        public ContactInfo ContactInfo { get; private set; }    
-
         /// <summary>
         /// Конструктор для добавления нового объекта в БД.
         /// </summary>
@@ -73,7 +73,7 @@ namespace PartsApp.Models
             Password      = password;
 
             ContactInfo = contactInfo;
-        }//
+        }
 
         /// <summary>
         /// Конструктор для создания объекта из БД.
@@ -108,7 +108,7 @@ namespace PartsApp.Models
         {
             string shortMiddleName = (MiddleName != null) ? MiddleName.ToUpper()[0] + "." : "";
             return String.Format("{0} {1}. {2}", LastName, FirstName.ToUpper()[0], shortMiddleName);
-        }//GetShortFullName
+        }
 
         public void TrySetContactInfo(ContactInfo info)
         {
@@ -118,6 +118,6 @@ namespace PartsApp.Models
             }            
         }
 
-    }//Employee
+    }
   
-}//namespace
+}

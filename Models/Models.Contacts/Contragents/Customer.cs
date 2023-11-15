@@ -26,9 +26,6 @@ namespace PartsApp.Models
             ContactInfo    = contactInfo;
             Description    = description;
             Balance        = balance;            
-        }//      
-
-    }//Customer
-
-
-}//namespace
+        }    
+    }
+}

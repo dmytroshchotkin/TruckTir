@@ -36,14 +36,14 @@ namespace PartsApp.Models
 
             // исключить из домена
             //_availabilityList = new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(this));
-        }//
+        }
 
         public SparePart(SparePart sparePart)
             : this (sparePart.SparePartId, sparePart.Photo, sparePart.Manufacturer, sparePart.Articul, sparePart.Title,
                     sparePart.Description, sparePart.MeasureUnit)
         {
            
-        }//
+        }
 
         /// <summary>
         /// Возвращает список новых объектов созданного на основании переданного списка.
@@ -58,7 +58,7 @@ namespace PartsApp.Models
                 newSparePartsList.Add(new SparePart(sparePartsList[i]));
 
             return newSparePartsList;
-        }//GetNewSparePartsList
+        }
 
         public void TrySetAvailabilities(Lazy<List<Availability>> availabilities)
         {
@@ -67,6 +67,6 @@ namespace PartsApp.Models
                 _availabilityList = availabilities;
             }
         }
-    }//SparePart
+    }
 
-}//namespace
+}

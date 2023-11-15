@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PartsApp
 {
-    public static class Helper
+    public static class DateTimeParser
     {
         /// <summary>
         /// Returns DateTime value if it is successfully parsed using any culture

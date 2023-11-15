@@ -36,8 +36,8 @@ namespace PartsApp.Models
             ExtPhone        = extPhone;
             Website         = website;
             Email           = email;
-        }//
+        }
 
-    }//ContactInfo
+    }
 
-}//namespace
+}

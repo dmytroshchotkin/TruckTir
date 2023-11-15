@@ -29,7 +29,7 @@ namespace PartsApp.Models
             Description = description;
 
             _operationDetailsList = new Lazy<IList<OperationDetails>>(() => operDetList);
-        }//
+        }
 
         public Sale(int operationId, Employee employee, IContragent contragent, string contragentEmployee,
                     DateTime operationDate, string description ) 
@@ -42,7 +42,7 @@ namespace PartsApp.Models
             Description           = description;
 
             //_operationDetailsList = new Lazy<IList<OperationDetails>>(() => PartsDAL.FindSaleDetails(this));
-        }//
+        }
 
         public void TrySetOperationDetails(Lazy<IList<OperationDetails>> operationDetails)
         {
@@ -51,7 +51,7 @@ namespace PartsApp.Models
                 _operationDetailsList = operationDetails;
             }
         }
-    }//Sale
+    }
 
 
-}//namespace
+}
