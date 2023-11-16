@@ -45,18 +45,6 @@ namespace Infrastructure.Storage
                                 }
                             }
 
-                            else
-                            {
-                                if (purchase.Contragent is Supplier)
-                                {
-                                    SupplierRepository.UpdateSupplier(purchase.Contragent as Supplier, cmd);
-                                }
-
-                                else if (purchase.Contragent is Customer)
-                                {
-                                    CustomerRepository.UpdateCustomer(purchase.Contragent as Customer, cmd);
-                                }
-                            }
                             //вставляем запись в таблицу Operation.
                             purchase.OperationId = AddPurchase(purchase, cmd);
                             //вставляем записи в PurchaseDetails и Avaliability.

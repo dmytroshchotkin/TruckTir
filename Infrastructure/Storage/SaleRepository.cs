@@ -44,19 +44,6 @@ namespace Infrastructure.Storage
                                 }
                             }
 
-                            else
-                            {
-                                if (sale.Contragent is Supplier)
-                                {
-                                    SupplierRepository.UpdateSupplier(sale.Contragent as Supplier, cmd);
-                                }
-
-                                else if (sale.Contragent is Customer)
-                                {
-                                    CustomerRepository.UpdateCustomer(sale.Contragent as Customer, cmd);
-                                }
-                            }
-
                             //вставляем запись в таблицу Sales.
                             sale.OperationId = AddSale(sale, cmd);
                             //вставляем записи в SaleDetails.
