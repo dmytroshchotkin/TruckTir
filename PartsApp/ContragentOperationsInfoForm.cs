@@ -80,25 +80,26 @@ namespace PartsApp
             {
                 //int contragId = (int)ContragentsListBox.SelectedValue;
                 int contragId = (ContragentsListView.SelectedItems[0].Tag as IContragent).ContragentId;
-
-                //Если инф-ции об операциях данного контрагента ещё нет в коллекции, находим её в базе и добавляем в коллекцию.
-                List<IOperation> operList = null;
-                if (_contragentsOperations.TryGetValue(contragId, out operList) == false)
+                //Если инф-ции об операциях данного контрагента ещё нет в коллекции, находим её в базе и добавляем в коллекцию.                
+                if (_contragentsOperations.TryGetValue(contragId, out List<IOperation> operList) == false)
                 {
-                    if (_contragType == typeof(Supplier))
+                    if (operList == null)
                     {
-                        operList = PartsDAL.FindPurchases(contragId, null).Cast<IOperation>() as List<IOperation>;
-                    }
+                        operList = new List<IOperation>();
+                        if (_contragType == typeof(Supplier))
+                        {
+                            var purchases = PartsDAL.FindPurchases(contragId, null);
+                            operList.AddRange(purchases);
+                        }
 
-                    if (_contragType == typeof(Customer))
-                    {
-                        operList = PartsDAL.FindSales(contragId, null).Cast<IOperation>() as List<IOperation>;
-                    }
-                    
-                    if (operList != null)
-                    {
-                        _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.  
-                    }                                  
+                        if (_contragType == typeof(Customer))
+                        {
+                            var sales = PartsDAL.FindSales(contragId, null);
+                            operList.AddRange(sales);
+                        }
+
+                        _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.    
+                    }                                                 
                 }//if
 
                 FillTheOperationsInfoDGV(operList); //Заполняем таблицу Операций.
