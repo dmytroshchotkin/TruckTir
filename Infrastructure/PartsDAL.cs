@@ -373,61 +373,7 @@ namespace PartsApp
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion        
-
-        #region !!! ВЫНЕСТИ В PRESENTATION Поиск по обеим таблицам Sales и Purchase для вывода рез-та в форме
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Возвращает список всех операций проведённых за указанный период.
-        /// </summary>
-        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <returns></returns>
-        public static List<IOperation> FindOperations(DateTime? startDate, DateTime? endDate)
-        {
-            List<IOperation> operationsList = new List<IOperation>();
-
-            PurchaseRepository.FindPurchases(startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
-            SaleRepository.FindSales(startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
-
-            return operationsList;
-        }
-
-        /// <summary>
-        /// Возвращает список всех операций производимых с заданным товаром.
-        /// </summary>
-        /// <param name="sparePartId">Ид искомого товара.</param>
-        /// <returns></returns>
-        public static List<IOperation> FindOperations(SparePart sparePart)
-        {
-            List<IOperation> operationsList = new List<IOperation>();
-
-            PurchaseRepository.FindPurchases(sparePart).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
-            SaleRepository.FindSales(sparePart).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
-
-            return operationsList;
-        }
-
-        /// <summary>
-        /// Возвращает список всех операций осуществлённых данным сотрудником.
-        /// </summary>
-        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
-        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <returns></returns>
-        public static List<IOperation> FindOperations(Employee emp, DateTime? startDate, DateTime? endDate)
-        {
-            List<IOperation> operationsList = new List<IOperation>();
-
-            PurchaseRepository.FindPurchases(emp, startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
-            SaleRepository.FindSales(emp, startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
-
-            return operationsList;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion
+        #endregion   
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion

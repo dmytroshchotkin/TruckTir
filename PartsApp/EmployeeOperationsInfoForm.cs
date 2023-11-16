@@ -67,7 +67,7 @@ namespace PartsApp
             DateTime? beginDate = BeginDateDTP.Enabled ? BeginDateDTP.Value : (DateTime?)null;
             DateTime? endDate   = EndDateDTP.Enabled   ? EndDateDTP.Value   : (DateTime?)null;
             //Выводим список операций соответствующий заданным требованиям.
-            List<IOperation> operList = PartsDAL.FindOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate);
+            List<IOperation> operList = FindOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate);
             FillTheOperationDGV(operList);
 
             //Изменяем видимость строк по типу операции.
@@ -154,6 +154,23 @@ namespace PartsApp
             }//foreach                          
 
         }//FillTheOperationDetailsDGV
+
+        /// <summary>
+        /// Возвращает список всех операций осуществлённых данным сотрудником.
+        /// </summary>
+        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
+        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <returns></returns>
+        private static List<IOperation> FindOperations(Employee emp, DateTime? startDate, DateTime? endDate)
+        {
+            List<IOperation> operationsList = new List<IOperation>();
+
+            PurchaseRepository.FindPurchases(emp, startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
+            SaleRepository.FindSales(emp, startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
+
+            return operationsList;
+        }
 
     }//EmployeeOperationsInfoForm
 
