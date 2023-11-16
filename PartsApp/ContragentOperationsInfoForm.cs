@@ -82,11 +82,23 @@ namespace PartsApp
                 int contragId = (ContragentsListView.SelectedItems[0].Tag as IContragent).ContragentId;
 
                 //Если инф-ции об операциях данного контрагента ещё нет в коллекции, находим её в базе и добавляем в коллекцию.
-                List<IOperation> operList;
+                List<IOperation> operList = null;
                 if (_contragentsOperations.TryGetValue(contragId, out operList) == false)
                 {
-                    operList = (_contragType == typeof(Supplier)) ? PartsDAL.FindPurchases(contragId, null) : PartsDAL.FindSales(contragId, null);
-                    _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.                
+                    if (_contragType == typeof(Supplier))
+                    {
+                        operList = PartsDAL.FindPurchases(contragId, null).Cast<IOperation>() as List<IOperation>;
+                    }
+
+                    if (_contragType == typeof(Customer))
+                    {
+                        operList = PartsDAL.FindSales(contragId, null).Cast<IOperation>() as List<IOperation>;
+                    }
+                    
+                    if (operList != null)
+                    {
+                        _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.  
+                    }                                  
                 }//if
 
                 FillTheOperationsInfoDGV(operList); //Заполняем таблицу Операций.
@@ -110,7 +122,16 @@ namespace PartsApp
         {
             if (ContragentsListView.SelectedItems[0].Tag is IContragent contragent)
             {
-                contragent = (contragent is Supplier) ? PartsDAL.FindSuppliers(contragent.ContragentId) : PartsDAL.FindCustomers(contragent.ContragentId);
+                if (contragent is Supplier)
+                {
+                    contragent = PartsDAL.FindSuppliers(contragent.ContragentId);
+                }
+
+                if (contragent is Customer)
+                {
+                    contragent = PartsDAL.FindCustomers(contragent.ContragentId);
+                }
+                
                 //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
                 new AddContragentForm(contragent).Show();
             }

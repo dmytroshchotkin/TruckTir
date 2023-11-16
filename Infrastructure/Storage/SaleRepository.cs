@@ -48,10 +48,14 @@ namespace Infrastructure.Storage
                             sale.OperationId = AddSale(sale, cmd);
                             //вставляем записи в SaleDetails.
                             foreach (OperationDetails operDet in operDetList)
+                            {
                                 AvailabilityDatabaseHandler.SaleSparePartAvaliability(operDet, cmd);
+                            }                                
                             // и модифицируем Avaliability.
                             foreach (OperationDetails operDet in sale.OperationDetailsList)
+                            {
                                 AddSaleDetail(sale.OperationId, operDet, cmd);
+                            }                                
 
                             trans.Commit(); //Фиксируем изменения.
                         }
@@ -211,9 +215,9 @@ namespace Infrastructure.Storage
         /// <param name="customerId"></param>
         /// <param name="cust">STUB</param>
         /// <returns></returns>
-        public static List<IOperation> FindSales(int customerId, Customer cust)
+        public static List<Sale> FindSales(int customerId, Customer cust)
         {
-            List<IOperation> salesList = new List<IOperation>();
+           var salesList = new List<Sale>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {

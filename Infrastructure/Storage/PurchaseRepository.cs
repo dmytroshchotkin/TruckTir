@@ -269,9 +269,9 @@ namespace Infrastructure.Storage
             return purchase;
         }
 
-        public static List<IOperation> FindPurchases(int supplierId, SparePart spr)
+        public static List<Purchase> FindPurchases(int supplierId, SparePart spr)
         {
-            List<IOperation> purchases = new List<IOperation>();
+            var purchases = new List<Purchase>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {

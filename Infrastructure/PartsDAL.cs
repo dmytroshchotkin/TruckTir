@@ -296,7 +296,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="customerId">Id клиента, которого надо найти.</param>
         /// <returns></returns>
-        public static IContragent FindCustomers(int customerId)
+        public static Customer FindCustomers(int customerId)
         {
             return CustomerRepository.FindCustomer(customerId);
         }
@@ -315,7 +315,7 @@ namespace PartsApp
             return PurchaseRepository.FindPurchase(purchaseId);
         }
 
-        public static List<IOperation> FindPurchases(int supplierId, SparePart spr)
+        public static List<Purchase> FindPurchases(int supplierId, SparePart spr)
         {
             return PurchaseRepository.FindPurchases(supplierId, spr);
         }
@@ -342,7 +342,7 @@ namespace PartsApp
             return SaleRepository.FindSale(saleId);
         }
 
-        public static List<IOperation> FindSales(int customerId, Customer cust)
+        public static List<Sale> FindSales(int customerId, Customer cust)
         {
             return SaleRepository.FindSales(customerId, cust);
         }
