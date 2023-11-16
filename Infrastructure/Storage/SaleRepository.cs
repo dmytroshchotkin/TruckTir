@@ -350,7 +350,7 @@ namespace Infrastructure.Storage
             (
                 operationId: Convert.ToInt32(dataReader["OperationId"]),
                 employee: (dataReader["EmployeeId"] != DBNull.Value) ? EmployeeRepository.FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null,
-                contragent: CustomerRepository.FindCustomers(Convert.ToInt32(dataReader["ContragentId"])),
+                contragent: CustomerRepository.FindCustomer(Convert.ToInt32(dataReader["ContragentId"])),
                 contragentEmployee: dataReader["ContragentEmployee"] as string,
                 operationDate: Convert.ToDateTime(dataReader["OD"]),
                 description: dataReader["Description"] as string

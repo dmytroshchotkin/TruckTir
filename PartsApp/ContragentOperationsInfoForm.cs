@@ -50,14 +50,14 @@ namespace PartsApp
             List<IContragent> contragList = null;
             if (_contragType == typeof(Supplier))
             {
-                contragList = PartsDAL.FindSuppliers().OrderBy(s => s.ContragentName).ToList();
+                contragList = PartsDAL.FindSuppliers().Cast<IContragent>().OrderBy(s => s.ContragentName).ToList();
                 ContragentsGroupBox.Text = "Поставщики";
                 OperationsGroupBox.Text = "Поставки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по поставкам.";
             }//if
             else
             {
-                contragList = PartsDAL.FindCustomers().OrderBy(s => s.ContragentName).ToList();
+                contragList = PartsDAL.FindCustomers().Cast<IContragent>().OrderBy(s => s.ContragentName).ToList();
                 ContragentsGroupBox.Text = "Покупатели";
                 OperationsGroupBox.Text = "Покупки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по покупкам.";

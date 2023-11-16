@@ -231,7 +231,7 @@ namespace PartsApp
         /// Возвращает коллекцию из всех Supplier-ов.
         /// </summary>
         /// <returns></returns>
-        public static IList<IContragent> FindSuppliers()
+        public static IList<Supplier> FindSuppliers()
         {
             return SupplierRepository.FindSuppliers();
         }
@@ -251,9 +251,9 @@ namespace PartsApp
         /// </summary>
         /// <param name="SupplierName">имя Supplier-а, которого надо найти.</param>
         /// <returns></returns>
-        public static IContragent FindSuppliers(string supplierName)
+        public static Supplier FindSuppliers(string supplierName)
         {
-            return SupplierRepository.FindSuppliers(supplierName);
+            return SupplierRepository.FindSupplier(supplierName);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace PartsApp
         /// Возвращает коллекцию из всех Customer.
         /// </summary>
         /// <returns></returns>
-        public static IList<IContragent> FindCustomers()
+        public static IList<Customer> FindCustomers()
         {        
             return CustomerRepository.FindCustomers();
         }
@@ -298,7 +298,7 @@ namespace PartsApp
         /// <returns></returns>
         public static IContragent FindCustomers(int customerId)
         {
-            return CustomerRepository.FindCustomers(customerId);
+            return CustomerRepository.FindCustomer(customerId);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

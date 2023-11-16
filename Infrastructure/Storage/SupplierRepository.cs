@@ -16,9 +16,9 @@ namespace Infrastructure.Storage
         /// Возвращает коллекцию из всех Supplier-ов.
         /// </summary>
         /// <returns></returns>
-        public static IList<IContragent> FindSuppliers()
+        public static IList<Supplier> FindSuppliers()
         {
-            IList<IContragent> suppliers = new List<IContragent>();
+            IList<Supplier> suppliers = new List<Supplier>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {
@@ -73,7 +73,7 @@ namespace Infrastructure.Storage
         /// </summary>
         /// <param name="SupplierName">имя Supplier-а, которого надо найти.</param>
         /// <returns></returns>
-        public static IContragent FindSuppliers(string supplierName)
+        public static Supplier FindSupplier(string supplierName)
         {
             Supplier supplier = null;
 
@@ -265,7 +265,7 @@ namespace Infrastructure.Storage
         {
             cmd.CommandText = "UPDATE " + TableName
                             + " SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
-                            + "ContactInfoId = @ContactInfoId, Description = @Description, Balance = @Balance "
+                            + "ContactInfoId = @ContactInfoId, Description = @Description "
                             + "WHERE ContragentId = @ContragentId;";
 
             cmd.Parameters.Clear();
@@ -275,7 +275,6 @@ namespace Infrastructure.Storage
             cmd.Parameters.AddWithValue("@Entity", supplier.Entity);
             cmd.Parameters.AddWithValue("@ContactInfoId", (supplier.ContactInfo != null) ? supplier.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description", supplier.Description);
-            cmd.Parameters.AddWithValue("@Balance", supplier.Balance);
 
             cmd.ExecuteNonQuery();
         }
