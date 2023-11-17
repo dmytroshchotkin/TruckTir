@@ -416,7 +416,7 @@ namespace Infrastructure.Storage
 
         public static string[] FindAllManufacturersName()
         {
-            IList<string> manufacturers = new List<string>();
+            List<string> manufacturers = new List<string>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {

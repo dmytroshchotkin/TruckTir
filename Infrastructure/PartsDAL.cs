@@ -231,7 +231,7 @@ namespace PartsApp
         /// Возвращает коллекцию из всех Supplier-ов.
         /// </summary>
         /// <returns></returns>
-        public static IList<Supplier> FindSuppliers()
+        public static List<Supplier> FindSuppliers()
         {
             return SupplierRepository.FindSuppliers();
         }
@@ -276,7 +276,7 @@ namespace PartsApp
         /// Возвращает коллекцию из всех Customer.
         /// </summary>
         /// <returns></returns>
-        public static IList<Customer> FindCustomers()
+        public static List<Customer> FindCustomers()
         {        
             return CustomerRepository.FindCustomers();
         }

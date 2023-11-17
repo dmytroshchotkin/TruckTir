@@ -360,7 +360,7 @@ namespace Infrastructure.Storage
                 description: dataReader["Description"] as string
             );
 
-            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => FindSaleDetails(result)));
+            result.TrySetOperationDetails(new Lazy<List<OperationDetails>>(() => FindSaleDetails(result)));
             return result;
         }
 

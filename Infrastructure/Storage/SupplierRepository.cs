@@ -16,9 +16,9 @@ namespace Infrastructure.Storage
         /// Возвращает коллекцию из всех Supplier-ов.
         /// </summary>
         /// <returns></returns>
-        public static IList<Supplier> FindSuppliers()
+        public static List<Supplier> FindSuppliers()
         {
-            IList<Supplier> suppliers = new List<Supplier>();
+            List<Supplier> suppliers = new List<Supplier>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {

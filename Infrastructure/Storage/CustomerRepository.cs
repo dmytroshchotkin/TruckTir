@@ -161,9 +161,9 @@ namespace Infrastructure.Storage
         /// Возвращает коллекцию из всех Customer.
         /// </summary>
         /// <returns></returns>
-        public static IList<Customer> FindCustomers()
+        public static List<Customer> FindCustomers()   
         {
-            IList<Customer> customers = new List<Customer>();
+            List<Customer> customers = new List<Customer>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {

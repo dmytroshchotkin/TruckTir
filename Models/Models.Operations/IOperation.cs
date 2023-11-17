@@ -15,9 +15,9 @@ namespace PartsApp.Models
         DateTime    OperationDate       { get; set; }
         string      Description         { get; set; }
 
-        IList<OperationDetails> OperationDetailsList { get;}
+        List<OperationDetails> OperationDetailsList { get;}
 
-        void TrySetOperationDetails(Lazy<IList<OperationDetails>> operationDetails);
+        void TrySetOperationDetails(Lazy<List<OperationDetails>> operationDetails);
 
     }
 
