@@ -265,7 +265,7 @@ namespace Infrastructure.Storage
         {
             cmd.CommandText = "UPDATE " + TableName
                             + " SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
-                            + "ContactInfoId = @ContactInfoId, Description = @Description "
+                            + "ContactInfoId = @ContactInfoId, Description = @Description, Balance = @Balance "
                             + "WHERE ContragentId = @ContragentId;";
 
             cmd.Parameters.Clear();
@@ -275,6 +275,7 @@ namespace Infrastructure.Storage
             cmd.Parameters.AddWithValue("@Entity", supplier.Entity);
             cmd.Parameters.AddWithValue("@ContactInfoId", (supplier.ContactInfo != null) ? supplier.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description", supplier.Description);
+            cmd.Parameters.AddWithValue("@Balance", supplier.Balance);
 
             cmd.ExecuteNonQuery();
         }

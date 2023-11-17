@@ -14,7 +14,7 @@ namespace PartsApp.Models
         string Entity           { get; set; }
         ContactInfo ContactInfo { get; set; }
         string Description      { get; set; }
-        double? Balance         { get; set; }
+        double Balance         { get; set; }
     }
 
 }

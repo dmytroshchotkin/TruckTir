@@ -14,7 +14,7 @@ namespace PartsApp.Models
         public string       Entity          { get; set; }
         public ContactInfo  ContactInfo     { get; set; }
         public string       Description     { get; set; }
-        public double?       Balance        { get; set; }
+        public double       Balance        { get; set; }
 
         public Supplier() { }
         public Supplier(int contragentId, string contragentName, string code, string entity, ContactInfo contactInfo, string description)
