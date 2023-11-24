@@ -23,7 +23,6 @@ namespace PartsApp
         /// </summary>
         const string sparePartPhotoFolder = @"Товар\";
 
-
         public SparePartForm()
         {
             InitializeComponent();
@@ -35,8 +34,7 @@ namespace PartsApp
             _sparePart = sparePart;
 
             FillFornFromSparePart(_sparePart); //Заполняем поля формы данными из объетка.
-        }//AddSparePartForm
-
+        }
 
         private void AddSparePartForm_Load(object sender, EventArgs e)
         {
@@ -46,11 +44,10 @@ namespace PartsApp
 
             //Добавляем в выпадающий список всех Производителей. /*ERROR!!!*/            
             ManufacturerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllManufacturersName());
-        }//Form1_Load   
-
+        }
 
         #region Методы проверки корректности ввода.
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Валидация ввода артикула.
@@ -60,25 +57,23 @@ namespace PartsApp
         private void ArticulTextBox_Leave(object sender, EventArgs e)
         {
             //если артикул введен.
-            if (!String.IsNullOrWhiteSpace(ArticulTextBox.Text)) 
+            if (!String.IsNullOrWhiteSpace(ArticulTextBox.Text))
             {
                 string text = ArticulTextBox.Text.Trim();
                 //Если введенный артикул уже есть в базе, выдаём предупреждение, но позволяем дальнейший ввод.
                 if ((_sparePart.SparePartId != 0 && _sparePart.Articul.ToLower() == text.ToLower()) || PartsDAL.FindSparePartsByArticul(text).Count == 0)
                     ControlValidation.CorrectValueInput(toolTip, ArticulTextBox);
                 else
-                    ControlValidation.WrongValueInput(toolTip, ArticulTextBox, "Такой артикул уже есть в базе", Color.Yellow);             
-            }//if
+                    ControlValidation.WrongValueInput(toolTip, ArticulTextBox, "Такой артикул уже есть в базе", Color.Yellow);
+            }
             else //Если артикул не введен.
             {
-                ControlValidation.WrongValueInput(toolTip, ArticulTextBox);                                    
-            }//else
-
+                ControlValidation.WrongValueInput(toolTip, ArticulTextBox);
+            }
             //Если Title не пустой, проверяем уникальность заполнения связки Артикул-Название.
             if (String.IsNullOrWhiteSpace(TitleTextBox.Text) == false)
                 TitleTextBox_Leave(null, null);
-        }//ArticulTextBox_Leave
-
+        }
         private void TitleTextBox_Leave(object sender, EventArgs e)
         {
             //Если Title введен.
@@ -90,24 +85,22 @@ namespace PartsApp
                     //Если связка Артикул-Название не уникальны, выводим сообщение об ошибке.
                     if (PartsDAL.FindSparePartsByArticul(ArticulTextBox.Text.Trim()).Any(sp => sp.Title.ToLower() == TitleTextBox.Text.Trim().ToLower()))
                         ControlValidation.WrongValueInput(toolTip, TitleTextBox, "Такая связка Артикул-Название уже есть в базе");
-                    else          
+                    else
                         ControlValidation.CorrectValueInput(toolTip, TitleTextBox);
-                }//if                
+                }
                 else   //если tilte введен правильно            
                     ControlValidation.CorrectValueInput(toolTip, TitleTextBox);
-            }//if
+            }
             else //если Title не введен
             {
                 ControlValidation.WrongValueInput(toolTip, TitleTextBox);
-            }//else
-        }//TitleTextBox_Leave
-
+            }
+        }
         private void ManufacturerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)                       
+            if (e.KeyCode == Keys.Enter)
                 MeasureUnitComboBox.Select(); //переводим фокус на др. контрол, и инициируем тем самым событие OnLeave.
-        }//ManufacturerTextBox_PreviewKeyDown
-
+        }
         private void ManufacturerTextBox_Leave(object sender, EventArgs e)
         {
             if (!String.IsNullOrWhiteSpace(ManufacturerTextBox.Text))
@@ -120,9 +113,8 @@ namespace PartsApp
                     toolTip.Show("Такого производителя нет в базе! Он будет добавлен.", this, ManufacturerTextBox.Location, 2000);
                 else
                     ManufacturerTextBox.Text = manuf; //Выводим корректное имя контрагента.
-            }//if
-        }//ManufacturerTextBox_Leave
-
+            }
+        }
 
         //Проверить вылеты.
         private void MeasureUnitComboBox_Leave(object sender, EventArgs e)
@@ -131,19 +123,13 @@ namespace PartsApp
                 ControlValidation.WrongValueInput(toolTip, MeasureUnitComboBox, "Выберите ед. изм.");
             else
                 ControlValidation.CorrectValueInput(toolTip, MeasureUnitComboBox);
-        }//MeasureUnitComboBox_Leave
+        }
 
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         #region Методы работы с Фото.
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Выбор фото данной единицы товара.
@@ -164,15 +150,14 @@ namespace PartsApp
                     //Если файл в нужной папке не является подходящим, то очищаем pictureBox.
                     if (DialogResult.Cancel == MessageBox.Show("Этот файл или файл с таким именем уже существует в папке \"Товар\".\nЕсли данное фото, является правильным, нажмите \"Ok\".\nИначе нажмите \"Отмена\" измените имя выбираемого файла и попробуйте ещё раз.", "Совпадение имен файлов", MessageBoxButtons.OKCancel))
                         DeselectToolStripMenuItem_Click(null, null);
-                }//if
+                }
                 else
                 {
                     PhotoPictureBox.Image = new Bitmap(Image.FromFile(PhotoOpenFileDialog.FileName), PhotoPictureBox.Size);
-                }//else
-
+                }
                 toolTip.SetToolTip(PhotoPictureBox, fileName);   //задаём имя файла во всплывающую подсказку.
-            }//if
-        }//AddPhotoButton_Click
+            }
+        }
 
         /// <summary>
         /// Вызов контекстного меню для photoPictureBox.
@@ -187,8 +172,8 @@ namespace PartsApp
                 //Если photoPictureBox не пустой.
                 if (PhotoPictureBox.Image != null)
                     PhotoContextMenuStrip.Show(PhotoPictureBox, e.Location); //Выводим контекстное меню.
-            }//if
-        }//PhotoPictureBox_MouseClick
+            }
+        }
 
         /// <summary>
         /// Событие для отмены выбора фотографии.
@@ -200,7 +185,7 @@ namespace PartsApp
             PhotoPictureBox.Image = null;
             PhotoOpenFileDialog.FileName = String.Empty;
             toolTip.SetToolTip(PhotoPictureBox, String.Empty);
-        }//DeselectToolStripMenuItem_Click 
+        }
 
         /// <summary>
         /// Копирует фото в папку 'Товар', если фото с таким названием ещё нет.
@@ -215,17 +200,11 @@ namespace PartsApp
                 //Если фото ещё нет в папке 'Товар', копируем его туда.
                 if (!System.IO.File.Exists(fullPath))
                     System.IO.File.Copy(PhotoOpenFileDialog.FileName, fullPath);
-            }//else
-        }//CopyPhotoToTheFolder
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            }
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
-                
-              
 
         /// <summary>
         /// Заполняет форму данными из переданного объекта.
@@ -234,35 +213,33 @@ namespace PartsApp
         private void FillFornFromSparePart(SparePart sparePart)
         {
             //Заполняем все поля на форме.
-            ArticulTextBox.Text      = _sparePart.Articul;
-            TitleTextBox.Text        = _sparePart.Title;
+            ArticulTextBox.Text = _sparePart.Articul;
+            TitleTextBox.Text = _sparePart.Title;
             ManufacturerTextBox.Text = _sparePart.Manufacturer;
-            DescrRichTextBox.Text    = _sparePart.Description;
+            DescrRichTextBox.Text = _sparePart.Description;
             MeasureUnitComboBox.SelectedItem = _sparePart.MeasureUnit;
-            
+
             //Заполняем фото, если оно есть в соотв. папке.
             if (_sparePart.Photo != null && System.IO.File.Exists(System.IO.Path.GetFullPath(_sparePart.Photo)))
             {
                 PhotoPictureBox.Image = new Bitmap(Image.FromFile(_sparePart.Photo), PhotoPictureBox.Size);
                 toolTip.SetToolTip(PhotoPictureBox, System.IO.Path.GetFileName(_sparePart.Photo));
-            }//if            
-        }//FillFornFromSparePart
+            }
+        }
 
         /// <summary>
         /// Заполняет объект типа SparePart информацией из формы. 
         /// </summary>
         /// <param name="employee">Товар, который будет заполнен инф-цией из формы.</param>
         private void FillTheSparePartFromForm(SparePart sparePart)
-        {            
-            sparePart.Photo        = (PhotoPictureBox.Image != null) ? sparePartPhotoFolder + toolTip.GetToolTip(PhotoPictureBox) : null;
-            sparePart.Articul      = ArticulTextBox.Text.Trim();
-            sparePart.Title        = TitleTextBox.Text.Trim();
-            sparePart.Description  = (!String.IsNullOrWhiteSpace(DescrRichTextBox.Text)) ? DescrRichTextBox.Text.Trim() : null;
+        {
+            sparePart.Photo = (PhotoPictureBox.Image != null) ? sparePartPhotoFolder + toolTip.GetToolTip(PhotoPictureBox) : null;
+            sparePart.Articul = ArticulTextBox.Text.Trim();
+            sparePart.Title = TitleTextBox.Text.Trim();
+            sparePart.Description = (!String.IsNullOrWhiteSpace(DescrRichTextBox.Text)) ? DescrRichTextBox.Text.Trim() : null;
             sparePart.Manufacturer = (!String.IsNullOrWhiteSpace(ManufacturerTextBox.Text)) ? ManufacturerTextBox.Text.Trim() : null;
-            sparePart.MeasureUnit  = MeasureUnitComboBox.SelectedValue.ToString();
-        }//FillTheSparePartFromForm
-
-        
+            sparePart.MeasureUnit = MeasureUnitComboBox.SelectedValue.ToString();
+        }
 
         /// <summary>
         /// Возвращает true если все обязательные поля корректно заполнены, иначе false.
@@ -281,7 +258,7 @@ namespace PartsApp
 
             //Если хоть один не прошел валидацию, возв-ем false.
             return !curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red);
-        }//IsRequiredAddingAreaFieldsValid
+        }
 
         private void CancelButton_MouseClick(object sender, MouseEventArgs e)
         {
@@ -289,8 +266,8 @@ namespace PartsApp
             {
                 if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     this.Close();
-            }//if
-        }//CancelButton_MouseClick
+            }
+        }
 
         private void OkButton_MouseClick(object sender, MouseEventArgs e)
         {
@@ -309,22 +286,17 @@ namespace PartsApp
                             PartsDAL.UpdateSparePart(_sparePart);
                         else
                             PartsDAL.AddSparePart(_sparePart);
-                    }//try
+                    }
                     catch
                     {
                         MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
                         this.Cursor = Cursors.Default;
                         return;
-                    }//catch
-
+                    }
                     CopyPhotoToTheFolder(_sparePart.Photo); //Копируем фото в папку 'Товар', если необходимо.
                     this.Close();
-                }//if
-            }//if
-        }//
-
-        
-
-    }//AddSparePartForm
-
-}//namespace
+                }
+            }
+        }
+    }
+}

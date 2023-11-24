@@ -15,14 +15,13 @@ namespace PartsApp.SupportClasses
         {
             return en.Select(t => new Tuple<T, R>(t, evaluate(t)))
                 .Aggregate((max, next) => next.Item2.CompareTo(max.Item2) > 0 ? next : max).Item1;
-        }//MaxBy
+        }
 
         public static T MinBy<T, R>(this IEnumerable<T> en, Func<T, R> evaluate) where R : IComparable<R>
         {
             return en.Select(t => new Tuple<T, R>(t, evaluate(t)))
                 .Aggregate((max, next) => next.Item2.CompareTo(max.Item2) < 0 ? next : max).Item1;
-        }//MinBy
-
+        }
 
 
         /// <summary>
@@ -38,7 +37,7 @@ namespace PartsApp.SupportClasses
             return controls.SelectMany(ctrl => GetAllControls(ctrl, type))
                                       .Concat(controls)
                                       .Where(c => c.GetType() == type).ToList();
-        }//GetAllControls
+        }
 
         /// <summary>
         /// Возвращает список всех контролов заданного типа и имеющие совпадение в имени, расположенных на форме.
@@ -54,8 +53,7 @@ namespace PartsApp.SupportClasses
             return controls.SelectMany(ctrl => GetAllControls(ctrl, type))
                                       .Concat(controls)
                                       .Where(c => c.GetType() == type && c.Name.Contains(searchName)).ToList();
-        }//GetAllControls
-
+        }
 
         /// <summary>
         /// Заполняет RowHeaders переданной строки текущим номером по порядку.
@@ -69,7 +67,8 @@ namespace PartsApp.SupportClasses
             //Если RowHeadersCell не заполнена или индекс строки изменен, присваиваем новый номер строке.
             if (headerCellValue == null || headerCellValue.ToString() != rowNumber)
                 dgv.Rows[row.Index].HeaderCell.Value = rowNumber;
-        }//RowNumerate
+        }
+
         /// <summary>
         /// Заполняет RowHeaders переданной строки текущим номером по порядку и устанавливает его ширину.
         /// </summary>
@@ -78,19 +77,21 @@ namespace PartsApp.SupportClasses
         {
             RowNumerate(row);                           //Нумеруем строку.
             RowHeadersWidthAutoSize(row.DataGridView);  //Задаём размер RowHeaders.
-        }//RowsNumerateAndAutoSize
+        }
+
         /// <summary>
         /// Заполняет RowHeaders строк переданной таблицы текущими номероми по порядку и устанавливает его ширину.
         /// </summary>
         /// <param name="dgv">Таблица с нумеруемыми строками.</param>
         public static void RowsNumerateAndAutoSize(DataGridView dgv)
         {
-            
+
             foreach (DataGridViewRow row in dgv.Rows)
                 RowNumerate(row);            //Нумеруем строку.                    
 
             RowHeadersWidthAutoSize(dgv);    //Задаём размер RowHeaders.
-        }//RowsNumerateAndAutoSize
+        }
+
         /// <summary>
         /// Устанавливает ширину RowHeaders переденной таблицы.
         /// </summary>
@@ -103,11 +104,9 @@ namespace PartsApp.SupportClasses
             int newRowHeadersWidth = defaultRowHeadersWidth + (oneDigitWidth * (dgv.Rows.Count.ToString().Length - 1));
             if (dgv.RowHeadersWidth != newRowHeadersWidth) //Проверка необходима, потому что изменение RowHeadersWidth приводит к инициированию события OnPaint, а сл-но к бесконечному циклу. 
                 dgv.RowHeadersWidth = newRowHeadersWidth;
-        }//RowHeadersWidthAutoSize
+        }
+
+    }
 
 
-    }//EnumerableExtensions
-
-
-
-}//namespace
+}

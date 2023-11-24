@@ -37,8 +37,7 @@ namespace PartsApp
         public SaleForm()
         {
             InitializeComponent();
-        }//
-
+        }
         private void SaleForm_Load(object sender, EventArgs e)
         {
             //Устанавливаем даты для DateTimePicker.
@@ -52,11 +51,10 @@ namespace PartsApp
             markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
 
             sellerAgentTextBox.Text = String.Format("{0} {1}", Form1.CurEmployee.LastName, Form1.CurEmployee.FirstName);
-        }//SaleForm_Load
-
+        }
 
         #region Валидация вводимых данных.
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private void customerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
@@ -64,15 +62,14 @@ namespace PartsApp
             {
                 customerTextBox_Leave(sender, null);
                 SaleDGV.Select(); //переводим фокус на таблицу продаж.
-            }//if
-        }//SellerTextBox_PreviewKeyDown
-
+            }
+        }
         private void customerTextBox_Leave(object sender, EventArgs e)
-        {            
+        {
             if (String.IsNullOrWhiteSpace(customerTextBox.Text))
             {
                 ControlValidation.WrongValueInput(toolTip, customerTextBox);
-            }//if
+            }
             else
             {
                 //Если такой контрагент в базе отсутствует, выводим сообщение об этом.
@@ -81,45 +78,37 @@ namespace PartsApp
                 {
                     ControlValidation.CorrectValueInput(toolTip, customerTextBox);
                     customerTextBox.Text = customer; //Выводим корректное имя контрагента.
-                }//if
+                }
                 else
                 {
                     ControlValidation.WrongValueInput(toolTip, customerTextBox, "Такого клиента нет в базе! Он будет добавлен.", Color.Yellow);
-                }//else
-
-            }//else            
-        }//customerTextBox_Leave
-
+                }
+            }
+        }
         private void sellerTextBox_Leave(object sender, EventArgs e)
         {
             ControlValidation.IsInputControlEmpty(sellerTextBox, toolTip);
-        }//sellerTextBox_Leave
+        }
 
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         #region Методы работы с таблицей.
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private void DGV_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             //Нумерация строк.
             DataGridView dgv = sender as DataGridView;
-            EnumerableExtensions.RowsNumerateAndAutoSize(dgv.Rows[e.RowIndex]);  
-        }//DGV_RowPostPaint
-
+            EnumerableExtensions.RowsNumerateAndAutoSize(dgv.Rows[e.RowIndex]);
+        }
         #region Методы работы с осн. таблицей.
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         private void SaleDGV_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
             SaleDGV[SellingPriceCol.Index, e.RowIndex].ReadOnly = SaleDGV[CountCol.Index, e.RowIndex].ReadOnly = true;
-        }//SaleDGV_RowsAdded
-
+        }
         private void SaleDGV_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             //Находим соотв. выбранному товару данные и обновляем доп. таблицу.
@@ -128,7 +117,7 @@ namespace PartsApp
                 FillTheExtDGV(sparePart.AvailabilityList);
             else
                 ExtSaleDGV.Rows.Clear();
-        }//SaleDGV_RowEnter
+        }
 
         /// <summary>
         /// Событие для установки listBox в нужную позицию.
@@ -146,7 +135,7 @@ namespace PartsApp
             //Обрабатываем ввод в ячейку 'Количествo'.
             if (_lastEditCell.OwningColumn == CountCol)
                 SetCustomValueToCell(_lastEditCell, null); //очищаем ячейку для ввода значения пользователем.
-        }//ReturnDGV_CellBeginEdit
+        }
 
         /// <summary>
         /// Событие для добавления обработчиков на ввод текста в ячейку.
@@ -160,16 +149,16 @@ namespace PartsApp
             if (cell.OwningColumn == TitleCol || cell.OwningColumn == ArticulCol)
             {
                 //Если ячейка редактируется первый раз, подписываем её на события обработки ввода.
-                if (cell.Tag == null) 
+                if (cell.Tag == null)
                 {
                     TextBox textBoxCell = e.Control as TextBox;
                     cell.Tag = textBoxCell; //Запоминаем editing control в Tag ячейки.
 
                     textBoxCell.PreviewKeyDown += new PreviewKeyDownEventHandler(dataGridViewTextBoxCell_PreviewKeyDown);
                     textBoxCell.TextChanged += new EventHandler(dataGridViewTextBoxCell_TextChanged);
-                }//if
-            }//if
-        }//SaleDGV_EditingControlShowing
+                }
+            }
+        }
 
         /// <summary>
         /// Метод обработки нажатия клавиш в ячейках осн. таблицы.
@@ -177,9 +166,9 @@ namespace PartsApp
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void dataGridViewTextBoxCell_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {            
+        {
             switch (e.KeyCode)
-            { 
+            {
                 case Keys.Down:
                     _isCellEditError = true;
                     AutoCompleteListBox.KeyDownPress(autoCompleteListBox);
@@ -188,9 +177,8 @@ namespace PartsApp
                     _isCellEditError = true;
                     AutoCompleteListBox.KeyUpPress(autoCompleteListBox);
                     break;
-            }//switch
-        }//dataGridViewTextBoxCell_PreviewKeyDown
-
+            }
+        }
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
             autoCompleteListBox.DataSource = null;
@@ -206,14 +194,14 @@ namespace PartsApp
 
                 //Если совпадения найдены, вывести вып. список.
                 if (searchSparePartsList.Count > 0)
-                {                    
+                {
                     //Заполняем вып. список новыми объектами.
-                    autoCompleteListBox.DataSource = searchSparePartsList;               
+                    autoCompleteListBox.DataSource = searchSparePartsList;
                     autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
                     autoCompleteListBox.ClearSelected();
-                }//if
-            }//if
-        }//dataGridViewTextBoxCell_TextChanged
+                }
+            }
+        }
 
         private void SaleDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -227,8 +215,8 @@ namespace PartsApp
                     CountCellFilled(cell);
                 else if (cell.OwningColumn == SellingPriceCol)                     //Если редактируется цена продажи. 
                     SellingPriceCellFilled(cell);
-            }//if
-        }//SaleDGV_CellEndEdit 
+            }
+        }
 
         private void SaleDGV_SelectionChanged(object sender, EventArgs e)
         {
@@ -248,9 +236,8 @@ namespace PartsApp
                 //ставим каретку в конец текста. 
                 TextBox textBoxCell = _lastEditCell.Tag as TextBox;
                 textBoxCell.SelectionStart = textBoxCell.Text.Length;
-            }//if
-        }//SaleDGV_SelectionChanged
-
+            }
+        }
         private void SaleDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -267,9 +254,9 @@ namespace PartsApp
                     location.X += e.Location.X;
                     location.Y += e.Location.Y;
                     saleContextMenuStrip.Show(SaleDGV, location, ToolStripDropDownDirection.BelowRight);
-                }//if                
-            }//if 
-        }//SaleDGV_CellMouseClick     
+                }
+            }
+        }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -283,17 +270,15 @@ namespace PartsApp
                     _operDetList.RemoveAll(od => od.SparePart.SparePartId == (row.Tag as SparePart).SparePartId); //Очищаем список от соотв. объектов.
 
                 //Если это не последняя строка (предназнач. для ввода нового товара в список), удаляем её.
-                if (row.Index != SaleDGV.Rows.Count-1)
-                    SaleDGV.Rows.Remove(row);   
-            }//foreach
-
+                if (row.Index != SaleDGV.Rows.Count - 1)
+                    SaleDGV.Rows.Remove(row);
+            }
             ExtSaleDGV.Rows.Clear(); //Очищаем доп. таблицу.
             FillTheInTotal(); //Заполняем общую сумму операции.
-        }//removeToolStripMenuItem_Click
-        
+        }
 
         #region Вспомогательные методы.
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         /// <summary>
         /// Производит необх. действия при окончании редактирования ячейки столбца 'Артикул' и 'Название'.
@@ -311,17 +296,16 @@ namespace PartsApp
                         AutoCompleteRowInfo(cell, autoCompleteListBox.SelectedItem as SparePart); //Заполняем строку данными о товаре.
                     else  //если выбор не из вып. списка.
                         CellEndEditWrong(cell, "Выберите товар из списка.");
-                }//if
+                }
                 else //если нет такого товара в наличии.
                 {
                     CellEndEditWrong(cell, "Нет такого товара в наличии.");
-                }//else
-            }//if
-
+                }
+            }
             //Если нет ошибки завершения редактирования ячейки, производим необх. действия.
-            if (!_isCellEditError)            
-                CellEndEditCorrect(cell);            
-        }//TitleOrArticulCellFilled
+            if (!_isCellEditError)
+                CellEndEditCorrect(cell);
+        }
 
         /// <summary>
         /// Производит необх. действия при окончании редактирования ячейки столбца 'Количество'.
@@ -332,9 +316,9 @@ namespace PartsApp
             //Проверяем корректность ввода.
             string measureUnit = cell.OwningRow.Cells[MeasureUnitCol.Index].Value.ToString();
             if (IsCountCellValueCorrect(cell, measureUnit))
-            {                
+            {
                 AutoChoisePurchases(cell);         //Автовыбор приходов с которых осущ. продажа.
-            }//if            
+            }
             else
             {
                 toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.
@@ -342,9 +326,9 @@ namespace PartsApp
 
                 //Возвращаем дефолтные значения во всех строках доп. таблицы.
                 SetDefaultValuesToExtSaleDGV((cell.OwningRow.Tag as SparePart).SparePartId);
-            }//else
+            }
             FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'.
-        }//CountCellFilled
+        }
 
         /// <summary>
         /// Производит необх. действия при окончании редактирования ячейки столбца 'Цена продажи'.
@@ -355,7 +339,7 @@ namespace PartsApp
             try
             {
                 float sellPrice = Convert.ToSingle(cell.Value);
-                if (sellPrice == 0) 
+                if (sellPrice == 0)
                     throw new Exception();  //ввод нуля также является ошибкой.                
 
                 int sparePartId = (cell.OwningRow.Tag as SparePart).SparePartId;
@@ -367,24 +351,22 @@ namespace PartsApp
                     //Если установленная юзером цена продажи ниже чем цена продажи данного товара с наценкой "Крупный опт" хотя бы по одному приходу.
                     if (sparePart.AvailabilityList.Any(av => (av.OperationDetails.Price + (av.OperationDetails.Price * (float)Markup.Types.LargeWholesale / 100) > sellPrice)))
                         throw new Exception();
-                }//if
-
+                }
                 //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
                 if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= sellPrice))
                     if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
                         throw new Exception();
 
                 cell.Value = sellPrice; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
-            }//try
+            }
             catch
             {
                 //выводим всплывающее окно с сообщением об ошибке и очищаем ввод.
                 toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000);
                 cell.Value = null;
-            }//catch
-
+            }
             FillTheSumCell(cell.OwningRow);    //Заполняем и столбец 'Сумма'. 
-        }//SellingPriceCellFilled
+        }
 
         /// <summary>
         /// Автозаполнение строки соотв. инф-цией.
@@ -408,7 +390,7 @@ namespace PartsApp
             //    saleGroupBox.Size = new Size(saleGroupBox.Width, saleGroupBox.Height + height);
             //}
             #endregion
-        }//AutoCompleteRowInfo
+        }
 
         /// <summary>
         /// Действия при некорректном завершении редактирования ячейки.
@@ -419,7 +401,7 @@ namespace PartsApp
         {
             toolTip.Show(toolTipText, this, GetCellBelowLocation(cell), 1000);
             _isCellEditError = true;
-        }//CellEndEditWrong
+        }
 
         /// <summary>
         /// Действия при корректном завершении редактирования ячейки.
@@ -429,10 +411,10 @@ namespace PartsApp
         {
             //Отписываем editing control от событий обработки ввода.
             TextBox textBoxCell = cell.Tag as TextBox;
-            textBoxCell.TextChanged    -= dataGridViewTextBoxCell_TextChanged;
+            textBoxCell.TextChanged -= dataGridViewTextBoxCell_TextChanged;
             textBoxCell.PreviewKeyDown -= dataGridViewTextBoxCell_PreviewKeyDown;
             cell.Tag = null;
-        }//CellEndEditCorrect
+        }
 
         /// <summary>
         /// Возвращает число или генерирует исключение если введенное значение в ячейку 'Кол-во' некорректно.
@@ -456,7 +438,7 @@ namespace PartsApp
                 return false;
 
             return true;
-        }//IsCountCellValueCorrect
+        }
 
         /// <summary>
         /// Заполняет обе таблицы необх. данными
@@ -470,7 +452,7 @@ namespace PartsApp
             //Очищаем доп. таблицу и заполняем её новой инф-цией.
             ExtSaleDGV.Rows.Clear();
             FillTheExtDGV(sparePart.AvailabilityList);
-        }//FillTheBothDGV
+        }
 
         /// <summary>
         /// Заполняет осн. таблицу данными.
@@ -492,8 +474,7 @@ namespace PartsApp
             if (row.Cells[SellingPriceCol.Index].Value == null)
                 if (!sparePart.AvailabilityList.Any(av => av.SellingPrice != sparePart.AvailabilityList[0].SellingPrice))
                     row.Cells[SellingPriceCol.Index].Value = Math.Ceiling(sparePart.AvailabilityList[0].SellingPrice / 0.5) * 0.5; //Округляем в большую сторону с точностью до 0,5. //ERROR округление станет лишним, после того как полностью обновится список товара в наличии. //sparePart.AvailabilityList[0].SellingPrice
-        }//FillTheSaleDG
-
+        }
 
         /// <summary>
         /// Возвращает абсолютный location области сразу под позицией клетки из saleDGV. 
@@ -506,7 +487,7 @@ namespace PartsApp
             Point dgvLoc = SaleDGV.Location;
             Point gbLoc = saleGroupBox.Location;
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);
-        }//GetCellBelowLocation
+        }
 
         /// <summary>
         /// Метод автовыбора прихода с которого осуществляется продажа (Всегда самые старые приходы).
@@ -519,29 +500,29 @@ namespace PartsApp
             int sparePartId = (cell.OwningRow.Tag as SparePart).SparePartId;
             //Очищаем все записи с соотв. SparePartId из списка приходов.
             _operDetList.RemoveAll(od => od.SparePart.SparePartId == sparePartId);
-            
+
 
             //Перебираем по строкам из extDGV.
             foreach (DataGridViewRow row in ExtSaleDGV.Rows)
             {
                 float extAvailCount = Convert.ToSingle(row.Cells[ExtCountCol.Index].Tag); //количество в наличии в данном приходе.                
-                
+
                 if (sellCount > 0)
                 {
                     int purchaseId = Convert.ToInt32(row.Cells[ExtPurchaseIdCol.Index].Value);
-                    float curSellValue = (sellCount > extAvailCount) ? extAvailCount  : sellCount;
+                    float curSellValue = (sellCount > extAvailCount) ? extAvailCount : sellCount;
 
                     DataGridViewCell extCountCell = row.Cells[ExtCountCol.Index];
                     SetCustomValueToCell(extCountCell, curSellValue); //задаём значение для ячейки.
-                    FillTheOperDetList(sparePartId, extCountCell);     
-                    sellCount -= extAvailCount;                   
-                }//if
+                    FillTheOperDetList(sparePartId, extCountCell);
+                    sellCount -= extAvailCount;
+                }
                 else
                 {
                     SetDefaultValueToCell(row.Cells[ExtCountCol.Index]); //Возвращаем серый цвет и дефолтное значение данной ячейке.
-                }//else
-            }//foreach
-        }//AutoChoisePurchases
+                }
+            }
+        }
 
         /// <summary>
         /// Меняет количество или добавляет новое значение в список деталей операции. 
@@ -551,7 +532,7 @@ namespace PartsApp
         private void FillTheOperDetList(int sparePartId, DataGridViewCell extCountCell)
         {
             int purchaseId = Convert.ToInt32(extCountCell.OwningRow.Cells[ExtPurchaseIdCol.Index].Value);
-            float sellCount = (extCountCell.Style.ForeColor == Color.Black) ? Convert.ToSingle(extCountCell.Value) : 0; 
+            float sellCount = (extCountCell.Style.ForeColor == Color.Black) ? Convert.ToSingle(extCountCell.Value) : 0;
             //Находим, если есть соотв. объект в списке.
             OperationDetails operDet = _operDetList.FirstOrDefault(od => od.SparePart.SparePartId == sparePartId
                                                                       && od.Operation.OperationId == purchaseId);
@@ -561,12 +542,12 @@ namespace PartsApp
             {
                 if (sellCount > 0)
                 {
-                    SparePart sparePart = SaleDGV.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (r.Tag as SparePart).SparePartId == sparePartId).Tag as SparePart;                   
+                    SparePart sparePart = SaleDGV.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (r.Tag as SparePart).SparePartId == sparePartId).Tag as SparePart;
                     IOperation purch = sparePart.AvailabilityList.First(av => av.OperationDetails.Operation.OperationId == purchaseId).OperationDetails.Operation;
-                    
+
                     _operDetList.Add(new OperationDetails(sparePart, purch, sellCount, 0));
-                }//if
-            }//if
+                }
+            }
             else
             {
                 //Если такой объект есть в списке, и прод. кол-во > 0, то обновляем кол-во, иначе удаляем из списка.
@@ -574,8 +555,8 @@ namespace PartsApp
                     operDet.Count = sellCount;
                 else
                     _operDetList.Remove(operDet);
-            }//else
-        }//FillTheOperDetList
+            }
+        }
 
         /// <summary>
         /// Заполняет ячейку 'Сумма' заданной строки и общую сумму.
@@ -588,15 +569,14 @@ namespace PartsApp
                 float sellPrice = Convert.ToSingle(row.Cells[SellingPriceCol.Index].Value);
                 float sellCount = Convert.ToSingle(row.Cells[CountCol.Index].Value);
 
-                row.Cells[SumCol.Index].Value = sellPrice * sellCount;                
-            }//if
+                row.Cells[SumCol.Index].Value = sellPrice * sellCount;
+            }
             else
             {
                 row.Cells[SumCol.Index].Value = null;//очищаем ячейку. 
-            }//else
-
+            }
             FillTheInTotal(); //Заполняем общую сумму операции.
-        }//FillTheSumCells
+        }
 
         /// <summary>
         /// Заполняет InTotalLabel корретным значением.
@@ -609,8 +589,7 @@ namespace PartsApp
                 //Если в строке заполнена ячейка 'Сумма'.
                 if (row.Cells[SumCol.Index].Value != null)
                     inTotal += Convert.ToSingle(row.Cells[SumCol.Index].Value);
-            }//foreach
-
+            }
             //Заполняем InTotalLabel расчитанным значением.
             inTotalNumberLabel.Text = (Math.Round(inTotal, 2, MidpointRounding.AwayFromZero)).ToString("0.00");
 
@@ -619,7 +598,7 @@ namespace PartsApp
             //меняем значение фактической оплаченной суммы если, галочка о полной оплате стоит.
             if (PaidCheckBox.Checked == true)
                 PaidNumericUpDown.Value = (decimal)inTotal;
-        }//FillTheInTotal
+        }
 
         /// <summary>
         /// Возвращает дефолтные значения во все ячейки столбца 'Кол-во' доп. таблицы.
@@ -631,8 +610,8 @@ namespace PartsApp
             {
                 SetDefaultValueToCell(extRow.Cells[ExtCountCol.Index]);           //Записываем дефолтное значение в ячейку.
                 FillTheOperDetList(sparePartId, extRow.Cells[ExtCountCol.Index]); //Запоминаем изменение в список.    
-            }//foreach
-        }//SetDefaultValuesToExtSaleDGV
+            }
+        }
 
         /// <summary>
         /// Записывает дефолтное значения в переданную ячейку.
@@ -641,9 +620,8 @@ namespace PartsApp
         private void SetDefaultValueToCell(DataGridViewCell cell)
         {
             cell.Style.ForeColor = Color.Gray;
-            cell.Value           = cell.Tag;
-        }//SetDefaultValueToCell
-
+            cell.Value = cell.Tag;
+        }
 
         /// <summary>
         /// Записывает кастомное значения в переданную ячейку.
@@ -653,15 +631,14 @@ namespace PartsApp
         {
             cell.Style.ForeColor = Color.Black;
             cell.Value = value;
-        }//SetCustomValueToCell
+        }
 
 
-
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
 
         #region Методы работы с выпадающим списком.
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         /// <summary>
         /// Обработчик для того, чтобы не срабатывало событие CellEndEdit при клике мышкой по вып. спику.
@@ -671,7 +648,7 @@ namespace PartsApp
         private void autoCompleteListBox_MouseHover(object sender, EventArgs e)
         {
             _isCellEditError = true;
-        }//autoCompleteListBox_MouseHover
+        }
 
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -680,20 +657,19 @@ namespace PartsApp
                 //Возвращаем фокус на ячейку для кот. выводится вып. список.                
                 SaleDGV_SelectionChanged(null, null);
                 _isCellEditError = true;
-            }//if
+            }
             else
             {
                 //Делаем автозаполнение строки, выбранным объектом.   
                 _isCellEditError = false;
-                SaleDGV_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));                
-            }//else
-        }//autoCompleteListBox_MouseDown
+                SaleDGV_CellEndEdit(null, new DataGridViewCellEventArgs(_lastEditCell.ColumnIndex, _lastEditCell.RowIndex));
+            }
+        }
 
         private void autoCompleteListBox_DataSourceChanged(object sender, EventArgs e)
         {
             AutoCompleteListBox.DataSourceChanged(autoCompleteListBox);
-        }//autoCompleteListBox_DataSourceChanged
-
+        }
         /// <summary>
         /// Форматирование вывода в ListBox.
         /// </summary>
@@ -702,31 +678,16 @@ namespace PartsApp
         private void autoCompleteListBox_Format(object sender, ListControlConvertEventArgs e)
         {
             AutoCompleteListBox.OutputFormatting(autoCompleteListBox, e);
-        }//autoCompleteListBox_Format
+        }
 
-
-
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
 
-        
-
-
-
-
-
-
-
-
-
-
-
-
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
 
         #region Методы работы с доп. таблицей.
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         private void ExtSaleDGV_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
@@ -734,8 +695,8 @@ namespace PartsApp
             {
                 DataGridViewCell cell = ExtSaleDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 SetCustomValueToCell(cell, null); //Очищаем ячейку для ввода знвчения поль-лем.
-            }//if
-        }//ExtSaleDGV_CellBeginEdit
+            }
+        }
 
         private void ExtSaleDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -747,32 +708,31 @@ namespace PartsApp
                 DataGridViewCell countCell = row.Cells[CountCol.Index];
                 //Проверяем корректность ввода.
                 int sparePartId = (row.Tag as SparePart).SparePartId;
-                string measureUnit = extCountCell.OwningRow.Cells[ExtMeasureUnitCol.Index].Value.ToString();                
+                string measureUnit = extCountCell.OwningRow.Cells[ExtMeasureUnitCol.Index].Value.ToString();
                 if (IsCountCellValueCorrect(extCountCell, measureUnit))
                 {
                     SaleDGVCountColumnUpdate(countCell); //Обновляем ячеку 'Кол-во' в таблице продаж.                                      
-                }//if
+                }
                 else
                 {
                     toolTip.Show("Введены некорректные данные", this, GetExtCellBelowLocation(extCountCell), 1000);  //выводим всплывающее окно с сообщением об ошибке.
                     SetDefaultValueToCell(extCountCell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
                     SaleDGVCountColumnUpdate(countCell); //Обновляем ячеку 'Кол-во' в таблице продаж.                    
-                }//else       
-
+                }
                 FillTheSumCell(row);                           //Заполняем столбец 'Сумма'.
                 FillTheOperDetList(sparePartId, extCountCell); //Запоминаем изменение в список.    
-            }//if       
-        }//ExtSaleDGV_CellEndEdit  
+            }
+        }
 
         private void ExtSaleDGV_SelectionChanged(object sender, EventArgs e)
         {
             markupComboBox.Enabled = (ExtSaleDGV.SelectedCells.Count > 0); //Если есть выделенные клетки делаем доступной изменение наценки.
-        }//ExtSaleDGV_SelectionChanged
+        }
 
         private void extGroupBox_Click(object sender, EventArgs e)
         {
             ExtSaleDGV.ClearSelection();
-        }//extGroupBox_Click
+        }
 
         /// <summary>
         /// Заполняет данными таблицу доп. инф-ции.
@@ -789,15 +749,15 @@ namespace PartsApp
                 int rowIndx = ExtSaleDGV.Rows.Add();
                 DataGridViewRow row = ExtSaleDGV.Rows[rowIndx];
 
-                row.Cells[ExtSupplierCol.Index].Value       = avail.OperationDetails.Operation.Contragent.ContragentName;
-                row.Cells[ExtMeasureUnitCol.Index].Value    = avail.OperationDetails.SparePart.MeasureUnit;
-                row.Cells[ExtStorageAdressCol.Index].Value  = avail.StorageAddress;
-                row.Cells[ExtPriceCol.Index].Value          = avail.OperationDetails.Price;
-                row.Cells[ExtMarkupCol.Index].Value         = Models.Markup.GetDescription(avail.Markup);
-                row.Cells[ExtSellingPriceCol.Index].Value   = avail.SellingPrice;
-                row.Cells[ExtPurchaseIdCol.Index].Value     = avail.OperationDetails.Operation.OperationId;
-                row.Cells[ExtPurchaseDateCol.Index].Value   = avail.OperationDetails.Operation.OperationDate;
-                row.Cells[ExtNoteCol.Index].Value           = avail.OperationDetails.Operation.Description;
+                row.Cells[ExtSupplierCol.Index].Value = avail.OperationDetails.Operation.Contragent.ContragentName;
+                row.Cells[ExtMeasureUnitCol.Index].Value = avail.OperationDetails.SparePart.MeasureUnit;
+                row.Cells[ExtStorageAdressCol.Index].Value = avail.StorageAddress;
+                row.Cells[ExtPriceCol.Index].Value = avail.OperationDetails.Price;
+                row.Cells[ExtMarkupCol.Index].Value = Models.Markup.GetDescription(avail.Markup);
+                row.Cells[ExtSellingPriceCol.Index].Value = avail.SellingPrice;
+                row.Cells[ExtPurchaseIdCol.Index].Value = avail.OperationDetails.Operation.OperationId;
+                row.Cells[ExtPurchaseDateCol.Index].Value = avail.OperationDetails.Operation.OperationDate;
+                row.Cells[ExtNoteCol.Index].Value = avail.OperationDetails.Operation.Description;
 
                 //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.                
                 if (avail.StorageAddress != null)
@@ -817,12 +777,11 @@ namespace PartsApp
                     SetDefaultValueToCell(extCountCell); //Задаем серый цвет и дефолтное значение данной ячейке.
                 else
                     SetCustomValueToCell(extCountCell, operDet.Count); //Задаем значение ячейки.
-            }//foreach            
-
+            }
             //Сортируем таблицу по дате прихода.
             ExtSaleDGV.Sort(ExtPurchaseDateCol, ListSortDirection.Ascending);
             ExtSaleDGV.ClearSelection();
-        }//FillTheExtDGV
+        }
 
         /// <summary>
         /// Обновляет значение ячейки 'Кол-во' в таблице продаж, после изменений в доп. таблице.
@@ -836,14 +795,13 @@ namespace PartsApp
             {
                 if (extRow.Cells[ExtCountCol.Index].Style.ForeColor == Color.Black)
                     extSellCount += Convert.ToSingle(extRow.Cells[ExtCountCol.Index].Value);
-            }//foreach
-                            
+            }
             //Если есть кастомный ввод.
             if (extSellCount > 0)
                 SetCustomValueToCell(countCell, extSellCount); //Обновляем "кол-во" в таблице продаж.
-            else 
+            else
                 SetDefaultValueToCell(countCell); //Задаём дефолтное значения для ячейки.   
-        }//SaleDGVCountColumnUpdate
+        }
 
         /// <summary>
         /// Возвращает абсолютный location области сразу под позицией клетки из extSaleDGV. 
@@ -853,32 +811,30 @@ namespace PartsApp
         private Point GetExtCellBelowLocation(DataGridViewCell cell)
         {
             Point cellLoc = ExtSaleDGV.GetCellDisplayRectangle(cell.ColumnIndex, cell.RowIndex, true).Location;
-            Point dgvLoc  = ExtSaleDGV.Location;
-            Point gbLoc   = extGroupBox.Location;
+            Point dgvLoc = ExtSaleDGV.Location;
+            Point gbLoc = extGroupBox.Location;
             return new Point(cellLoc.X + dgvLoc.X + gbLoc.X, cellLoc.Y + dgvLoc.Y + gbLoc.Y + cell.Size.Height);
-        }//GetCellBelowLocation
-
+        }
 
 
         #region Методы связанные с изменением наценки.
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
                 markupComboBox_SelectedIndexChanged(sender, e);
-        }//markupComboBox_PreviewKeyDown
-
+        }
 
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
-            if (ExtSaleDGV.SelectedCells.Count == 0) 
+            if (ExtSaleDGV.SelectedCells.Count == 0)
                 return;
 
             //выделяем строки всех выделенных клеток.
             ExtSaleDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
-            
+
             try
             {
                 //узнаем процент заданной наценки.
@@ -893,42 +849,28 @@ namespace PartsApp
                     float price = (float)row.Cells[ExtPriceCol.Index].Value;
                     float sellPrice = (float)Math.Round(price + (price * markupValue / 100), 2, MidpointRounding.AwayFromZero);
                     row.Cells[ExtSellingPriceCol.Index].Value = sellPrice;
-                }//foreach
-            }//try
+                }
+            }
             catch
             {
                 toolTip.Show("Введено некорректное значение.", this, markupComboBox.Location, 2000);
-            }//catch
-        }//markupComboBox_SelectedIndexChanged
+            }
+        }
 
 
-
-
-
-
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
 
 
-
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
 
 
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         #region Методы вывода инф-ции в Excel.
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
@@ -945,7 +887,7 @@ namespace PartsApp
             {
                 MessageBox.Show("Ошибка вывода в Excel");
             }
-        }//saveInExcelAsync   
+        }
 
         /// <summary>
         /// Метод вывода расходной информации в Excel-файл.
@@ -956,13 +898,13 @@ namespace PartsApp
         {
             IList<OperationDetails> operDetList = sale.OperationDetailsList;
 
-            Excel.Application ExcelApp     = new Excel.Application();
-            Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
+            Excel.Application ExcelApp = new Excel.Application();
+            Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
             Excel.Worksheet ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
 
             //Настраиваем горизонтальные и вертикальные границы области печати.
-            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 7;
-            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin  = 7;
+            ExcelWorkSheet.PageSetup.TopMargin = ExcelWorkSheet.PageSetup.BottomMargin = 7;
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin = 7;
 
             int row = 1, column = 1;
             //Выводим Id и Дату. 
@@ -985,7 +927,7 @@ namespace PartsApp
                                                          "Выписал : " + Form1.CurEmployee.LastName + " " + Form1.CurEmployee.FirstName,
                                                          "Принял : " + sale.ContragentEmployee);
 
-           
+
             row += 2;
             //Выводим заметку к операции.
             DescriptionExcelOutput(ExcelWorkSheet, sale.Description, ref row, column);
@@ -993,7 +935,7 @@ namespace PartsApp
             //Вызываем нашу созданную эксельку.
             ExcelApp.Visible = ExcelApp.UserControl = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-        }//saveInExcel  
+        }
 
         /// <summary>
         /// Заполняем Excel инф-цией из переданного списка.
@@ -1011,7 +953,7 @@ namespace PartsApp
             //Уменьшаем ширину колонки "Ед. изм."
             ExcelWorkSheet.Cells[row, column + 3].VerticalAlignment = Excel.XlHAlign.xlHAlignDistributed;
             ExcelWorkSheet.Cells[row, column + 3].Columns.ColumnWidth = 5;
-            
+
             //Устанавливаем ширину столбцов.
             int titleColWidth = 30, articulColWidth = 20; // -- Взято методом тыка.  
             SetColumnsWidth(operDetList, ExcelWorkSheet.Cells[row, column + 2], ExcelWorkSheet.Cells[row, column + 1], ExcelWorkSheet.Cells[row, column]);
@@ -1022,15 +964,14 @@ namespace PartsApp
             {
                 FillExcelRow(ExcelWorkSheet, operDet, ++row, column, titleColWidth, articulColWidth);
                 inTotal += operDet.Price * operDet.Count;
-            }//foreach
-
+            }
             //Обводим талицу рамкой. 
             ExcelWorkSheet.get_Range("A" + (row - operDetList.Count + 1).ToString(), "G" + row.ToString()).Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-            
+
             ++row;
             //Выводим 'Итого'.
             InTotalExcelOutput(ExcelWorkSheet, inTotal, row, column);
-        }//FillTheExcelList
+        }
 
         /// <summary>
         /// Заполняет строку заголовками для таблицы.
@@ -1041,7 +982,7 @@ namespace PartsApp
         private void FillTheTitlesRow(Excel.Worksheet ExcelWorkSheet, int row, int column)
         {
             //Заполняем заголовки строк.
-            ExcelWorkSheet.Cells[row, column]     = "Произв.";
+            ExcelWorkSheet.Cells[row, column] = "Произв.";
             ExcelWorkSheet.Cells[row, column + 1] = "Артикул";
             ExcelWorkSheet.Cells[row, column + 2] = "Название";
             ExcelWorkSheet.Cells[row, column + 3] = "Ед. изм.";
@@ -1056,7 +997,7 @@ namespace PartsApp
             excelCells.Font.Size = 12;
             excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack; //Обводим заголовки таблицы рамкой.            
             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium; //Устанавливаем стиль и толщину линии
-        }//FillTheTitlesRow
+        }
 
         /// <summary>
         /// Заполянет строку данными из переданного объекта.
@@ -1084,7 +1025,7 @@ namespace PartsApp
             ExcelWorkSheet.Cells[row, column + 4] = operDet.Count;
             ExcelWorkSheet.Cells[row, column + 5] = operDet.Price;
             ExcelWorkSheet.Cells[row, column + 6] = operDet.Price * operDet.Count;
-        }//FillExcelRow
+        }
 
         /// <summary>
         /// Увеличивает ширину строки.
@@ -1103,8 +1044,7 @@ namespace PartsApp
                 ExcelWorkSheet.Cells[row, column + 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
             if (sparePart.Articul.Length <= articulColWidth && sparePart.Title.Length > titleColWidth)
                 ExcelWorkSheet.Cells[row, column + 1].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-        }//IncreaseRowHeight
-
+        }
 
 
         /// <summary>
@@ -1126,7 +1066,7 @@ namespace PartsApp
             ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Underline = true;
             ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Size = ExcelWorkSheet.Cells[row, column + 4 + indent].Font.Size = 12;
             ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Bold = ExcelWorkSheet.Cells[row, column + 4 + indent].Font.Bold = true;
-        }//InTotalExcelOutput
+        }
 
         /// <summary>
         /// Заполняет заданную строку Id операции и датой.
@@ -1144,7 +1084,7 @@ namespace PartsApp
             excelCells.Font.Size = 18;
             excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
             excelCells.Value = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
-        }//OperationIdAndDateExcelOutput
+        }
 
         /// <summary>
         /// Выводит заметку об операции.
@@ -1168,9 +1108,8 @@ namespace PartsApp
                 excelCells.WrapText = true;
                 excelCells.Value = description;
                 AutoFitMergedCellRowHeight((ExcelWorkSheet.Cells[row, column] as Excel.Range));
-            }//if
-        }//DescriptionExcelOutput
-
+            }
+        }
 
 
         private void AutoFitMergedCellRowHeight(Excel.Range rng)
@@ -1197,10 +1136,10 @@ namespace PartsApp
                         rng.MergeCells = true;
                         rng.RowHeight = possNewRowHeight;
                         (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = true;
-                    }//if
-                }//if                
-            }//if
-        }//AutoFitMergedCellRowHeight
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Устанавливает ширину столбцов.
@@ -1227,12 +1166,11 @@ namespace PartsApp
                 int different = manufColWidth - maxManufLenght; //разница между дефолтной шириной столбца и фактической.
                 titleColWidth += (manufColWidth - different < minManufColWidth) ? minManufColWidth : different;
                 manufColWidth = (manufColWidth - different < minManufColWidth) ? minManufColWidth : manufColWidth - different;
-            }//if
-
+            }
             manufCol.Columns.ColumnWidth = manufColWidth;
             articulCol.Columns.ColumnWidth = articulColWidth;
             titleCol.Columns.ColumnWidth = titleColWidth;
-        }//SetColumnsWidth
+        }
 
         /// <summary>
         /// Возвращает ширину заданной области.
@@ -1245,10 +1183,9 @@ namespace PartsApp
             for (int i = 1; i <= rng.Columns.Count; ++i)
             {
                 rngWidth += rng.Cells.Item[1, i].ColumnWidth;
-            }//for
+            }
             return rngWidth;
-        }//GetRangeWidth
-
+        }
         private string xlRCtoA1(int ARow, int ACol, bool RowAbsolute = false, bool ColAbsolute = false)
         {
             int A1 = 'A' - 1;  // номер "A" минус 1 (65 - 1 = 64)
@@ -1277,13 +1214,7 @@ namespace PartsApp
 
             S = S + ARow.ToString();
             return S;
-        }//xlRCtoA1
-
-
-
-
-
-
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
@@ -1294,8 +1225,7 @@ namespace PartsApp
 
             //Если галочка стоит, то выводим оплаченную сумму как сумму по всей накладной, иначе выводим 0.
             PaidNumericUpDown.Value = (PaidCheckBox.Checked ? Convert.ToDecimal(inTotalNumberLabel.Text) : 0);
-        }//PaidCheckBox_CheckedChanged
-
+        }
 
         /// <summary>
         /// Возвращает объект типа Sale, созданный из данных формы.
@@ -1309,23 +1239,23 @@ namespace PartsApp
 
             //Если внесена сумма отличающаяся от требуемой (галочка выключена), меняем баланс клиента.
             if (PaidCheckBox.Checked == false)
-                customer.Balance += (double)PaidNumericUpDown.Value - Convert.ToDouble(inTotalNumberLabel.Text); 
-            
+                customer.Balance += (double)PaidNumericUpDown.Value - Convert.ToDouble(inTotalNumberLabel.Text);
+
 
             Sale sale = new Sale
             (
-                employee            : Form1.CurEmployee,
-                contragent          : customer,
-                contragentEmployee  : (!String.IsNullOrWhiteSpace(customerAgentTextBox.Text)) ? customerAgentTextBox.Text.Trim() : null,
-                operationDate       : saleDateTimePicker.Value,
-                description         : (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
-                operDetList         : CreateOperationDetailsListFromForm()
+                employee: Form1.CurEmployee,
+                contragent: customer,
+                contragentEmployee: (!String.IsNullOrWhiteSpace(customerAgentTextBox.Text)) ? customerAgentTextBox.Text.Trim() : null,
+                operationDate: saleDateTimePicker.Value,
+                description: (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
+                operDetList: CreateOperationDetailsListFromForm()
             );
             //Присваиваем 'Операцию' для каждого OperationDetails.
-            sale.OperationDetailsList.ToList().ForEach(od => od.Operation = sale); 
-            
+            sale.OperationDetailsList.ToList().ForEach(od => od.Operation = sale);
+
             return sale;
-        }//CreateSaleFromForm
+        }
 
         /// <summary>
         /// Возвращает список объектов типа OperationDetails, созданный из данных таблицы продаж.
@@ -1344,11 +1274,10 @@ namespace PartsApp
 
                     SparePart sparePart = row.Tag as SparePart;
                     operDetList.Add(new OperationDetails(sparePart, null, count, sellPrice));
-                }//if
-            }//foreach
-
+                }
+            }
             return operDetList;
-        }//CreateAvailabilityListFromForm
+        }
 
         /// <summary>
         /// Возвращает true если все обязательные поля корректно заполнены, иначе false.
@@ -1371,13 +1300,9 @@ namespace PartsApp
             {
                 toolTip.Show("Таблица не заполнена или не везде указана цена или количество товара", this, okButton.Location, 3000);
                 return false;
-            }//if
-
-            return true;            
-        }//IsRequiredAddingAreaFieldsValid
-
-
-
+            }
+            return true;
+        }
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
@@ -1385,9 +1310,9 @@ namespace PartsApp
             {
                 if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     this.Close();
-            }//if
-        }//CancelButton_MouseClick
-        
+            }
+        }
+
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -1400,20 +1325,16 @@ namespace PartsApp
                     try
                     {
                         sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
-                    }//try
+                    }
                     catch (Exception)
                     {
                         MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
                         return;
-                    }//catch 
-
+                    }
                     saveInExcelAsync(sale, sellerTextBox.Text.Trim());
                     this.Close();
-                }//if
-            }//if
-        }//
-
-        
-    }//Form2
-
-}//namespace
+                }
+            }
+        }
+    }
+}

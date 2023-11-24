@@ -17,17 +17,17 @@ namespace PartsApp
         public SparePartOperationsInfoForm()
         {
             InitializeComponent();
-        }//
+        }
 
         public SparePartOperationsInfoForm(SparePart sparePart)
         {
             InitializeComponent();
 
             List<IOperation> operList = FindOperations(sparePart);
-            
+
             //Заполняем таблицу.
             FillTheOperationDGV(operList, sparePart.SparePartId);
-        }//
+        }
 
         /// <summary>
         /// Заполняет таблицу операций переданной инф-цией.
@@ -42,24 +42,24 @@ namespace PartsApp
                 DataGridViewRow row = OperationsInfoDGV.Rows[rowIndx];
 
                 row.Cells[OperationTypeCol.Index].Value = (operat.GetType() == typeof(Sale)) ? "Расход" : "Приход";
-                row.DefaultCellStyle.BackColor          = (operat.GetType() == typeof(Sale)) ? Color.LightGreen : Color.Khaki;//Color.Pink;
-                row.Cells[OperationIdCol.Index].Value   = operat.OperationId;
-                row.Cells[DateCol.Index].Value          = operat.OperationDate.ToShortDateString();
-                row.Cells[EmployeeCol.Index].Value      = (operat.Employee != null) ? operat.Employee.GetShortFullName() : null;
-                row.Cells[ContragentCol.Index].Value    = operat.Contragent.ContragentName;
+                row.DefaultCellStyle.BackColor = (operat.GetType() == typeof(Sale)) ? Color.LightGreen : Color.Khaki;//Color.Pink;
+                row.Cells[OperationIdCol.Index].Value = operat.OperationId;
+                row.Cells[DateCol.Index].Value = operat.OperationDate.ToShortDateString();
+                row.Cells[EmployeeCol.Index].Value = (operat.Employee != null) ? operat.Employee.GetShortFullName() : null;
+                row.Cells[ContragentCol.Index].Value = operat.Contragent.ContragentName;
                 row.Cells[ContragentEmployeeCol.Index].Value = operat.ContragentEmployee;
 
                 OperationDetails operDet = operat.OperationDetailsList.First(od => od.SparePart.SparePartId == sparePartId);
-                row.Cells[UnitCol.Index].Value  = operDet.SparePart.MeasureUnit;
+                row.Cells[UnitCol.Index].Value = operDet.SparePart.MeasureUnit;
                 row.Cells[CountCol.Index].Value = operDet.Count;
                 row.Cells[PriceCol.Index].Value = operDet.Price;
-                row.Cells[SumCol.Index].Value   = operDet.Price * operDet.Count;
+                row.Cells[SumCol.Index].Value = operDet.Price * operDet.Count;
 
                 //Выводим название и артикул запчасти.
                 ArticulLabel.Text = operDet.SparePart.Articul;
-                TitleLabel.Text   = operDet.SparePart.Title;
-            }//foreach
-        }//FillTheOperationDGV
+                TitleLabel.Text = operDet.SparePart.Title;
+            }
+        }
 
         private void SaleCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -67,9 +67,8 @@ namespace PartsApp
             {
                 if (row.Cells[OperationTypeCol.Index].Value.ToString() == "Расход")
                     row.Visible = SaleCheckBox.Checked;
-            }//foreach
-
-        }//SaleCheckBox_CheckedChanged
+            }
+        }
 
         private void PurchaseCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -77,7 +76,7 @@ namespace PartsApp
             {
                 if (row.Cells[OperationTypeCol.Index].Value.ToString() == "Приход")
                     row.Visible = PurchaseCheckBox.Checked;
-            }//foreach
+            }
         }
 
         /// <summary>
@@ -94,15 +93,8 @@ namespace PartsApp
 
             return operationsList;
         }
-
-
-
-
-
-
-    }//SparePartOperationsInfoForm
-}//namespace
-
+    }
+}
 
 /**/
 //Вывод даты вместе со временем.

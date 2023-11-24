@@ -34,7 +34,6 @@ namespace PartsApp.SupportClasses
                 hash += String.Format("{0:x2}", b);
 
             return hash;
-        }//GetHashString
-    }//PasswordClass
-
-}//namespace
+        }
+    }
+}

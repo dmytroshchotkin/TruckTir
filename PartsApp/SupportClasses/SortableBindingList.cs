@@ -21,7 +21,7 @@ namespace PartsApp.SupportClasses
         /// </summary>
         public SortableBindingList()
         {
-        }//
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SortableBindingList{T}"/> class.
@@ -30,7 +30,7 @@ namespace PartsApp.SupportClasses
         public SortableBindingList(IList<T> list)
             : base(list)
         {
-        }//
+        }
 
         /// <summary>
         /// Gets a value indicating whether the list supports sorting.
@@ -38,7 +38,7 @@ namespace PartsApp.SupportClasses
         protected override bool SupportsSortingCore
         {
             get { return true; }
-        }//SupportsSortingCore
+        }
 
         /// <summary>
         /// Gets a value indicating whether the list is sorted.
@@ -46,7 +46,7 @@ namespace PartsApp.SupportClasses
         protected override bool IsSortedCore
         {
             get { return _isSorted; }
-        }//IsSortedCore
+        }
 
         /// <summary>
         /// Gets the direction the list is sorted.
@@ -54,7 +54,7 @@ namespace PartsApp.SupportClasses
         protected override ListSortDirection SortDirectionCore
         {
             get { return _sortDirection; }
-        }//SortDirectionCore
+        }
 
         /// <summary>
         /// Gets the property descriptor that is used for sorting the list if sorting is implemented in a derived class; otherwise, returns null
@@ -62,7 +62,7 @@ namespace PartsApp.SupportClasses
         protected override PropertyDescriptor SortPropertyCore
         {
             get { return _sortProperty; }
-        }//SortPropertyCore
+        }
 
         /// <summary>
         /// Removes any sort applied with ApplySortCore if sorting is implemented
@@ -71,8 +71,8 @@ namespace PartsApp.SupportClasses
         {
             _sortDirection = ListSortDirection.Ascending;
             _sortProperty = null;
-            _isSorted = false; 
-        }//RemoveSortCore
+            _isSorted = false;
+        }
 
         /// <summary>
         /// Sorts the items if overridden in a derived class
@@ -92,8 +92,7 @@ namespace PartsApp.SupportClasses
             _isSorted = true;
             //fire an event that the list has been changed.
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-        }//ApplySortCore
-
+        }
 
         private int Compare(T lhs, T rhs)
         {
@@ -102,7 +101,7 @@ namespace PartsApp.SupportClasses
             if (_sortDirection == ListSortDirection.Descending)
                 result = -result;
             return result;
-        }//Compare
+        }
 
         private int OnComparison(T lhs, T rhs)
         {
@@ -126,8 +125,6 @@ namespace PartsApp.SupportClasses
             }
             //not comparable, compare ToString
             return lhsValue.ToString().CompareTo(rhsValue.ToString());
-        }//OnComparison
-
-    }//SortableBindingList
-
-}//namespace
+        }
+    }
+}

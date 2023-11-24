@@ -27,7 +27,7 @@ namespace PartsApp
             BeginDateDTP.Value = DateTime.Today.AddMonths(-1);
             EndDateDTP.Value = DateTime.Now;
             BeginDateDTP.ValueChanged += new System.EventHandler(this.DatesDTP_ValueChanged);
-        }//
+        }
 
         /// <summary>
         /// Выводим список операций соответствующих установленным требованиям по дате, и типу операции.
@@ -37,8 +37,7 @@ namespace PartsApp
         private void DatesDTP_ValueChanged(object sender, EventArgs e)
         {
             FillTheOperationDGV(); //Заполняем таблицу операций.
-        }//DatesDTP_ValueChanged
-
+        }
 
         /// <summary>
         /// Заполняем таблицу операций для выделенного сотрудника.
@@ -56,7 +55,7 @@ namespace PartsApp
 
             //Изменяем видимость строк по типу операции.
             OperationsCheckBox_CheckedChanged(null, null);
-        }//FillTheOperationDGV
+        }
 
         /// <summary>
         /// Заполняет таблицу операций переданной инф-цией.
@@ -79,8 +78,8 @@ namespace PartsApp
                 row.Cells[TotalSumCol.Index].Value = operat.OperationDetailsList.Sum(od => od.Sum);
 
                 row.Tag = operat;
-            }//foreach
-        }//FillTheOperationDGV
+            }
+        }
 
         /// <summary>
         /// Изменяет видимость строк по типу операции, в зависимости от состояния CheckBox-ов.
@@ -93,11 +92,10 @@ namespace PartsApp
             foreach (DataGridViewRow row in OperationsInfoDGV.Rows)
             {
                 row.Visible = (row.Cells[OperationTypeCol.Index].Value == "Приход" ? PurchaseCheckBox.Checked : SaleCheckBox.Checked);
-            }//foreach
-
+            }
             //Выводим кол-во видимых строк.
             OperationsCoubtLabel.Text = OperationsInfoDGV.Rows.GetRowCount(DataGridViewElementStates.Visible).ToString();
-        }//OperationsCheckBox_CheckedChanged    
+        }
 
         /// <summary>
         /// Осуществляет изменения данных в таблице деталей операции в зависимости от выбранной операции.
@@ -114,8 +112,8 @@ namespace PartsApp
                 IOperation oper = (OperationsInfoDGV.Rows[e.RowIndex].Tag as IOperation);//Находим нужную операцию
                 //Выводим инф-цию в таблицу доп. инф-ции по данной операции.
                 FillTheOperationDetailsDGV(oper.OperationDetailsList);
-            }//if
-        }//OperationsInfoDGV_RowEnter
+            }
+        }
 
         /// <summary>
         /// Заполняет таблицу доп. инф-ции по Операции данными из переданного списка.
@@ -135,8 +133,8 @@ namespace PartsApp
                 row.Cells[CountCol.Index].Value = operDet.Count;
                 row.Cells[PriceCol.Index].Value = operDet.Price;
                 row.Cells[SumCol.Index].Value = operDet.Count * operDet.Price;
-            }//foreach
-        }//FillTheOperationDetailsDGV
+            }
+        }
 
         /// <summary>
         /// Изменяем доступность DTP в зависимости от состояния CheckBox-ов.
@@ -151,7 +149,7 @@ namespace PartsApp
 
             //Заполняем таблицу операций.
             FillTheOperationDGV();
-        }//BeginDateCheckBox_CheckedChanged
+        }
 
         /// <summary>
         /// Возвращает список всех операций проведённых за указанный период.
@@ -185,15 +183,13 @@ namespace PartsApp
             {
                 Purchase purchase = row.Tag as Purchase;
                 saveInExcelAsync(purchase.OperationDetailsList, "Truck Tir");
-            }//if
+            }
             else
             {
                 Sale sale = row.Tag as Sale;
                 saveInExcelAsync(sale, "Truck Tir");
-            }//else
-
-        }//ExcelOutputButton_Click
-
+            }
+        }
         #region *************************************************Вывод приходов********************************************************
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -213,7 +209,7 @@ namespace PartsApp
             {
                 MessageBox.Show("Ошибка вывода в Excel");
             }
-        }//saveInExcelAsync        
+        }
 
         /// <summary>
         /// Метод вывода приходной информации в Excel-файл.
@@ -263,8 +259,7 @@ namespace PartsApp
             //Вызываем нашу созданную эксельку.
             ExcelApp.Visible = ExcelApp.UserControl = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.            
-        }//saveInExcel  
-
+        }
 
         /// <summary>
         /// Заполняем Excel инф-цией из переданного списка.
@@ -293,15 +288,14 @@ namespace PartsApp
             {
                 FillExcelRow(ExcelWorkSheet, operDet, ++row, column, titleColWidth, articulColWidth);
                 inTotal += operDet.Price * operDet.Count;
-            }//foreach
-
+            }
             //Обводим талицу рамкой. 
             ExcelWorkSheet.get_Range("A" + (row - operDetList.Count + 1).ToString(), "G" + row.ToString()).Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
 
             ++row;
             //Выводим 'Итого'.
             InTotalExcelOutput(ExcelWorkSheet, inTotal, row, column);
-        }//FillTheExcelList
+        }
 
         /// <summary>
         /// Заполняет строку заголовками для таблицы.
@@ -327,7 +321,7 @@ namespace PartsApp
             excelCells.Font.Size = 12;
             excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack; //Обводим заголовки таблицы рамкой.            
             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium; //Устанавливаем стиль и толщину линии
-        }//FillTheTitlesRow
+        }
 
         /// <summary>
         /// Заполянет строку данными из переданного объекта.
@@ -355,8 +349,7 @@ namespace PartsApp
             ExcelWorkSheet.Cells[row, column + 4] = operDet.Count;
             ExcelWorkSheet.Cells[row, column + 5] = operDet.Price;
             ExcelWorkSheet.Cells[row, column + 6] = operDet.Price * operDet.Count;
-        }//FillExcelRow
-
+        }
 
         /// <summary>
         /// Увеличивает ширину строки.
@@ -375,7 +368,7 @@ namespace PartsApp
                 ExcelWorkSheet.Cells[row, column + 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
             if (sparePart.Articul.Length <= articulColWidth && sparePart.Title.Length > titleColWidth)
                 ExcelWorkSheet.Cells[row, column + 1].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-        }//IncreaseRowHeight
+        }
 
         /// <summary>
         /// Выводим 'Итого' в заданной клетке.
@@ -396,7 +389,7 @@ namespace PartsApp
             ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Underline = true;
             ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Size = ExcelWorkSheet.Cells[row, column + 4 + indent].Font.Size = 12;
             ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Bold = ExcelWorkSheet.Cells[row, column + 4 + indent].Font.Bold = true;
-        }//InTotalExcelOutput
+        }
 
         /// <summary>
         /// Заполняет заданную строку Id операции и датой.
@@ -414,7 +407,7 @@ namespace PartsApp
             excelCells.Font.Size = 18;
             excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
             excelCells.Value = String.Format("Приходная накладная №{0} от {1}г.", purchase.OperationId, purchase.OperationDate.ToString("dd/MM/yyyy"));
-        }//OperationIdAndDateExcelOutput
+        }
 
         /// <summary>
         /// Выводит заметку об операции.
@@ -438,9 +431,8 @@ namespace PartsApp
                 excelCells.WrapText = true;
                 excelCells.Value = description;
                 AutoFitMergedCellRowHeight((ExcelWorkSheet.Cells[row, column] as Excel.Range));
-            }//if
-        }//DescriptionExcelOutput
-
+            }
+        }
 
         /// <summary>
         /// Устанавливает ширину столбцов.
@@ -467,13 +459,11 @@ namespace PartsApp
                 int different = manufColWidth - maxManufLenght; //разница между дефолтной шириной столбца и фактической.
                 titleColWidth += (manufColWidth - different < minManufColWidth) ? minManufColWidth : different;
                 manufColWidth = (manufColWidth - different < minManufColWidth) ? minManufColWidth : manufColWidth - different;
-            }//if
-
+            }
             manufCol.Columns.ColumnWidth = manufColWidth;
             articulCol.Columns.ColumnWidth = articulColWidth;
             titleCol.Columns.ColumnWidth = titleColWidth;
-        }//SetColumnsWidth
-
+        }
 
         private void AutoFitMergedCellRowHeight(Excel.Range rng)
         {
@@ -499,11 +489,10 @@ namespace PartsApp
                         rng.MergeCells = true;
                         rng.RowHeight = possNewRowHeight;
                         (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = true;
-                    }//if
-                }//if                
-            }//if
-        }//AutoFitMergedCellRowHeight
-
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Возвращает ширину заданной области.
@@ -516,10 +505,9 @@ namespace PartsApp
             for (int i = 1; i <= rng.Columns.Count; ++i)
             {
                 rngWidth += rng.Cells.Item[1, i].ColumnWidth;
-            }//for
+            }
             return rngWidth;
-        }//GetRangeWidth
-
+        }
         private string xlRCtoA1(int ARow, int ACol, bool RowAbsolute = false, bool ColAbsolute = false)
         {
             int A1 = 'A' - 1;  // номер "A" минус 1 (65 - 1 = 64)
@@ -548,8 +536,7 @@ namespace PartsApp
 
             S = S + ARow.ToString();
             return S;
-        }//xlRCtoA1
-
+        }
 
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -573,7 +560,7 @@ namespace PartsApp
             {
                 MessageBox.Show("Ошибка вывода в Excel");
             }
-        }//saveInExcelAsync   
+        }
 
         /// <summary>
         /// Метод вывода расходной информации в Excel-файл.
@@ -621,8 +608,7 @@ namespace PartsApp
             //Вызываем нашу созданную эксельку.
             ExcelApp.Visible = ExcelApp.UserControl = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-        }//saveInExcel  
-
+        }
 
         /// <summary>
         /// Заполняет заданную строку Id операции и датой.
@@ -640,24 +626,12 @@ namespace PartsApp
             excelCells.Font.Size = 18;
             excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
             excelCells.Value = String.Format("Расходная накладная №{0} от {1}г.", sale.OperationId, sale.OperationDate.ToString("dd/MM/yyyy"));
-        }//OperationIdAndDateExcelOutput
-
-
-
-
-
-
-
+        }
 
         //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
         #endregion
 
-
-
-
         //==============================================================================================================================================================================
         #endregion
-
-        
-    }//OperationsInfoForm
-}//namespace
+    }
+}

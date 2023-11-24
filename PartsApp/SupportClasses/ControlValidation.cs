@@ -9,7 +9,7 @@ using System.Drawing;
 namespace PartsApp.SupportClasses
 {
     public static class ControlValidation
-    {        
+    {
 
         ///// <summary>
         ///// Метод выдачи визуального сообщения о том что введены некорректные данные.
@@ -22,8 +22,7 @@ namespace PartsApp.SupportClasses
         //    Point location = GetControlLocation(inputControl);
 
         //    WrongValueInput(toolTip, inputControl, location, toolTipMessage, toolTipShowTime);
-        //}//WrongValueInput 
-        ///// <summary>
+        //}        ///// <summary>
         /////  Метод выдачи визуального сообщения о том что введены некорректные данные.
         ///// </summary>
         ///// <param name="inputControl">Контрол ввода инф-ции</param>
@@ -42,7 +41,7 @@ namespace PartsApp.SupportClasses
 
         //    toolTip.SetToolTip(inputControl, toolTipMessage);
         //    toolTip.Show(toolTipMessage, inputControl.FindForm(), toolTipLocation, toolTipShowTime);
-        //}//WrongValueInput
+        //}
 
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены некорректные данные.
@@ -53,7 +52,8 @@ namespace PartsApp.SupportClasses
         {
             string alertMessage = ControlValidation.GetAlertMessage(inputControl); //Находим дефолтное сообщение.
             WrongValueInput(toolTip, inputControl, alertMessage);
-        }//WrongValueInput     
+        }
+
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены некорректные данные.
         /// </summary>
@@ -64,7 +64,8 @@ namespace PartsApp.SupportClasses
         {
             string alertMessage = ControlValidation.GetAlertMessage(inputControl); //Находим дефолтное сообщение.
             WrongValueInput(toolTip, inputControl, alertMessage, warningColor);
-        }//WrongValueInput
+        }
+
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены некорректные данные.
         /// </summary>
@@ -73,8 +74,9 @@ namespace PartsApp.SupportClasses
         /// <param name="toolTipMessage">Всплывающее сообщение.</param>
         public static void WrongValueInput(ToolTip toolTip, Control inputControl, string toolTipMessage)
         {
-            WrongValueInput(toolTip, inputControl, toolTipMessage,  Color.Red);
-        }//WrongValueInput
+            WrongValueInput(toolTip, inputControl, toolTipMessage, Color.Red);
+        }
+
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены некорректные данные.
         /// </summary>
@@ -98,8 +100,7 @@ namespace PartsApp.SupportClasses
 
             toolTip.SetToolTip(inputControl, toolTipMessage);
             toolTip.Show(toolTipMessage, inputControl.FindForm(), location, 2000);
-        }//WrongValueInput
-
+        }
 
 
         /// <summary>
@@ -116,7 +117,8 @@ namespace PartsApp.SupportClasses
                 starLabel.ForeColor = Color.Black;
             backPanel.BackColor = SystemColors.Control;
             toolTip.SetToolTip(inputControl, String.Empty);
-        }//CorrectValueInput
+        }
+
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены корректные данные.
         /// </summary>
@@ -125,7 +127,8 @@ namespace PartsApp.SupportClasses
         public static void CorrectValueInput(ToolTip toolTip, Control inputControl, string toolTipMessage)
         {
             CorrectValueInput(toolTip, inputControl, toolTipMessage, 2000);
-        }//CorrectValueInput
+        }
+
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены корректные данные.
         /// </summary>
@@ -145,8 +148,7 @@ namespace PartsApp.SupportClasses
             toolTip.SetToolTip(inputControl, toolTipMessage);
             toolTip.Show(toolTipMessage, inputControl.FindForm(), location, toolTipShowTime);
             //toolTip.Show(toolTipMessage, inputControl, toolTipShowTime);
-        }//CorrectValueInput
-
+        }
 
         /// <summary>
         /// Возвращает позицию переданного контрола относительно формы.
@@ -168,7 +170,7 @@ namespace PartsApp.SupportClasses
             var relPos = form.PointToClient(absPos);
 
             return new Point(relPos.X + borderWidth, relPos.Y + borderHeight + captionHeight);
-        }//GetControlLocation
+        }
 
         /// <summary>
         /// Возвращает StarLabel ассоциируемый с переданным TextBox-ом.
@@ -183,7 +185,8 @@ namespace PartsApp.SupportClasses
             string fieldsBeginName = control.Name.Substring(0, control.Name.IndexOf(controlType)); // "FirstName"
             string starLabelName = fieldsBeginName + "StarLabel";                                  // "FirstName" + "StarLabel"
             return control.FindForm().Controls.Find(starLabelName, true).FirstOrDefault() as Label;
-        }//FindStarLabel
+        }
+
         /// <summary>
         /// Возвращает BackPanel ассоциируемый с переданным TextBox-ом.
         /// </summary>
@@ -197,7 +200,7 @@ namespace PartsApp.SupportClasses
             string fieldsBeginName = control.Name.Substring(0, control.Name.IndexOf(controlType));  // "FirstName"
             string starLabelName = fieldsBeginName + "BackPanel";                                 // "FirstName" + "BackPanel"
             return control.FindForm().Controls.Find(starLabelName, true).FirstOrDefault() as Panel;
-        }//FindBackPanel
+        }
 
         /// <summary>
         /// Возвращает строку предупреждения найденную по имени контрола ассоциируемого с TextBox-ом.
@@ -217,7 +220,7 @@ namespace PartsApp.SupportClasses
             string correctLabelText = nameLabel.Text.Substring(0, nameLabel.Text.Length - 2);    //Вместо "Имя :" получаем "Имя".
 
             return String.Format("Заполните поле \"{0}\"", correctLabelText);
-        }//GetToolTipAlertMessage
+        }
 
         ///// <summary>
         ///// Менят BackColor переданного контрола на красный на 200мс.
@@ -240,7 +243,8 @@ namespace PartsApp.SupportClasses
         //    };
 
         //    dt.Start();
-        //}//ControlBlink
+        //}
+
 
         /// <summary>
         /// Вовращает true, если св-во Text переданного контрола пустое, иначе false. В зависимости от результата визуально выделяет StarLabel и BackPanel контрола.
@@ -262,9 +266,8 @@ namespace PartsApp.SupportClasses
             {
                 CorrectValueInput(toolTip, control);
                 return false;
-            }//else 
-        }//IsInputControlEmpty
-    }//ControlValidation
+            }
+        }
+    }
 
-
-}//namespace
+}

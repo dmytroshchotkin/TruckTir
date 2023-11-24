@@ -20,9 +20,7 @@ namespace PartsApp2
                 for (int i = 0; i < spareParts.Count; ++i)
                     PartsDAL.AddSparePart(spareParts[i], connection);
                 connection.Close();
-            }//using
-        }//AddSparePart
-        public static void AddSparePartsProviders(int sparePartId, IList<int> providersId, SQLiteConnection openConnection)
+            }        }        public static void AddSparePartsProviders(int sparePartId, IList<int> providersId, SQLiteConnection openConnection)
         {
             var insertSQL = new SQLiteCommand("INSERT INTO SparePartsProviders VALUES (@sparePartId, @providerId)", openConnection);
 
@@ -42,9 +40,7 @@ namespace PartsApp2
                 param2.Value = providersId[i];
 
                 insertSQL.ExecuteNonQuery();
-            }//for   
-        }//AddSparePartsProviders
-
+            }        }
         //Добавление в БД новой записи, или увеличение количества уже существующей. 
         public static void AddSparePartsWithUpdateCount(IList<SparePart> spareParts)
         {
@@ -69,12 +65,8 @@ namespace PartsApp2
                             AddSparePart(spareParts[i], connection);
                         //если точно такая же запись уже есть в БД, то увеличиваем количество.
                         else PartsDAL.ChangeSparePartCount(sparePartsId[0], spareParts[i].Count, connection);
-                    }//else
-                }//for           
-                connection.Close();
-            }//using
-        }//AddSparePartsWithIncreasingCount
-
+                    }                }                connection.Close();
+            }        }
         //Добавления во вспомогательные таблицы.
         public static void AddUnitOfMeasure(string unit)
         {
@@ -90,9 +82,7 @@ namespace PartsApp2
                 insertSQL.ExecuteNonQuery();
 
                 connection.Close();
-            }//using
-        }//AddUnitOfMeasure
-        public static void AddUnitOfMeasure(string unit, SQLiteConnection openConnection)
+            }        }        public static void AddUnitOfMeasure(string unit, SQLiteConnection openConnection)
         {
             //Вставляем запись в табл. "UnitOfMeasure"
             var insertSQL = new SQLiteCommand("INSERT INTO UnitOfMeasure VALUES(@Unit)", openConnection);
@@ -100,8 +90,7 @@ namespace PartsApp2
             insertSQL.Parameters.AddWithValue("@Unit", unit);
 
             insertSQL.ExecuteNonQuery();
-        }//AddUnitOfMeasure
-
+        }
         //Нахождение всех данных БД.
         public static IList<SparePart> FindAllSpareParts()
         {
@@ -131,12 +120,9 @@ namespace PartsApp2
                     sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                     spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-            return spareParts;
-        }//FindAllSpareParts
-
+                }                connection.Close();
+            }            return spareParts;
+        }
         //Обновление данных в БД.
         public static void UpdateSparePartTitle(int id, string title)
         {
@@ -160,10 +146,8 @@ namespace PartsApp2
                 updateCom.ExecuteNonQuery();
 
                 connection.Close();
-            }//using
-
-        }//UpdateSparePartTitle
-
+            }
+        }
         public static void ChangeSparePartCount(int id, double count)
         {
             using (SQLiteConnection connection = GetDatabaseConnection("SparePartConfig") as SQLiteConnection)
@@ -186,9 +170,7 @@ namespace PartsApp2
                 updateCom.ExecuteNonQuery();
 
                 connection.Close();
-            }//using
-        }//ChangeSparePartCount
-        public static void ChangeSparePartCount(int id, double count, SQLiteConnection openConnection)
+            }        }        public static void ChangeSparePartCount(int id, double count, SQLiteConnection openConnection)
         {
             var updateCom = new SQLiteCommand("UPDATE SparePart SET Count = Count + @Count WHERE Id = @Id", openConnection);
 
@@ -206,8 +188,7 @@ namespace PartsApp2
 
             updateCom.ExecuteNonQuery();
 
-        }//ChangeSparePartCount
-
+        }
         //Поиск по БД.
         public static IList<SparePart> FindSparePartByArticul(string sparePartArticul)
         {
@@ -245,12 +226,10 @@ namespace PartsApp2
                     sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                     spareParts.Add(sparePart);
-                }///while
-                connection.Close();
+                }                connection.Close();
             }
             return spareParts;
-        }//FindSparePartByArticul
-        public static IList<SparePart> FindSparePartByArticul(string sparePartArticul, SQLiteConnection openConnection)
+        }        public static IList<SparePart> FindSparePartByArticul(string sparePartArticul, SQLiteConnection openConnection)
         {
             IList<SparePart> spareParts = new List<SparePart>();
 
@@ -284,10 +263,8 @@ namespace PartsApp2
                 sparePart.Providers = FindSparePartProvidersById(sparePart.Id, openConnection);
 
                 spareParts.Add(sparePart);
-            }///while
-            return spareParts;
-        }//FindSparePartByArticul
-        public static IList<int> FindSparePartsIdByArticul(string sparePartArticul)
+            }            return spareParts;
+        }        public static IList<int> FindSparePartsIdByArticul(string sparePartArticul)
         {
             IList<int> sparePartsId = new List<int>();
 
@@ -311,12 +288,9 @@ namespace PartsApp2
                 while (dataReader.Read())
                 {
                     sparePartsId.Add(Convert.ToInt32(dataReader["Id"]));
-                }//while
-                connection.Close();
-            }//using
-            return sparePartsId;
-        }//FindSparePartsIdByArticul
-        public static IList<int> FindSparePartsIdByArticul(string sparePartArticul, SQLiteConnection openConnection)
+                }                connection.Close();
+            }            return sparePartsId;
+        }        public static IList<int> FindSparePartsIdByArticul(string sparePartArticul, SQLiteConnection openConnection)
         {
             IList<int> sparePartsId = new List<int>();
             var cmd = new SQLiteCommand(null, openConnection);
@@ -336,8 +310,7 @@ namespace PartsApp2
                 sparePartsId.Add(Convert.ToInt32(dataReader["Id"]));
 
             return sparePartsId;
-        }//FindSparePartsIdByArticul
-        public static IList<int> FindSparePartsIdByTitle(string sparePartTitle)
+        }        public static IList<int> FindSparePartsIdByTitle(string sparePartTitle)
         {
             IList<int> sparePartsId = new List<int>();
 
@@ -361,12 +334,9 @@ namespace PartsApp2
                 while (dataReader.Read())
                 {
                     sparePartsId.Add(Convert.ToInt32(dataReader["Id"]));
-                }//while
-                connection.Close();
-            }//using
-            return sparePartsId;
-        }//FindSparePartsIdByTitle
-        public static IList<int> FindSparePartsIdByTitle(string sparePartTitle, SQLiteConnection openConnection)
+                }                connection.Close();
+            }            return sparePartsId;
+        }        public static IList<int> FindSparePartsIdByTitle(string sparePartTitle, SQLiteConnection openConnection)
         {
             IList<int> sparePartsId = new List<int>();
 
@@ -387,8 +357,7 @@ namespace PartsApp2
                 sparePartsId.Add(Convert.ToInt32(dataReader["Id"]));
 
             return sparePartsId;
-        }//FindSparePartsIdByTitle
-
+        }
         public static int FindManufacturerIdByTitle(string manufacturerTitle)
         {
             int ManufacturerId = 0;
@@ -411,10 +380,8 @@ namespace PartsApp2
                 while (dataReader.Read())
                     ManufacturerId = Convert.ToInt32(dataReader["Id"]);
                 connection.Close();
-            }//using
-            return ManufacturerId;
-        }//FindManufacturerIdByTitle
-        public static int FindManufacturerIdByTitle(string manufacturerTitle, SQLiteConnection openConnection)
+            }            return ManufacturerId;
+        }        public static int FindManufacturerIdByTitle(string manufacturerTitle, SQLiteConnection openConnection)
         {
             int ManufacturerId = 0;
 
@@ -435,8 +402,7 @@ namespace PartsApp2
 
 
             return ManufacturerId;
-        }//FindManufacturerIdByTitle
-        public static IList<int> FindSparePartsIdByTitle(string sparePartTitle, IList<int> sparePartsIdList)
+        }        public static IList<int> FindSparePartsIdByTitle(string sparePartTitle, IList<int> sparePartsIdList)
         {
             IList<int> sparePartsId = new List<int>();
 
@@ -466,12 +432,9 @@ namespace PartsApp2
                     while (dataReader.Read())
                         if ((dataReader["Title"] as string) == sparePartTitle) sparePartsId.Add(sparePartsIdList[i]);
                     dataReader.Dispose();
-                }//for
-                connection.Close();
-            }//using
-            return sparePartsId;
-        }//FindSparePartsIdByTitle
-        public static IList<int> FindSparePartsIdByTitle(string sparePartTitle, IList<int> sparePartsIdList, SQLiteConnection openConnection)
+                }                connection.Close();
+            }            return sparePartsId;
+        }        public static IList<int> FindSparePartsIdByTitle(string sparePartTitle, IList<int> sparePartsIdList, SQLiteConnection openConnection)
         {
             IList<int> sparePartsId = new List<int>();
 
@@ -498,11 +461,9 @@ namespace PartsApp2
                 while (dataReader.Read())
                     if ((dataReader["Title"] as string) == sparePartTitle) sparePartsId.Add(sparePartsIdList[i]);
                 dataReader.Dispose();
-            }//for
-
+            }
             return sparePartsId;
-        }//FindSparePartsIdByTitle
-        public static IList<SparePart> FindSparePartsByTitle(string sparePartTitle)
+        }        public static IList<SparePart> FindSparePartsByTitle(string sparePartTitle)
         {
             IList<SparePart> spareParts = new List<SparePart>();
             using (SQLiteConnection connection = GetDatabaseConnection("SparePartConfig") as SQLiteConnection)
@@ -538,12 +499,9 @@ namespace PartsApp2
                     sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                     spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-            return spareParts;
-        }//FindSparePartsByTitle
-        public static IList<SparePart> FindSparePartsByArticulOrTitle(string TitleOrArticul)
+                }                connection.Close();
+            }            return spareParts;
+        }        public static IList<SparePart> FindSparePartsByArticulOrTitle(string TitleOrArticul)
         {
             IList<SparePart> spareParts = new List<SparePart>();
             using (SQLiteConnection connection = GetDatabaseConnection("SparePartConfig") as SQLiteConnection)
@@ -579,13 +537,11 @@ namespace PartsApp2
                     sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                     spareParts.Add(sparePart);
-                }//while
-
+                }
                 connection.Close();
             }
             return spareParts;
-        }//FindSparePartsByArticulOrTitle
-        public static IList<SparePart> FindSparePartsByArticuls(IList<string> articuls)
+        }        public static IList<SparePart> FindSparePartsByArticuls(IList<string> articuls)
         {
             IList<SparePart> spareParts = new List<SparePart>();
 
@@ -625,14 +581,10 @@ namespace PartsApp2
                         sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                         spareParts.Add(sparePart);
-                    }//while
-                    dataReader.Dispose();  //Спорный момент с dataReader. Без Dispose выдаёт ошибку "dataReader already activate".
-                }//for
-                connection.Close();
-            }//using
-            return spareParts;
-        }//FindSparePartsByArticuls
-        public static SparePart FindSparePartById(int id)
+                    }                    dataReader.Dispose();  //Спорный момент с dataReader. Без Dispose выдаёт ошибку "dataReader already activate".
+                }                connection.Close();
+            }            return spareParts;
+        }        public static SparePart FindSparePartById(int id)
         {
             SparePart sparePart = null;
 
@@ -670,10 +622,8 @@ namespace PartsApp2
                 sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                 connection.Close();
-            }//using
-            return sparePart;
-        }//FindSparePartById
-        public static SparePart FindSparePartById(int id, SQLiteConnection openConnection)
+            }            return sparePart;
+        }        public static SparePart FindSparePartById(int id, SQLiteConnection openConnection)
         {
             SparePart sparePart = null;
             var cmd = new SQLiteCommand(null, openConnection);
@@ -707,8 +657,7 @@ namespace PartsApp2
             sparePart.Providers = FindSparePartProvidersById(sparePart.Id, openConnection);
 
             return sparePart;
-        }//FindSparePartById
-        public static IList<SparePart> FindSparePartById(IList<int> sparePartsId)
+        }        public static IList<SparePart> FindSparePartById(IList<int> sparePartsId)
         {
             IList<SparePart> spareParts = new List<SparePart>();
             using (SQLiteConnection connection = GetDatabaseConnection("SparePartConfig") as SQLiteConnection)
@@ -747,13 +696,9 @@ namespace PartsApp2
                         sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                         spareParts.Add(sparePart);
-                    }//while
-                    dataReader.Dispose();  //Спорный момент с dataReader. Без Dispose выдаёт ошибку "dataReader already activate".
-                }//for
-            }//using
-            return spareParts;
-        }//FindSparePartById
-        public static IList<SparePart> FindSparePartById(IList<int> sparePartsId, SQLiteConnection openConnection)
+                    }                    dataReader.Dispose();  //Спорный момент с dataReader. Без Dispose выдаёт ошибку "dataReader already activate".
+                }            }            return spareParts;
+        }        public static IList<SparePart> FindSparePartById(IList<int> sparePartsId, SQLiteConnection openConnection)
         {
             IList<SparePart> spareParts = new List<SparePart>();
             var cmd = new SQLiteCommand("SELECT * FROM SparePart WHERE Id = @Id", openConnection);
@@ -787,12 +732,9 @@ namespace PartsApp2
                     sparePart.Providers = FindSparePartProvidersById(sparePart.Id, openConnection);
 
                     spareParts.Add(sparePart);
-                }//while
-                dataReader.Dispose();  //Спорный момент с dataReader. Без Dispose выдаёт ошибку "dataReader already activate".
-            }//for                               
-            return spareParts;
-        }//FindSparePartById
-        
+                }                dataReader.Dispose();  //Спорный момент с dataReader. Без Dispose выдаёт ошибку "dataReader already activate".
+            }            return spareParts;
+        }        
 
 
         //Удаление из БД.
@@ -815,9 +757,7 @@ namespace PartsApp2
                 cmd.ExecuteReader();
 
                 connection.Close();
-            }//using
-        }//DeleteSparePartByArticul
-        public static void DeleteSparePartByTitle(string sparePartTitle)
+            }        }        public static void DeleteSparePartByTitle(string sparePartTitle)
         {
             using (SQLiteConnection connection = GetDatabaseConnection("SparePartConfig") as SQLiteConnection)
             {
@@ -836,9 +776,7 @@ namespace PartsApp2
                 cmd.ExecuteReader();
 
                 connection.Close();
-            }//using
-        }//DeleteSparePartByTitle
-
+            }        }
         //Поиск совпадений по БД.
         public static IList<SparePart> SearchByArticul(string searchArticul)
         {
@@ -877,12 +815,9 @@ namespace PartsApp2
                     sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                     spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-            return spareParts;
-        }//SearchByArticul
-        public static IList<SparePart> SearchByTitle(string searchTitle)
+                }                connection.Close();
+            }            return spareParts;
+        }        public static IList<SparePart> SearchByTitle(string searchTitle)
         {
             IList<SparePart> spareParts = new List<SparePart>();
 
@@ -919,12 +854,9 @@ namespace PartsApp2
                     sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                     spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-            return spareParts;
-        }//SearchByTitle
-        public static IList<SparePart> SearchByTitleOrArticul(string searchTitleOrArticul)
+                }                connection.Close();
+            }            return spareParts;
+        }        public static IList<SparePart> SearchByTitleOrArticul(string searchTitleOrArticul)
         {
             IList<SparePart> spareParts = new List<SparePart>();
 
@@ -961,12 +893,9 @@ namespace PartsApp2
                     sparePart.Providers = FindSparePartProvidersById(sparePart.Id, connection);
 
                     spareParts.Add(sparePart);
-                }//while
-                connection.Close();
-            }//using
-            return spareParts;
-        }//SearchByTitleOrArticul
-
+                }                connection.Close();
+            }            return spareParts;
+        }
         //Чтение из Excel файла.
         private static IList<SparePart> LoadExcelFile(string excelPath)
         {
@@ -1002,11 +931,8 @@ namespace PartsApp2
                         sparePart.SellingPrice = CalculationOfSellingPrice(sparePart.Price, sparePart.Markup);
 
                         spareParts.Add(sparePart);
-                    }//for
-                    row++;
-                }//while
-            }//try
-            catch (Exception) { }
+                    }                    row++;
+                }            }            catch (Exception) { }
             // В случае если имя файла указано неправильно, ресурс должен быть освобожден! (можно исп-ть using)
             finally
             {
@@ -1014,8 +940,7 @@ namespace PartsApp2
             }
 
             return spareParts;
-        }//LoadExcelFile
-        public static void AddSparePartsFromExcelFile(string excelPath)
+        }        public static void AddSparePartsFromExcelFile(string excelPath)
         {
             //Сравнить разницу в быстродействии двух вариантов!!!
             IList<SparePart> spareParts = PartsDAL.LoadExcelFile(excelPath);
@@ -1026,8 +951,7 @@ namespace PartsApp2
             //2)Более быстрый вариант. connection открывается один раз для всей коллекции.
             //PartsDAL.AddSparePart(spareParts);
             PartsDAL.AddSparePartsWithUpdateCount(spareParts);
-        }//AddSparePartsFromExcelFile
-
+        }
         //Сохранение в Excel файл.
         public static void SaveToExcelFile(IList<SparePart> spareParts)
         {
@@ -1050,12 +974,10 @@ namespace PartsApp2
                 ExcelApp.Cells[i + 1, ++j] = spareParts[i].Count;
                 ExcelApp.Cells[i + 1, ++j] = spareParts[i].Price;
                 ExcelApp.Cells[i + 1, ++j] = spareParts[i].Markup;
-            }//for
-            //Вызываем нашу созданную эксельку.
+            }            //Вызываем нашу созданную эксельку.
             ExcelApp.Visible = true;
             ExcelApp.UserControl = true;
-        }//SaveToExcelFile
-
+        }
         //Ф-ция расчета Цены продажи
         public static double CalculationOfSellingPrice(double price, double markup)
         {
@@ -1071,11 +993,9 @@ namespace PartsApp2
             conn.ConnectionString = settings.ConnectionString;
 
             return conn;
-        }//GetDatabaseConnection
+        }
 
-
-    }//PartsDAL22
-
+    }
 
 
     class SparePart
@@ -1108,7 +1028,6 @@ namespace PartsApp2
             Markup = markup;
             SellingPrice = price * markup;     
         }
-    }//SparePart
+    }
 
-
-}//namespace
+}
