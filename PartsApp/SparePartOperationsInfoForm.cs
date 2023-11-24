@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Infrastructure.Storage;
 using PartsApp.Models;
 
 namespace PartsApp
@@ -22,7 +23,7 @@ namespace PartsApp
         {
             InitializeComponent();
 
-            List<IOperation> operList = PartsDAL.FindOperations(sparePart);
+            List<IOperation> operList = FindOperations(sparePart);
             
             //Заполняем таблицу.
             FillTheOperationDGV(operList, sparePart.SparePartId);
@@ -79,7 +80,20 @@ namespace PartsApp
             }//foreach
         }
 
+        /// <summary>
+        /// Возвращает список всех операций производимых с заданным товаром.
+        /// </summary>
+        /// <param name="sparePartId">Ид искомого товара.</param>
+        /// <returns></returns>
+        private static List<IOperation> FindOperations(SparePart sparePart)
+        {
+            List<IOperation> operationsList = new List<IOperation>();
 
+            PurchaseRepository.FindPurchases(sparePart).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
+            SaleRepository.FindSales(sparePart).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
+
+            return operationsList;
+        }
 
 
 

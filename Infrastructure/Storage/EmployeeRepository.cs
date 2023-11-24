@@ -257,9 +257,9 @@ namespace Infrastructure
             return employee;
         }
 
-        public static IList<Employee> FindEmployees(string lastName, string firstName = null)
+        public static List<Employee> FindEmployees(string lastName, string firstName = null)
         {
-            IList<Employee> employees = new List<Employee>();
+            List<Employee> employees = new List<Employee>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {

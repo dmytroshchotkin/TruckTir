@@ -44,27 +44,18 @@ namespace Infrastructure.Storage
                                 }
                             }
 
-                            else
-                            {
-                                if (sale.Contragent is Supplier)
-                                {
-                                    SupplierRepository.UpdateSupplier(sale.Contragent as Supplier, cmd);
-                                }
-
-                                else if (sale.Contragent is Customer)
-                                {
-                                    CustomerRepository.UpdateCustomer(sale.Contragent as Customer, cmd);
-                                }
-                            }
-
                             //вставляем запись в таблицу Sales.
                             sale.OperationId = AddSale(sale, cmd);
                             //вставляем записи в SaleDetails.
                             foreach (OperationDetails operDet in operDetList)
+                            {
                                 AvailabilityDatabaseHandler.SaleSparePartAvaliability(operDet, cmd);
+                            }                                
                             // и модифицируем Avaliability.
                             foreach (OperationDetails operDet in sale.OperationDetailsList)
+                            {
                                 AddSaleDetail(sale.OperationId, operDet, cmd);
+                            }                                
 
                             trans.Commit(); //Фиксируем изменения.
                         }
@@ -224,9 +215,9 @@ namespace Infrastructure.Storage
         /// <param name="customerId"></param>
         /// <param name="cust">STUB</param>
         /// <returns></returns>
-        public static List<IOperation> FindSales(int customerId, Customer cust)
+        public static List<Sale> FindSales(int customerId, Customer cust)
         {
-            List<IOperation> salesList = new List<IOperation>();
+           var salesList = new List<Sale>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {
@@ -363,13 +354,13 @@ namespace Infrastructure.Storage
             (
                 operationId: Convert.ToInt32(dataReader["OperationId"]),
                 employee: (dataReader["EmployeeId"] != DBNull.Value) ? EmployeeRepository.FindEmployees(Convert.ToInt32(dataReader["EmployeeId"])) : null,
-                contragent: CustomerRepository.FindCustomers(Convert.ToInt32(dataReader["ContragentId"])),
+                contragent: CustomerRepository.FindCustomer(Convert.ToInt32(dataReader["ContragentId"])),
                 contragentEmployee: dataReader["ContragentEmployee"] as string,
                 operationDate: Convert.ToDateTime(dataReader["OD"]),
                 description: dataReader["Description"] as string
             );
 
-            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => FindSaleDetails(result)));
+            result.TrySetOperationDetails(new Lazy<List<OperationDetails>>(() => FindSaleDetails(result)));
             return result;
         }
 

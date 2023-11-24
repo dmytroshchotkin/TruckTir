@@ -161,9 +161,9 @@ namespace Infrastructure.Storage
         /// Возвращает коллекцию из всех Customer.
         /// </summary>
         /// <returns></returns>
-        public static IList<IContragent> FindCustomers()
+        public static List<Customer> FindCustomers()   
         {
-            IList<IContragent> customers = new List<IContragent>();
+            List<Customer> customers = new List<Customer>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {
@@ -222,7 +222,7 @@ namespace Infrastructure.Storage
         /// </summary>
         /// <param name="customerId">Id клиента, которого надо найти.</param>
         /// <returns></returns>
-        public static IContragent FindCustomers(int customerId)
+        public static Customer FindCustomer(int customerId)
         {
             Customer customer = new Customer();
 

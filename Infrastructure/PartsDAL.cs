@@ -231,7 +231,7 @@ namespace PartsApp
         /// Возвращает коллекцию из всех Supplier-ов.
         /// </summary>
         /// <returns></returns>
-        public static IList<IContragent> FindSuppliers()
+        public static List<Supplier> FindSuppliers()
         {
             return SupplierRepository.FindSuppliers();
         }
@@ -251,9 +251,9 @@ namespace PartsApp
         /// </summary>
         /// <param name="SupplierName">имя Supplier-а, которого надо найти.</param>
         /// <returns></returns>
-        public static IContragent FindSuppliers(string supplierName)
+        public static Supplier FindSuppliers(string supplierName)
         {
-            return SupplierRepository.FindSuppliers(supplierName);
+            return SupplierRepository.FindSupplier(supplierName);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace PartsApp
         /// Возвращает коллекцию из всех Customer.
         /// </summary>
         /// <returns></returns>
-        public static IList<IContragent> FindCustomers()
+        public static List<Customer> FindCustomers()
         {        
             return CustomerRepository.FindCustomers();
         }
@@ -296,9 +296,9 @@ namespace PartsApp
         /// </summary>
         /// <param name="customerId">Id клиента, которого надо найти.</param>
         /// <returns></returns>
-        public static IContragent FindCustomers(int customerId)
+        public static Customer FindCustomers(int customerId)
         {
-            return CustomerRepository.FindCustomers(customerId);
+            return CustomerRepository.FindCustomer(customerId);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -315,7 +315,7 @@ namespace PartsApp
             return PurchaseRepository.FindPurchase(purchaseId);
         }
 
-        public static List<IOperation> FindPurchases(int supplierId, SparePart spr)
+        public static List<Purchase> FindPurchases(int supplierId, SparePart spr)
         {
             return PurchaseRepository.FindPurchases(supplierId, spr);
         }
@@ -342,7 +342,7 @@ namespace PartsApp
             return SaleRepository.FindSale(saleId);
         }
 
-        public static List<IOperation> FindSales(int customerId, Customer cust)
+        public static List<Sale> FindSales(int customerId, Customer cust)
         {
             return SaleRepository.FindSales(customerId, cust);
         }
@@ -373,61 +373,7 @@ namespace PartsApp
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion
-
-        #region !!! ВЫНЕСТИ В PRESENTATION Поиск по обеим таблицам Sales и Purchase для вывода рез-та в форме
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Возвращает список всех операций проведённых за указанный период.
-        /// </summary>
-        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <returns></returns>
-        public static List<IOperation> FindOperations(DateTime? startDate, DateTime? endDate)
-        {
-            List<IOperation> operationsList = new List<IOperation>();
-
-            PurchaseRepository.FindPurchases(startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
-            SaleRepository.FindSales(startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
-
-            return operationsList;
-        }
-
-        /// <summary>
-        /// Возвращает список всех операций производимых с заданным товаром.
-        /// </summary>
-        /// <param name="sparePartId">Ид искомого товара.</param>
-        /// <returns></returns>
-        public static List<IOperation> FindOperations(SparePart sparePart)
-        {
-            List<IOperation> operationsList = new List<IOperation>();
-
-            PurchaseRepository.FindPurchases(sparePart).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
-            SaleRepository.FindSales(sparePart).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
-
-            return operationsList;
-        }
-
-        /// <summary>
-        /// Возвращает список всех операций осуществлённых данным сотрудником.
-        /// </summary>
-        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
-        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <returns></returns>
-        public static List<IOperation> FindOperations(Employee emp, DateTime? startDate, DateTime? endDate)
-        {
-            List<IOperation> operationsList = new List<IOperation>();
-
-            PurchaseRepository.FindPurchases(emp, startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
-            SaleRepository.FindSales(emp, startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
-
-            return operationsList;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion
+        #endregion   
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion

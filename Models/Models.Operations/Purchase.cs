@@ -15,12 +15,12 @@ namespace PartsApp.Models
         public DateTime     OperationDate       { get; set; }
         public string       Description         { get; set; }
 
-        private Lazy<IList<OperationDetails>> _operationDetailsList;
-        public IList<OperationDetails> OperationDetailsList { get { return _operationDetailsList.Value; } }
+        private Lazy<List<OperationDetails>> _operationDetailsList;
+        public List<OperationDetails> OperationDetailsList { get { return _operationDetailsList.Value; } }
 
         public Purchase() 
         {
-            _operationDetailsList = new Lazy<IList<OperationDetails>>();
+            _operationDetailsList = new Lazy<List<OperationDetails>>();
         }
 
         public Purchase(Employee employee, IContragent contragent, string contragentEmployee,
@@ -32,7 +32,7 @@ namespace PartsApp.Models
             OperationDate = operationDate;
             Description = description;
 
-            _operationDetailsList = new Lazy<IList<OperationDetails>>(() => operDetList);
+            _operationDetailsList = new Lazy<List<OperationDetails>>(() => operDetList);
         }
 
         public Purchase(int operationId, Employee employee, IContragent contragent, string contragentEmployee,
@@ -48,7 +48,7 @@ namespace PartsApp.Models
             //_operationDetailsList = new Lazy<IList<OperationDetails>>(() => PartsDAL.FindPurchaseDetails(this));
         }
 
-        public void TrySetOperationDetails(Lazy<IList<OperationDetails>> operationDetails)
+        public void TrySetOperationDetails(Lazy<List<OperationDetails>> operationDetails)
         {
             if (operationDetails != null)
             {

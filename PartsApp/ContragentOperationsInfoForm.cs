@@ -50,14 +50,14 @@ namespace PartsApp
             List<IContragent> contragList = null;
             if (_contragType == typeof(Supplier))
             {
-                contragList = PartsDAL.FindSuppliers().OrderBy(s => s.ContragentName).ToList();
+                contragList = PartsDAL.FindSuppliers().Cast<IContragent>().OrderBy(s => s.ContragentName).ToList();
                 ContragentsGroupBox.Text = "Поставщики";
                 OperationsGroupBox.Text = "Поставки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по поставкам.";
             }//if
             else
             {
-                contragList = PartsDAL.FindCustomers().OrderBy(s => s.ContragentName).ToList();
+                contragList = PartsDAL.FindCustomers().Cast<IContragent>().OrderBy(s => s.ContragentName).ToList();
                 ContragentsGroupBox.Text = "Покупатели";
                 OperationsGroupBox.Text = "Покупки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по покупкам.";
@@ -80,13 +80,26 @@ namespace PartsApp
             {
                 //int contragId = (int)ContragentsListBox.SelectedValue;
                 int contragId = (ContragentsListView.SelectedItems[0].Tag as IContragent).ContragentId;
-
-                //Если инф-ции об операциях данного контрагента ещё нет в коллекции, находим её в базе и добавляем в коллекцию.
-                List<IOperation> operList;
-                if (_contragentsOperations.TryGetValue(contragId, out operList) == false)
+                //Если инф-ции об операциях данного контрагента ещё нет в коллекции, находим её в базе и добавляем в коллекцию.                
+                if (_contragentsOperations.TryGetValue(contragId, out List<IOperation> operList) == false)
                 {
-                    operList = (_contragType == typeof(Supplier)) ? PartsDAL.FindPurchases(contragId, null) : PartsDAL.FindSales(contragId, null);
-                    _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.                
+                    if (operList == null)
+                    {
+                        operList = new List<IOperation>();
+                        if (_contragType == typeof(Supplier))
+                        {
+                            var purchases = PartsDAL.FindPurchases(contragId, null);
+                            operList.AddRange(purchases);
+                        }
+
+                        if (_contragType == typeof(Customer))
+                        {
+                            var sales = PartsDAL.FindSales(contragId, null);
+                            operList.AddRange(sales);
+                        }
+
+                        _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.    
+                    }                                                 
                 }//if
 
                 FillTheOperationsInfoDGV(operList); //Заполняем таблицу Операций.
@@ -110,7 +123,16 @@ namespace PartsApp
         {
             if (ContragentsListView.SelectedItems[0].Tag is IContragent contragent)
             {
-                contragent = (contragent is Supplier) ? PartsDAL.FindSuppliers(contragent.ContragentId) : PartsDAL.FindCustomers(contragent.ContragentId);
+                if (contragent is Supplier)
+                {
+                    contragent = PartsDAL.FindSuppliers(contragent.ContragentId);
+                }
+
+                if (contragent is Customer)
+                {
+                    contragent = PartsDAL.FindCustomers(contragent.ContragentId);
+                }
+                
                 //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
                 new AddContragentForm(contragent).Show();
             }

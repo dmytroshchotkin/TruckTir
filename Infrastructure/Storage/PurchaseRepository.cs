@@ -45,18 +45,6 @@ namespace Infrastructure.Storage
                                 }
                             }
 
-                            else
-                            {
-                                if (purchase.Contragent is Supplier)
-                                {
-                                    SupplierRepository.UpdateSupplier(purchase.Contragent as Supplier, cmd);
-                                }
-
-                                else if (purchase.Contragent is Customer)
-                                {
-                                    CustomerRepository.UpdateCustomer(purchase.Contragent as Customer, cmd);
-                                }
-                            }
                             //вставляем запись в таблицу Operation.
                             purchase.OperationId = AddPurchase(purchase, cmd);
                             //вставляем записи в PurchaseDetails и Avaliability.
@@ -281,9 +269,9 @@ namespace Infrastructure.Storage
             return purchase;
         }
 
-        public static List<IOperation> FindPurchases(int supplierId, SparePart spr)
+        public static List<Purchase> FindPurchases(int supplierId, SparePart spr)
         {
-            List<IOperation> purchases = new List<IOperation>();
+            var purchases = new List<Purchase>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {
@@ -431,7 +419,7 @@ namespace Infrastructure.Storage
                 description: dataReader["Description"] as string
             );
 
-            result.TrySetOperationDetails(new Lazy<IList<OperationDetails>>(() => FindPurchaseDetails(result)));
+            result.TrySetOperationDetails(new Lazy<List<OperationDetails>>(() => FindPurchaseDetails(result)));
             return result;
         }
 

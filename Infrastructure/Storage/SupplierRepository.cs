@@ -16,9 +16,9 @@ namespace Infrastructure.Storage
         /// Возвращает коллекцию из всех Supplier-ов.
         /// </summary>
         /// <returns></returns>
-        public static IList<IContragent> FindSuppliers()
+        public static List<Supplier> FindSuppliers()
         {
-            IList<IContragent> suppliers = new List<IContragent>();
+            List<Supplier> suppliers = new List<Supplier>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {
@@ -73,7 +73,7 @@ namespace Infrastructure.Storage
         /// </summary>
         /// <param name="SupplierName">имя Supplier-а, которого надо найти.</param>
         /// <returns></returns>
-        public static IContragent FindSuppliers(string supplierName)
+        public static Supplier FindSupplier(string supplierName)
         {
             Supplier supplier = null;
 

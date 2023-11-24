@@ -1,4 +1,5 @@
-﻿using PartsApp.Models;
+﻿using Infrastructure.Storage;
+using PartsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -50,7 +51,7 @@ namespace PartsApp
             DateTime? beginDate = BeginDateDTP.Enabled ? BeginDateDTP.Value : (DateTime?)null;
             DateTime? endDate = EndDateDTP.Enabled ? EndDateDTP.Value : (DateTime?)null;
             //Выводим список операций соответствующий заданным требованиям.
-            List<IOperation> operList = PartsDAL.FindOperations(beginDate, endDate);
+            List<IOperation> operList = FindOperations(beginDate, endDate);
             FillTheOperationDGV(operList);
 
             //Изменяем видимость строк по типу операции.
@@ -151,6 +152,22 @@ namespace PartsApp
             //Заполняем таблицу операций.
             FillTheOperationDGV();
         }//BeginDateCheckBox_CheckedChanged
+
+        /// <summary>
+        /// Возвращает список всех операций проведённых за указанный период.
+        /// </summary>
+        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
+        /// <returns></returns>
+        private static List<IOperation> FindOperations(DateTime? startDate, DateTime? endDate)
+        {
+            List<IOperation> operationsList = new List<IOperation>();
+
+            PurchaseRepository.FindPurchases(startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
+            SaleRepository.FindSales(startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
+
+            return operationsList;
+        }
 
         #region **************************************Вывод в Excel**********************************************************************
         //==============================================================================================================================================================================
