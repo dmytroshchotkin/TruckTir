@@ -114,9 +114,13 @@ namespace PartsApp
             //Находим соотв. выбранному товару данные и обновляем доп. таблицу.
             SparePart sparePart = SaleDGV.Rows[e.RowIndex].Tag as SparePart;
             if (sparePart != null)
+            {
                 FillTheExtDGV(sparePart.AvailabilityList);
+            }
             else
+            {
                 ExtSaleDGV.Rows.Clear();
+            }
         }
 
         /// <summary>
@@ -130,11 +134,15 @@ namespace PartsApp
 
             //Обрабатываем ввод в ячейку 'Название' или 'Артикул'.
             if (_lastEditCell.OwningColumn == TitleCol || _lastEditCell.OwningColumn == ArticulCol)
+            {
                 autoCompleteListBox.Location = GetCellBelowLocation(_lastEditCell); //устанавливаем позицию вып. списка.
+            }
 
             //Обрабатываем ввод в ячейку 'Количествo'.
             if (_lastEditCell.OwningColumn == CountCol)
+            {
                 SetCustomValueToCell(_lastEditCell, null); //очищаем ячейку для ввода значения пользователем.
+            }
         }
 
         /// <summary>
@@ -179,6 +187,7 @@ namespace PartsApp
                     break;
             }
         }
+
         private void dataGridViewTextBoxCell_TextChanged(object sender, EventArgs e)
         {
             autoCompleteListBox.DataSource = null;
@@ -210,11 +219,17 @@ namespace PartsApp
                 DataGridViewCell cell = SaleDGV[e.ColumnIndex, e.RowIndex];
 
                 if (cell.OwningColumn == TitleCol || cell.OwningColumn == ArticulCol) //Если редактируется артикул или название товара. 
+                {
                     TitleOrArticulCellFilled(cell);
+                }
                 else if (cell.OwningColumn == CountCol)                            //Если редактируется кол-во. 
+                {
                     CountCellFilled(cell);
+                }
                 else if (cell.OwningColumn == SellingPriceCol)                     //Если редактируется цена продажи. 
+                {
                     SellingPriceCellFilled(cell);
+                }
             }
         }
 
@@ -245,9 +260,13 @@ namespace PartsApp
                 if (e.ColumnIndex == -1)
                 {
                     if (e.RowIndex == -1)
+                    {
                         SaleDGV.SelectAll();
+                    }
                     else
+                    {
                         SaleDGV.Rows[e.RowIndex].Selected = true;
+                    }
 
                     //Выводим контекстное меню.
                     Point location = SaleDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true).Location;
@@ -267,11 +286,15 @@ namespace PartsApp
             {
                 //Если строка не пустая, очищаем соотв ей список приходов.
                 if (row.Tag != null)
+                {
                     _operDetList.RemoveAll(od => od.SparePart.SparePartId == (row.Tag as SparePart).SparePartId); //Очищаем список от соотв. объектов.
+                }
 
                 //Если это не последняя строка (предназнач. для ввода нового товара в список), удаляем её.
                 if (row.Index != SaleDGV.Rows.Count - 1)
+                {
                     SaleDGV.Rows.Remove(row);
+                }
             }
             ExtSaleDGV.Rows.Clear(); //Очищаем доп. таблицу.
             FillTheInTotal(); //Заполняем общую сумму операции.
@@ -293,9 +316,13 @@ namespace PartsApp
                 {
                     //если выбор сделан из выпадающего списка.
                     if (autoCompleteListBox.SelectedItem != null)
+                    {
                         AutoCompleteRowInfo(cell, autoCompleteListBox.SelectedItem as SparePart); //Заполняем строку данными о товаре.
+                    }
                     else  //если выбор не из вып. списка.
+                    {
                         CellEndEditWrong(cell, "Выберите товар из списка.");
+                    }
                 }
                 else //если нет такого товара в наличии.
                 {
@@ -304,7 +331,9 @@ namespace PartsApp
             }
             //Если нет ошибки завершения редактирования ячейки, производим необх. действия.
             if (!_isCellEditError)
+            {
                 CellEndEditCorrect(cell);
+            }
         }
 
         /// <summary>
@@ -340,7 +369,9 @@ namespace PartsApp
             {
                 float sellPrice = Convert.ToSingle(cell.Value);
                 if (sellPrice == 0)
+                {
                     throw new Exception();  //ввод нуля также является ошибкой.                
+                }
 
                 int sparePartId = (cell.OwningRow.Tag as SparePart).SparePartId;
                 SparePart sparePart = SaleDGV.Rows.Cast<DataGridViewRow>().First(r => r.Tag != null && (r.Tag as SparePart).SparePartId == sparePartId).Tag as SparePart;
@@ -350,12 +381,18 @@ namespace PartsApp
                 {
                     //Если установленная юзером цена продажи ниже чем цена продажи данного товара с наценкой "Крупный опт" хотя бы по одному приходу.
                     if (sparePart.AvailabilityList.Any(av => (av.OperationDetails.Price + (av.OperationDetails.Price * (float)Markup.Types.LargeWholesale / 100) > sellPrice)))
+                    {
                         throw new Exception();
+                    }
                 }
                 //Если цена продажи хотя бы где-то ниже закупочной требуем подтверждения действий.                         
                 if (sparePart.AvailabilityList.Any(av => av.OperationDetails.Price >= sellPrice))
+                {
                     if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
+                    {
                         throw new Exception();
+                    }
+                }
 
                 cell.Value = sellPrice; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
             }
@@ -426,16 +463,22 @@ namespace PartsApp
             float count;
             //Если введено не числовое значение, это ошибка.
             if (countCell.Value == null || (Single.TryParse(countCell.Value.ToString(), out count) == false))
+            {
                 return false;
+            }
 
             //Ввод значения не более 0, или больше чем есть в наличии является ошибкой. 
             float totalCount = Convert.ToSingle(countCell.Tag);
             if (count <= 0 || count > totalCount)
+            {
                 return false;
+            }
 
             //Проверяем является ли введенное число корректным для продажи, т.е. кратно ли оно минимальной единице продажи.     
             if (count % Models.MeasureUnit.GetMinUnitSale(measureUnit) != 0)
+            {
                 return false;
+            }
 
             return true;
         }
@@ -472,8 +515,12 @@ namespace PartsApp
 
             //Если отпускная цена не указана поль-лем и если у всех приходов она одинаковая, выводим её в saleDGV.
             if (row.Cells[SellingPriceCol.Index].Value == null)
+            {
                 if (!sparePart.AvailabilityList.Any(av => av.SellingPrice != sparePart.AvailabilityList[0].SellingPrice))
+                {
                     row.Cells[SellingPriceCol.Index].Value = Math.Ceiling(sparePart.AvailabilityList[0].SellingPrice / 0.5) * 0.5; //Округляем в большую сторону с точностью до 0,5. //ERROR округление станет лишним, после того как полностью обновится список товара в наличии. //sparePart.AvailabilityList[0].SellingPrice
+                }
+            }
         }
 
         /// <summary>
@@ -552,9 +599,13 @@ namespace PartsApp
             {
                 //Если такой объект есть в списке, и прод. кол-во > 0, то обновляем кол-во, иначе удаляем из списка.
                 if (sellCount > 0)
+                {
                     operDet.Count = sellCount;
+                }
                 else
+                {
                     _operDetList.Remove(operDet);
+                }
             }
         }
 
@@ -588,7 +639,9 @@ namespace PartsApp
             {
                 //Если в строке заполнена ячейка 'Сумма'.
                 if (row.Cells[SumCol.Index].Value != null)
+                {
                     inTotal += Convert.ToSingle(row.Cells[SumCol.Index].Value);
+                }
             }
             //Заполняем InTotalLabel расчитанным значением.
             inTotalNumberLabel.Text = (Math.Round(inTotal, 2, MidpointRounding.AwayFromZero)).ToString("0.00");
@@ -597,7 +650,9 @@ namespace PartsApp
 
             //меняем значение фактической оплаченной суммы если, галочка о полной оплате стоит.
             if (PaidCheckBox.Checked == true)
+            {
                 PaidNumericUpDown.Value = (decimal)inTotal;
+            }
         }
 
         /// <summary>
@@ -761,11 +816,13 @@ namespace PartsApp
 
                 //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.                
                 if (avail.StorageAddress != null)
+                {
                     ExtStorageAdressCol.Visible = true;
-
+                }
                 if (avail.OperationDetails.Operation.Description != null)
+                {
                     ExtNoteCol.Visible = true;
-
+                }
                 //Заполняем ячейку 'Кол-во' либо ранее установленным значением, иначе общим кол-вом по данному приходу в наличии. 
                 OperationDetails operDet = _operDetList.FirstOrDefault(od => od.SparePart.SparePartId == avail.OperationDetails.SparePart.SparePartId
                                                                     && od.Operation.OperationId == avail.OperationDetails.Operation.OperationId);
@@ -774,10 +831,14 @@ namespace PartsApp
                 extCountCell.Tag = avail.OperationDetails.Count; //заполняем ячейку значением и запоминаем это дефолтное значение в Tag.
 
                 if (operDet == null)
+                {
                     SetDefaultValueToCell(extCountCell); //Задаем серый цвет и дефолтное значение данной ячейке.
+                }
                 else
+                {
                     SetCustomValueToCell(extCountCell, operDet.Count); //Задаем значение ячейки.
-            }
+                }
+                }
             //Сортируем таблицу по дате прихода.
             ExtSaleDGV.Sort(ExtPurchaseDateCol, ListSortDirection.Ascending);
             ExtSaleDGV.ClearSelection();
@@ -794,13 +855,19 @@ namespace PartsApp
             foreach (DataGridViewRow extRow in ExtSaleDGV.Rows)
             {
                 if (extRow.Cells[ExtCountCol.Index].Style.ForeColor == Color.Black)
+                {
                     extSellCount += Convert.ToSingle(extRow.Cells[ExtCountCol.Index].Value);
+                }
             }
             //Если есть кастомный ввод.
             if (extSellCount > 0)
+            {
                 SetCustomValueToCell(countCell, extSellCount); //Обновляем "кол-во" в таблице продаж.
+            }
             else
+            {
                 SetDefaultValueToCell(countCell); //Задаём дефолтное значения для ячейки.   
+            }
         }
 
         /// <summary>
@@ -823,14 +890,18 @@ namespace PartsApp
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 markupComboBox_SelectedIndexChanged(sender, e);
+            }
         }
 
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
             if (ExtSaleDGV.SelectedCells.Count == 0)
+            {
                 return;
+            }
 
             //выделяем строки всех выделенных клеток.
             ExtSaleDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
@@ -1018,7 +1089,9 @@ namespace PartsApp
 
             //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
             if (operDet.SparePart.Articul.Length > articulColWidth || operDet.SparePart.Title.Length > titleColWidth)
+            {
                 IncreaseRowHeight(ExcelWorkSheet, operDet.SparePart, row, column, titleColWidth, articulColWidth);
+            }
 
             ExcelWorkSheet.Cells[row, column] = operDet.SparePart.Manufacturer;
             ExcelWorkSheet.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
@@ -1041,9 +1114,13 @@ namespace PartsApp
             ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
             //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
             if (sparePart.Articul.Length > articulColWidth && sparePart.Title.Length <= titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
             if (sparePart.Articul.Length <= articulColWidth && sparePart.Title.Length > titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 1].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
         }
 
 
@@ -1059,7 +1136,9 @@ namespace PartsApp
             //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
             int indent = 0; //отступ
             if (inTotal.ToString("0.00").Length <= 9)
+            {
                 indent = 1;
+            }
 
             ExcelWorkSheet.Cells[row, column + 4 + indent] = "Итого : ";
             ExcelWorkSheet.Cells[row, column + 5 + indent] = inTotal.ToString("0.00");
@@ -1159,7 +1238,9 @@ namespace PartsApp
             int maxManufLenght = 0;
             var sparePartsManufacturers = operDetList.Select(od => od.SparePart.Manufacturer).Where(man => man != null);
             if (sparePartsManufacturers.Count() > 0)
+            {
                 maxManufLenght = sparePartsManufacturers.Max(man => man.Length);
+            }
 
             if (maxManufLenght < manufColWidth)
             {
@@ -1197,20 +1278,38 @@ namespace PartsApp
             t = ACol / AZ; // целая часть
             m = (ACol % AZ); // остаток?
             if (m == 0)
+            {
                 t--;
+            }
             if (t > 0)
+            {
                 S = Convert.ToString((char)(A1 + t));
-            else S = String.Empty;
+            }
+            else
+            {
+                S = String.Empty;
+            }
 
             if (m == 0)
+            {
                 t = AZ;
-            else t = m;
+            }
+            else
+            {
+                t = m;
+            }
 
             S = S + (char)(A1 + t);
 
             //весь адрес.
-            if (ColAbsolute) S = '$' + S;
-            if (RowAbsolute) S = S + '$';
+            if (ColAbsolute)
+            {
+                S = '$' + S;
+            }
+            if (RowAbsolute)
+            {
+                S = S + '$';
+            }
 
             S = S + ARow.ToString();
             return S;
@@ -1239,7 +1338,9 @@ namespace PartsApp
 
             //Если внесена сумма отличающаяся от требуемой (галочка выключена), меняем баланс клиента.
             if (PaidCheckBox.Checked == false)
+            {
                 customer.Balance += (double)PaidNumericUpDown.Value - Convert.ToDouble(inTotalNumberLabel.Text);
+            }
 
 
             Sale sale = new Sale
@@ -1293,7 +1394,9 @@ namespace PartsApp
 
             //Если хоть один контрол не прошел валидацию, возв-ем false.
             if (curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red))
+            {
                 return false;
+            }
 
             //Если таблица не заполнена или не везде указана цена или кол-во.
             if (_operDetList.Count == 0 || SaleDGV.Rows.Cast<DataGridViewRow>().Any(r => r.Tag != null && (r.Cells[SellingPriceCol.Index].Value == null || r.Cells[CountCol.Index].Style.ForeColor == Color.Gray)))
@@ -1309,7 +1412,9 @@ namespace PartsApp
             if (e.Button == MouseButtons.Left)
             {
                 if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
                     this.Close();
+                }
             }
         }
 

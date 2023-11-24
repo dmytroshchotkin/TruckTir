@@ -66,7 +66,9 @@ namespace PartsApp.SupportClasses
             object headerCellValue = dgv.Rows[row.Index].HeaderCell.Value;
             //Если RowHeadersCell не заполнена или индекс строки изменен, присваиваем новый номер строке.
             if (headerCellValue == null || headerCellValue.ToString() != rowNumber)
+            {
                 dgv.Rows[row.Index].HeaderCell.Value = rowNumber;
+            }
         }
 
         /// <summary>
@@ -87,7 +89,9 @@ namespace PartsApp.SupportClasses
         {
 
             foreach (DataGridViewRow row in dgv.Rows)
+            {
                 RowNumerate(row);            //Нумеруем строку.                    
+            }
 
             RowHeadersWidthAutoSize(dgv);    //Задаём размер RowHeaders.
         }
@@ -103,7 +107,9 @@ namespace PartsApp.SupportClasses
             int oneDigitWidth = 7; //Ширина одного разряда числа (определена методом тыка).
             int newRowHeadersWidth = defaultRowHeadersWidth + (oneDigitWidth * (dgv.Rows.Count.ToString().Length - 1));
             if (dgv.RowHeadersWidth != newRowHeadersWidth) //Проверка необходима, потому что изменение RowHeadersWidth приводит к инициированию события OnPaint, а сл-но к бесконечному циклу. 
+            {
                 dgv.RowHeadersWidth = newRowHeadersWidth;
+            }
         }
 
     }

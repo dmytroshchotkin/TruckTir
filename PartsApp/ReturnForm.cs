@@ -28,7 +28,9 @@ namespace PartsApp
                 OperationDetails opDet = sale.OperationDetailsList.First(od => od.SparePart.SparePartId == operDet.SparePart.SparePartId);
                 opDet.Count -= operDet.Count;
                 if (opDet.Count == 0)
+                {
                     sale.OperationDetailsList.Remove(opDet);
+                }
             }
             //Заполняем таблицу
             sale.OperationDetailsList.ToList().ForEach(od => od.Tag = od.Count); //Запоминаем в Tag каждого объекта его начальное значение количества.
@@ -180,7 +182,9 @@ namespace PartsApp
                 toolTip.Show("Введены некорректные данные", this, GetCellBelowLocation(cell), 1000); //выводим всплывающее окно с сообщением об ошибке.                
                 //Если ячейка была до этого корректно заполнена, перемещаем её вниз.
                 if (cell.RowIndex < lastCorrectRowIndex)
+                {
                     RowsSort(ref cell, lastCorrectRowIndex);
+                }
 
                 SetDefaultValueToCell(cell); //Возвращаем серый цвет и дефолтное значение данной ячейке.
             }
@@ -200,16 +204,22 @@ namespace PartsApp
             float count;
             //Если введено не числовое значение, это ошибка.
             if (countCell.Value == null || (Single.TryParse(countCell.Value.ToString(), out count) == false))
+            {
                 return false;
+            }
 
             //Ввод значения не более 0, или больше чем было приобретено, является ошибкой. 
             float totalCount = (float)(countCell.OwningRow.DataBoundItem as OperationDetails).Tag;
             if (count <= 0 || count > totalCount)
+            {
                 return false;
+            }
 
             //Проверяем является ли введенное число корректным для продажи, т.е. кратно ли оно минимальной единице продажи.     
             if (count % Models.MeasureUnit.GetMinUnitSale(measureUnit) != 0)
+            {
                 return false;
+            }
 
             return true;
         }
@@ -339,7 +349,9 @@ namespace PartsApp
             if (e.Button == MouseButtons.Left)
             {
                 if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
                     this.Close();
+                }
             }
         }
         private void okButton_MouseClick(object sender, MouseEventArgs e)

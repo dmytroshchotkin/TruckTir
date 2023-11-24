@@ -16,9 +16,13 @@ namespace PartsApp.SupportClasses
         {
             //Если выбран последний эл-нт списка, вернуть начальное значение и убрать выделение в listBox-е. 
             if (autoCompleteListBox.SelectedIndex == autoCompleteListBox.Items.Count - 1)
+            {
                 autoCompleteListBox.ClearSelected();
+            }
             else
+            {
                 autoCompleteListBox.SelectedIndex += 1;
+            }
         }
 
         /// <summary>
@@ -33,9 +37,13 @@ namespace PartsApp.SupportClasses
             else
             {
                 if (autoCompleteListBox.SelectedIndex == 0)
+                {
                     autoCompleteListBox.ClearSelected();
+                }
                 else
+                {
                     autoCompleteListBox.SelectedIndex -= 1;
+                }
             }
         }
 
@@ -60,7 +68,9 @@ namespace PartsApp.SupportClasses
                 autoCompleteListBox.Visible = true;
             }
             else
+            {
                 autoCompleteListBox.Visible = false;
+            }
         }
 
         /// <summary>

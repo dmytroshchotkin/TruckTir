@@ -168,7 +168,9 @@ namespace PartsApp
 
             //Заполняем таблицу списком товаров.
             foreach (SparePart sparePart in spareParts)
+            {
                 FillExcelRow(ExcelWorkSheet, sparePart, ++row, column, titleColWidth, articulColWidth);
+            }
 
             //Обводим талицу рамкой. 
             ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "F" + row.ToString()).Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
@@ -217,13 +219,17 @@ namespace PartsApp
 
             //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
             if (sparePart.Articul.Length > articulColWidth || sparePart.Title.Length > titleColWidth)
+            {
                 IncreaseRowHeight(ExcelWorkSheet, sparePart, row, column, titleColWidth, articulColWidth);
+            }
 
             ExcelWorkSheet.Cells[row, column] = sparePart.Manufacturer;
             ExcelWorkSheet.Cells[row, column + 3] = sparePart.MeasureUnit;
             ExcelWorkSheet.Cells[row, column + 4] = sparePart.AvailabilityList.Sum(av => av.OperationDetails.Count);
             if (sparePart.AvailabilityList.Count > 0)
+            {
                 ExcelWorkSheet.Cells[row, column + 5] = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
+            }
         }
 
 
@@ -243,7 +249,9 @@ namespace PartsApp
             int maxManufLenght = 0;
             var sparePartsManufacturers = spareParts.Select(sp => sp.Manufacturer).Where(man => man != null);
             if (sparePartsManufacturers.Count() > 0)
+            {
                 maxManufLenght = sparePartsManufacturers.Max(man => man.Length);
+            }
 
             if (maxManufLenght < manufColWidth)
             {
@@ -270,9 +278,13 @@ namespace PartsApp
             ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
             //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
             if (sparePart.Articul.Length > articulColWidth && sparePart.Title.Length <= titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
             if (sparePart.Articul.Length <= articulColWidth && sparePart.Title.Length > titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 1].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
         }
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
@@ -327,7 +339,9 @@ namespace PartsApp
             {
                 FillExcelSheetPriceList(sparePartsList[i], row, 1, ExcelWorkSheet);
                 if (++i < sparePartsList.Count)
+                {
                     row = FillExcelSheetPriceList(sparePartsList[i], row, 3, ExcelWorkSheet);
+                }
 
                 row += 2;
             }
@@ -349,12 +363,16 @@ namespace PartsApp
             ExcelWorkSheet.get_Range(columnChar + startRow.ToString(), columnChar + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
             //Если не влазиет в строку, делаем перенос.
             if (sparePart.Title.Length > columnWidth - 5)
+            {
                 ExcelWorkSheet.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+            }
 
             //Выводим Розничную цену.
             row += 2;
             if (sparePart.AvailabilityList.Count > 0)
+            {
                 ExcelWorkSheet.Cells[row, column] = String.Format("{0:0.00} руб", Availability.GetMaxSellingPrice(sparePart.AvailabilityList));
+            }
             Excel.Range excelCells = ExcelWorkSheet.get_Range(columnChar + row.ToString());
             excelCells.Font.Size = 24;
             //Выравниваем по центру.
@@ -439,14 +457,20 @@ namespace PartsApp
             {
                 //Если есть выбранный элемент, выводим его.
                 if (autoCompleteListBox.SelectedItem != null)
+                {
                     ChangeDataSource(new List<SparePart>() { autoCompleteListBox.SelectedItem as SparePart });
+                }
                 else //Если выбранного элемента нет
                 {
                     //Если вып. список заполнен меньше макс. кол-ва, заполняем таблицу эл-ми вып. списка.
                     if (autoCompleteListBox.Items.Count > 0 && autoCompleteListBox.Items.Count < 10)
+                    {
                         ChangeDataSource(autoCompleteListBox.DataSource as List<SparePart>);
+                    }
                     else
+                    {
                         ChangeDataSource(PartsDAL.SearchSpareParts(searchTextBox.Text.Trim(), onlyAvaliabilityCheckBox.Checked));
+                    }
                 }
             }
         }
@@ -471,9 +495,13 @@ namespace PartsApp
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Clicks == 1)
+            {
                 searchTextBox.Focus();
+            }
             else
+            {
                 searchTextBox_KeyDown(searchTextBox, new KeyEventArgs(Keys.Enter));
+            }
         }
 
         //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -504,7 +532,9 @@ namespace PartsApp
 
                 //Если юзер не обладает правами админа, то запрещаем ему делать наценку менее чем "Крупный опт".
                 if (CurEmployee.AccessLayer == Employee.AccessLayers.User.ToDescription() && markup < (float)Markup.Types.LargeWholesale)
+                {
                     throw new Exception();
+                }
 
                 MarkupChanged(markup); //Меняем наценку.              
             }
@@ -526,9 +556,13 @@ namespace PartsApp
             catch (System.Data.SQLite.SQLiteException ex)
             {
                 if (ex.Message == "database is locked\r\ndatabase is locked")
+                {
                     MessageBox.Show("Вероятно кто-то другой сейчас осуществляет запись в базу\nПопробуйте ещё раз.", "База данных занята в данный момент.");
+                }
                 else
+                {
                     MessageBox.Show($"Ошибка записи изменения наценки\n{ex.Message}");
+                }
             }
             Cursor = Cursors.Default;
         }
@@ -541,7 +575,9 @@ namespace PartsApp
 
             //Меняем значение наценки в соотв. ячейках доп. таблицы.
             foreach (DataGridViewRow extRow in ExtPartsDGV.Rows)
+            {
                 extRow.Cells[MarkupExtCol.Index].Value = Markup.GetDescription((extRow.DataBoundItem as Availability).Markup);
+            }
 
             ExtPartsDGV.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
 
@@ -551,7 +587,9 @@ namespace PartsApp
                 SparePart sparePart = row.DataBoundItem as SparePart;
                 Availability avail = _changedMarkupList.FirstOrDefault(av => av.OperationDetails.SparePart.SparePartId == sparePart.SparePartId);
                 if (avail != null)
+                {
                     row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList); //Присваиваем новое значение столбцу 'ЦенаПродажи'.
+                }
             }
             SaveAndCancelChangesButtonsSetEnable(false);
         }
@@ -561,7 +599,9 @@ namespace PartsApp
             saveChangesButton.Enabled = cancelChangesButton.Enabled = enabled;
             //Если кнопка стала недоступной, то очищаем список объетов с изм. наценкой.
             if (enabled == false)
+            {
                 _changedMarkupList.Clear();
+            }
         }
 
         /// <summary>
@@ -613,14 +653,24 @@ namespace PartsApp
         private void MarkupChanged(float markup)
         {
             //Выделяем строки всех выделенных ячеек.            
-            foreach (DataGridViewCell cell in PartsDGV.SelectedCells) cell.OwningRow.Selected = true;    //partsDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
-            foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells) cell.OwningRow.Selected = true;
+            foreach (DataGridViewCell cell in PartsDGV.SelectedCells)
+            {
+                cell.OwningRow.Selected = true; //partsDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
+            }
+            foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells)
+            {
+                cell.OwningRow.Selected = true;
+            }
 
             //В зависимотсти от того, есть ли выделенные ячейки в доп. таблице, вызываем соотв. метод измененния наценки.
             if (ExtPartsDGV.SelectedRows.Count == 0)
+            {
                 PartsDGVMarkupChange(markup);
+            }
             else
+            {
                 ExtPartsDGVMarkupChange(markup);
+            }
         }
 
         /// <summary>
@@ -632,7 +682,9 @@ namespace PartsApp
         {
             //Если изменена дефолтная наценка, запоминаем её в Tag объекта.
             if (avail.Tag == null)
+            {
                 avail.Tag = avail.Markup;
+            }
             avail.Markup = markup;
 
             //Если такого объекта ещё нет в списке.
@@ -640,13 +692,17 @@ namespace PartsApp
             {
                 //Если новая наценка не равна первоначальной, добавляем объект в список.
                 if (avail.Markup != (float)avail.Tag)
+                {
                     _changedMarkupList.Add(avail);
+                }
             }
             else //Если такой объект уже есть в списке.
             {
                 //Если новая наценка равна первоначальной, удаляем объект из списка.
                 if (avail.Markup == (float)avail.Tag)
+                {
                     _changedMarkupList.Remove(avail);
+                }
             }
             //Если в списке товаров с изм. наценкой есть хоть один объект, делаем доступными кнопки Сохранения и Отмены, иначе делаем недоступными.
             SaveAndCancelChangesButtonsSetEnable(_changedMarkupList.Count > 0);
@@ -668,7 +724,9 @@ namespace PartsApp
         {
             //Проверяем отображается ли сейчас photoPictureBox.
             if (photoPictureBox.Visible == true)
+            {
                 photoPictureBox.Visible = false;
+            }
         }
 
         /// <summary>
@@ -694,7 +752,9 @@ namespace PartsApp
 
                         //Если картинка больше размером чем заданный размер, то подгоняем её под заданный размер.
                         if (photoPictureBox.PreferredSize.Width > photoSize.Width || photoPictureBox.PreferredSize.Height > photoSize.Height)
+                        {
                             photoPictureBox.Image = ResizeOrigImg(photoPictureBox.Image, photoSize.Width, photoSize.Height);
+                        }
 
                         photoPictureBox.Size = photoPictureBox.PreferredSize;
                         photoPictureBox.Visible = true;
@@ -736,6 +796,7 @@ namespace PartsApp
             SaveAndCancelChangesButtonsSetEnable(false);
             ExtPartsDGVClearSelection(null, null); //сбрасываем выделение в доп. таблице.
         }
+
         private void partsDGV_Sorted(object sender, EventArgs e)
         {
             FillColumns();                                           //Заполняем ячейки столбцов 'Цена продажи' и 'Наличие'.
@@ -783,10 +844,14 @@ namespace PartsApp
 
                 //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.
                 if (avail.StorageAddress != null)
+                {
                     StorageAddressExtCol.Visible = true;
+                }
 
                 if (avail.OperationDetails.Operation.Description != null)
+                {
                     NoteExtCol.Visible = true;
+                }
             }
             EnumerableExtensions.RowsNumerateAndAutoSize(ExtPartsDGV); //Нумерация строк.
             ExtPartsDGV.ClearSelection();                              //Убираем выделение ячейки.
@@ -903,8 +968,14 @@ namespace PartsApp
             if (PartsDGV.SelectedCells.Count != 0)
             {
                 //выделяем строки всех выделенных клеток.
-                foreach (DataGridViewCell cell in PartsDGV.SelectedCells) cell.OwningRow.Selected = true;
-                foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells) cell.OwningRow.Selected = true;
+                foreach (DataGridViewCell cell in PartsDGV.SelectedCells)
+                {
+                    cell.OwningRow.Selected = true;
+                }
+                foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells)
+                {
+                    cell.OwningRow.Selected = true;
+                }
 
                 decimal rate = excRateNumericUpDown.Value; //Находим установленный курс.
                 foreach (DataGridViewRow row in PartsDGV.SelectedRows)

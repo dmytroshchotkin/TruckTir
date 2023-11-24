@@ -56,7 +56,9 @@ namespace PartsApp
         private void storageComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (storageComboBox.SelectedIndex != 0)
+            {
                 storageAdressStarLabel.Visible = storageAdressLabel.Visible = storageAdressBackPanel.Visible = true;
+            }
             else
             {
                 storageAdressStarLabel.Visible = storageAdressLabel.Visible = storageAdressBackPanel.Visible = false;
@@ -70,9 +72,13 @@ namespace PartsApp
             if (storageAdressTextBox.Visible)
             {
                 if (String.IsNullOrWhiteSpace(storageAdressTextBox.Text))
+                {
                     storageAdressBackPanel.BackColor = Color.Red;
+                }
                 else
+                {
                     storageAdressBackPanel.BackColor = SystemColors.Control;
+                }
             }
         }
         #region Валидация вводимых данных.
@@ -145,7 +151,9 @@ namespace PartsApp
 
             //Обрабатываем ввод в ячейку 'Название' или 'Артикул'.
             if (_lastEditCell.OwningColumn == TitleCol || _lastEditCell.OwningColumn == ArticulCol)
+            {
                 autoCompleteListBox.Location = GetCellBelowLocation(_lastEditCell); //устанавливаем позицию вып. списка.
+            }
         }
 
         /// <summary>
@@ -221,13 +229,21 @@ namespace PartsApp
                 DataGridViewCell cell = PurchaseDGV[e.ColumnIndex, e.RowIndex];
 
                 if (cell.OwningColumn == TitleCol || cell.OwningColumn == ArticulCol) //Если редактируется артикул или название товара. 
+                {
                     TitleOrArticulCellFilled(cell);
+                }
                 else if (cell.OwningColumn == CountCol)                            //Если редактируется кол-во. 
+                {
                     CountCellFilled(cell);
+                }
                 else if (cell.OwningColumn == PriceCol)
+                {
                     PriceCellFilled(cell);
+                }
                 else if (cell.OwningColumn == SellingPriceCol)                     //Если редактируется цена продажи. 
+                {
                     SellingPriceCellFilled(cell);
+                }
             }
         }
 
@@ -259,9 +275,13 @@ namespace PartsApp
                 if (e.ColumnIndex == -1)
                 {
                     if (e.RowIndex == -1)
+                    {
                         PurchaseDGV.SelectAll();
+                    }
                     else
+                    {
                         PurchaseDGV.Rows[e.RowIndex].Selected = true;
+                    }
 
                     //Выводим контекстное меню.
                     Point location = PurchaseDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true).Location;
@@ -301,22 +321,32 @@ namespace PartsApp
                 {
                     //если выбор сделан из выпадающего списка.
                     if (autoCompleteListBox.SelectedItem != null)
-                        AutoCompleteRowInfo(cell, autoCompleteListBox.SelectedItem as SparePart); //Заполняем строку данными о товаре.                        
+                    {
+                        AutoCompleteRowInfo(cell, autoCompleteListBox.SelectedItem as SparePart); //Заполняем строку данными о товаре.
+                    }
                     else  //если выбор не из вып. списка.
+                    {
                         CellEndEditWrong(cell, "Выберите товар из списка.");
+                    }
                 }
                 else
                 {
                     _isCellEditError = true;
                     //Если такого товара нет в базе, даём возможность добавить его.
                     if (DialogResult.Yes == MessageBox.Show("Нет такого товара в базе. Добавить?", null, MessageBoxButtons.YesNo))
+                    {
                         if (new SparePartForm().ShowDialog() == DialogResult.OK)
+                        {
                             dataGridViewTextBoxCell_TextChanged(cell.Tag, null); //обновляем вып. список.
+                        }
+                    }
                 }
             }
             //Если нет ошибки завершения редактирования ячейки, производим необх. действия.
             if (!_isCellEditError)
+            {
                 CellEndEditCorrect(cell);
+            }
         }
 
         /// <summary>
@@ -345,7 +375,9 @@ namespace PartsApp
             {
                 float price = Convert.ToSingle(cell.Value);
                 if (price <= 0)
+                {
                     throw new Exception();  //ввод значения не более 0 также является ошибкой.
+                }
 
                 cell.Value = price; //Перезаписываем установленную цену, для её форматированного вывода в ячейке.
                 cell.OwningRow.Cells[SellingPriceCol.Index].Value = null; //очищаем цену продажи для дальнейшей установки дефолтного значения.
@@ -371,13 +403,19 @@ namespace PartsApp
             {
                 float sellingPrice = Convert.ToSingle(cell.Value);
                 if (sellingPrice <= 0)
+                {
                     throw new Exception();  //ввод значения не более 0 также является ошибкой.
+                }
 
                 //Если цена продажи меньше или равна закупочной, требуем подтверждения.
                 float price = Convert.ToSingle(cell.OwningRow.Cells[PriceCol.Index].Value);
                 if (sellingPrice <= price)
+                {
                     if (MessageBox.Show("Цена продажи ниже или равна закупочной!. Всё верно?", "", MessageBoxButtons.YesNo) == DialogResult.No)
+                    {
                         throw new Exception();
+                    }
+                }
             }
             catch
             {
@@ -410,7 +448,9 @@ namespace PartsApp
                 markupCell.Tag = markup;                                    //запоминаем числовое значение наценки.
             }
             else
+            {
                 markupCell.Value = markupCell.Tag = sellPriceCell.Value = null;   //если цена не установлена, обнуляем значения наценки и цены продажи.
+            }
         }
 
         /// <summary>
@@ -485,15 +525,21 @@ namespace PartsApp
             float count;
             //Если введено не числовое значение, это ошибка.
             if (countCell.Value == null || (Single.TryParse(countCell.Value.ToString(), out count) == false))
+            {
                 return false;
+            }
 
             //Ввод значения не более 0, является ошибкой. 
             if (count <= 0)
+            {
                 return false;
+            }
 
             //Проверяем является ли введенное число корректным для продажи, т.е. кратно ли оно минимальной единице продажи.     
             if (count % Models.MeasureUnit.GetMinUnitSale(measureUnit) != 0)
+            {
                 return false;
+            }
 
             return true;
         }
@@ -752,7 +798,9 @@ namespace PartsApp
 
             //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
             if (operDet.SparePart.Articul.Length > articulColWidth || operDet.SparePart.Title.Length > titleColWidth)
+            {
                 IncreaseRowHeight(ExcelWorkSheet, operDet.SparePart, row, column, titleColWidth, articulColWidth);
+            }
 
             ExcelWorkSheet.Cells[row, column] = operDet.SparePart.Manufacturer;
             ExcelWorkSheet.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
@@ -775,9 +823,13 @@ namespace PartsApp
             ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
             //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
             if (sparePart.Articul.Length > articulColWidth && sparePart.Title.Length <= titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
             if (sparePart.Articul.Length <= articulColWidth && sparePart.Title.Length > titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 1].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
         }
 
         /// <summary>
@@ -792,7 +844,9 @@ namespace PartsApp
             //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
             int indent = 0; //отступ
             if (inTotal.ToString("0.00").Length <= 9)
+            {
                 indent = 1;
+            }
 
             ExcelWorkSheet.Cells[row, column + 4 + indent] = "Итого : ";
             ExcelWorkSheet.Cells[row, column + 5 + indent] = inTotal.ToString("0.00");
@@ -862,7 +916,9 @@ namespace PartsApp
             int maxManufLenght = 0;
             var sparePartsManufacturers = operDetList.Select(od => od.SparePart.Manufacturer).Where(man => man != null);
             if (sparePartsManufacturers.Count() > 0)
+            {
                 maxManufLenght = sparePartsManufacturers.Max(man => man.Length);
+            }
 
             if (maxManufLenght < manufColWidth)
             {
@@ -918,6 +974,7 @@ namespace PartsApp
             }
             return rngWidth;
         }
+
         private string xlRCtoA1(int ARow, int ACol, bool RowAbsolute = false, bool ColAbsolute = false)
         {
             int A1 = 'A' - 1;  // номер "A" минус 1 (65 - 1 = 64)
@@ -929,20 +986,38 @@ namespace PartsApp
             t = ACol / AZ; // целая часть
             m = (ACol % AZ); // остаток?
             if (m == 0)
+            {
                 t--;
+            }
             if (t > 0)
+            {
                 S = Convert.ToString((char)(A1 + t));
-            else S = String.Empty;
+            }
+            else
+            {
+                S = String.Empty;
+            }
 
             if (m == 0)
+            {
                 t = AZ;
-            else t = m;
+            }
+            else
+            {
+                t = m;
+            }
 
             S = S + (char)(A1 + t);
 
             //весь адрес.
-            if (ColAbsolute) S = '$' + S;
-            if (RowAbsolute) S = S + '$';
+            if (ColAbsolute)
+            {
+                S = '$' + S;
+            }
+            if (RowAbsolute)
+            {
+                S = S + '$';
+            }
 
             S = S + ARow.ToString();
             return S;
@@ -961,14 +1036,19 @@ namespace PartsApp
                 currencyComboBox.Enabled = false;
                 helpLabel.Dispose();
             }
-            else excRateNumericUpDown.Enabled = true;
+            else
+            {
+                excRateNumericUpDown.Enabled = true;
+            }
 
             markupCheckBox.Enabled = true;
         }
+
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             PurchaseDGV.Enabled = excRateNumericUpDown.Value > excRateNumericUpDown.Minimum;
         }
+
         private void excRateNumericUpDown_Leave(object sender, EventArgs e)
         {
             if (excRateNumericUpDown.Value > excRateNumericUpDown.Minimum)
@@ -979,7 +1059,9 @@ namespace PartsApp
                 helpLabel.Dispose();
             }
             else
+            {
                 toolTip.Show("Выберите курс к рос. рублю", this, excRateNumericUpDown.Location, 3000);
+            }
         }
 
 
@@ -995,14 +1077,18 @@ namespace PartsApp
         private void markupComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 markupComboBox_SelectedIndexChanged(sender, e);
+            }
         }
 
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Если нет выделенных строк, то выходим.
             if (PurchaseDGV.SelectedCells.Count == 0)
+            {
                 return;
+            }
 
             //выделяем строки всех выделенных клеток.
             PurchaseDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
@@ -1132,7 +1218,9 @@ namespace PartsApp
 
             //Если хоть один контрол не прошел валидацию, возв-ем false.
             if (curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red))
+            {
                 return false;
+            }
 
             //Если таблица не заполнена или не везде указана цена или кол-во.
             if (PurchaseDGV.Rows.Cast<DataGridViewRow>().All(r => r.Tag == null) || PurchaseDGV.Rows.Cast<DataGridViewRow>().Any(r => r.Tag != null && (r.Cells[PriceCol.Index].Value == null || r.Cells[CountCol.Index].Value == null)))
@@ -1161,7 +1249,9 @@ namespace PartsApp
             {
                 //Если идет редактирование записи, то обновляем её в базе.
                 if (purchaseIdTextBox.Text != String.Empty)
+                {
                     PartsDAL.UpdatePurchase(Convert.ToInt32(purchaseIdTextBox.Text), (String.IsNullOrWhiteSpace(descriptionRichTextBox.Text) ? null : descriptionRichTextBox.Text.Trim()));
+                }
                 else
                 {
                     //Если всё заполненно корректно.
@@ -1179,8 +1269,6 @@ namespace PartsApp
                         }
                         //Выводим в Excel.
                         saveInExcelAsync(availList.Select(av => av.OperationDetails).ToList(), buyerAgentTextBox.Text.Trim());
-
-
                     }
                 }
                 this.Close();

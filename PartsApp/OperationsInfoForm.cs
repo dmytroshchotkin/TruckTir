@@ -342,7 +342,9 @@ namespace PartsApp
 
             //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
             if (operDet.SparePart.Articul.Length > articulColWidth || operDet.SparePart.Title.Length > titleColWidth)
+            {
                 IncreaseRowHeight(ExcelWorkSheet, operDet.SparePart, row, column, titleColWidth, articulColWidth);
+            }
 
             ExcelWorkSheet.Cells[row, column] = operDet.SparePart.Manufacturer;
             ExcelWorkSheet.Cells[row, column + 3] = operDet.SparePart.MeasureUnit;
@@ -365,9 +367,13 @@ namespace PartsApp
             ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
             //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
             if (sparePart.Articul.Length > articulColWidth && sparePart.Title.Length <= titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
             if (sparePart.Articul.Length <= articulColWidth && sparePart.Title.Length > titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 1].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
         }
 
         /// <summary>
@@ -382,7 +388,9 @@ namespace PartsApp
             //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
             int indent = 0; //отступ
             if (inTotal.ToString("0.00").Length <= 9)
+            {
                 indent = 1;
+            }
 
             ExcelWorkSheet.Cells[row, column + 4 + indent] = "Итого : ";
             ExcelWorkSheet.Cells[row, column + 5 + indent] = inTotal.ToString("0.00");
@@ -452,7 +460,9 @@ namespace PartsApp
             int maxManufLenght = 0;
             var sparePartsManufacturers = operDetList.Select(od => od.SparePart.Manufacturer).Where(man => man != null);
             if (sparePartsManufacturers.Count() > 0)
+            {
                 maxManufLenght = sparePartsManufacturers.Max(man => man.Length);
+            }
 
             if (maxManufLenght < manufColWidth)
             {
@@ -519,20 +529,38 @@ namespace PartsApp
             t = ACol / AZ; // целая часть
             m = (ACol % AZ); // остаток?
             if (m == 0)
+            {
                 t--;
+            }
             if (t > 0)
+            {
                 S = Convert.ToString((char)(A1 + t));
-            else S = String.Empty;
+            }
+            else
+            {
+                S = String.Empty;
+            }
 
             if (m == 0)
+            {
                 t = AZ;
-            else t = m;
+            }
+            else
+            {
+                t = m;
+            }
 
             S = S + (char)(A1 + t);
 
             //весь адрес.
-            if (ColAbsolute) S = '$' + S;
-            if (RowAbsolute) S = S + '$';
+            if (ColAbsolute)
+            {
+                S = '$' + S;
+            }
+            if (RowAbsolute)
+            {
+                S = S + '$';
+            }
 
             S = S + ARow.ToString();
             return S;

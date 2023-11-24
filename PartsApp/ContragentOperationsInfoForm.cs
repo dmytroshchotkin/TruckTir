@@ -111,7 +111,9 @@ namespace PartsApp
                 rect.Y += ContragentsGroupBox.Location.Y;
 
                 if (e.Y >= rect.Top && e.Y <= rect.Bottom)
+                {
                     editContragentContextMenuStrip.Show(ContragentsListView, e.Location, ToolStripDropDownDirection.BelowRight);
+                }
             }
         }
 
@@ -168,9 +170,13 @@ namespace PartsApp
             {
                 Cursor = Cursors.WaitCursor;
                 if (_contragType == typeof(Supplier))
+                {
                     PartsDAL.UpdatePurchase(operId, descr);
+                }
                 else
+                {
                     PartsDAL.UpdateSale(operId, descr);
+                }
 
                 (cell.OwningRow.Tag as IOperation).Description = descr;
                 Cursor = Cursors.Default;

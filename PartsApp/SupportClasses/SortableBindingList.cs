@@ -85,7 +85,10 @@ namespace PartsApp.SupportClasses
             _sortDirection = direction;
 
             List<T> list = Items as List<T>;
-            if (list == null) return;
+            if (list == null)
+            {
+                return;
+            }
 
             list.Sort(Compare);
 
@@ -99,7 +102,9 @@ namespace PartsApp.SupportClasses
             var result = OnComparison(lhs, rhs);
             //invert if descending
             if (_sortDirection == ListSortDirection.Descending)
+            {
                 result = -result;
+            }
             return result;
         }
 

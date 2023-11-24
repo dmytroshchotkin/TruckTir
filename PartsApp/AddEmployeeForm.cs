@@ -50,13 +50,22 @@ namespace PartsApp
         {
             //Проверяем есть ли уже введенная информация. 
             if (contactInfoPanel.Visible == true)
-                if (IsThereContactInfo() == true) return;
+            {
+                if (IsThereContactInfo() == true)
+                {
+                    return;
+                }
+            }
 
             contactInfoPanel.Visible = !contactInfoPanel.Visible;
             if (contactInfoPanel.Visible == false)
+            {
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
+            }
             else
+            {
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y + contactInfoPanel.Size.Height);
+            }
         }
 
         #region Методы проверки корректности ввода.
@@ -90,16 +99,22 @@ namespace PartsApp
         private void passportNumTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(passportNumTextBox.Text))
+            {
                 CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel);
+            }
             else
             {
                 if (PartsDAL.FindEmployees().Where(empl => empl.PassportNum == passportNumTextBox.Text.Trim()).Count() > 0) //Если такой номер паспорта уже имеется в базе.
                 {
                     //Если редактируется существующий сотрудник, и паспортные данные не изменены, то всё корректно. Иначе проверяем на совпадение с другими паспортными данными.
                     if (_editEmployee != null && _editEmployee.PassportNum == passportNumTextBox.Text.Trim())
+                    {
                         CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel);
+                    }
                     else
+                    {
                         WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel, "Такие паспортные данные уже имеются в базе.", 3000);
+                    }
                 }
                 else//если фамилия введена правильно
                 {
@@ -160,9 +175,13 @@ namespace PartsApp
                 {
                     //Если редактируется существующий сотрудник, и логин не изменен, то всё корректно. Иначе проверяем на совпадение с другими логинами в базе.
                     if (_editEmployee != null && _editEmployee.Login == loginTextBox.Text.Trim())
+                    {
                         CorrectValueInput(loginTextBox, loginBackPanel, loginStarLabel);
+                    }
                     else
+                    {
                         WrongValueInput(loginTextBox, loginBackPanel, loginStarLabel, location, "Такой логин уже существует, введите другой.", 3000);
+                    }
                 }
                 else//если фамилия введена правильно
                 {
@@ -278,7 +297,10 @@ namespace PartsApp
                     if (control is TextBox)
                     {
                         var textBox = control as TextBox;
-                        if (String.IsNullOrWhiteSpace(textBox.Text)) continue;
+                        if (String.IsNullOrWhiteSpace(textBox.Text))
+                        {
+                            continue;
+                        }
 
                         //Находим имя текущего контрола соответствующее имени свойства класса ContactInfo.
                         string propertyName = char.ToUpper(textBox.Name[0]).ToString() + textBox.Name.Substring(1, textBox.Name.IndexOf("TextBox") - 1);
@@ -340,18 +362,22 @@ namespace PartsApp
                     toolTip.SetToolTip(photoPictureBox, fileName);
                 }                //если выбранное фото не находится в нужной папке. 
                 else
+                {
                     if (System.IO.File.Exists(System.IO.Path.GetFullPath(path))) //проверяем есть ли фото с таким именем в нужной папке. 
-                {
-                    photoPictureBox.Image = new Bitmap(Image.FromFile(System.IO.Path.GetFullPath(path)), photoPictureBox.Size);
-                    //Если файл в нужной папке не является подходящим, то очищаем pictureBox.
-                    if (DialogResult.Cancel == MessageBox.Show("Этот файл или файл с таким именем уже существует в папке \"Сотрудники\".\nЕсли данное фото, является правильным, нажмите \"Ok\".\nИначе нажмите \"Отмена\" измените имя выбираемого файла и попробуйте ещё раз.", "Совпадение имен файлов", MessageBoxButtons.OKCancel))
-                        deselectToolStripMenuItem_Click(sender, e);
-                }                    //Если файл не находится в нужной папке, и при этом нет совпадения имен, копируем его.
-                else
-                {
-                    photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
-                    //записываем конечный путь файла всв-во tag.
-                    photoPictureBox.Tag = System.IO.Path.GetFullPath(path);
+                    {
+                        photoPictureBox.Image = new Bitmap(Image.FromFile(System.IO.Path.GetFullPath(path)), photoPictureBox.Size);
+                        //Если файл в нужной папке не является подходящим, то очищаем pictureBox.
+                        if (DialogResult.Cancel == MessageBox.Show("Этот файл или файл с таким именем уже существует в папке \"Сотрудники\".\nЕсли данное фото, является правильным, нажмите \"Ok\".\nИначе нажмите \"Отмена\" измените имя выбираемого файла и попробуйте ещё раз.", "Совпадение имен файлов", MessageBoxButtons.OKCancel))
+                        {
+                            deselectToolStripMenuItem_Click(sender, e);
+                        }
+                    }                    //Если файл не находится в нужной папке, и при этом нет совпадения имен, копируем его.
+                    else
+                    {
+                        photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
+                        //записываем конечный путь файла всв-во tag.
+                        photoPictureBox.Tag = System.IO.Path.GetFullPath(path);
+                    }
                 }
             }
         }
@@ -437,7 +463,9 @@ namespace PartsApp
                 if (employee.AccessLayer == Employee.AccessLayers.User.ToDescription())
                 {
                     foreach (Control control in this.Controls)
+                    {
                         control.Enabled = false;
+                    }
 
                     bottomPanel.Enabled = true;
                     accessLayerComboBox.Enabled = descrRichTextBox.Visible = descrLabel.Visible = false;
@@ -461,7 +489,9 @@ namespace PartsApp
                 else //если права "Обычный" -- запрещено всё.
                 {
                     foreach (Control control in this.Controls)
+                    {
                         control.Enabled = false;
+                    }
 
                     descrRichTextBox.Visible = descrLabel.Visible = false;
                 }
@@ -482,15 +512,21 @@ namespace PartsApp
                 {
                     //Если пароль не менялся, обновляем без пароля, иначе обновляем полностью.
                     if (passwordTextBox.Text.Trim() == Form1.CurEmployee.Password)
+                    {
                         PartsDAL.UpdateEmployeeWithoutPassword(employee);
+                    }
                     else
+                    {
                         PartsDAL.UpdateEmployee(employee);
+                    }
                 }                //если права "Обычные"
                 else
                 {
                     //Если введен новый пароль, то обновляем его в базе, иначе ничего не делаем.
                     if (passwordTextBox.Text.Trim() != Form1.CurEmployee.Password)
+                    {
                         PartsDAL.UpdateEmployee(employee);
+                    }
                 }
                 Form1.CurEmployee = employee;
             }
@@ -498,7 +534,9 @@ namespace PartsApp
             {
                 //если права "Админ" 
                 if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+                {
                     PartsDAL.UpdateEmployeeWithoutPassword(employee);
+                }
             }
         }
         #endregion

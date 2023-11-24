@@ -66,7 +66,9 @@ namespace PartsApp
             foreach (DataGridViewRow row in OperationsInfoDGV.Rows)
             {
                 if (row.Cells[OperationTypeCol.Index].Value.ToString() == "Расход")
+                {
                     row.Visible = SaleCheckBox.Checked;
+                }                   
             }
         }
 
@@ -75,7 +77,9 @@ namespace PartsApp
             foreach (DataGridViewRow row in OperationsInfoDGV.Rows)
             {
                 if (row.Cells[OperationTypeCol.Index].Value.ToString() == "Приход")
+                {
                     row.Visible = PurchaseCheckBox.Checked;
+                }                    
             }
         }
 

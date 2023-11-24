@@ -62,9 +62,14 @@ namespace PartsApp
                 string text = ArticulTextBox.Text.Trim();
                 //Если введенный артикул уже есть в базе, выдаём предупреждение, но позволяем дальнейший ввод.
                 if ((_sparePart.SparePartId != 0 && _sparePart.Articul.ToLower() == text.ToLower()) || PartsDAL.FindSparePartsByArticul(text).Count == 0)
+                {
                     ControlValidation.CorrectValueInput(toolTip, ArticulTextBox);
+                }                    
                 else
+                {
                     ControlValidation.WrongValueInput(toolTip, ArticulTextBox, "Такой артикул уже есть в базе", Color.Yellow);
+                }
+                   
             }
             else //Если артикул не введен.
             {
@@ -72,8 +77,11 @@ namespace PartsApp
             }
             //Если Title не пустой, проверяем уникальность заполнения связки Артикул-Название.
             if (String.IsNullOrWhiteSpace(TitleTextBox.Text) == false)
+            {
                 TitleTextBox_Leave(null, null);
+            }               
         }
+
         private void TitleTextBox_Leave(object sender, EventArgs e)
         {
             //Если Title введен.
@@ -84,23 +92,33 @@ namespace PartsApp
                 {
                     //Если связка Артикул-Название не уникальны, выводим сообщение об ошибке.
                     if (PartsDAL.FindSparePartsByArticul(ArticulTextBox.Text.Trim()).Any(sp => sp.Title.ToLower() == TitleTextBox.Text.Trim().ToLower()))
+                    {
                         ControlValidation.WrongValueInput(toolTip, TitleTextBox, "Такая связка Артикул-Название уже есть в базе");
+                    }                        
                     else
+                    {
                         ControlValidation.CorrectValueInput(toolTip, TitleTextBox);
+                    }                        
                 }
                 else   //если tilte введен правильно            
+                {
                     ControlValidation.CorrectValueInput(toolTip, TitleTextBox);
+                }                 
             }
             else //если Title не введен
             {
                 ControlValidation.WrongValueInput(toolTip, TitleTextBox);
             }
         }
+
         private void ManufacturerTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 MeasureUnitComboBox.Select(); //переводим фокус на др. контрол, и инициируем тем самым событие OnLeave.
+            }                
         }
+
         private void ManufacturerTextBox_Leave(object sender, EventArgs e)
         {
             if (!String.IsNullOrWhiteSpace(ManufacturerTextBox.Text))
@@ -110,9 +128,13 @@ namespace PartsApp
                 string manuf = ManufacturerTextBox.AutoCompleteCustomSource.Cast<string>().ToList().FirstOrDefault(c => c.ToLower() == text);
                 //Если нет такого Производителя в базе, выводим сообщение.
                 if (manuf == null)
+                {
                     toolTip.Show("Такого производителя нет в базе! Он будет добавлен.", this, ManufacturerTextBox.Location, 2000);
+                }                    
                 else
+                {
                     ManufacturerTextBox.Text = manuf; //Выводим корректное имя контрагента.
+                }                    
             }
         }
 
@@ -120,9 +142,13 @@ namespace PartsApp
         private void MeasureUnitComboBox_Leave(object sender, EventArgs e)
         {
             if (MeasureUnitComboBox.SelectedIndex == -1)
+            {
                 ControlValidation.WrongValueInput(toolTip, MeasureUnitComboBox, "Выберите ед. изм.");
+            }                
             else
+            {
                 ControlValidation.CorrectValueInput(toolTip, MeasureUnitComboBox);
+            }               
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +175,9 @@ namespace PartsApp
                     PhotoPictureBox.Image = new Bitmap(Image.FromFile(fullPath), PhotoPictureBox.Size);
                     //Если файл в нужной папке не является подходящим, то очищаем pictureBox.
                     if (DialogResult.Cancel == MessageBox.Show("Этот файл или файл с таким именем уже существует в папке \"Товар\".\nЕсли данное фото, является правильным, нажмите \"Ok\".\nИначе нажмите \"Отмена\" измените имя выбираемого файла и попробуйте ещё раз.", "Совпадение имен файлов", MessageBoxButtons.OKCancel))
+                    {
                         DeselectToolStripMenuItem_Click(null, null);
+                    }
                 }
                 else
                 {
@@ -171,7 +199,9 @@ namespace PartsApp
             {
                 //Если photoPictureBox не пустой.
                 if (PhotoPictureBox.Image != null)
+                {
                     PhotoContextMenuStrip.Show(PhotoPictureBox, e.Location); //Выводим контекстное меню.
+                }
             }
         }
 
@@ -199,7 +229,9 @@ namespace PartsApp
                 string fullPath = System.IO.Path.GetFullPath(photoPath);
                 //Если фото ещё нет в папке 'Товар', копируем его туда.
                 if (!System.IO.File.Exists(fullPath))
+                {
                     System.IO.File.Copy(PhotoOpenFileDialog.FileName, fullPath);
+                }
             }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +297,9 @@ namespace PartsApp
             if (e.Button == MouseButtons.Left)
             {
                 if (MessageBox.Show("Данные не будут внесены в базу, вы точно хотите выйти?", "Предупреждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
                     this.Close();
+                }
             }
         }
 
@@ -283,9 +317,13 @@ namespace PartsApp
                     {
                         //Редактируем существующий объект или добавляем новый.
                         if (_sparePart.SparePartId != 0)
+                        {
                             PartsDAL.UpdateSparePart(_sparePart);
+                        }
                         else
+                        {
                             PartsDAL.AddSparePart(_sparePart);
+                        }
                     }
                     catch
                     {

@@ -22,7 +22,9 @@ namespace PartsApp
             //Заполняем выпадающий список контрола для ввода ФИО.
             IList<Employee> employees = PartsDAL.FindEmployees();
             foreach (Employee employee in employees)
+            {
                 loginTextBox.AutoCompleteCustomSource.Add(employee.Login);
+            }
 
         }
 
@@ -31,7 +33,9 @@ namespace PartsApp
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 if (_isCorrectClose == false)
+                {
                     e.Cancel = true;
+                }
             }
         }
 

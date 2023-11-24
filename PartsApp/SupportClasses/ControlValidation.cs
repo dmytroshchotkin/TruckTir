@@ -95,7 +95,9 @@ namespace PartsApp.SupportClasses
 
             //Если StarControl есть, меняем его цвет.
             if (starControl != null)
+            {
                 starControl.ForeColor = warningColor;
+            }
             backControl.BackColor = warningColor;
 
             toolTip.SetToolTip(inputControl, toolTipMessage);
@@ -114,7 +116,9 @@ namespace PartsApp.SupportClasses
             Label starLabel = FindStarLabel(inputControl); //Находим соответствующую контролу StarLabel.
 
             if (starLabel != null)
+            {
                 starLabel.ForeColor = Color.Black;
+            }
             backPanel.BackColor = SystemColors.Control;
             toolTip.SetToolTip(inputControl, String.Empty);
         }
@@ -142,7 +146,9 @@ namespace PartsApp.SupportClasses
             Point location = GetControlLocation(backControl);
 
             if (starControl != null)
+            {
                 starControl.ForeColor = Color.Black;
+            }
             backControl.BackColor = SystemColors.Control;
 
             toolTip.SetToolTip(inputControl, toolTipMessage);

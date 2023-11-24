@@ -39,20 +39,31 @@ namespace PartsApp
 
             //Если у переданного объекта задан Id, то происходит редактирование контрагента.
             if (_contragent.ContragentId != 0)
+            {
                 FillFormFromObject();//Заполняем форму инф-цией.
+            }
         }
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
         {
             //Проверяем есть ли уже введенная информация. 
             if (contactInfoPanel.Visible == true)
-                if (IsThereContactInfo() == true) return;
+            {
+                if (IsThereContactInfo() == true)
+                {
+                    return;
+                }
+            }
 
             contactInfoPanel.Visible = !contactInfoPanel.Visible;
             if (contactInfoPanel.Visible == false)
+            {
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
+            }
             else
+            {
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y + contactInfoPanel.Size.Height);
+            }
         }
 
         private void contragentNameTextBox_Leave(object sender, EventArgs e)
@@ -73,12 +84,18 @@ namespace PartsApp
                 string text = contragentNameTextBox.Text.Trim().ToLower();
                 //Если контрагент с таким именем уже есть в базе и это не его редактирование, выдаём ошибку.
                 if ((_contragent.ContragentId != 0 && _contragent.ContragentName.ToLower() == text) || contragent == null)
+                {
                     ControlValidation.CorrectValueInput(toolTip, contragentNameTextBox);
+                }
                 else
+                {
                     ControlValidation.WrongValueInput(toolTip, contragentNameTextBox, String.Format("Введите другое название или ФИО {0}а", _contragentType));
+                }
             }
             else //если название введено некорректно
+            {
                 ControlValidation.WrongValueInput(toolTip, contragentNameTextBox);
+            }
         }
 
         /// <summary>
@@ -92,7 +109,9 @@ namespace PartsApp
             //или в начало textbox-а, если ранее ничего введено не было.
             //Если клик производится по уже заполненной области, то каретка там и остаётся.
             if (codeMaskedTextBox.SelectionStart > codeMaskedTextBox.Text.Length)
+            {
                 codeMaskedTextBox.SelectionStart = codeMaskedTextBox.Text.Length;
+            }
         }
 
         private void codeMaskedTextBox_Leave(object sender, EventArgs e)
@@ -104,9 +123,13 @@ namespace PartsApp
                 {
                     //Проверяем существует ли уже такой code в базе.
                     if ((_contragent.ContragentId != 0 && _contragent.Code == codeMaskedTextBox.Text) || PartsDAL.IsSupplierCodeExist(codeMaskedTextBox.Text) == false)
+                    {
                         ControlValidation.CorrectValueInput(toolTip, codeMaskedTextBox);
+                    }
                     else
+                    {
                         ControlValidation.WrongValueInput(toolTip, codeMaskedTextBox, String.Format("Такой ИНН/ОКПО уже есть в базе!", _contragentType));
+                    }
                 }
                 else
                 {
@@ -114,7 +137,9 @@ namespace PartsApp
                 }
             }
             else
+            {
                 ControlValidation.CorrectValueInput(toolTip, codeMaskedTextBox);
+            }
         }
 
 
@@ -136,7 +161,10 @@ namespace PartsApp
                     if (control is TextBox)
                     {
                         var textBox = control as TextBox;
-                        if (String.IsNullOrWhiteSpace(textBox.Text)) continue;
+                        if (String.IsNullOrWhiteSpace(textBox.Text))
+                        {
+                            continue;
+                        }
 
                         //Находим имя текущего контрола соответствующее имени свойства класса ContactInfo.
                         string propertyName = char.ToUpper(textBox.Name[0]).ToString() + textBox.Name.Substring(1, textBox.Name.IndexOf("TextBox") - 1);
@@ -271,9 +299,13 @@ namespace PartsApp
 
                     //Добавляем новую запись или редактируем существующую.
                     if (_contragent.ContragentId == 0)
+                    {
                         PartsDAL.AddContragent(_contragent);
+                    }
                     else
+                    {
                         PartsDAL.UpdateContragent(_contragent);
+                    }
 
                     this.DialogResult = DialogResult.OK;
                     this.Close();
