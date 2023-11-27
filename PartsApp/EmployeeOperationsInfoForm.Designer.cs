@@ -40,7 +40,7 @@ namespace PartsApp
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.EmployeeGroupBox = new System.Windows.Forms.GroupBox();
             this.EmployeeListBox = new System.Windows.Forms.ListBox();
-            this.ActivEmployeesCheckBox = new System.Windows.Forms.CheckBox();
+            this.AllEmployeesCheckBox = new System.Windows.Forms.CheckBox();
             this.InactiveEmployeesCheckBox = new System.Windows.Forms.CheckBox();
             this.BottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
@@ -118,7 +118,7 @@ namespace PartsApp
             // EmployeeGroupBox
             // 
             this.EmployeeGroupBox.Controls.Add(this.EmployeeListBox);
-            this.EmployeeGroupBox.Controls.Add(this.ActivEmployeesCheckBox);
+            this.EmployeeGroupBox.Controls.Add(this.AllEmployeesCheckBox);
             this.EmployeeGroupBox.Controls.Add(this.InactiveEmployeesCheckBox);
             this.EmployeeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EmployeeGroupBox.Location = new System.Drawing.Point(0, 0);
@@ -126,7 +126,7 @@ namespace PartsApp
             this.EmployeeGroupBox.Size = new System.Drawing.Size(864, 129);
             this.EmployeeGroupBox.TabIndex = 1;
             this.EmployeeGroupBox.TabStop = false;
-            this.EmployeeGroupBox.Text = "Сотрудники";
+            this.EmployeeGroupBox.Text = "Активные";
             //
             // EditToolStripMenuItem
             //
@@ -157,34 +157,35 @@ namespace PartsApp
             this.EmployeeListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnEmployeeListBoxMouseDown);
             this.EmployeeListBox.ContextMenuStrip = this.EmployeeEditingContextMenu;            
             // 
-            // ActivEmployeesCheckBox
+            // AllEmployeesCheckBox
             // 
-            this.ActivEmployeesCheckBox.AutoSize = true;
-            this.ActivEmployeesCheckBox.Checked = true;
-            this.ActivEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ActivEmployeesCheckBox.Location = new System.Drawing.Point(86, 0);
-            this.ActivEmployeesCheckBox.Name = "ActivEmployeesCheckBox";
-            this.ActivEmployeesCheckBox.Size = new System.Drawing.Size(76, 17);
-            this.ActivEmployeesCheckBox.TabIndex = 1;
-            this.ActivEmployeesCheckBox.Text = "Активные";
-            this.toolTip1.SetToolTip(this.ActivEmployeesCheckBox, "Отображать дейстующих сотрудников");
-            this.ActivEmployeesCheckBox.UseVisualStyleBackColor = true;
-            this.ActivEmployeesCheckBox.Visible = false;
+            this.AllEmployeesCheckBox.AutoSize = true;
+            this.AllEmployeesCheckBox.Checked = false;
+        //    this.AllEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AllEmployeesCheckBox.Location = new System.Drawing.Point(179, 0);
+            this.AllEmployeesCheckBox.Name = "ActivEmployeesCheckBox";
+            this.AllEmployeesCheckBox.Size = new System.Drawing.Size(76, 17);
+            this.AllEmployeesCheckBox.TabIndex = 1;
+            this.AllEmployeesCheckBox.Text = "Все сотрудники";
+            this.toolTip1.SetToolTip(this.AllEmployeesCheckBox, "Отображать полный список список");
+            this.AllEmployeesCheckBox.UseVisualStyleBackColor = true;
+            this.AllEmployeesCheckBox.Visible = true;
+            this.AllEmployeesCheckBox.CheckedChanged += OnAllEmployeesCheckBoxCheckedChanged;
             // 
             // InactiveEmployeesCheckBox
             // 
             this.InactiveEmployeesCheckBox.AutoSize = true;
-            this.InactiveEmployeesCheckBox.Checked = true;
-            this.InactiveEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.InactiveEmployeesCheckBox.Location = new System.Drawing.Point(179, 0);
+            this.InactiveEmployeesCheckBox.Checked = false;
+          //  this.InactiveEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.InactiveEmployeesCheckBox.Location = new System.Drawing.Point(86, 0);
             this.InactiveEmployeesCheckBox.Name = "InactiveEmployeesCheckBox";
             this.InactiveEmployeesCheckBox.Size = new System.Drawing.Size(92, 17);
             this.InactiveEmployeesCheckBox.TabIndex = 2;
-            this.InactiveEmployeesCheckBox.Text = "Не активные";
-            this.toolTip1.SetToolTip(this.InactiveEmployeesCheckBox, "Отображать не действующих сотрудников. Неактивным считается сотрудник у которого " +
-        "в профиле заполнено поле \'Дата Увольнения\'.");
+            this.InactiveEmployeesCheckBox.Text = "Уволенные";
+            this.toolTip1.SetToolTip(this.InactiveEmployeesCheckBox, "Отображать неактивных сотрудников");
             this.InactiveEmployeesCheckBox.UseVisualStyleBackColor = true;
-            this.InactiveEmployeesCheckBox.Visible = false;
+            this.InactiveEmployeesCheckBox.Visible = true;
+            this.InactiveEmployeesCheckBox.CheckedChanged += OnInactiveEmployeesCheckBoxCheckedChanged;
             // 
             // BottomSplitContainer
             // 
@@ -617,7 +618,7 @@ namespace PartsApp
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
         private System.Windows.Forms.GroupBox EmployeeGroupBox;
         private System.Windows.Forms.ListBox EmployeeListBox;
-        private System.Windows.Forms.CheckBox ActivEmployeesCheckBox;
+        private System.Windows.Forms.CheckBox AllEmployeesCheckBox;
         private System.Windows.Forms.CheckBox InactiveEmployeesCheckBox;
         private System.Windows.Forms.DataGridView OperationsInfoDGV;
         private System.Windows.Forms.DataGridViewTextBoxColumn OperationTypeCol;

@@ -15,6 +15,8 @@ namespace PartsApp
 {
     public partial class EmployeeOperationsInfoForm : Form
     {
+        private List<Employee> _employees;
+
         public EmployeeOperationsInfoForm()
         {
             InitializeComponent();
@@ -23,14 +25,116 @@ namespace PartsApp
         private void EmployeeOperationsInfoForm_Load(object sender, EventArgs e)
         {
             //Находим список всех сотрудников (сортируем по фамилии и имени) и делаем источником данных для ListBox.
-            EmployeeListBox.DataSource = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+            _employees = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+            EmployeeListBox.DataSource = GetActiveEmployees();            
 
             //Устанавливаем стартовый период в месяц.
             EndDateDTP.Value = DateTime.Now;
             BeginDateDTP.Value = DateTime.Today.AddMonths(-1);
         }
 
+        #region Вывод списков сотрудников (активных, уволенных, всех) и редактирование
+        /// <summary>
+        /// Выводим меню редактирования / увольнения сотрудника, если юзер является админом
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnEmployeeListBoxMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+            {
+                if (EmployeeListBox.SelectedItem is Employee emp)
+                {
+                    if (emp.DismissalDate != default)
+                    {
+                        DismissalToolStripMenuItem.Visible = false;
+                    }
+                    else
+                    {
+                        DismissalToolStripMenuItem.Visible = true;
+                    }
 
+                    EmployeeEditingContextMenu.Show();
+                }
+            }
+        }
+
+        private void OnDismissalOptionClick(object sender, EventArgs e)
+        {
+            if (EmployeeListBox.SelectedItem is Employee emp)
+            {
+                var dismissForm = new DismissEmployeeForm(emp);
+                dismissForm.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// В ListBox добавляются уволенные сотрудники или только активные, если поле пусто
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnInactiveEmployeesCheckBoxCheckedChanged(object sender, EventArgs e)
+        {
+            if (InactiveEmployeesCheckBox.Checked && AllEmployeesCheckBox.Checked)
+            {
+                AllEmployeesCheckBox.Checked = false;
+            }
+
+            if (InactiveEmployeesCheckBox.Checked && !AllEmployeesCheckBox.Checked)
+            {
+                EmployeeListBox.DataSource = GetFiredEmployees();
+            }
+
+            if (!AllEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
+            {
+                EmployeeListBox.DataSource = GetActiveEmployees();
+            }
+        }
+
+        /// <summary>
+        /// В ListBox добавляются все сотрудники или только активные, если поле пусто
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAllEmployeesCheckBoxCheckedChanged(object sender, EventArgs e)
+        {
+            if (AllEmployeesCheckBox.Checked && InactiveEmployeesCheckBox.Checked)
+            {
+                InactiveEmployeesCheckBox.Checked = false;
+            }
+
+            if (AllEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
+            {
+                EmployeeListBox.DataSource = GetAllEmployees();
+            }
+
+            if (!AllEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
+            {
+                EmployeeListBox.DataSource = GetActiveEmployees();
+            }
+        }
+
+        private List<Employee> GetAllEmployees()
+        {
+            return _employees.OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+        }
+
+        private List<Employee> GetFiredEmployees()
+        {
+            return _employees
+                .Where(e => e.DismissalDate != default && e.DismissalDate <= DateTime.Now)
+                .OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+        }
+
+        private List<Employee> GetActiveEmployees()
+        {
+            return _employees
+                .Where(e => e.DismissalDate == default)
+                .OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+        }
+        #endregion
+
+        #region Вывод операций по сотрудникам
         /// <summary>
         /// Изменяем доступность DTP в зависимости от состояния CheckBox-ов.
         /// </summary>
@@ -119,40 +223,6 @@ namespace PartsApp
             FillTheOperationDGV(); //Заполняем таблицу операций.
         }
 
-        /// <summary>
-        /// Выводим меню редактирования / увольнения сотрудника, если юзер является админом
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnEmployeeListBoxMouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right && Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
-            {
-                if (EmployeeListBox.SelectedItem is Employee emp)
-                {
-                    if (emp.DismissalDate != default)
-                    {                        
-                        DismissalToolStripMenuItem.Visible = false;
-                    }
-                    else
-                    {
-                        DismissalToolStripMenuItem.Visible = true;
-                    }
-
-                    EmployeeEditingContextMenu.Show();
-                }                    
-            }
-        }
-
-        private void OnDismissalOptionClick(object sender, EventArgs e)
-        {
-            if (EmployeeListBox.SelectedItem is Employee emp)
-            {
-                var dismissForm = new DismissEmployeeForm(emp);
-                dismissForm.ShowDialog();
-            }
-        }
-
         private void OperationsInfoDGV_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             OperationDetailsDGV.Rows.Clear(); //Очищаем таблицу доп. инф-ции от старых данных.
@@ -203,6 +273,6 @@ namespace PartsApp
 
             return operationsList;
         }
-
+        #endregion
     }
 }
