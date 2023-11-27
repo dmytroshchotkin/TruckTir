@@ -1,4 +1,6 @@
-﻿namespace PartsApp
+﻿using System.Windows.Forms;
+
+namespace PartsApp
 {
     partial class EmployeeOperationsInfoForm
     {
@@ -125,6 +127,21 @@
             this.EmployeeGroupBox.TabIndex = 1;
             this.EmployeeGroupBox.TabStop = false;
             this.EmployeeGroupBox.Text = "Сотрудники";
+            //
+            // EditToolStripMenuItem
+            //
+            this.EditToolStripMenuItem = new ToolStripMenuItem("Редактировать");
+            //
+            // DismissalToolStripMenuItem
+            //
+            this.DismissalToolStripMenuItem = new ToolStripMenuItem("Уволить");
+            this.DismissalToolStripMenuItem.Click += OnDismissalOptionClick;
+            //
+            // EmployeeEditingContextMenu
+            //
+            this.EmployeeEditingContextMenu = new ContextMenuStrip();
+            this.EmployeeEditingContextMenu.Items.Add(EditToolStripMenuItem);
+            this.EmployeeEditingContextMenu.Items.Add(DismissalToolStripMenuItem);
             // 
             // EmployeeListBox
             // 
@@ -137,6 +154,8 @@
             this.EmployeeListBox.TabIndex = 0;
             this.EmployeeListBox.ValueMember = "EmployeeId";
             this.EmployeeListBox.SelectedIndexChanged += new System.EventHandler(this.EmployeeListBox_SelectedIndexChanged);
+            this.EmployeeListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnEmployeeListBoxMouseDown);
+            this.EmployeeListBox.ContextMenuStrip = this.EmployeeEditingContextMenu;            
             // 
             // ActivEmployeesCheckBox
             // 
@@ -610,5 +629,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DescriptionCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TotalSumCol;
         private System.Windows.Forms.ToolStripStatusLabel OperationsCoubtLabel;
+        private ContextMenuStrip EmployeeEditingContextMenu;
+        private ToolStripMenuItem EditToolStripMenuItem;
+        private ToolStripMenuItem DismissalToolStripMenuItem;
     }
 }

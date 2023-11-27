@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Models.Helper;
 
 namespace PartsApp
 {
@@ -116,6 +117,40 @@ namespace PartsApp
         private void EmployeeListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillTheOperationDGV(); //Заполняем таблицу операций.
+        }
+
+        /// <summary>
+        /// Выводим меню редактирования / увольнения сотрудника, если юзер является админом
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnEmployeeListBoxMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+            {
+                if (EmployeeListBox.SelectedItem is Employee emp)
+                {
+                    if (emp.DismissalDate != default)
+                    {                        
+                        DismissalToolStripMenuItem.Visible = false;
+                    }
+                    else
+                    {
+                        DismissalToolStripMenuItem.Visible = true;
+                    }
+
+                    EmployeeEditingContextMenu.Show();
+                }                    
+            }
+        }
+
+        private void OnDismissalOptionClick(object sender, EventArgs e)
+        {
+            if (EmployeeListBox.SelectedItem is Employee emp)
+            {
+                var dismissForm = new DismissEmployeeForm(emp);
+                dismissForm.ShowDialog();
+            }
         }
 
         private void OperationsInfoDGV_RowEnter(object sender, DataGridViewCellEventArgs e)
