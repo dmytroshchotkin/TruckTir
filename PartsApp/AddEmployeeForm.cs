@@ -28,7 +28,7 @@ namespace PartsApp
             birthDateTimePicker.MinDate = new DateTime(DateTime.Today.Year - maxAge, 1, 1);
             birthDateTimePicker.MaxDate = new DateTime(DateTime.Today.Year - minAge, 12, 31);
             birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
-            
+
         }
 
         public AddEmployeeForm(Employee editEmployee)
@@ -37,32 +37,41 @@ namespace PartsApp
 
             _editEmployee = editEmployee;
             FillTheForm(_editEmployee);
-            
+
             birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
         }
 
         private void AddEmployeeForm_Load(object sender, EventArgs e)
         {
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
-        }//AddEmployeeForm_Load
+        }
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
         {
             //Проверяем есть ли уже введенная информация. 
             if (contactInfoPanel.Visible == true)
-                if (IsThereContactInfo() == true) return;
+            {
+                if (IsThereContactInfo() == true)
+                {
+                    return;
+                }
+            }
 
             contactInfoPanel.Visible = !contactInfoPanel.Visible;
             if (contactInfoPanel.Visible == false)
+            {
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
+            }
             else
+            {
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y + contactInfoPanel.Size.Height);
+            }
         }
 
         #region Методы проверки корректности ввода.
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-     
+
         private void lastNameTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(lastNameTextBox.Text))
@@ -72,8 +81,8 @@ namespace PartsApp
             else //если фамилия введена правильно
             {
                 CorrectValueInput(lastNameTextBox, lastNameBackPanel, lastNameStarLabel);
-            }//else
-        }//lastNameTextBox_Leave
+            }
+        }
 
         private void firstNameTextBox_Leave(object sender, EventArgs e)
         {
@@ -84,35 +93,41 @@ namespace PartsApp
             else //если фамилия введена правильно
             {
                 CorrectValueInput(firstNameTextBox, firstNameBackPanel, firstNameStarLabel);
-            }//else
-        }//firstNameTextBox_Leave
-        
+            }
+        }
+
         private void passportNumTextBox_Leave(object sender, EventArgs e)
         {
             if (String.IsNullOrWhiteSpace(passportNumTextBox.Text))
+            {
                 CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel);
+            }
             else
             {
                 if (PartsDAL.FindEmployees().Where(empl => empl.PassportNum == passportNumTextBox.Text.Trim()).Count() > 0) //Если такой номер паспорта уже имеется в базе.
                 {
                     //Если редактируется существующий сотрудник, и паспортные данные не изменены, то всё корректно. Иначе проверяем на совпадение с другими паспортными данными.
                     if (_editEmployee != null && _editEmployee.PassportNum == passportNumTextBox.Text.Trim())
+                    {
                         CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel);
+                    }
                     else
+                    {
                         WrongValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel, "Такие паспортные данные уже имеются в базе.", 3000);
-                }//if
+                    }
+                }
                 else//если фамилия введена правильно
                 {
                     CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel);
-                }//else                
-            }//else
-        }//passportNumTextBox_Leave
+                }
+            }
+        }
 
         private void passwordTextBox_TextChanged(object sender, EventArgs e)
         {
             passwordAgainTextBox.Enabled = true;
 
-        }//passwordTextBox_TextChanged
+        }
 
         private void passwordTextBox_Leave(object sender, EventArgs e)
         {
@@ -122,21 +137,21 @@ namespace PartsApp
                 WrongValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel, location, "Введите пароль", 3000);
                 passwordAgainTextBox.Clear();
                 passwordAgainTextBox.Enabled = false;
-            }//if
+            }
             else //если фамилия введена правильно
             {
                 CorrectValueInput(passwordTextBox, passwordBackPanel, passwordStarLabel);
-            }//else
-        }//passwordTextBox_Leave
+            }
+        }
 
         private void passwordAgainTextBox_Leave(object sender, EventArgs e)
         {
             Point location = new Point(bottomPanel.Location.X + passwordAgainBackPanel.Location.X, bottomPanel.Location.Y + passwordAgainBackPanel.Location.Y);
             //Проверяем повторный ввод пароля на корректность.
             if (String.IsNullOrWhiteSpace(passwordAgainTextBox.Text))
-            {                
+            {
                 WrongValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel, location, "Повторите пароль", 3000);
-            }//if
+            }
             else if (passwordAgainTextBox.Text != passwordTextBox.Text)
             {
                 WrongValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel, location, "Пароли не совпадают", 3000);
@@ -144,8 +159,8 @@ namespace PartsApp
             else
             {
                 CorrectValueInput(passwordAgainTextBox, passwordAgainBackPanel, passwordAgainStarLabel);
-            }//else
-        }//passwordAgainTextBox_Leave
+            }
+        }
 
         private void loginTextBox_Leave(object sender, EventArgs e)
         {
@@ -153,24 +168,27 @@ namespace PartsApp
             if (String.IsNullOrWhiteSpace(loginTextBox.Text))
             {
                 WrongValueInput(loginTextBox, loginBackPanel, loginStarLabel, location, "Введите имя (логин) учетной записи.", 3000);
-            }//if
+            }
             else
             {
                 if (PartsDAL.FindEmployees().Where(empl => empl.Login == loginTextBox.Text.Trim()).Count() > 0) //Если такой логин уже имеется в базе.
                 {
                     //Если редактируется существующий сотрудник, и логин не изменен, то всё корректно. Иначе проверяем на совпадение с другими логинами в базе.
                     if (_editEmployee != null && _editEmployee.Login == loginTextBox.Text.Trim())
+                    {
                         CorrectValueInput(loginTextBox, loginBackPanel, loginStarLabel);
+                    }
                     else
+                    {
                         WrongValueInput(loginTextBox, loginBackPanel, loginStarLabel, location, "Такой логин уже существует, введите другой.", 3000);
-                }//if
+                    }
+                }
                 else//если фамилия введена правильно
                 {
                     CorrectValueInput(loginTextBox, loginBackPanel, loginStarLabel);
-                }//else
-            }//else
-
-        }//loginTextBox_Leave
+                }
+            }
+        }
 
         private void accessLayerComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -182,26 +200,24 @@ namespace PartsApp
             else //если фамилия введена правильно
             {
                 CorrectValueInput(accessLayerComboBox, accessLayerBackPanel, accessLayerStarLabel);
-            }//else
-        }// accessLayerComboBox_SelectedIndexChanged//birthDateTimePicker_ValueChanged
+            }
+        }
 
         private void birthDateTimePicker_ValueChanged(object sender, EventArgs e)
         {
             hireDateTimePicker.Enabled = true;
 
             //Возраст сотрудника принимаемого на работу должен быть не меньше minAge, поэтому ставим ограничения на возм-ть выбора даты. 
-            if (companyFoundingDate.Year  - birthDateTimePicker.Value.Year  < minAge)
+            if (companyFoundingDate.Year - birthDateTimePicker.Value.Year < minAge)
             {
                 hireDateTimePicker.MinDate = new DateTime(birthDateTimePicker.Value.Year + minAge, 1, 1);
-            }//if
+            }
             else
             {
                 hireDateTimePicker.MinDate = companyFoundingDate;
-            }//else
-
+            }
             hireDateTimePicker.MaxDate = DateTime.Today;
-        }//birthDateTimePicker_ValueChanged
-
+        }
 
 
 
@@ -218,7 +234,8 @@ namespace PartsApp
             starControl.ForeColor = backControl.BackColor = Color.Red;
             toolTip.SetToolTip(inputControl, toolTipMessage);
             toolTip.Show(toolTipMessage, this, backControl.Location, toolTipShowTime);
-        }//wrongValueInput
+        }
+
         /// <summary>
         ///  Метод выдачи визуального сообщения о том что введены некорректные данные.
         /// </summary>
@@ -233,7 +250,8 @@ namespace PartsApp
             starControl.ForeColor = backControl.BackColor = Color.Red;
             toolTip.SetToolTip(inputControl, toolTipMessage);
             toolTip.Show(toolTipMessage, this, toolTipLocation, toolTipShowTime);
-        }//wrongValueInput
+        }
+
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены корректные данные.
         /// </summary>
@@ -245,7 +263,8 @@ namespace PartsApp
             starControl.ForeColor = Color.Black;
             backControl.BackColor = SystemColors.Control;
             toolTip.SetToolTip(inputControl, String.Empty);
-        }//CorrectValueInput
+        }
+
         /// <summary>
         /// Метод выдачи визуального сообщения о том что введены корректные данные.
         /// </summary>
@@ -260,7 +279,7 @@ namespace PartsApp
             backControl.BackColor = SystemColors.Control;
             toolTip.SetToolTip(inputControl, toolTipMessage);
             toolTip.Show(toolTipMessage, this, backControl.Location, toolTipShowTime);
-        }//CorrectValueInput
+        }
 
         /// <summary>
         /// Возвращает Id контактной информации если она введена, иначе возвращает null.
@@ -278,7 +297,10 @@ namespace PartsApp
                     if (control is TextBox)
                     {
                         var textBox = control as TextBox;
-                        if (String.IsNullOrWhiteSpace(textBox.Text)) continue;
+                        if (String.IsNullOrWhiteSpace(textBox.Text))
+                        {
+                            continue;
+                        }
 
                         //Находим имя текущего контрола соответствующее имени свойства класса ContactInfo.
                         string propertyName = char.ToUpper(textBox.Name[0]).ToString() + textBox.Name.Substring(1, textBox.Name.IndexOf("TextBox") - 1);
@@ -287,13 +309,12 @@ namespace PartsApp
                         Type type = typeof(ContactInfo);
                         var property = type.GetProperty(propertyName);
                         property.SetValue(contactInfo, textBox.Text.Trim());
-                    }//if
-                }//foreach    
-
+                    }
+                }
                 return contactInfo;
-            }//if
+            }
             return null;
-        }//GetContactInfo
+        }
 
         /// <summary>
         /// Возвращает true если в contactInfoPanel введена какая-то инф-ция, иначе false.
@@ -308,16 +329,15 @@ namespace PartsApp
                     if (String.IsNullOrWhiteSpace((control as TextBox).Text) == false)
                     {
                         return true;
-                    }//if
-                }//if
-            }//foreach
+                    }
+                }
+            }
             return false;
-        }//isThereContactInfo
+        }
 
 
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         /// <summary>
@@ -340,26 +360,28 @@ namespace PartsApp
                     //Если фото выбрано, то подгоняем его размер под PictureBox и добавляем всплывающую подсказку.
                     photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
                     toolTip.SetToolTip(photoPictureBox, fileName);
-                }//if
-                //если выбранное фото не находится в нужной папке. 
+                }                //если выбранное фото не находится в нужной папке. 
                 else
+                {
                     if (System.IO.File.Exists(System.IO.Path.GetFullPath(path))) //проверяем есть ли фото с таким именем в нужной папке. 
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(System.IO.Path.GetFullPath(path)), photoPictureBox.Size);
                         //Если файл в нужной папке не является подходящим, то очищаем pictureBox.
                         if (DialogResult.Cancel == MessageBox.Show("Этот файл или файл с таким именем уже существует в папке \"Сотрудники\".\nЕсли данное фото, является правильным, нажмите \"Ok\".\nИначе нажмите \"Отмена\" измените имя выбираемого файла и попробуйте ещё раз.", "Совпадение имен файлов", MessageBoxButtons.OKCancel))
+                        {
                             deselectToolStripMenuItem_Click(sender, e);
-                    }//if
-                    //Если файл не находится в нужной папке, и при этом нет совпадения имен, копируем его.
+                        }
+                    }                    //Если файл не находится в нужной папке, и при этом нет совпадения имен, копируем его.
                     else
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
                         //записываем конечный путь файла всв-во tag.
                         photoPictureBox.Tag = System.IO.Path.GetFullPath(path);
-                    }//else
+                    }
+                }
+            }
+        }
 
-            }//if
-        }//addEmployeePhotoButton_Click
         /// <summary>
         /// Событие для отмены выбора фотографии.
         /// </summary>
@@ -380,15 +402,15 @@ namespace PartsApp
         /// <param name="employee">Сотрудник чьей информацией заполняется форма.</param>
         private void FillTheForm(Employee employee)
         {
-            lastNameTextBox.Text             = employee.LastName;
-            firstNameTextBox.Text            = employee.FirstName;
-            middleNameTextBox.Text           = employee.MiddleName;
-            birthDateTimePicker.Value        = (DateTime)employee.BirthDate;
-            hireDateTimePicker.Value         = (DateTime)employee.HireDate;            
-            descrRichTextBox.Text            = employee.Note;
-            passportNumTextBox.Text          = employee.PassportNum;
-            titleTextBox.Text                = employee.Title;
-            loginTextBox.Text                = employee.Login;
+            lastNameTextBox.Text = employee.LastName;
+            firstNameTextBox.Text = employee.FirstName;
+            middleNameTextBox.Text = employee.MiddleName;
+            birthDateTimePicker.Value = (DateTime)employee.BirthDate;
+            hireDateTimePicker.Value = (DateTime)employee.HireDate;
+            descrRichTextBox.Text = employee.Note;
+            passportNumTextBox.Text = employee.PassportNum;
+            titleTextBox.Text = employee.Title;
+            loginTextBox.Text = employee.Login;
             accessLayerComboBox.SelectedItem = employee.AccessLayer;
             FillTheContactInfoPanel(employee.ContactInfo); //Заполняем контактную информацию.
             //Проверяем наличие фото.
@@ -399,15 +421,13 @@ namespace PartsApp
                 {
                     photoPictureBox.Image = new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size);
                     toolTip.SetToolTip(photoPictureBox, System.IO.Path.GetFileName(employee.Photo));
-                }//if
-                //else //если путь фото указан, но такого фото уже нет в папке.
-                //{
-                 //   employee.Photo = null;                 
-                //}//else
-            }//if
-
+                }
+            }//else //если путь фото указан, но такого фото уже нет в папке.
+             //{
+             //   employee.Photo = null;                 
+             //}            }
             SetTheAccessLayerConstraints(employee);
-        }//FillTheForm
+        }
 
         /// <summary>
         /// Метод заполнения ContactInfoPanel информацией из заданного ContactInfo.
@@ -417,18 +437,18 @@ namespace PartsApp
         {
             if (contactInfo != null)
             {
-                countryTextBox.Text  = contactInfo.Country;
-                regionTextBox.Text   = contactInfo.Region;
-                cityTextBox.Text     = contactInfo.City;
-                streetTextBox.Text   = contactInfo.Street;
-                houseTextBox.Text    = contactInfo.House;
-                roomTextBox.Text     = contactInfo.Room;
-                phoneTextBox.Text    = contactInfo.Phone;
+                countryTextBox.Text = contactInfo.Country;
+                regionTextBox.Text = contactInfo.Region;
+                cityTextBox.Text = contactInfo.City;
+                streetTextBox.Text = contactInfo.Street;
+                houseTextBox.Text = contactInfo.House;
+                roomTextBox.Text = contactInfo.Room;
+                phoneTextBox.Text = contactInfo.Phone;
                 ExtPhoneTextBox.Text = contactInfo.ExtPhone;
-                emailTextBox.Text    = contactInfo.Email; ;
-                websiteTextBox.Text  = contactInfo.Website;
-            }//if
-        }//FillTheContactInfoPanel        
+                emailTextBox.Text = contactInfo.Email; ;
+                websiteTextBox.Text = contactInfo.Website;
+            }
+        }
 
         /// <summary>
         /// Задаёт ограничения модификации формы исходя из уровня доступа переданного сотрудника.
@@ -443,16 +463,18 @@ namespace PartsApp
                 if (employee.AccessLayer == Employee.AccessLayers.User.ToDescription())
                 {
                     foreach (Control control in this.Controls)
+                    {
                         control.Enabled = false;
+                    }
 
                     bottomPanel.Enabled = true;
                     accessLayerComboBox.Enabled = descrRichTextBox.Visible = descrLabel.Visible = false;
-                }//if
+                }
                 else //если права "Админ" -- может редактировать всё.
                 {
                     passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
-                }//else
-            }//if
+                }
+            }
             else //Если редактируемый юзер не является авторизованным юзером
             {
                 //если права "Админ" -- может редактировать всё, кроме пароля и логина.
@@ -463,16 +485,19 @@ namespace PartsApp
                     passwordTextBox.Visible = passwordAgainTextBox.Visible = false;
                     passwordAgainLabel.Visible = passwordLabel.Visible = false;
                     passwordAgainStarLabel.Visible = passwordStarLabel.Visible = false;
-                }//if
+                }
                 else //если права "Обычный" -- запрещено всё.
                 {
                     foreach (Control control in this.Controls)
+                    {
                         control.Enabled = false;
+                    }
 
                     descrRichTextBox.Visible = descrLabel.Visible = false;
-                }//else
-            }//else
-        }//SetTheAccessLayerConstraints        
+                }
+            }
+        }
+
         /// <summary>
         /// Метод обновляющий данные переданного сотрудника в базе.
         /// </summary>
@@ -486,29 +511,34 @@ namespace PartsApp
                 if (Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
                 {
                     //Если пароль не менялся, обновляем без пароля, иначе обновляем полностью.
-                    if (passwordTextBox.Text.Trim() == Form1.CurEmployee.Password)                    
-                        PartsDAL.UpdateEmployeeWithoutPassword(employee);                    
-                    else                                           
-                        PartsDAL.UpdateEmployee(employee);                                                                                                      
-                }//if
-                //если права "Обычные"
-                else 
+                    if (passwordTextBox.Text.Trim() == Form1.CurEmployee.Password)
+                    {
+                        PartsDAL.UpdateEmployeeWithoutPassword(employee);
+                    }
+                    else
+                    {
+                        PartsDAL.UpdateEmployee(employee);
+                    }
+                }                //если права "Обычные"
+                else
                 {
                     //Если введен новый пароль, то обновляем его в базе, иначе ничего не делаем.
-                    if (passwordTextBox.Text.Trim() != Form1.CurEmployee.Password)                                           
-                        PartsDAL.UpdateEmployee(employee);                            
-                }//else
-
-                Form1.CurEmployee = employee;                
-            }//if
+                    if (passwordTextBox.Text.Trim() != Form1.CurEmployee.Password)
+                    {
+                        PartsDAL.UpdateEmployee(employee);
+                    }
+                }
+                Form1.CurEmployee = employee;
+            }
             else //Если редактируемый юзер не является авторизованным юзером
             {
                 //если права "Админ" 
-                if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())           
-                    PartsDAL.UpdateEmployeeWithoutPassword(employee);                
-            }//else    
-        }//UpdateEmployee
-
+                if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+                {
+                    PartsDAL.UpdateEmployeeWithoutPassword(employee);
+                }
+            }
+        }
         #endregion
 
         /// <summary>
@@ -526,29 +556,28 @@ namespace PartsApp
                     System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
                 }
                 photoPath = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
-            }//else
-
+            }
             Employee employee = new Employee
             (
-                employeeId     : 0,
-                photo          : photoPath,
-                lastName       : lastNameTextBox.Text.Trim(),
-                firstName      : firstNameTextBox.Text.Trim(),
-                middleName     : (!String.IsNullOrWhiteSpace(middleNameTextBox.Text)) ? middleNameTextBox.Text.Trim() : null,
-                birthDate      : birthDateTimePicker.Value,
-                hireDate       : hireDateTimePicker.Value,
-                dismissalDate  : null,
-                note           : (!String.IsNullOrWhiteSpace(descrRichTextBox.Text))   ? descrRichTextBox.Text.Trim()   : null,
-                passportNum    : (!String.IsNullOrWhiteSpace(passportNumTextBox.Text)) ? passportNumTextBox.Text.Trim() : null,
-                title          : (!String.IsNullOrWhiteSpace(titleTextBox.Text))       ? titleTextBox.Text.Trim()       : null,
-                accessLayer    : accessLayerComboBox.SelectedItem as string,
-                contactInfo    : GetContactInfo(),
-                login          : loginTextBox.Text.Trim(),
-                password       : PasswordClass.GetHashString(passwordTextBox.Text.Trim())//получаем хэш введенного пароля.
+                employeeId: 0,
+                photo: photoPath,
+                lastName: lastNameTextBox.Text.Trim(),
+                firstName: firstNameTextBox.Text.Trim(),
+                middleName: (!String.IsNullOrWhiteSpace(middleNameTextBox.Text)) ? middleNameTextBox.Text.Trim() : null,
+                birthDate: birthDateTimePicker.Value,
+                hireDate: hireDateTimePicker.Value,
+                dismissalDate: null,
+                note: (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null,
+                passportNum: (!String.IsNullOrWhiteSpace(passportNumTextBox.Text)) ? passportNumTextBox.Text.Trim() : null,
+                title: (!String.IsNullOrWhiteSpace(titleTextBox.Text)) ? titleTextBox.Text.Trim() : null,
+                accessLayer: accessLayerComboBox.SelectedItem as string,
+                contactInfo: GetContactInfo(),
+                login: loginTextBox.Text.Trim(),
+                password: PasswordClass.GetHashString(passwordTextBox.Text.Trim())//получаем хэш введенного пароля.
             );
 
             return employee;
-        }//GetEmployeeFromForm
+        }
 
         /// <summary>
         /// Возвращает true если все необходимые данные введены корректно, иначе false.
@@ -557,11 +586,11 @@ namespace PartsApp
         private bool CheckAllConditionsForWrightValues()
         {
             //Проверяем корректность ввода необходимых данных.
-            lastNameTextBox_Leave     (null, null);
-            firstNameTextBox_Leave    (null, null);
+            lastNameTextBox_Leave(null, null);
+            firstNameTextBox_Leave(null, null);
             //passportNumTextBox_Leave  (null, null);
-            loginTextBox_Leave        (null, null);
-            passwordTextBox_Leave     (null, null);
+            loginTextBox_Leave(null, null);
+            passwordTextBox_Leave(null, null);
             passwordAgainTextBox_Leave(null, null);
             accessLayerComboBox_SelectedIndexChanged(null, null);
 
@@ -572,13 +601,12 @@ namespace PartsApp
                 && loginBackPanel.BackColor != Color.Red)
             {
                 return true;
-            }//if
+            }
             else
             {
                 return false;
-            }//else
-        }//CheckAllConditionsForWrightValues
-
+            }
+        }
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -588,9 +616,8 @@ namespace PartsApp
                     this.DialogResult = DialogResult.Cancel;
                     this.Close();
                 }
-            }//if
-        }//CancelButton_MouseClick
-
+            }
+        }
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -605,49 +632,24 @@ namespace PartsApp
                         if (_editEmployee == null)
                         {
                             PartsDAL.AddEmployee(employee);
-                        }//if
+                        }
                         else
                         {
                             employee.EmployeeId = _editEmployee.EmployeeId;
                             UpdateEmployee(employee);
-                        }//else
-                    }//try
+                        }
+                    }
                     catch
                     {
                         MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
                         this.Cursor = Cursors.Default;
                         return;
-                    }//catch
-
+                    }
                     this.DialogResult = DialogResult.OK;
                     this.Close();
-                }//if
-            }//if
-
+                }
+            }
         }
-
-        
-
-
-        
-
-        
-
-        
-
-        
-
-        
-        
-
-        
-
-        
-
-
-
-
-    }//AddEmployeeForm
-}//namespace
-
+    }
+}
 /*http://www.internet-technologies.ru/articles/article_1807.html -- шифрование.*/

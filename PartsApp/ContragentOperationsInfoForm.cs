@@ -32,20 +32,19 @@ namespace PartsApp
 
             _contragType = contragType;
             _contragentsOperations = new Dictionary<int, List<IOperation>>();
-        }//
-
+        }
 
         private void ContragentOperationsInfoForm_Load(object sender, EventArgs e)
-        {            
+        {
             //Стартовая инициализация формы.
             FormInitialize();
-        }//ContragentOperationsInfoForm_Load
+        }
 
         /// <summary>
         /// Метод стартовой инициализации формы.
         /// </summary>
         private void FormInitialize()
-        {            
+        {
             //Заполняем таблицы инф-цией в зависимости от типа операции.
             List<IContragent> contragList = null;
             if (_contragType == typeof(Supplier))
@@ -54,25 +53,23 @@ namespace PartsApp
                 ContragentsGroupBox.Text = "Поставщики";
                 OperationsGroupBox.Text = "Поставки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по поставкам.";
-            }//if
+            }
             else
             {
                 contragList = PartsDAL.FindCustomers().Cast<IContragent>().OrderBy(s => s.ContragentName).ToList();
                 ContragentsGroupBox.Text = "Покупатели";
                 OperationsGroupBox.Text = "Покупки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по покупкам.";
-            }//else            
-
+            }
             //Заполняем лист контрагентами.
             foreach (IContragent contrag in contragList)
             {
-                ListViewItem item = new ListViewItem(contrag.ContragentName );
+                ListViewItem item = new ListViewItem(contrag.ContragentName);
                 item.SubItems.Add(contrag.Balance == null ? null : ((double)contrag.Balance).ToString("0.00"));
                 item.Tag = contrag;
-                ContragentsListView.Items.Add(item);                
-            }//foreach
-            
-        }//FormInitialize
+                ContragentsListView.Items.Add(item);
+            }
+        }
 
         private void ContragentsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -99,12 +96,11 @@ namespace PartsApp
                         }
 
                         _contragentsOperations.Add(contragId, operList);//добавляем в коллекцию.    
-                    }                                                 
-                }//if
-
+                    }
+                }
                 FillTheOperationsInfoDGV(operList); //Заполняем таблицу Операций.
-            }//if
-        }//ContragentsListBox_SelectedIndexChanged
+            }
+        }
 
         private void ContragentsListBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -115,9 +111,11 @@ namespace PartsApp
                 rect.Y += ContragentsGroupBox.Location.Y;
 
                 if (e.Y >= rect.Top && e.Y <= rect.Bottom)
+                {
                     editContragentContextMenuStrip.Show(ContragentsListView, e.Location, ToolStripDropDownDirection.BelowRight);
-            }//if
-        }//ContragentsListBox_MouseDown
+                }
+            }
+        }
 
         private void EditContragentToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -132,7 +130,7 @@ namespace PartsApp
                 {
                     contragent = PartsDAL.FindCustomers(contragent.ContragentId);
                 }
-                
+
                 //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
                 new AddContragentForm(contragent).Show();
             }
@@ -148,8 +146,8 @@ namespace PartsApp
                 Point loc = new Point(rect.Left + e.X, rect.Top + e.Y);
                 editOperDescriptContextMenuStrip.Show(OperationsInfoDGV, loc, ToolStripDropDownDirection.BelowRight);
                 OperationsInfoDGV.Rows[e.RowIndex].Cells[DescriptionCol.Index].Selected = true;
-            }//if
-        }//OperationsInfoDGV_CellMouseClick
+            }
+        }
 
         private void editOperDescriptToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -157,7 +155,7 @@ namespace PartsApp
             DataGridViewCell cell = OperationsInfoDGV.SelectedRows[0].Cells[DescriptionCol.Index];
             cell.ReadOnly = false;
             OperationsInfoDGV.BeginEdit(false);  //Активируем для редактирования
-        }//editOperDescriptToolStripMenuItem_Click
+        }
 
         private void OperationsInfoDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -172,20 +170,23 @@ namespace PartsApp
             {
                 Cursor = Cursors.WaitCursor;
                 if (_contragType == typeof(Supplier))
+                {
                     PartsDAL.UpdatePurchase(operId, descr);
+                }
                 else
+                {
                     PartsDAL.UpdateSale(operId, descr);
+                }
 
                 (cell.OwningRow.Tag as IOperation).Description = descr;
                 Cursor = Cursors.Default;
-            }//try
+            }
             catch
             {
                 MessageBox.Show("Не удалось редактировать запись. Попробуйте ещё раз.");
                 cell.Value = (cell.OwningRow.Tag as IOperation).Description;
-            }//catch
-        }//OperationsInfoDGV_CellEndEdit
-
+            }
+        }
 
         /// <summary>
         /// Заполняет таблицу Операций данными из переданного списка.
@@ -198,22 +199,21 @@ namespace PartsApp
             foreach (IOperation oper in operationsList)
             {
                 OperationsInfoDGV.SelectionChanged -= OperationsInfoDGV_SelectionChanged; //Отключаем вызов события, т.к. оно инициируется сразу при добавлении строки в таблицу, что вызывает ошибку выполнения.
-                int rowIndx = OperationsInfoDGV.Rows.Add();                
+                int rowIndx = OperationsInfoDGV.Rows.Add();
                 DataGridViewRow row = OperationsInfoDGV.Rows[rowIndx];
 
                 row.Tag = oper;
                 row.Cells[OperationIdCol.Index].Value = oper.OperationId;
-                row.Cells[DateCol.Index].Value        = oper.OperationDate;
-                row.Cells[EmployeeCol.Index].Value    = (oper.Employee != null) ? oper.Employee.GetShortFullName() : null;
+                row.Cells[DateCol.Index].Value = oper.OperationDate;
+                row.Cells[EmployeeCol.Index].Value = (oper.Employee != null) ? oper.Employee.GetShortFullName() : null;
                 row.Cells[ContragentEmployeeCol.Index].Value = oper.ContragentEmployee;
                 row.Cells[DescriptionCol.Index].Value = oper.Description;
-                row.Cells[TotalSumCol.Index].Value    = oper.OperationDetailsList.Sum(od => od.Sum);
+                row.Cells[TotalSumCol.Index].Value = oper.OperationDetailsList.Sum(od => od.Sum);
 
                 OperationsInfoDGV.ClearSelection();
                 OperationsInfoDGV.SelectionChanged += OperationsInfoDGV_SelectionChanged;
-            }//foreach
-            
-        }//FillTheOperationsInfoDGV
+            }
+        }
 
         /// <summary>
         /// Выводим доп. инф-цию по выбранной операции.
@@ -226,54 +226,36 @@ namespace PartsApp
             //Если есть выбранная строка.
             if (OperationsInfoDGV.SelectedRows.Count != 0)
             {
-                int operId    = (int)OperationsInfoDGV.SelectedRows[0].Cells[OperationIdCol.Index].Value; //Находим Id выбранной операции.                
+                int operId = (int)OperationsInfoDGV.SelectedRows[0].Cells[OperationIdCol.Index].Value; //Находим Id выбранной операции.                
                 int contragId = (ContragentsListView.SelectedItems[0].Tag as IContragent).ContragentId;
                 IOperation oper = _contragentsOperations[contragId].First(op => op.OperationId == operId); //Находим нужную операцию
-                
+
                 //Выводим инф-цию в таблицу доп. инф-ции по данной операции.
                 FillTheOperationDetailsDGV(oper.OperationDetailsList);
-            }//if
-        }//OperationsInfoDGV_SelectionChanged
+            }
+        }
 
         /// <summary>
         /// Заполняет таблицу доп. инф-ции по Операции данными из переданного списка.
         /// </summary>
         /// <param name="operDetList">Список операций для заполнения.</param>
         private void FillTheOperationDetailsDGV(IList<OperationDetails> operDetList)
-        {            
+        {
             foreach (OperationDetails operDet in operDetList)
             {
                 int rowIndx = OperationDetailsDGV.Rows.Add();
                 DataGridViewRow row = OperationDetailsDGV.Rows[rowIndx];
 
-                row.Cells[ManufacturerCol.Index].Value  = operDet.SparePart.Manufacturer;
-                row.Cells[ArticulCol.Index].Value       = operDet.SparePart.Articul;
-                row.Cells[TitleCol.Index].Value         = operDet.SparePart.Title;
-                row.Cells[MeasureUnitCol.Index].Value   = operDet.SparePart.MeasureUnit;
-                row.Cells[CountCol.Index].Value         = operDet.Count;
-                row.Cells[PriceCol.Index].Value         = operDet.Price;
-                row.Cells[SumCol.Index].Value           = operDet.Count * operDet.Price;
-            }//foreach                          
-
-        }//FillTheOperationDetailsDGV
-
-        
-
-        
-
-        
-
-       
-
-        
-
-        
-
-
-
-    }//ContragentOperationsInfoForm
-
-}//namespace
-
+                row.Cells[ManufacturerCol.Index].Value = operDet.SparePart.Manufacturer;
+                row.Cells[ArticulCol.Index].Value = operDet.SparePart.Articul;
+                row.Cells[TitleCol.Index].Value = operDet.SparePart.Title;
+                row.Cells[MeasureUnitCol.Index].Value = operDet.SparePart.MeasureUnit;
+                row.Cells[CountCol.Index].Value = operDet.Count;
+                row.Cells[PriceCol.Index].Value = operDet.Price;
+                row.Cells[SumCol.Index].Value = operDet.Count * operDet.Price;
+            }
+        }
+    }
+}
 /*Будущие задачи*/
 //Сделать выбор периода за кот. ищется инф-ция.

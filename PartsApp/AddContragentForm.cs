@@ -26,34 +26,45 @@ namespace PartsApp
 
             _contragent = contragent;
             _contragentType = (_contragent is Supplier) ? "поставщик" : "клиент";
-        }//
+        }
 
         private void AddcontragentForm_Load(object sender, EventArgs e)
         {
-            
-            this.Text = String.Format("Форма {0} {1}а", (_contragent.ContragentId == 0) ? "добавления" : "редактирования",_contragentType);
+
+            this.Text = String.Format("Форма {0} {1}а", (_contragent.ContragentId == 0) ? "добавления" : "редактирования", _contragentType);
             descrLabel.Text += String.Format("{0}е :", _contragentType);
 
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
-            codeMaskedTextBox.SelectionStart = 1; 
-           
+            codeMaskedTextBox.SelectionStart = 1;
+
             //Если у переданного объекта задан Id, то происходит редактирование контрагента.
             if (_contragent.ContragentId != 0)
+            {
                 FillFormFromObject();//Заполняем форму инф-цией.
-        }//AddcontragentForm_Load
+            }
+        }
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
         {
             //Проверяем есть ли уже введенная информация. 
-            if (contactInfoPanel.Visible == true)                  
-                if (IsThereContactInfo() == true) return;
+            if (contactInfoPanel.Visible == true)
+            {
+                if (IsThereContactInfo() == true)
+                {
+                    return;
+                }
+            }
 
             contactInfoPanel.Visible = !contactInfoPanel.Visible;
             if (contactInfoPanel.Visible == false)
+            {
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
+            }
             else
+            {
                 bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y + contactInfoPanel.Size.Height);
-        }//addContactInfoButton_Click
+            }
+        }
 
         private void contragentNameTextBox_Leave(object sender, EventArgs e)
         {
@@ -73,13 +84,19 @@ namespace PartsApp
                 string text = contragentNameTextBox.Text.Trim().ToLower();
                 //Если контрагент с таким именем уже есть в базе и это не его редактирование, выдаём ошибку.
                 if ((_contragent.ContragentId != 0 && _contragent.ContragentName.ToLower() == text) || contragent == null)
+                {
                     ControlValidation.CorrectValueInput(toolTip, contragentNameTextBox);
+                }
                 else
+                {
                     ControlValidation.WrongValueInput(toolTip, contragentNameTextBox, String.Format("Введите другое название или ФИО {0}а", _contragentType));
-            }//if
+                }
+            }
             else //если название введено некорректно
+            {
                 ControlValidation.WrongValueInput(toolTip, contragentNameTextBox);
-        }//contragentNameTextBox_Leave
+            }
+        }
 
         /// <summary>
         /// Событие для установления каретки в начало codeMaskedTextBox.
@@ -92,8 +109,10 @@ namespace PartsApp
             //или в начало textbox-а, если ранее ничего введено не было.
             //Если клик производится по уже заполненной области, то каретка там и остаётся.
             if (codeMaskedTextBox.SelectionStart > codeMaskedTextBox.Text.Length)
-                codeMaskedTextBox.SelectionStart = codeMaskedTextBox.Text.Length;                        
-        }//codeMaskedTextBox_MouseClick
+            {
+                codeMaskedTextBox.SelectionStart = codeMaskedTextBox.Text.Length;
+            }
+        }
 
         private void codeMaskedTextBox_Leave(object sender, EventArgs e)
         {
@@ -104,19 +123,24 @@ namespace PartsApp
                 {
                     //Проверяем существует ли уже такой code в базе.
                     if ((_contragent.ContragentId != 0 && _contragent.Code == codeMaskedTextBox.Text) || PartsDAL.IsSupplierCodeExist(codeMaskedTextBox.Text) == false)
-                        ControlValidation.CorrectValueInput(toolTip, codeMaskedTextBox);                        
+                    {
+                        ControlValidation.CorrectValueInput(toolTip, codeMaskedTextBox);
+                    }
                     else
+                    {
                         ControlValidation.WrongValueInput(toolTip, codeMaskedTextBox, String.Format("Такой ИНН/ОКПО уже есть в базе!", _contragentType));
-                }//if
+                    }
+                }
                 else
                 {
                     ControlValidation.WrongValueInput(toolTip, codeMaskedTextBox, String.Format("Введенный ИНН/ОКПО является некорректным!", _contragentType));
-                }//else
-            }//if
-            else 
+                }
+            }
+            else
+            {
                 ControlValidation.CorrectValueInput(toolTip, codeMaskedTextBox);
-        }//codeMaskedTextBox_Leave
-
+            }
+        }
 
 
 
@@ -128,7 +152,7 @@ namespace PartsApp
         {
             //Если ContactInfoPanel развернута.
             if (contactInfoPanel.Visible == true && IsThereContactInfo() == true)
-            {                
+            {
                 //Если есть введенная инф-ция
                 ContactInfo contactInfo = new ContactInfo();
                 foreach (var control in contactInfoPanel.Controls)
@@ -137,22 +161,24 @@ namespace PartsApp
                     if (control is TextBox)
                     {
                         var textBox = control as TextBox;
-                        if (String.IsNullOrWhiteSpace(textBox.Text)) continue;
+                        if (String.IsNullOrWhiteSpace(textBox.Text))
+                        {
+                            continue;
+                        }
 
                         //Находим имя текущего контрола соответствующее имени свойства класса ContactInfo.
-                        string propertyName = char.ToUpper(textBox.Name[0]).ToString() + textBox.Name.Substring(1, textBox.Name.IndexOf("TextBox")-1);
+                        string propertyName = char.ToUpper(textBox.Name[0]).ToString() + textBox.Name.Substring(1, textBox.Name.IndexOf("TextBox") - 1);
 
                         //Присваиваем значение свойству propertyName из соответствующего textBox.
                         Type type = typeof(ContactInfo);
                         System.Reflection.PropertyInfo property = type.GetProperty(propertyName);
                         property.SetValue(contactInfo, textBox.Text.Trim());
-                    }//if
-                }//foreach    
-
+                    }
+                }
                 return contactInfo;
-            }//if
+            }
             return null;
-        }//GetContactInfo
+        }
 
         /// <summary>
         /// Возвращает true если в contactInfoPanel введена какая-то инф-ция, иначе false.
@@ -167,11 +193,11 @@ namespace PartsApp
                     if (String.IsNullOrWhiteSpace((control as TextBox).Text) == false)
                     {
                         return true;
-                    }//if
-                }//if
-            }//foreach
+                    }
+                }
+            }
             return false;
-        }//isThereContactInfo
+        }
 
         /// <summary>
         /// Заполняет форму инф-цией переданного в конст-ор объекта.
@@ -179,12 +205,12 @@ namespace PartsApp
         private void FillFormFromObject()
         {
             //Заполняем форму данными объекта  
-            contragentNameTextBox.Text =   _contragent.ContragentName; 
-            codeMaskedTextBox.Text     =   _contragent.Code; 
-            entityComboBox.Text        =   _contragent.Entity; 
-            descrRichTextBox.Text      =   _contragent.Description;
-            FillTheContactInfoPanel(_contragent.ContactInfo);           
-        }//FillFormFromObject
+            contragentNameTextBox.Text = _contragent.ContragentName;
+            codeMaskedTextBox.Text = _contragent.Code;
+            entityComboBox.Text = _contragent.Entity;
+            descrRichTextBox.Text = _contragent.Description;
+            FillTheContactInfoPanel(_contragent.ContactInfo);
+        }
 
         /// <summary>
         /// Метод заполнения ContactInfoPanel информацией из заданного ContactInfo.
@@ -194,39 +220,39 @@ namespace PartsApp
         {
             if (contactInfo != null)
             {
-                countryTextBox.Text  = contactInfo.Country;
-                regionTextBox.Text   = contactInfo.Region;
-                cityTextBox.Text     = contactInfo.City;
-                streetTextBox.Text   = contactInfo.Street;
-                houseTextBox.Text    = contactInfo.House;
-                roomTextBox.Text     = contactInfo.Room;
-                phoneTextBox.Text    = contactInfo.Phone;
+                countryTextBox.Text = contactInfo.Country;
+                regionTextBox.Text = contactInfo.Region;
+                cityTextBox.Text = contactInfo.City;
+                streetTextBox.Text = contactInfo.Street;
+                houseTextBox.Text = contactInfo.House;
+                roomTextBox.Text = contactInfo.Room;
+                phoneTextBox.Text = contactInfo.Phone;
                 extPhoneTextBox.Text = contactInfo.ExtPhone;
-                emailTextBox.Text    = contactInfo.Email; ;
-                websiteTextBox.Text  = contactInfo.Website;
-            }//if
-        }//FillTheContactInfoPanel   
+                emailTextBox.Text = contactInfo.Email; ;
+                websiteTextBox.Text = contactInfo.Website;
+            }
+        }
 
         /// <summary>
         /// Возвращает объект заполненный данными с формы.
         /// </summary>
         /// <returns></returns>
         private IContragent GetContragentFromForm()
-        {            
+        {
             //Находим данные с формы.
-            int id               = _contragent.ContragentId;
-            string name          = contragentNameTextBox.Text.Trim();
-            string code          = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
-            string entity        = (entityComboBox.SelectedItem != null) ? entityComboBox.Text : null;
-            string description   = (String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? null : descrRichTextBox.Text.Trim();
+            int id = _contragent.ContragentId;
+            string name = contragentNameTextBox.Text.Trim();
+            string code = (codeMaskedTextBox.Text == String.Empty) ? null : codeMaskedTextBox.Text;
+            string entity = (entityComboBox.SelectedItem != null) ? entityComboBox.Text : null;
+            string description = (String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? null : descrRichTextBox.Text.Trim();
             ContactInfo contInfo = GetContactInfo();
-            double balance       = (double)BalanceNumericUpDown.Value;
+            double balance = (double)BalanceNumericUpDown.Value;
 
             //возвращаем объект в зависимости от его типа.
-            return (_contragent is Supplier) ? (IContragent) new Supplier(id, name, code, entity, contInfo, description)
-                                             : (IContragent) new Customer(id, name, code, entity, contInfo, description, balance);
+            return (_contragent is Supplier) ? (IContragent)new Supplier(id, name, code, entity, contInfo, description)
+                                             : (IContragent)new Customer(id, name, code, entity, contInfo, description, balance);
 
-        }//GetContragentFromForm()
+        }
 
         /// <summary>
         /// Возвращает true если все обязательные поля корректно заполнены, иначе false.
@@ -245,8 +271,7 @@ namespace PartsApp
 
             //Если хоть один не прошел валидацию, возв-ем false.
             return !curAccBackControls.Any(backPanel => backPanel.BackColor == Color.Red);
-        }//IsRequiredAddingAreaFieldsValid
-
+        }
 
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
@@ -258,35 +283,36 @@ namespace PartsApp
                     this.DialogResult = DialogResult.Cancel;
                     this.Close();
                 }
-            }//if
-        }//CancelButton_MouseClick
+            }
+        }
 
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                
+
                 //Если все данные введены корректно
                 if (IsRequiredFieldsValid())
-                {             
+                {
                     //Присваиваем объект заполненный данными с формы.
                     _contragent = GetContragentFromForm();
 
                     //Добавляем новую запись или редактируем существующую.
                     if (_contragent.ContragentId == 0)
+                    {
                         PartsDAL.AddContragent(_contragent);
+                    }
                     else
+                    {
                         PartsDAL.UpdateContragent(_contragent);
+                    }
 
                     this.DialogResult = DialogResult.OK;
                     this.Close();
-                }//if
-            }//if
-        }//OkButton_MouseClick
-        
+                }
+            }
+        }
 
-    }//AddcontragentForm
-
-}//namespace
-
+    }
+}
 //Сделать contactInfoPanel -- кастомным контролом.

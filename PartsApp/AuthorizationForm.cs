@@ -22,7 +22,9 @@ namespace PartsApp
             //Заполняем выпадающий список контрола для ввода ФИО.
             IList<Employee> employees = PartsDAL.FindEmployees();
             foreach (Employee employee in employees)
+            {
                 loginTextBox.AutoCompleteCustomSource.Add(employee.Login);
+            }
 
         }
 
@@ -31,18 +33,19 @@ namespace PartsApp
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 if (_isCorrectClose == false)
+                {
                     e.Cancel = true;
-            }//if
-        }//AuthorizationForm_FormClosing
-
+                }
+            }
+        }
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
                 this.Owner.Close();
-            }//if
-        }//CancelButton_MouseClick
+            }
+        }
 
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
@@ -58,18 +61,15 @@ namespace PartsApp
                     Form1.CurEmployee = employee;
                     _isCorrectClose = true;
                     this.Close();
-                }//try
-                catch 
+                }
+                catch
                 {
-                    toolTip.Show("Введены неверные данные.", this, okButton.Location, 3000); 
+                    toolTip.Show("Введены неверные данные.", this, okButton.Location, 3000);
                 }
                 //var employeesList = PartsDAL.FindAllEmployees().Where(empl => empl.GetFullName() == fullNameTextBox.Text.Trim() && empl.Password == inputPasswordHash).First();
-                
-            }//if
+
+            }
         }
 
-        
-
-
-    }//AuthorizationForm
-}//namespace
+    }
+}

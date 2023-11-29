@@ -27,8 +27,7 @@ namespace PartsApp
             //Устанавливаем стартовый период в месяц.
             EndDateDTP.Value = DateTime.Now;
             BeginDateDTP.Value = DateTime.Today.AddMonths(-1);
-        }//EmployeeOperationsInfoForm_Load
-
+        }
 
 
         /// <summary>
@@ -43,8 +42,8 @@ namespace PartsApp
             dtp.Enabled = !dtp.Enabled;
 
             //Заполняем таблицу операций.
-            FillTheOperationDGV(); 
-        }//BeginDateCheckBox_CheckedChanged
+            FillTheOperationDGV();
+        }
 
         /// <summary>
         /// Выводим список операций соответствующих установленным требованиям по дате, сотруднику и типу операции.
@@ -54,7 +53,7 @@ namespace PartsApp
         private void DatesDTP_ValueChanged(object sender, EventArgs e)
         {
             FillTheOperationDGV(); //Заполняем таблицу операций.
-        }//DatesDTP_ValueChanged
+        }
 
         /// <summary>
         /// Заполняем таблицу операций для выделенного сотрудника.
@@ -65,14 +64,14 @@ namespace PartsApp
 
             //Находим начальную и конечную дату требуемых операций.
             DateTime? beginDate = BeginDateDTP.Enabled ? BeginDateDTP.Value : (DateTime?)null;
-            DateTime? endDate   = EndDateDTP.Enabled   ? EndDateDTP.Value   : (DateTime?)null;
+            DateTime? endDate = EndDateDTP.Enabled ? EndDateDTP.Value : (DateTime?)null;
             //Выводим список операций соответствующий заданным требованиям.
             List<IOperation> operList = FindOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate);
             FillTheOperationDGV(operList);
 
             //Изменяем видимость строк по типу операции.
-            OperationsCheckBox_CheckedChanged(null, null);            
-        }//FillTheOperationDGV
+            OperationsCheckBox_CheckedChanged(null, null);
+        }
 
         /// <summary>
         /// Заполняет таблицу операций переданной инф-цией.
@@ -86,17 +85,17 @@ namespace PartsApp
                 DataGridViewRow row = OperationsInfoDGV.Rows[rowIndx];
 
                 row.Cells[OperationTypeCol.Index].Value = (operat.GetType() == typeof(Sale)) ? "Расход" : "Приход";
-                row.DefaultCellStyle.BackColor          = (operat.GetType() == typeof(Sale)) ? Color.LightGreen : Color.Khaki;//Color.Pink;
-                row.Cells[OperationIdCol.Index].Value   = operat.OperationId;
-                row.Cells[DateCol.Index].Value          = operat.OperationDate.ToShortDateString();
-                row.Cells[EmployeeCol.Index].Value      = (operat.Employee != null) ? operat.Employee.GetShortFullName() : null;
-                row.Cells[ContragentCol.Index].Value    = operat.Contragent.ContragentName;
+                row.DefaultCellStyle.BackColor = (operat.GetType() == typeof(Sale)) ? Color.LightGreen : Color.Khaki;//Color.Pink;
+                row.Cells[OperationIdCol.Index].Value = operat.OperationId;
+                row.Cells[DateCol.Index].Value = operat.OperationDate.ToShortDateString();
+                row.Cells[EmployeeCol.Index].Value = (operat.Employee != null) ? operat.Employee.GetShortFullName() : null;
+                row.Cells[ContragentCol.Index].Value = operat.Contragent.ContragentName;
                 row.Cells[ContragentEmployeeCol.Index].Value = operat.ContragentEmployee;
-                row.Cells[TotalSumCol.Index].Value      = operat.OperationDetailsList.Sum(od => od.Sum);
+                row.Cells[TotalSumCol.Index].Value = operat.OperationDetailsList.Sum(od => od.Sum);
 
                 row.Tag = operat;
-            }//foreach
-        }//FillTheOperationDGV
+            }
+        }
 
         /// <summary>
         /// Изменяет видимость строк по типу операции, в зависимости от состояния CheckBox-ов.
@@ -107,31 +106,30 @@ namespace PartsApp
         {
             //Меняем видимость требуемых строк в зависимотси от установленных требований для данного типа операций.
             foreach (DataGridViewRow row in OperationsInfoDGV.Rows)
-            {                
+            {
                 row.Visible = (row.Cells[OperationTypeCol.Index].Value == "Приход" ? PurchaseCheckBox.Checked : SaleCheckBox.Checked);
-            }//foreach
-
+            }
             //Выводим кол-во видимых строк.
             OperationsCoubtLabel.Text = OperationsInfoDGV.Rows.GetRowCount(DataGridViewElementStates.Visible).ToString();
-        }//OperationsCheckBox_CheckedChanged
+        }
 
         private void EmployeeListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {            
+        {
             FillTheOperationDGV(); //Заполняем таблицу операций.
-        }//EmployeeListBox_SelectedIndexChanged
+        }
 
         private void OperationsInfoDGV_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             OperationDetailsDGV.Rows.Clear(); //Очищаем таблицу доп. инф-ции от старых данных.
-           
+
             //Если есть выбранная строка.
             if (OperationsInfoDGV.SelectedRows.Count != 0)
             {
                 IOperation oper = (OperationsInfoDGV.Rows[e.RowIndex].Tag as IOperation);//Находим нужную операцию
                 //Выводим инф-цию в таблицу доп. инф-ции по данной операции.
                 FillTheOperationDetailsDGV(oper.OperationDetailsList);
-            }//if
-        }//OperationsInfoDGV_RowEnter
+            }
+        }
 
         /// <summary>
         /// Заполняет таблицу доп. инф-ции по Операции данными из переданного списка.
@@ -151,9 +149,8 @@ namespace PartsApp
                 row.Cells[CountCol.Index].Value = operDet.Count;
                 row.Cells[PriceCol.Index].Value = operDet.Price;
                 row.Cells[SumCol.Index].Value = operDet.Count * operDet.Price;
-            }//foreach                          
-
-        }//FillTheOperationDetailsDGV
+            }
+        }
 
         /// <summary>
         /// Возвращает список всех операций осуществлённых данным сотрудником.
@@ -172,6 +169,5 @@ namespace PartsApp
             return operationsList;
         }
 
-    }//EmployeeOperationsInfoForm
-
-}//namespace
+    }
+}

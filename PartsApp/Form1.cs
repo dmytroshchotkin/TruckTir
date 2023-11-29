@@ -14,9 +14,9 @@ using Models.Helper;
 
 namespace PartsApp
 {
-    
+
     public partial class Form1 : Form
-    {                                    
+    {
         /// <summary>
         /// Список объектов с измененной наценкой.
         /// </summary>
@@ -34,13 +34,13 @@ namespace PartsApp
             _changedMarkupList = new List<Availability>();
 
 
-            editPurchaseToolStripTextBox.GotFocus       += ToolStripTextBox_GotFocus;
-            editPurchaseToolStripTextBox.LostFocus      += ToolStripTextBox_LostFocus;
-            addReturnInputIdToolStripTextBox.GotFocus   += ToolStripTextBox_GotFocus;
-            addReturnInputIdToolStripTextBox.LostFocus  += ToolStripTextBox_LostFocus;
+            editPurchaseToolStripTextBox.GotFocus += ToolStripTextBox_GotFocus;
+            editPurchaseToolStripTextBox.LostFocus += ToolStripTextBox_LostFocus;
+            addReturnInputIdToolStripTextBox.GotFocus += ToolStripTextBox_GotFocus;
+            addReturnInputIdToolStripTextBox.LostFocus += ToolStripTextBox_LostFocus;
             ToolStripTextBox_LostFocus(editPurchaseToolStripTextBox, null);
             ToolStripTextBox_LostFocus(addReturnInputIdToolStripTextBox, null);
-        }//
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -50,7 +50,7 @@ namespace PartsApp
             #region Настройки таблиц.
 
             /*Закомментированные строки выполнены через дизайнер.*/
-            PartsDGV.AutoGenerateColumns    = false;
+            PartsDGV.AutoGenerateColumns = false;
             ExtPartsDGV.AutoGenerateColumns = false;
 
 
@@ -77,7 +77,7 @@ namespace PartsApp
 
             PartsDAL.RegistrateUDFs(); //Регистрируем в СУБД user-defined functions.            
 
-        }//Form1_Load
+        }
 
         /// <summary>
         /// Визуальная инициализация формы в зависимости от правд доступа текущего юзера.
@@ -86,16 +86,15 @@ namespace PartsApp
         {
             //Если пользователь не обладает правами админа.
             if (CurEmployee.AccessLayer == Employee.AccessLayers.User.ToDescription())
-            {                
+            {
                 purchaseToolStripMenuItem.Enabled = false; //Блокируем возможность приходовать товар
                 addNewSpToolStripMenuItem.Enabled = false; //Блокируем возм-ть добавлять новые единицы товара
                 editSparePartToolStripMenuItem.Enabled = false;  //Блокируем возм-ть редактировать данные об единиице товара.
                 addNewSupplierToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять нового поставщика.
                 addNewCustomerToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять нового клиента.
                 addNewEmployeeToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять сотрудников.
-            }//if        
-        }//FormInitialize
-
+            }
+        }
         #region Работа с Excel.
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -112,7 +111,7 @@ namespace PartsApp
             //Находим соотв. объекты SparePart для всех выведенных в таблице строк.
             List<SparePart> sparePartsList = PartsDGV.Rows.Cast<DataGridViewRow>().Select(r => r.DataBoundItem as SparePart).ToList();
             saveInExcelAsync(sparePartsList); //Выводим в Excel.
-        }//saveInExcelToolStripMenuItem_Click
+        }
 
         /// <summary>
         /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
@@ -128,21 +127,21 @@ namespace PartsApp
             {
                 MessageBox.Show("Ошибка вывода в Excel");
             }
-        }//saveInExcelAsync
+        }
 
         /// <summary>
         /// Вывод в Excel инф-ции из переданного списка товаров.
         /// </summary>
         /// <param name="sparePart">Список товаров для вывода в Excel.</param>
         private void saveInExcel(IList<SparePart> spareParts)
-        {            
-            Excel.Application ExcelApp     = new Excel.Application();
-            Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
+        {
+            Excel.Application ExcelApp = new Excel.Application();
+            Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
             Excel.Worksheet ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);   //Таблица.
 
             //Настраиваем горизонтальные и вертикальные границы области печати.
-            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 7;
-            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin  = 7;
+            ExcelWorkSheet.PageSetup.TopMargin = ExcelWorkSheet.PageSetup.BottomMargin = 7;
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin = 7;
 
             //Заполняем таблицу.
             FillExcelList(ExcelWorkSheet, spareParts);
@@ -150,8 +149,7 @@ namespace PartsApp
             //Вызываем нашу созданную эксельку.
             ExcelApp.Visible = ExcelApp.UserControl = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.                 
-        }//saveInExcel
-
+        }
 
         /// <summary>
         /// Заполняем Excel инф-цией из переданного списка.
@@ -170,11 +168,13 @@ namespace PartsApp
 
             //Заполняем таблицу списком товаров.
             foreach (SparePart sparePart in spareParts)
+            {
                 FillExcelRow(ExcelWorkSheet, sparePart, ++row, column, titleColWidth, articulColWidth);
+            }
 
             //Обводим талицу рамкой. 
             ExcelWorkSheet.get_Range("A" + (row - spareParts.Count + 1).ToString(), "F" + row.ToString()).Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
-        }//FillExcelList
+        }
 
         /// <summary>
         /// Заполняет строку заголовками для таблицы.
@@ -185,7 +185,7 @@ namespace PartsApp
         private void FillTheTitlesRow(Excel.Worksheet ExcelWorkSheet, int row, int column)
         {
             //Заполняем заголовки строк.
-            ExcelWorkSheet.Cells[row, column]     = "Произв.";
+            ExcelWorkSheet.Cells[row, column] = "Произв.";
             ExcelWorkSheet.Cells[row, column + 1] = "Артикул";
             ExcelWorkSheet.Cells[row, column + 2] = "Название";
             ExcelWorkSheet.Cells[row, column + 3] = "Ед. изм.";
@@ -198,7 +198,7 @@ namespace PartsApp
             excelCells.Font.Size = 12;
             excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack; //Обводим заголовки таблицы рамкой.
             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium; //Устанавливаем стиль и толщину линии
-        }//FillTheTitlesRow
+        }
 
         /// <summary>
         /// Заполянет строку данными из переданного объекта.
@@ -210,7 +210,7 @@ namespace PartsApp
         /// <param name="titleColWidth">ширина столбца 'Название'.</param>
         /// <param name="articulColWidth">ширина столбца 'Артикул'.</param>
         private void FillExcelRow(Excel.Worksheet ExcelWorkSheet, SparePart sparePart, int row, int column, int titleColWidth, int articulColWidth)
-        {            
+        {
             ExcelWorkSheet.Cells[row, column + 2] = sparePart.Title;
             ExcelWorkSheet.Cells[row, column + 1] = sparePart.Articul;
             //Выравнивание диапазона строк.
@@ -219,15 +219,18 @@ namespace PartsApp
 
             //Если Title или Articul не влазиет в одну строку, увеличиваем высоту.
             if (sparePart.Articul.Length > articulColWidth || sparePart.Title.Length > titleColWidth)
+            {
                 IncreaseRowHeight(ExcelWorkSheet, sparePart, row, column, titleColWidth, articulColWidth);
+            }
 
             ExcelWorkSheet.Cells[row, column] = sparePart.Manufacturer;
             ExcelWorkSheet.Cells[row, column + 3] = sparePart.MeasureUnit;
             ExcelWorkSheet.Cells[row, column + 4] = sparePart.AvailabilityList.Sum(av => av.OperationDetails.Count);
             if (sparePart.AvailabilityList.Count > 0)
-                ExcelWorkSheet.Cells[row, column + 5] = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);           
-        }//FillExcelRow
-
+            {
+                ExcelWorkSheet.Cells[row, column + 5] = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
+            }
+        }
 
 
         /// <summary>
@@ -246,19 +249,20 @@ namespace PartsApp
             int maxManufLenght = 0;
             var sparePartsManufacturers = spareParts.Select(sp => sp.Manufacturer).Where(man => man != null);
             if (sparePartsManufacturers.Count() > 0)
+            {
                 maxManufLenght = sparePartsManufacturers.Max(man => man.Length);
+            }
 
             if (maxManufLenght < manufColWidth)
             {
                 int different = manufColWidth - maxManufLenght; //разница между дефолтной шириной столбца и фактической.
                 titleColWidth += (manufColWidth - different < minManufColWidth) ? minManufColWidth : different;
                 manufColWidth = (manufColWidth - different < minManufColWidth) ? minManufColWidth : manufColWidth - different;
-            }//if
-
-            manufCol.Columns.ColumnWidth   = manufColWidth;
+            }
+            manufCol.Columns.ColumnWidth = manufColWidth;
             articulCol.Columns.ColumnWidth = articulColWidth;
-            titleCol.Columns.ColumnWidth   = titleColWidth;
-        }//SetColumnsWidth
+            titleCol.Columns.ColumnWidth = titleColWidth;
+        }
 
         /// <summary>
         /// Увеличивает ширину строки.
@@ -274,16 +278,19 @@ namespace PartsApp
             ExcelWorkSheet.get_Range("B" + row.ToString(), "C" + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
             //Проверки для выравнивания по левой стороне, если содержимое только одного из столбцов не влазиет в одну строку.
             if (sparePart.Articul.Length > articulColWidth && sparePart.Title.Length <= titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            }
             if (sparePart.Articul.Length <= articulColWidth && sparePart.Title.Length > titleColWidth)
+            {
                 ExcelWorkSheet.Cells[row, column + 1].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-        }//IncreaseRowHeight
-
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+            }
+        }
+        //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
 
         #region Вывод ценников.
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         private void SpPriceListToExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -293,7 +300,7 @@ namespace PartsApp
             List<SparePart> sparePartsList = selectedRows.Select(r => r.DataBoundItem as SparePart).ToList();
             //Выводим в Excel.
             ExcelSaveSparePartPriceListAsync(sparePartsList);
-        }//SpPriceListToExcelToolStripMenuItem_Click
+        }
 
         /// <summary>
         /// Асинхронный вывод в Excel инф-ции для распечатки ценников.
@@ -309,7 +316,7 @@ namespace PartsApp
             {
                 MessageBox.Show("Ошибка вывода в Excel");
             }
-        }//ExcelSaveSparePartPriceListAsync
+        }
 
         /// <summary>
         /// Вывод в Excel инф-ции для распечатки ценников.
@@ -317,13 +324,13 @@ namespace PartsApp
         /// <param name="sparePartsList">Список товаров для вывода в Excel.</param>
         private void ExcelSaveSparePartPriceList(IList<SparePart> sparePartsList)
         {
-            Excel.Application ExcelApp     = new Excel.Application();
-            Excel.Workbook ExcelWorkBook   = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); ;
+            Excel.Application ExcelApp = new Excel.Application();
+            Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); ;
             Excel.Worksheet ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
 
             //Настраиваем горизонтальные и вертикальные границы области печати.
-            ExcelWorkSheet.PageSetup.TopMargin  = ExcelWorkSheet.PageSetup.BottomMargin = 7;
-            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin  = 7;
+            ExcelWorkSheet.PageSetup.TopMargin = ExcelWorkSheet.PageSetup.BottomMargin = 7;
+            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin = 7;
             ExcelWorkSheet.Columns["B"].ColumnWidth = 1; //задаем ширину второго столбца, для того чтобы корректно выделять рамкой ценники.
 
             //Заполняем Excel-файл, по 2 записи на строку.
@@ -332,22 +339,23 @@ namespace PartsApp
             {
                 FillExcelSheetPriceList(sparePartsList[i], row, 1, ExcelWorkSheet);
                 if (++i < sparePartsList.Count)
+                {
                     row = FillExcelSheetPriceList(sparePartsList[i], row, 3, ExcelWorkSheet);
+                }
 
-                row += 2;                
-            }//for
-
+                row += 2;
+            }
             //Вызываем нашу созданную эксельку.
             ExcelApp.Visible = ExcelApp.UserControl = true;
             ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.
-        }//ExcelSaveSparePartPriceList
+        }
 
         private int FillExcelSheetPriceList(SparePart sparePart, int startRow, int column, Excel.Worksheet ExcelWorkSheet)
         {
             int row = startRow, columnWidth = 50;
             string columnChar = (column == 1) ? "A" : "C";
             ExcelWorkSheet.Cells[row, column].Columns.ColumnWidth = columnWidth; //задаём ширину столбца.
-                        
+
             ExcelWorkSheet.Cells[row, column] = sparePart.Articul; //Выводим Артикул.
             row += 2;
             ExcelWorkSheet.Cells[row, column] = sparePart.Title; //Выводим Название.
@@ -355,12 +363,16 @@ namespace PartsApp
             ExcelWorkSheet.get_Range(columnChar + startRow.ToString(), columnChar + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
             //Если не влазиет в строку, делаем перенос.
             if (sparePart.Title.Length > columnWidth - 5)
+            {
                 ExcelWorkSheet.Cells[row, column].HorizontalAlignment = Excel.XlHAlign.xlHAlignDistributed;
+            }
 
             //Выводим Розничную цену.
             row += 2;
             if (sparePart.AvailabilityList.Count > 0)
+            {
                 ExcelWorkSheet.Cells[row, column] = String.Format("{0:0.00} руб", Availability.GetMaxSellingPrice(sparePart.AvailabilityList));
+            }
             Excel.Range excelCells = ExcelWorkSheet.get_Range(columnChar + row.ToString());
             excelCells.Font.Size = 24;
             //Выравниваем по центру.
@@ -372,21 +384,15 @@ namespace PartsApp
             excelCells.BorderAround(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlColorIndex.xlColorIndexAutomatic, Excel.XlRgbColor.rgbBlack);
 
             return row;
-        }//FillExcelSheetPriceList
-
-//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        }
+        //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
 
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #endregion        
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
 
         #region Методы связанные с поиском товара.       
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -404,11 +410,10 @@ namespace PartsApp
                     autoCompleteListBox.DataSource = searchSparePartsList;
                     autoCompleteListBox.Size = autoCompleteListBox.PreferredSize;
                     autoCompleteListBox.ClearSelected();
-                }//if
-            }//if
-        }//searchTextBox_TextChanged
+                }
+            }
+        }
 
-        
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true; //Перехватываем событие для того чтобы каретка не меняла свою позицию в строке.
@@ -419,7 +424,7 @@ namespace PartsApp
                     AutoCompleteListBox.KeyDownPress(autoCompleteListBox);
                     break;
                 case Keys.Up:
-                    AutoCompleteListBox.KeyUpPress(autoCompleteListBox);                    
+                    AutoCompleteListBox.KeyUpPress(autoCompleteListBox);
                     break;
                 case Keys.Left:
                     searchTextBox.SelectionStart -= (searchTextBox.SelectionStart != 0) ? 1 : 0;
@@ -430,14 +435,13 @@ namespace PartsApp
                 case Keys.Enter:
                     KeyEnterPress();
                     break;
-            }//switch
-        }//searchTextBox_KeyDown
-
+            }
+        }
 
         private void onlyAvaliabilityCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             searchTextBox_TextChanged(sender, e);
-        }//onlyAvaliabilityCheckBox_CheckedChanged
+        }
 
         /// <summary>
         /// Выполняет необходимые действия при нажатии юзером Keys.Enter.
@@ -448,34 +452,36 @@ namespace PartsApp
             if (autoCompleteListBox.Items.Count == 0 && !String.IsNullOrWhiteSpace(searchTextBox.Text))
             {
                 toolTip.Show("Нет элементов удовлетворяющих поиску.", this, new Point(searchTextBox.Location.X, componentPanel.Location.Y), 2000);
-            }//if
+            }
             else
             {
                 //Если есть выбранный элемент, выводим его.
                 if (autoCompleteListBox.SelectedItem != null)
+                {
                     ChangeDataSource(new List<SparePart>() { autoCompleteListBox.SelectedItem as SparePart });
+                }
                 else //Если выбранного элемента нет
                 {
                     //Если вып. список заполнен меньше макс. кол-ва, заполняем таблицу эл-ми вып. списка.
                     if (autoCompleteListBox.Items.Count > 0 && autoCompleteListBox.Items.Count < 10)
+                    {
                         ChangeDataSource(autoCompleteListBox.DataSource as List<SparePart>);
+                    }
                     else
+                    {
                         ChangeDataSource(PartsDAL.SearchSpareParts(searchTextBox.Text.Trim(), onlyAvaliabilityCheckBox.Checked));
-                }//else
-            }//else
-        }//KeyEnterPress
-
-        
-
-
+                    }
+                }
+            }
+        }
 
         #region Методы работы с вып. списком.
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
         private void autoCompleteListBox_DataSourceChanged(object sender, EventArgs e)
         {
             AutoCompleteListBox.DataSourceChanged(autoCompleteListBox);
-        }//autoCompleteListBox_DataSourceChanged
+        }
 
         /// <summary>
         /// Форматирование вывода в ListBox.
@@ -485,55 +491,28 @@ namespace PartsApp
         private void autoCompleteListBox_Format(object sender, ListControlConvertEventArgs e)
         {
             AutoCompleteListBox.OutputFormatting(autoCompleteListBox, e);
-        }//autoCompleteListBox_Format
-
+        }
         private void autoCompleteListBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Clicks == 1)
+            {
                 searchTextBox.Focus();
+            }
             else
+            {
                 searchTextBox_KeyDown(searchTextBox, new KeyEventArgs(Keys.Enter));
-        }//autoCompleteListBox_MouseDown
+            }
+        }
 
-
-
-
-//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+        //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         #region Методы связанные с изменением Наценки.
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private void markupComboBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -541,11 +520,11 @@ namespace PartsApp
             {
                 markupComboBox_SelectedIndexChanged(sender, null);
                 e.SuppressKeyPress = true; //Для предотвращения звука некорректного ввода.
-            }//if
-        }//markupComboBox_KeyDown
+            }
+        }
 
         private void markupComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {            
+        {
             try
             {
                 //узнаем процент заданной наценки.
@@ -553,35 +532,40 @@ namespace PartsApp
 
                 //Если юзер не обладает правами админа, то запрещаем ему делать наценку менее чем "Крупный опт".
                 if (CurEmployee.AccessLayer == Employee.AccessLayers.User.ToDescription() && markup < (float)Markup.Types.LargeWholesale)
+                {
                     throw new Exception();
+                }
 
                 MarkupChanged(markup); //Меняем наценку.              
-            }//try                
-            catch 
-            { 
-                toolTip.Show("Введены некорректные значения", this, markupComboBox.Location, 2000); 
-            }//catch            
-        }//markupComboBox_SelectedIndexChanged
+            }
+            catch
+            {
+                toolTip.Show("Введены некорректные значения", this, markupComboBox.Location, 2000);
+            }
+        }
 
         private void saveChangesButton_Click(object sender, EventArgs e)
-        {                      
+        {
             Cursor = Cursors.WaitCursor;
             try
             {
                 PartsDAL.UpdateSparePartMarkup(_changedMarkupList);
                 //Действия осущ-мые при удачной записи в базу.
                 SaveAndCancelChangesButtonsSetEnable(false); //делаем кнопки недоступными.
-            }//try			
+            }
             catch (System.Data.SQLite.SQLiteException ex)
             {
-                if (ex.Message == "database is locked\r\ndatabase is locked") 
-                    MessageBox.Show("Вероятно кто-то другой сейчас осуществляет запись в базу\nПопробуйте ещё раз.", "База данных занята в данный момент." );
-                else 
+                if (ex.Message == "database is locked\r\ndatabase is locked")
+                {
+                    MessageBox.Show("Вероятно кто-то другой сейчас осуществляет запись в базу\nПопробуйте ещё раз.", "База данных занята в данный момент.");
+                }
+                else
+                {
                     MessageBox.Show($"Ошибка записи изменения наценки\n{ex.Message}");
-            }//catch    
-
+                }
+            }
             Cursor = Cursors.Default;
-        }//saveChangesButton_Click
+        }
 
         private void cancelChangesButton_Click(object sender, EventArgs e)
         {
@@ -591,7 +575,9 @@ namespace PartsApp
 
             //Меняем значение наценки в соотв. ячейках доп. таблицы.
             foreach (DataGridViewRow extRow in ExtPartsDGV.Rows)
+            {
                 extRow.Cells[MarkupExtCol.Index].Value = Markup.GetDescription((extRow.DataBoundItem as Availability).Markup);
+            }
 
             ExtPartsDGV.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
 
@@ -601,19 +587,22 @@ namespace PartsApp
                 SparePart sparePart = row.DataBoundItem as SparePart;
                 Availability avail = _changedMarkupList.FirstOrDefault(av => av.OperationDetails.SparePart.SparePartId == sparePart.SparePartId);
                 if (avail != null)
+                {
                     row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList); //Присваиваем новое значение столбцу 'ЦенаПродажи'.
-            }//foreach
-
+                }
+            }
             SaveAndCancelChangesButtonsSetEnable(false);
-        }//cancelChangesButton_Click
+        }
 
         private void SaveAndCancelChangesButtonsSetEnable(bool enabled)
         {
             saveChangesButton.Enabled = cancelChangesButton.Enabled = enabled;
             //Если кнопка стала недоступной, то очищаем список объетов с изм. наценкой.
             if (enabled == false)
+            {
                 _changedMarkupList.Clear();
-        }//SaveAndCancelChangesButtonsSetEnable
+            }
+        }
 
         /// <summary>
         /// Осущ-ние действий вызванных изменением наценки.
@@ -626,17 +615,16 @@ namespace PartsApp
             {
                 List<Availability> availList = (row.DataBoundItem as SparePart).AvailabilityList;
                 if (availList.Count > 0)
-                {                    
+                {
                     availList.ForEach(av => MarkupChanged(av, markup)); //Меняем наценку во всем cоотв. объектах.
                     //Меняем значение наценки в соотв. ячейках доп. таблицы.
                     ExtPartsDGV.Rows.Cast<DataGridViewRow>().ToList().ForEach(r => r.Cells[MarkupExtCol.Index].Value = Markup.GetDescription(markup));
                     //Присваиваем новое значение столбцу 'ЦенаПродажи'.
-                    row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(availList); 
-                }//if                                                      
-            }//foreach   
-
+                    row.Cells[SellingPriceCol.Name].Value = Availability.GetMaxSellingPrice(availList);
+                }
+            }
             ExtPartsDGV.InvalidateColumn(SellingPriceExtCol.Index); //обновляем столбец 'Цена продажи' в доп. таблице.
-        }//PartsDGVMarkupChange
+        }
 
         /// <summary>
         /// Осущ-ние действий вызванных изменением наценки.
@@ -652,12 +640,11 @@ namespace PartsApp
 
                 extRow.Cells[MarkupExtCol.Index].Value = Markup.GetDescription(markup); //Меняем тип наценки.
                 ExtPartsDGV.InvalidateCell(extRow.Cells[SellingPriceExtCol.Index]); //Обновляем измененную ячейку
-            }//foreach  
-
+            }
             //Заполняем столбец 'Цена продажи' в главной таблице.
             SparePart sparePart = (ExtPartsDGV.SelectedRows[0].DataBoundItem as Availability).OperationDetails.SparePart;
             SetMaxValueToSellingPriceColumn(sparePart);
-        }//ExtPartsDGVMarkupChange
+        }
 
         /// <summary>
         /// Производятся необходимые действия при изменении наценки объекта типа Availability.
@@ -666,15 +653,25 @@ namespace PartsApp
         private void MarkupChanged(float markup)
         {
             //Выделяем строки всех выделенных ячеек.            
-            foreach (DataGridViewCell cell in PartsDGV.SelectedCells)    cell.OwningRow.Selected = true;    //partsDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
-            foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells) cell.OwningRow.Selected = true;
+            foreach (DataGridViewCell cell in PartsDGV.SelectedCells)
+            {
+                cell.OwningRow.Selected = true; //partsDGV.SelectedCells.Cast<DataGridViewCell>().ToList().ForEach(c => c.OwningRow.Selected = true);
+            }
+            foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells)
+            {
+                cell.OwningRow.Selected = true;
+            }
 
             //В зависимотсти от того, есть ли выделенные ячейки в доп. таблице, вызываем соотв. метод измененния наценки.
             if (ExtPartsDGV.SelectedRows.Count == 0)
+            {
                 PartsDGVMarkupChange(markup);
+            }
             else
+            {
                 ExtPartsDGVMarkupChange(markup);
-        }//MarkupChanged
+            }
+        }
 
         /// <summary>
         /// Производятся необходимые действия при изменении наценки объекта типа Availability.
@@ -685,7 +682,9 @@ namespace PartsApp
         {
             //Если изменена дефолтная наценка, запоминаем её в Tag объекта.
             if (avail.Tag == null)
+            {
                 avail.Tag = avail.Markup;
+            }
             avail.Markup = markup;
 
             //Если такого объекта ещё нет в списке.
@@ -693,41 +692,28 @@ namespace PartsApp
             {
                 //Если новая наценка не равна первоначальной, добавляем объект в список.
                 if (avail.Markup != (float)avail.Tag)
+                {
                     _changedMarkupList.Add(avail);
-            }//if 
+                }
+            }
             else //Если такой объект уже есть в списке.
             {
                 //Если новая наценка равна первоначальной, удаляем объект из списка.
                 if (avail.Markup == (float)avail.Tag)
+                {
                     _changedMarkupList.Remove(avail);
-            }//else
-
+                }
+            }
             //Если в списке товаров с изм. наценкой есть хоть один объект, делаем доступными кнопки Сохранения и Отмены, иначе делаем недоступными.
-            SaveAndCancelChangesButtonsSetEnable(_changedMarkupList.Count > 0); 
-        }//MarkupChanged
+            SaveAndCancelChangesButtonsSetEnable(_changedMarkupList.Count > 0);
+        }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         #region Обработчики событий для талбиц.
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Событие для окончания отображения Фотографии.
@@ -737,9 +723,11 @@ namespace PartsApp
         private void partsDGV_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
             //Проверяем отображается ли сейчас photoPictureBox.
-            if (photoPictureBox.Visible == true) 
+            if (photoPictureBox.Visible == true)
+            {
                 photoPictureBox.Visible = false;
-        }//partsDGV_CellMouseLeave
+            }
+        }
 
         /// <summary>
         /// Событие для отображения Фотографии.
@@ -764,19 +752,21 @@ namespace PartsApp
 
                         //Если картинка больше размером чем заданный размер, то подгоняем её под заданный размер.
                         if (photoPictureBox.PreferredSize.Width > photoSize.Width || photoPictureBox.PreferredSize.Height > photoSize.Height)
+                        {
                             photoPictureBox.Image = ResizeOrigImg(photoPictureBox.Image, photoSize.Width, photoSize.Height);
+                        }
 
                         photoPictureBox.Size = photoPictureBox.PreferredSize;
                         photoPictureBox.Visible = true;
-                    }//if
+                    }
                     else
-                    { 
+                    {
                         /*ERROR*/
                         //Удаление данных о фото у объкта, если такого фото уже нет в папке.
-                    }//else
-                }//if
-            }//if
-        }//partsDGV_CellMouseEnter
+                    }
+                }
+            }
+        }
 
         //Событие для отображения расширенной информации о Наличии запчасти.
         private void partsDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -789,11 +779,11 @@ namespace PartsApp
                 {
                     PartsDGV[e.ColumnIndex, e.RowIndex].Selected = true;
                     //Находим позицию в таблице, где был сделан клик и выводим контекстное меню.
-                    Rectangle cellRect = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);                    
-                    partsDGVContextMenuStrip.Show(PartsDGV, new Point(cellRect.X, cellRect.Bottom));                
-                }//if                
-            }//if                   
-        }//partsDGV_CellMouseClick
+                    Rectangle cellRect = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                    partsDGVContextMenuStrip.Show(PartsDGV, new Point(cellRect.X, cellRect.Bottom));
+                }
+            }
+        }
 
         //Событие исп-ся для регулирования ширины RowHeaders.
         private void partsDGV_DataSourceChanged(object sender, EventArgs e)
@@ -805,14 +795,13 @@ namespace PartsApp
 
             SaveAndCancelChangesButtonsSetEnable(false);
             ExtPartsDGVClearSelection(null, null); //сбрасываем выделение в доп. таблице.
-        }//partsDGV_DataSourceChanged
+        }
 
         private void partsDGV_Sorted(object sender, EventArgs e)
         {
             FillColumns();                                           //Заполняем ячейки столбцов 'Цена продажи' и 'Наличие'.
             EnumerableExtensions.RowsNumerateAndAutoSize(PartsDGV);  //Нумеруем строки.
-        }//partsDGV_Sorted
-
+        }
 
         /// <summary>
         /// Метод для корректной binding-привязки вложенных эл-тов объекта.
@@ -821,8 +810,8 @@ namespace PartsApp
         /// <param name="e"></param>
         private void extPartsDGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView grid      = (DataGridView)sender;
-            DataGridViewRow row    = grid.Rows[e.RowIndex];
+            DataGridView grid = (DataGridView)sender;
+            DataGridViewRow row = grid.Rows[e.RowIndex];
             DataGridViewColumn col = grid.Columns[e.ColumnIndex];
 
             if (row.DataBoundItem != null)
@@ -838,11 +827,11 @@ namespace PartsApp
                         Type valueType = val.GetType();
                         propInfo = valueType.GetProperty(props[i]);
                         val = propInfo.GetValue(val, null);
-                    }//for
+                    }
                     e.Value = val;
-                }//if
-            }//if
-        }//ReturnDGV_CellFormatting
+                }
+            }
+        }
 
         private void extPartsDGV_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
@@ -855,15 +844,18 @@ namespace PartsApp
 
                 //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.
                 if (avail.StorageAddress != null)
+                {
                     StorageAddressExtCol.Visible = true;
+                }
 
                 if (avail.OperationDetails.Operation.Description != null)
+                {
                     NoteExtCol.Visible = true;
-            }//foreach
-
+                }
+            }
             EnumerableExtensions.RowsNumerateAndAutoSize(ExtPartsDGV); //Нумерация строк.
             ExtPartsDGV.ClearSelection();                              //Убираем выделение ячейки.
-        }//extPartsDGV_DataBindingComplete
+        }
 
         private void extPartsDGV_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
@@ -880,14 +872,8 @@ namespace PartsApp
 
                 //Обновляем столбец 'Цена продажи' в главной таблице.
                 SetMaxValueToSellingPriceColumn(avail.OperationDetails.SparePart);
-            }//if            
-        }//extPartsDGV_CellEndEdit
-
-
-
-
-
-
+            }
+        }
 
         /// <summary>
         /// Задает макс. значение в необходимую ячейку столбца "SellingPriceCol".
@@ -901,9 +887,9 @@ namespace PartsApp
                 {
                     mainRow.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sparePart.AvailabilityList);
                     break;
-                }//if
-            }//foreach
-        }//SetMaxValueToSellingPriceColumn
+                }
+            }
+        }
 
         /// <summary>
         /// Метод изменения источника данных для обоих dgv.
@@ -913,8 +899,8 @@ namespace PartsApp
         {
             autoCompleteListBox.Visible = false;
             //Заполняем DataSource новымы значениями.
-            PartsDGV.DataSource = ExtPartsDGV.DataSource = new BindingSource(new SortableBindingList<SparePart>(spareParts), null);            
-        }//ChangeDataSource
+            PartsDGV.DataSource = ExtPartsDGV.DataSource = new BindingSource(new SortableBindingList<SparePart>(spareParts), null);
+        }
 
         /// <summary>
         /// Заполняем ячейки столбцов 'Цена продажи' и 'Наличие'.
@@ -928,9 +914,9 @@ namespace PartsApp
                 {
                     row.Cells[AvaliabilityCol.Index].Value = Availability.GetTotalCount(sp.AvailabilityList);
                     row.Cells[SellingPriceCol.Index].Value = Availability.GetMaxSellingPrice(sp.AvailabilityList);
-                }//if
-            }//foreach  
-        }//FillColumns
+                }
+            }
+        }
 
         /// <summary>
         /// Осуществляет действия необходимые при сбросе выделения.
@@ -941,9 +927,9 @@ namespace PartsApp
             //excRateNumericUpDown.Value = 1;
             //markupComboBox.Text = String.Empty;  
             //excRateNumericUpDown.Enabled = markupComboBox.Enabled = false;
-                        
+
             ExtPartsDGV.ClearSelection();
-        }//ExtPartsDGVClearSelection        
+        }
 
         /// <summary>
         /// Возвращает новый Image на основе переданного, с пропорционального уменьшения размеров до заданных.
@@ -957,30 +943,23 @@ namespace PartsApp
             double coefH = (double)nHeight / (double)image.Height;
             double coefW = (double)nWidth / (double)image.Width;
 
-            int newWidth  = (coefW >= coefH) ? (int)(image.Width * coefH)  : (int)(image.Width * coefW);
+            int newWidth = (coefW >= coefH) ? (int)(image.Width * coefH) : (int)(image.Width * coefW);
             int newHeight = (coefW >= coefH) ? (int)(image.Height * coefH) : (int)(image.Height * coefW);
 
             Image result = new Bitmap(newWidth, newHeight);
             using (Graphics g = Graphics.FromImage(result))
             {
                 g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                g.SmoothingMode      = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                g.InterpolationMode  = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
                 g.DrawImage(image, 0, 0, newWidth, newHeight);
                 g.Dispose();
-            }//using
-
+            }
             return result;
-        }//ResizeOrigImg
+        }
 
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
         private void excRateNumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -989,8 +968,14 @@ namespace PartsApp
             if (PartsDGV.SelectedCells.Count != 0)
             {
                 //выделяем строки всех выделенных клеток.
-                foreach (DataGridViewCell cell in PartsDGV.SelectedCells) cell.OwningRow.Selected    = true;
-                foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells) cell.OwningRow.Selected = true;
+                foreach (DataGridViewCell cell in PartsDGV.SelectedCells)
+                {
+                    cell.OwningRow.Selected = true;
+                }
+                foreach (DataGridViewCell cell in ExtPartsDGV.SelectedCells)
+                {
+                    cell.OwningRow.Selected = true;
+                }
 
                 decimal rate = excRateNumericUpDown.Value; //Находим установленный курс.
                 foreach (DataGridViewRow row in PartsDGV.SelectedRows)
@@ -1000,10 +985,10 @@ namespace PartsApp
 
                     //Присваиваем новое значение в ячейку 'Цена продажи'.
                     row.Cells[SellingPriceCol.Name].Value = (decimal)selPrice / rate;
-                }//foreach     
-            }//if
-        }//excRateNumericUpDown_ValueChanged
-        
+                }
+            }
+        }
+
         /// <summary>
         /// Сброс выделения в доп. таблице.
         /// </summary>
@@ -1012,48 +997,41 @@ namespace PartsApp
         private void extPartsGroupBox_Click(object sender, System.EventArgs e)
         {
             ExtPartsDGV.ClearSelection();
-        }//extPartsGroupBox_Click
-
-        
-
-
+        }
 
 
         #region Методы вызова дополнительных окон.
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
         private void addNewSpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new SparePartForm().Show(this);
-        }//addNewSpToolStripMenuItem_Click
+        }
 
         private void addNewSupplierToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AddContragentForm(new Supplier()).Show();
-        }//addNewSupplierToolStripMenuItem_Click
+        }
 
         private void addNewCustomerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AddContragentForm(new Customer()).Show();             
-        }//addNewCustomerToolStripMenuItem_Click
+            new AddContragentForm(new Customer()).Show();
+        }
 
         private void addNewPurchaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new PurchaseForm().Show(this);            
-        }//addNewPurchaseToolStripMenuItem_Click
+            new PurchaseForm().Show(this);
+        }
 
         private void addNewSaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new SaleForm().Show(this);
-        }//addNewSaleToolStripMenuItem_Click
-
+        }
         private void editSparePartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SparePart sparePart = PartsDGV.SelectedCells[0].OwningRow.DataBoundItem as SparePart;
             new SparePartForm(sparePart).Show();
-        }//editSparePartToolStripMenuItem_Click
+        }
 
         /// <summary>
         /// Вызов формы просмотра информации об операциях.
@@ -1063,8 +1041,7 @@ namespace PartsApp
         private void ViewOperationsInfoSaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new OperationsInfoForm().Show();
-        }//ViewOperationsInfoSaleToolStripMenuItem_Click
-
+        }
 
 
         /// <summary>
@@ -1075,32 +1052,31 @@ namespace PartsApp
         private void ViewEmployeeInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new EmployeeOperationsInfoForm().ShowDialog();
-        }//ViewEmployeeInfoToolStripMenuItem_Click 
-
+        }
 
         private void addNewEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AddEmployeeForm().ShowDialog();
-        }//addNewEmployeeToolStripMenuItem_Click
+        }
 
         private void editEmployeeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AddEmployeeForm(CurEmployee).ShowDialog();
-        }//editEmployeeToolStripMenuItem_Click
+        }
 
         private void посмотретьПередвижениеТовараToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SparePart sparePart = PartsDGV.SelectedCells[0].OwningRow.DataBoundItem as SparePart;
             new SparePartOperationsInfoForm(sparePart).Show();
-        }//посмотретьПередвижениеТовараToolStripMenuItem_Click
+        }
 
         private void ViewInfoByContragentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Открываем форму инф-ции по поставщикам или клиетам в зависимости от выбранного меню.
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
-            Type contragentType = (menuItem == ViewSuppliersInfoToolStripMenuItem) ? typeof(Supplier) : typeof(Customer);       
+            Type contragentType = (menuItem == ViewSuppliersInfoToolStripMenuItem) ? typeof(Supplier) : typeof(Customer);
             new ContragentOperationsInfoForm(contragentType).Show();
-        }//ViewInfoByContragentToolStripMenuItem_Click
+        }
 
         private void addReturnInputIdToolStripTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -1114,21 +1090,21 @@ namespace PartsApp
                     int saleId = 0;
                     Sale sale = null;
                     //Проверяем на корректность ввода и что есть такая продажа в базе.
-                    if (Int32.TryParse(txt, out saleId) && (sale = PartsDAL.FindSale(saleId)) != null )
+                    if (Int32.TryParse(txt, out saleId) && (sale = PartsDAL.FindSale(saleId)) != null)
                     {
                         new ReturnForm(sale).Show();
                         addReturnInputIdToolStripTextBox.Text = addReturnInputIdToolStripTextBox.Tag as string;
                         addReturnInputIdToolStripTextBox.ForeColor = Color.Gray;
-                    }//if
+                    }
                     else
                     {
                         //Если введены некорректные данные, выводим сообщение об ошибке.
-                        System.Media.SystemSounds.Beep.Play();                        
+                        System.Media.SystemSounds.Beep.Play();
                         toolTip.Show("Такого номера накладной нет в базе.", this, new Point(200, 200), 3000); //!!!/*ERROR!!!*/Не работает.
-                    }//else
-                }//if                
-            }//if
-        }//addReturnInputIdToolStripTextBox_KeyPress
+                    }
+                }
+            }
+        }
 
         private void editPurchaseToolStripTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -1147,16 +1123,16 @@ namespace PartsApp
                         new PurchaseForm(purchase).Show(this); ;
                         editPurchaseToolStripTextBox.Text = editPurchaseToolStripTextBox.Tag as string;
                         editPurchaseToolStripTextBox.ForeColor = Color.Gray;
-                    }//if
+                    }
                     else
                     {
                         //Если введены некорректные данные, выводим сообщение об ошибке.
                         System.Media.SystemSounds.Beep.Play();
                         toolTip.Show("Такого номера накладной нет в базе.", this, new Point(200, 200), 3000); //!!!/*ERROR!!!*/Не работает.
-                    }//else
-                }//if                
-            }//if
-        }//
+                    }
+                }
+            }
+        }
 
         private void ToolStripTextBox_GotFocus(object sender, EventArgs e)
         {
@@ -1165,8 +1141,8 @@ namespace PartsApp
             {
                 item.Text = null;
                 item.ForeColor = Color.Black;
-            }//if
-        }//ToolStripTextBox_GotFocus
+            }
+        }
 
         private void ToolStripTextBox_LostFocus(object sender, EventArgs e)
         {
@@ -1176,41 +1152,8 @@ namespace PartsApp
             {
                 item.Text = item.Tag as string;
                 item.ForeColor = Color.Gray;
-            }//if
+            }
         }
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
@@ -1223,15 +1166,12 @@ namespace PartsApp
                 PartsDAL.CreateBackupInGoogleDrive(); //Копируем базу в облако.          
 
                 PartsDAL.CreateLocalBackup(); //создаём локальный бэкап.
-            }//if
-        }//
+            }
+        }
 
-        
 
-    }//Form1
-
-}//namespace
-
+    }
+}
 /*Задачи*/
 //1) Выгрузка инф-ции в Excel.
 //2) Добавить в extPartsDGV поля "поставщик" и "адрес" или "название" вирт. склада.

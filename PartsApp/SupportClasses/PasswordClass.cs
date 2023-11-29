@@ -31,10 +31,11 @@ namespace PartsApp.SupportClasses
 
             //формируем одну цельную строку из массива  
             foreach (byte b in byteHash)
+            {
                 hash += String.Format("{0:x2}", b);
+            }
 
             return hash;
-        }//GetHashString
-    }//PasswordClass
-
-}//namespace
+        }
+    }
+}
