@@ -68,6 +68,7 @@ namespace PartsApp
             }
         }
 
+<<<<<<< HEAD
         private void OnEditingOptionClick(object sender, EventArgs e)
         {
             if (EmployeeListBox.SelectedItem is Employee emp)
@@ -83,6 +84,8 @@ namespace PartsApp
             }
         }
 
+=======
+>>>>>>> f4d9e53 (Active, fired and all Employees are displayed in EmployeeOperationInfoForm)
         /// <summary>
         /// В ListBox добавляются уволенные сотрудники или только активные, если поле пусто
         /// </summary>
