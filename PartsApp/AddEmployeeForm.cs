@@ -481,20 +481,20 @@ namespace PartsApp
                 if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
                 {
                     passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
-                    loginTextBox.Visible = false;
+                    loginTextBox.Visible = loginLabel.Visible = loginStarLabel.Visible = false;
                     passwordTextBox.Visible = passwordAgainTextBox.Visible = false;
                     passwordAgainLabel.Visible = passwordLabel.Visible = false;
                     passwordAgainStarLabel.Visible = passwordStarLabel.Visible = false;
                 }
-                else //если права "Обычный" -- запрещено всё.
-                {
-                    foreach (Control control in this.Controls)
-                    {
-                        control.Enabled = false;
-                    }
+                //else //если права "Обычный" -- запрещено всё.
+                //{
+                //    foreach (Control control in this.Controls)
+                //    {
+                //        control.Enabled = false;
+                //    }
 
-                    descrRichTextBox.Visible = descrLabel.Visible = false;
-                }
+                //    descrRichTextBox.Visible = descrLabel.Visible = false;
+                //}
             }
         }
 
@@ -533,7 +533,7 @@ namespace PartsApp
             else //Если редактируемый юзер не является авторизованным юзером
             {
                 //если права "Админ" 
-                if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+                if (Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
                 {
                     PartsDAL.UpdateEmployeeWithoutPassword(employee);
                 }

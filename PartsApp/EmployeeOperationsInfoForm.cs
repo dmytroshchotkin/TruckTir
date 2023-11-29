@@ -68,6 +68,21 @@ namespace PartsApp
             }
         }
 
+        private void OnEditingOptionClick(object sender, EventArgs e)
+        {
+            if (EmployeeListBox.SelectedItem is Employee emp)
+            {
+                var editingForm = new AddEmployeeForm(emp);
+                foreach (Control c in editingForm.Controls)
+                {
+                    c.Enabled = true;
+                }
+                editingForm.ShowDialog();
+
+                Close();
+            }
+        }
+
         /// <summary>
         /// В ListBox добавляются уволенные сотрудники или только активные, если поле пусто
         /// </summary>

@@ -59,6 +59,12 @@ namespace PartsApp
                     Employee employee = employees.Where(empl => empl.Password == inputPasswordHash).First();
 
                     Form1.CurEmployee = employee;
+
+                    if (employee.DismissalDate < DateTime.Now) 
+                    {
+                        throw new Exception();
+                    }
+
                     _isCorrectClose = true;
                     this.Close();
                 }

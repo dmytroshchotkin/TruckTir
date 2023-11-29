@@ -131,6 +131,7 @@ namespace PartsApp
             // EditToolStripMenuItem
             //
             this.EditToolStripMenuItem = new ToolStripMenuItem("Редактировать");
+            this.EditToolStripMenuItem.Click += OnEditingOptionClick;
             //
             // DismissalToolStripMenuItem
             //
