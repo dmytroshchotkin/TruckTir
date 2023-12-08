@@ -40,8 +40,8 @@ namespace PartsApp
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.EmployeeGroupBox = new System.Windows.Forms.GroupBox();
             this.EmployeeListBox = new System.Windows.Forms.ListBox();
-            this.AllEmployeesCheckBox = new System.Windows.Forms.CheckBox();
             this.InactiveEmployeesCheckBox = new System.Windows.Forms.CheckBox();
+            this.ActiveEmployeesCheckBox = new System.Windows.Forms.CheckBox();
             this.BottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
@@ -118,15 +118,14 @@ namespace PartsApp
             // EmployeeGroupBox
             // 
             this.EmployeeGroupBox.Controls.Add(this.EmployeeListBox);
-            this.EmployeeGroupBox.Controls.Add(this.AllEmployeesCheckBox);
             this.EmployeeGroupBox.Controls.Add(this.InactiveEmployeesCheckBox);
+            this.EmployeeGroupBox.Controls.Add(this.ActiveEmployeesCheckBox);
             this.EmployeeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EmployeeGroupBox.Location = new System.Drawing.Point(0, 0);
             this.EmployeeGroupBox.Name = "EmployeeGroupBox";
             this.EmployeeGroupBox.Size = new System.Drawing.Size(864, 129);
             this.EmployeeGroupBox.TabIndex = 1;
             this.EmployeeGroupBox.TabStop = false;
-            this.EmployeeGroupBox.Text = "Активные";
             //
             // EditToolStripMenuItem
             //
@@ -135,7 +134,7 @@ namespace PartsApp
             //
             // DismissalToolStripMenuItem
             //
-            this.DismissalToolStripMenuItem = new ToolStripMenuItem("Уволить");
+            this.DismissalToolStripMenuItem = new ToolStripMenuItem("Заблокировать");
             this.DismissalToolStripMenuItem.Click += OnDismissalOptionClick;
             //
             // EmployeeEditingContextMenu
@@ -156,22 +155,22 @@ namespace PartsApp
             this.EmployeeListBox.ValueMember = "EmployeeId";
             this.EmployeeListBox.SelectedIndexChanged += new System.EventHandler(this.EmployeeListBox_SelectedIndexChanged);
             this.EmployeeListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnEmployeeListBoxMouseDown);
-            this.EmployeeListBox.ContextMenuStrip = this.EmployeeEditingContextMenu;            
+            this.EmployeeListBox.ContextMenuStrip = this.EmployeeEditingContextMenu;     
             // 
-            // AllEmployeesCheckBox
+            // ActiveEmployeesCheckBox
             // 
-            this.AllEmployeesCheckBox.AutoSize = true;
-            this.AllEmployeesCheckBox.Checked = false;
-        //    this.AllEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AllEmployeesCheckBox.Location = new System.Drawing.Point(179, 0);
-            this.AllEmployeesCheckBox.Name = "ActivEmployeesCheckBox";
-            this.AllEmployeesCheckBox.Size = new System.Drawing.Size(76, 17);
-            this.AllEmployeesCheckBox.TabIndex = 1;
-            this.AllEmployeesCheckBox.Text = "Все сотрудники";
-            this.toolTip1.SetToolTip(this.AllEmployeesCheckBox, "Отображать полный список список");
-            this.AllEmployeesCheckBox.UseVisualStyleBackColor = true;
-            this.AllEmployeesCheckBox.Visible = true;
-            this.AllEmployeesCheckBox.CheckedChanged += OnAllEmployeesCheckBoxCheckedChanged;
+            this.ActiveEmployeesCheckBox.AutoSize = true;
+            this.ActiveEmployeesCheckBox.Checked = false;
+            //  this.InactiveEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ActiveEmployeesCheckBox.Location = new System.Drawing.Point(2, 0);
+            this.ActiveEmployeesCheckBox.Name = "InactiveEmployeesCheckBox";
+            this.ActiveEmployeesCheckBox.Size = new System.Drawing.Size(92, 17);
+            this.ActiveEmployeesCheckBox.TabIndex = 2;
+            this.ActiveEmployeesCheckBox.Text = "Активные";
+            this.toolTip1.SetToolTip(this.ActiveEmployeesCheckBox, "Отображать действующих сотрудников");
+            this.ActiveEmployeesCheckBox.UseVisualStyleBackColor = true;
+            this.ActiveEmployeesCheckBox.Visible = true;
+            this.ActiveEmployeesCheckBox.CheckedChanged += OnEmployeesCheckBoxesCheckedChanged;
             // 
             // InactiveEmployeesCheckBox
             // 
@@ -182,11 +181,11 @@ namespace PartsApp
             this.InactiveEmployeesCheckBox.Name = "InactiveEmployeesCheckBox";
             this.InactiveEmployeesCheckBox.Size = new System.Drawing.Size(92, 17);
             this.InactiveEmployeesCheckBox.TabIndex = 2;
-            this.InactiveEmployeesCheckBox.Text = "Уволенные";
+            this.InactiveEmployeesCheckBox.Text = "Неактивные";
             this.toolTip1.SetToolTip(this.InactiveEmployeesCheckBox, "Отображать неактивных сотрудников");
             this.InactiveEmployeesCheckBox.UseVisualStyleBackColor = true;
             this.InactiveEmployeesCheckBox.Visible = true;
-            this.InactiveEmployeesCheckBox.CheckedChanged += OnInactiveEmployeesCheckBoxCheckedChanged;
+            this.InactiveEmployeesCheckBox.CheckedChanged += OnEmployeesCheckBoxesCheckedChanged;
             // 
             // BottomSplitContainer
             // 
@@ -619,8 +618,8 @@ namespace PartsApp
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
         private System.Windows.Forms.GroupBox EmployeeGroupBox;
         private System.Windows.Forms.ListBox EmployeeListBox;
-        private System.Windows.Forms.CheckBox AllEmployeesCheckBox;
         private System.Windows.Forms.CheckBox InactiveEmployeesCheckBox;
+        private System.Windows.Forms.CheckBox ActiveEmployeesCheckBox;
         private System.Windows.Forms.DataGridView OperationsInfoDGV;
         private System.Windows.Forms.DataGridViewTextBoxColumn OperationTypeCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn OperationIdCol;

@@ -34,14 +34,13 @@
             this.accessLevelLabel = new System.Windows.Forms.Label();
             this.acceptDismissalButton = new System.Windows.Forms.Button();
             this.dismissalDateTimeLabel = new System.Windows.Forms.Label();
-            this.dismissalDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // dismissalActionLabel
             // 
             this.dismissalActionLabel.AutoSize = true;
             this.dismissalActionLabel.Location = new System.Drawing.Point(19, 21);
-            this.dismissalActionLabel.Name = "fireActionLabel";
+            this.dismissalActionLabel.Name = "dismissalActionLabel";
             this.dismissalActionLabel.Size = new System.Drawing.Size(260, 16);
             this.dismissalActionLabel.TabIndex = 0;
             this.dismissalActionLabel.Text = "Подтвердите увольнение сотрудника:";
@@ -75,12 +74,12 @@
             // 
             // acceptDismissalButton
             // 
-            this.acceptDismissalButton.Location = new System.Drawing.Point(22, 202);
+            this.acceptDismissalButton.Location = new System.Drawing.Point(22, 184);
             this.acceptDismissalButton.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
-            this.acceptDismissalButton.Name = "acceptFireButton";
+            this.acceptDismissalButton.Name = "acceptDismissalButton";
             this.acceptDismissalButton.Size = new System.Drawing.Size(257, 27);
             this.acceptDismissalButton.TabIndex = 4;
-            this.acceptDismissalButton.Text = "Уволить";
+            this.acceptDismissalButton.Text = "Заблокировать";
             this.acceptDismissalButton.UseVisualStyleBackColor = true;
             this.acceptDismissalButton.Click += new System.EventHandler(this.OnAcceptDismissalButton);
             // 
@@ -88,25 +87,16 @@
             // 
             this.dismissalDateTimeLabel.AutoSize = true;
             this.dismissalDateTimeLabel.Location = new System.Drawing.Point(19, 143);
-            this.dismissalDateTimeLabel.Name = "fireDateTimeLabel";
-            this.dismissalDateTimeLabel.Size = new System.Drawing.Size(123, 16);
+            this.dismissalDateTimeLabel.Name = "dismissalDateTimeLabel";
+            this.dismissalDateTimeLabel.Size = new System.Drawing.Size(207, 16);
             this.dismissalDateTimeLabel.TabIndex = 5;
-            this.dismissalDateTimeLabel.Text = "Дата увольнения:";
-            // 
-            // dismissalDateTimePicker
-            // 
-            this.dismissalDateTimePicker.Location = new System.Drawing.Point(22, 166);
-            this.dismissalDateTimePicker.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
-            this.dismissalDateTimePicker.Name = "fireDateTimePicker";
-            this.dismissalDateTimePicker.Size = new System.Drawing.Size(257, 22);
-            this.dismissalDateTimePicker.TabIndex = 6;
+            this.dismissalDateTimeLabel.Text = "Доступ будет заблокирован ";
             // 
             // DismissEmployeeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(415, 253);
-            this.Controls.Add(this.dismissalDateTimePicker);
             this.Controls.Add(this.dismissalDateTimeLabel);
             this.Controls.Add(this.acceptDismissalButton);
             this.Controls.Add(this.accessLevelLabel);
@@ -114,7 +104,7 @@
             this.Controls.Add(this.nameLabel);
             this.Controls.Add(this.dismissalActionLabel);
             this.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
-            this.Name = "FireEmployeeForm";
+            this.Name = "DismissEmployeeForm";
             this.Text = "Уволить сотрудника";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -129,6 +119,5 @@
         private System.Windows.Forms.Label accessLevelLabel;
         private System.Windows.Forms.Button acceptDismissalButton;
         private System.Windows.Forms.Label dismissalDateTimeLabel;
-        private System.Windows.Forms.DateTimePicker dismissalDateTimePicker;
     }
 }

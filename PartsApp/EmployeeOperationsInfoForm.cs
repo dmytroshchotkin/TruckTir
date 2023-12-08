@@ -26,7 +26,7 @@ namespace PartsApp
         {
             //Находим список всех сотрудников (сортируем по фамилии и имени) и делаем источником данных для ListBox.
             _employees = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
-            EmployeeListBox.DataSource = GetActiveEmployees();            
+            ActiveEmployeesCheckBox.Checked = true;          
 
             //Устанавливаем стартовый период в месяц.
             EndDateDTP.Value = DateTime.Now;
@@ -65,72 +65,47 @@ namespace PartsApp
             {
                 var dismissForm = new DismissEmployeeForm(emp);
                 dismissForm.ShowDialog();
+
+                if (emp.DismissalDate != default)
+                {
+                    EmployeeListBox.DataSource = GetActiveEmployees();
+                }
             }
         }
 
-<<<<<<< HEAD
         private void OnEditingOptionClick(object sender, EventArgs e)
         {
             if (EmployeeListBox.SelectedItem is Employee emp)
             {
                 var editingForm = new AddEmployeeForm(emp);
-                foreach (Control c in editingForm.Controls)
-                {
-                    c.Enabled = true;
-                }
                 editingForm.ShowDialog();
 
                 Close();
             }
         }
 
-=======
->>>>>>> f4d9e53 (Active, fired and all Employees are displayed in EmployeeOperationInfoForm)
-        /// <summary>
-        /// В ListBox добавляются уволенные сотрудники или только активные, если поле пусто
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnInactiveEmployeesCheckBoxCheckedChanged(object sender, EventArgs e)
+        private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
         {
-            if (InactiveEmployeesCheckBox.Checked && AllEmployeesCheckBox.Checked)
+            if (!InactiveEmployeesCheckBox.Checked)
             {
-                AllEmployeesCheckBox.Checked = false;
+                EmployeeListBox.DataSource = GetActiveEmployees();
             }
 
-            if (InactiveEmployeesCheckBox.Checked && !AllEmployeesCheckBox.Checked)
+            if (InactiveEmployeesCheckBox.Checked && !ActiveEmployeesCheckBox.Checked)
             {
                 EmployeeListBox.DataSource = GetFiredEmployees();
             }
 
-            if (!AllEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
-            {
-                EmployeeListBox.DataSource = GetActiveEmployees();
-            }
-        }
-
-        /// <summary>
-        /// В ListBox добавляются все сотрудники или только активные, если поле пусто
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnAllEmployeesCheckBoxCheckedChanged(object sender, EventArgs e)
-        {
-            if (AllEmployeesCheckBox.Checked && InactiveEmployeesCheckBox.Checked)
-            {
-                InactiveEmployeesCheckBox.Checked = false;
-            }
-
-            if (AllEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
+            if (ActiveEmployeesCheckBox.Checked && InactiveEmployeesCheckBox.Checked)
             {
                 EmployeeListBox.DataSource = GetAllEmployees();
             }
 
-            if (!AllEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
+            if (!ActiveEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
             {
-                EmployeeListBox.DataSource = GetActiveEmployees();
+                EmployeeListBox.DataSource = GetAllEmployees();
             }
-        }
+        }        
 
         private List<Employee> GetAllEmployees()
         {
