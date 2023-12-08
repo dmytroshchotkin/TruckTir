@@ -97,8 +97,8 @@
             this.photoOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.photoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dismissalDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.dismissalDateLabel = new System.Windows.Forms.Label();
+            this.dismissButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).BeginInit();
             this.lastNameBackPanel.SuspendLayout();
             this.firstNameBackPanel.SuspendLayout();
@@ -115,7 +115,7 @@
             // addEmployeePhotoButton
             // 
             this.addEmployeePhotoButton.Location = new System.Drawing.Point(529, 298);
-            this.addEmployeePhotoButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.addEmployeePhotoButton.Margin = new System.Windows.Forms.Padding(4);
             this.addEmployeePhotoButton.Name = "addEmployeePhotoButton";
             this.addEmployeePhotoButton.Size = new System.Drawing.Size(173, 28);
             this.addEmployeePhotoButton.TabIndex = 51;
@@ -127,7 +127,7 @@
             // 
             this.photoPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.photoPictureBox.Location = new System.Drawing.Point(432, 15);
-            this.photoPictureBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.photoPictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.photoPictureBox.Name = "photoPictureBox";
             this.photoPictureBox.Size = new System.Drawing.Size(367, 275);
             this.photoPictureBox.TabIndex = 50;
@@ -136,7 +136,7 @@
             // middleNameTextBox
             // 
             this.middleNameTextBox.Location = new System.Drawing.Point(140, 142);
-            this.middleNameTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.middleNameTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.middleNameTextBox.Name = "middleNameTextBox";
             this.middleNameTextBox.Size = new System.Drawing.Size(255, 22);
             this.middleNameTextBox.TabIndex = 54;
@@ -165,7 +165,7 @@
             // 
             this.lastNameBackPanel.Controls.Add(this.lastNameTextBox);
             this.lastNameBackPanel.Location = new System.Drawing.Point(137, 43);
-            this.lastNameBackPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lastNameBackPanel.Margin = new System.Windows.Forms.Padding(4);
             this.lastNameBackPanel.Name = "lastNameBackPanel";
             this.lastNameBackPanel.Size = new System.Drawing.Size(261, 30);
             this.lastNameBackPanel.TabIndex = 68;
@@ -173,7 +173,7 @@
             // lastNameTextBox
             // 
             this.lastNameTextBox.Location = new System.Drawing.Point(3, 2);
-            this.lastNameTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lastNameTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.lastNameTextBox.Name = "lastNameTextBox";
             this.lastNameTextBox.Size = new System.Drawing.Size(255, 22);
             this.lastNameTextBox.TabIndex = 24;
@@ -204,7 +204,7 @@
             // 
             this.firstNameBackPanel.Controls.Add(this.firstNameTextBox);
             this.firstNameBackPanel.Location = new System.Drawing.Point(137, 92);
-            this.firstNameBackPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.firstNameBackPanel.Margin = new System.Windows.Forms.Padding(4);
             this.firstNameBackPanel.Name = "firstNameBackPanel";
             this.firstNameBackPanel.Size = new System.Drawing.Size(261, 30);
             this.firstNameBackPanel.TabIndex = 71;
@@ -212,7 +212,7 @@
             // firstNameTextBox
             // 
             this.firstNameTextBox.Location = new System.Drawing.Point(3, 2);
-            this.firstNameTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.firstNameTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.firstNameTextBox.Name = "firstNameTextBox";
             this.firstNameTextBox.Size = new System.Drawing.Size(255, 22);
             this.firstNameTextBox.TabIndex = 24;
@@ -243,7 +243,7 @@
             // 
             this.passportNumBackPanel.Controls.Add(this.passportNumTextBox);
             this.passportNumBackPanel.Location = new System.Drawing.Point(231, 209);
-            this.passportNumBackPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.passportNumBackPanel.Margin = new System.Windows.Forms.Padding(4);
             this.passportNumBackPanel.Name = "passportNumBackPanel";
             this.passportNumBackPanel.Size = new System.Drawing.Size(165, 30);
             this.passportNumBackPanel.TabIndex = 74;
@@ -251,7 +251,7 @@
             // passportNumTextBox
             // 
             this.passportNumTextBox.Location = new System.Drawing.Point(3, 2);
-            this.passportNumTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.passportNumTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.passportNumTextBox.Name = "passportNumTextBox";
             this.passportNumTextBox.Size = new System.Drawing.Size(159, 22);
             this.passportNumTextBox.TabIndex = 24;
@@ -270,7 +270,7 @@
             // birthDateTimePicker
             // 
             this.birthDateTimePicker.Location = new System.Drawing.Point(160, 342);
-            this.birthDateTimePicker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.birthDateTimePicker.Margin = new System.Windows.Forms.Padding(4);
             this.birthDateTimePicker.Name = "birthDateTimePicker";
             this.birthDateTimePicker.Size = new System.Drawing.Size(212, 22);
             this.birthDateTimePicker.TabIndex = 76;
@@ -283,13 +283,12 @@
             this.hireDateLabel.Name = "hireDateLabel";
             this.hireDateLabel.Size = new System.Drawing.Size(166, 16);
             this.hireDateLabel.TabIndex = 77;
-            this.hireDateLabel.Text = "Дата приёма на работу :";
+            this.hireDateLabel.Text = "Дата приёма на работу: ";
             // 
             // hireDateTimePicker
             // 
-            this.hireDateTimePicker.Enabled = true;
             this.hireDateTimePicker.Location = new System.Drawing.Point(587, 342);
-            this.hireDateTimePicker.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.hireDateTimePicker.Margin = new System.Windows.Forms.Padding(4);
             this.hireDateTimePicker.Name = "hireDateTimePicker";
             this.hireDateTimePicker.Size = new System.Drawing.Size(212, 22);
             this.hireDateTimePicker.TabIndex = 78;
@@ -307,7 +306,7 @@
             // titleTextBox
             // 
             this.titleTextBox.Location = new System.Drawing.Point(140, 265);
-            this.titleTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.titleTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.titleTextBox.Name = "titleTextBox";
             this.titleTextBox.Size = new System.Drawing.Size(255, 22);
             this.titleTextBox.TabIndex = 80;
@@ -355,7 +354,7 @@
             // roomTextBox
             // 
             this.roomTextBox.Location = new System.Drawing.Point(413, 94);
-            this.roomTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.roomTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.roomTextBox.Name = "roomTextBox";
             this.roomTextBox.Size = new System.Drawing.Size(132, 22);
             this.roomTextBox.TabIndex = 21;
@@ -363,7 +362,7 @@
             // emailTextBox
             // 
             this.emailTextBox.Location = new System.Drawing.Point(377, 276);
-            this.emailTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.emailTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.emailTextBox.Name = "emailTextBox";
             this.emailTextBox.Size = new System.Drawing.Size(264, 22);
             this.emailTextBox.TabIndex = 20;
@@ -371,7 +370,7 @@
             // websiteTextBox
             // 
             this.websiteTextBox.Location = new System.Drawing.Point(27, 276);
-            this.websiteTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.websiteTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.websiteTextBox.Name = "websiteTextBox";
             this.websiteTextBox.Size = new System.Drawing.Size(255, 22);
             this.websiteTextBox.TabIndex = 19;
@@ -379,7 +378,7 @@
             // ExtPhoneTextBox
             // 
             this.ExtPhoneTextBox.Location = new System.Drawing.Point(220, 201);
-            this.ExtPhoneTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ExtPhoneTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.ExtPhoneTextBox.Name = "ExtPhoneTextBox";
             this.ExtPhoneTextBox.Size = new System.Drawing.Size(165, 22);
             this.ExtPhoneTextBox.TabIndex = 17;
@@ -387,7 +386,7 @@
             // phoneTextBox
             // 
             this.phoneTextBox.Location = new System.Drawing.Point(27, 201);
-            this.phoneTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.phoneTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.phoneTextBox.Name = "phoneTextBox";
             this.phoneTextBox.Size = new System.Drawing.Size(165, 22);
             this.phoneTextBox.TabIndex = 16;
@@ -395,7 +394,7 @@
             // houseTextBox
             // 
             this.houseTextBox.Location = new System.Drawing.Point(220, 94);
-            this.houseTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.houseTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.houseTextBox.Name = "houseTextBox";
             this.houseTextBox.Size = new System.Drawing.Size(165, 22);
             this.houseTextBox.TabIndex = 15;
@@ -403,7 +402,7 @@
             // streetTextBox
             // 
             this.streetTextBox.Location = new System.Drawing.Point(27, 96);
-            this.streetTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.streetTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.streetTextBox.Name = "streetTextBox";
             this.streetTextBox.Size = new System.Drawing.Size(168, 22);
             this.streetTextBox.TabIndex = 14;
@@ -411,7 +410,7 @@
             // cityTextBox
             // 
             this.cityTextBox.Location = new System.Drawing.Point(413, 31);
-            this.cityTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cityTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.cityTextBox.Name = "cityTextBox";
             this.cityTextBox.Size = new System.Drawing.Size(228, 22);
             this.cityTextBox.TabIndex = 13;
@@ -419,7 +418,7 @@
             // regionTextBox
             // 
             this.regionTextBox.Location = new System.Drawing.Point(220, 31);
-            this.regionTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.regionTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.regionTextBox.Name = "regionTextBox";
             this.regionTextBox.Size = new System.Drawing.Size(165, 22);
             this.regionTextBox.TabIndex = 12;
@@ -427,7 +426,7 @@
             // countryTextBox
             // 
             this.countryTextBox.Location = new System.Drawing.Point(27, 31);
-            this.countryTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.countryTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.countryTextBox.Name = "countryTextBox";
             this.countryTextBox.Size = new System.Drawing.Size(165, 22);
             this.countryTextBox.TabIndex = 11;
@@ -552,7 +551,7 @@
             this.bottomPanel.Controls.Add(this.accessLayerStarLabel);
             this.bottomPanel.Controls.Add(this.passwordAgainStarLabel);
             this.bottomPanel.Location = new System.Drawing.Point(6, 788);
-            this.bottomPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bottomPanel.Margin = new System.Windows.Forms.Padding(4);
             this.bottomPanel.Name = "bottomPanel";
             this.bottomPanel.Size = new System.Drawing.Size(793, 230);
             this.bottomPanel.TabIndex = 83;
@@ -561,7 +560,7 @@
             // 
             this.loginBackPanel.Controls.Add(this.loginTextBox);
             this.loginBackPanel.Location = new System.Drawing.Point(183, 79);
-            this.loginBackPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.loginBackPanel.Margin = new System.Windows.Forms.Padding(4);
             this.loginBackPanel.Name = "loginBackPanel";
             this.loginBackPanel.Size = new System.Drawing.Size(165, 30);
             this.loginBackPanel.TabIndex = 82;
@@ -569,7 +568,7 @@
             // loginTextBox
             // 
             this.loginTextBox.Location = new System.Drawing.Point(3, 2);
-            this.loginTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.loginTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.loginTextBox.Name = "loginTextBox";
             this.loginTextBox.Size = new System.Drawing.Size(159, 22);
             this.loginTextBox.TabIndex = 69;
@@ -602,7 +601,7 @@
             // 
             this.accessLayerBackPanel.Controls.Add(this.accessLayerComboBox);
             this.accessLayerBackPanel.Location = new System.Drawing.Point(569, 76);
-            this.accessLayerBackPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.accessLayerBackPanel.Margin = new System.Windows.Forms.Padding(4);
             this.accessLayerBackPanel.Name = "accessLayerBackPanel";
             this.accessLayerBackPanel.Size = new System.Drawing.Size(167, 31);
             this.accessLayerBackPanel.TabIndex = 79;
@@ -615,7 +614,7 @@
             "Обычный",
             "Администратор"});
             this.accessLayerComboBox.Location = new System.Drawing.Point(3, 2);
-            this.accessLayerComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.accessLayerComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.accessLayerComboBox.Name = "accessLayerComboBox";
             this.accessLayerComboBox.Size = new System.Drawing.Size(160, 24);
             this.accessLayerComboBox.TabIndex = 73;
@@ -625,7 +624,7 @@
             // 
             this.passwordAgainBackPanel.Controls.Add(this.passwordAgainTextBox);
             this.passwordAgainBackPanel.Location = new System.Drawing.Point(619, 144);
-            this.passwordAgainBackPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.passwordAgainBackPanel.Margin = new System.Windows.Forms.Padding(4);
             this.passwordAgainBackPanel.Name = "passwordAgainBackPanel";
             this.passwordAgainBackPanel.Size = new System.Drawing.Size(105, 30);
             this.passwordAgainBackPanel.TabIndex = 78;
@@ -634,7 +633,7 @@
             // 
             this.passwordAgainTextBox.Enabled = false;
             this.passwordAgainTextBox.Location = new System.Drawing.Point(3, 2);
-            this.passwordAgainTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.passwordAgainTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.passwordAgainTextBox.Name = "passwordAgainTextBox";
             this.passwordAgainTextBox.PasswordChar = '*';
             this.passwordAgainTextBox.Size = new System.Drawing.Size(99, 22);
@@ -645,7 +644,7 @@
             // 
             this.passwordBackPanel.Controls.Add(this.passwordTextBox);
             this.passwordBackPanel.Location = new System.Drawing.Point(243, 144);
-            this.passwordBackPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.passwordBackPanel.Margin = new System.Windows.Forms.Padding(4);
             this.passwordBackPanel.Name = "passwordBackPanel";
             this.passwordBackPanel.Size = new System.Drawing.Size(105, 30);
             this.passwordBackPanel.TabIndex = 77;
@@ -653,7 +652,7 @@
             // passwordTextBox
             // 
             this.passwordTextBox.Location = new System.Drawing.Point(3, 2);
-            this.passwordTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.passwordTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Size = new System.Drawing.Size(99, 22);
@@ -706,7 +705,7 @@
             // cancelButton
             // 
             this.cancelButton.Location = new System.Drawing.Point(497, 198);
-            this.cancelButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(100, 28);
             this.cancelButton.TabIndex = 67;
@@ -717,7 +716,7 @@
             // descrRichTextBox
             // 
             this.descrRichTextBox.Location = new System.Drawing.Point(27, 20);
-            this.descrRichTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.descrRichTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.descrRichTextBox.Name = "descrRichTextBox";
             this.descrRichTextBox.Size = new System.Drawing.Size(748, 41);
             this.descrRichTextBox.TabIndex = 64;
@@ -726,7 +725,7 @@
             // okButton
             // 
             this.okButton.Location = new System.Drawing.Point(153, 198);
-            this.okButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.okButton.Margin = new System.Windows.Forms.Padding(4);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(100, 28);
             this.okButton.TabIndex = 66;
@@ -786,24 +785,29 @@
             this.deselectToolStripMenuItem.Text = "Убрать фотографию";
             this.deselectToolStripMenuItem.Click += new System.EventHandler(this.deselectToolStripMenuItem_Click);
             // 
-            // dismissalDateTimePicker
-            // 
-            this.dismissalDateTimePicker.Enabled = false;
-            this.dismissalDateTimePicker.Location = new System.Drawing.Point(588, 385);
-            this.dismissalDateTimePicker.Margin = new System.Windows.Forms.Padding(4);
-            this.dismissalDateTimePicker.Name = "dateTimePicker1";
-            this.dismissalDateTimePicker.Size = new System.Drawing.Size(212, 22);
-            this.dismissalDateTimePicker.TabIndex = 84;
-            // 
             // dismissalDateLabel
             // 
             this.dismissalDateLabel.AutoSize = true;
             this.dismissalDateLabel.Location = new System.Drawing.Point(403, 385);
             this.dismissalDateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.dismissalDateLabel.Name = "label1";
-            this.dismissalDateLabel.Size = new System.Drawing.Size(120, 16);
+            this.dismissalDateLabel.Name = "dismissalDateLabel";
+            this.dismissalDateLabel.Size = new System.Drawing.Size(126, 16);
             this.dismissalDateLabel.TabIndex = 85;
-            this.dismissalDateLabel.Text = "Дата увольнения";
+            this.dismissalDateLabel.Text = "Дата увольнения: ";
+            this.dismissalDateLabel.Visible = false;
+            // 
+            // dismissButton
+            // 
+            this.dismissButton.Location = new System.Drawing.Point(406, 382);
+            this.dismissButton.Margin = new System.Windows.Forms.Padding(4);
+            this.dismissButton.Name = "dismissButton";
+            this.dismissButton.Size = new System.Drawing.Size(214, 28);
+            this.dismissButton.TabIndex = 86;
+            this.dismissButton.Text = "Заблокировать";
+            this.dismissButton.UseVisualStyleBackColor = true;
+            this.dismissButton.Visible = false;
+            this.dismissButton.UseVisualStyleBackColor = true;
+            this.dismissButton.Click += new System.EventHandler(this.OnDismissButtonClick);
             // 
             // AddEmployeeForm
             // 
@@ -812,8 +816,8 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(848, 1055);
+            this.Controls.Add(this.dismissButton);
             this.Controls.Add(this.dismissalDateLabel);
-            this.Controls.Add(this.dismissalDateTimePicker);
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.contactInfoPanel);
             this.Controls.Add(this.addContactInfoButton);
@@ -836,7 +840,7 @@
             this.Controls.Add(this.addEmployeePhotoButton);
             this.Controls.Add(this.photoPictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AddEmployeeForm";
@@ -935,7 +939,7 @@
         private System.Windows.Forms.TextBox loginTextBox;
         private System.Windows.Forms.Label loginLabel;
         private System.Windows.Forms.Label loginStarLabel;
-        private System.Windows.Forms.DateTimePicker dismissalDateTimePicker;
         private System.Windows.Forms.Label dismissalDateLabel;
+        private System.Windows.Forms.Button dismissButton;
     }
 }

@@ -7,6 +7,7 @@ namespace PartsApp
     public partial class DismissEmployeeForm : Form
     {
         private readonly Employee _employee;
+        private readonly DateTime _dismissalDate = DateTime.Now;
 
         public DismissEmployeeForm(Employee employee)
         {
@@ -15,23 +16,18 @@ namespace PartsApp
             nameLabel.Text += employee.FullName;
             hireDateTimeLabel.Text += employee.HireDate?.ToString("d");
             accessLevelLabel.Text += employee.AccessLayer;
-            dismissalDateTimePicker.MinDate = (DateTime)employee.HireDate;  
-            dismissalDateTimePicker.MaxDate = DateTime.Now.AddMonths(1);
+            dismissalDateTimeLabel.Text += _dismissalDate.ToString("d");
         }
 
         private void OnAcceptDismissalButton(object sender, EventArgs e)
         {
             try
             {
-                DateTime dismissalDate = dismissalDateTimePicker.Checked ? dismissalDateTimePicker.Value : DateTime.Now;
-                _employee.DismissalDate = dismissalDate;
+                _employee.DismissalDate = DateTime.Now;
                 PartsDAL.UpdateEmployee(_employee);
                                 
                 acceptDismissalButton.Visible = false;
-
                 dismissalActionLabel.Text = "Увольнение подтверждено";
-                dismissalDateTimeLabel.Text += _employee.DismissalDate?.ToString("d");
-                dismissalDateTimePicker.Visible = false;
             }
             catch (Exception)
             {

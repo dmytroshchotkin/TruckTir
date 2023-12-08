@@ -16,6 +16,8 @@ namespace PartsApp
     public partial class AddEmployeeForm : Form
     {
         Employee _editEmployee = null;
+        bool _employeeEditingInProcess = false;
+
         const string employeePhotoFolder = @"Сотрудники\";
         DateTime companyFoundingDate = new DateTime(2000, 1, 1);
         const int minAge = 16, maxAge = 80;
@@ -36,9 +38,18 @@ namespace PartsApp
             InitializeComponent();
 
             _editEmployee = editEmployee;
-            FillTheForm(_editEmployee);
+            if (_editEmployee != null)
+            {
+                _employeeEditingInProcess = true;
 
-            birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
+                foreach (Control c in Controls)
+                {
+                    c.Enabled = true;
+                }
+
+                FillTheForm(_editEmployee);
+                birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
+            }
         }
 
         private void AddEmployeeForm_Load(object sender, EventArgs e)
@@ -402,31 +413,76 @@ namespace PartsApp
         /// <param name="employee">Сотрудник чьей информацией заполняется форма.</param>
         private void FillTheForm(Employee employee)
         {
-            lastNameTextBox.Text = employee.LastName;
-            firstNameTextBox.Text = employee.FirstName;
-            middleNameTextBox.Text = employee.MiddleName;
-            birthDateTimePicker.Value = (DateTime)employee.BirthDate;
-            hireDateTimePicker.Value = (DateTime)employee.HireDate;
-            descrRichTextBox.Text = employee.Note;
-            passportNumTextBox.Text = employee.PassportNum;
-            titleTextBox.Text = employee.Title;
-            loginTextBox.Text = employee.Login;
-            accessLayerComboBox.SelectedItem = employee.AccessLayer;
-            FillTheContactInfoPanel(employee.ContactInfo); //Заполняем контактную информацию.
-            //Проверяем наличие фото.
-            //photoPictureBox.Image = (employee.Photo != null) ? new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size) : null;
-            if (employee.Photo != null)
+            if (_employeeEditingInProcess)
             {
-                if (System.IO.File.Exists(System.IO.Path.GetFullPath(employee.Photo)))
+                lastNameTextBox.Text = employee.LastName;
+                firstNameTextBox.Text = employee.FirstName;
+                middleNameTextBox.Text = employee.MiddleName;
+
+                hireDateLabel.Text += employee.HireDate?.ToString("d");
+                hireDateTimePicker.Value = (DateTime)employee.HireDate;
+                hireDateTimePicker.Visible = false;
+
+                birthDateTimePicker.Value = (DateTime)employee.BirthDate;
+                if (employee.DismissalDate != default)
                 {
-                    photoPictureBox.Image = new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size);
-                    toolTip.SetToolTip(photoPictureBox, System.IO.Path.GetFileName(employee.Photo));
+                    birthDateLabel.Text += employee.BirthDate?.ToString("d");
+                    birthDateTimePicker.Visible = false;
                 }
-            }//else //если путь фото указан, но такого фото уже нет в папке.
-             //{
-             //   employee.Photo = null;                 
-             //}            }
-            SetTheAccessLayerConstraints(employee);
+
+                descrRichTextBox.Text = employee.Note;
+                passportNumTextBox.Text = employee.PassportNum;
+                titleTextBox.Text = employee.Title;
+                loginTextBox.Text = employee.Login;
+                accessLayerComboBox.SelectedItem = employee.AccessLayer;
+                FillTheContactInfoPanel(employee.ContactInfo); //Заполняем контактную информацию.
+                                                               //Проверяем наличие фото.
+                                                               //photoPictureBox.Image = (employee.Photo != null) ? new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size) : null;
+                if (employee.Photo != null)
+                {
+                    if (System.IO.File.Exists(System.IO.Path.GetFullPath(employee.Photo)))
+                    {
+                        photoPictureBox.Image = new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size);
+                        toolTip.SetToolTip(photoPictureBox, System.IO.Path.GetFileName(employee.Photo));
+                    }
+                }//else //если путь фото указан, но такого фото уже нет в папке.
+                 //{
+                 //   employee.Photo = null;                 
+                 //}            }
+
+
+                if (employee.DismissalDate != default)
+                {
+                    dismissalDateLabel.Text += employee.DismissalDate?.ToString("d");
+                    dismissalDateLabel.Visible = true;
+
+                    DisableAccessControls();
+                }
+                else
+                {
+                    SetTheAccessLayerConstraints(employee);
+                    dismissButton.Visible = true;                    
+                }                
+            }
+        }
+
+        /// <summary>
+        /// Отключает элементы управления, связанные с установкой / проверкой логина и пароля
+        /// </summary>
+        private void DisableAccessControls()
+        {
+            accessLayerComboBox.Enabled = false;
+            loginBackPanel.Enabled = false;
+            loginLabel.Enabled = false;
+            loginStarLabel.Enabled = false;
+            passwordAgainBackPanel.Enabled = false;
+            passwordBackPanel.Enabled = false;
+            accessLayerLabel.Enabled = false;
+            passwordAgainLabel.Enabled = false;
+            passwordLabel.Enabled = false;
+            passwordStarLabel.Enabled = false;
+            accessLayerStarLabel.Enabled = false;
+            passwordAgainStarLabel.Enabled = false;
         }
 
         /// <summary>
@@ -486,15 +542,6 @@ namespace PartsApp
                     passwordAgainLabel.Visible = passwordLabel.Visible = false;
                     passwordAgainStarLabel.Visible = passwordStarLabel.Visible = false;
                 }
-                //else //если права "Обычный" -- запрещено всё.
-                //{
-                //    foreach (Control control in this.Controls)
-                //    {
-                //        control.Enabled = false;
-                //    }
-
-                //    descrRichTextBox.Visible = descrLabel.Visible = false;
-                //}
             }
         }
 
@@ -585,9 +632,15 @@ namespace PartsApp
         /// <returns></returns>
         private bool CheckAllConditionsForWrightValues()
         {
+            if (_editEmployee != null && _editEmployee.DismissalDate != default)
+            {
+                return true;
+            }
+
             //Проверяем корректность ввода необходимых данных.
             lastNameTextBox_Leave(null, null);
             firstNameTextBox_Leave(null, null);
+
             //passportNumTextBox_Leave  (null, null);
             loginTextBox_Leave(null, null);
             passwordTextBox_Leave(null, null);
@@ -618,6 +671,27 @@ namespace PartsApp
                 }
             }
         }
+
+        /// <summary>
+        /// Открывает форму подтверждения увольнения редактируемого сотрудника
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDismissButtonClick(object sender, EventArgs e)
+        {
+            if (_employeeEditingInProcess && _editEmployee != null)
+            {
+                var currentDismissalDate = _editEmployee.DismissalDate;
+                var dismissForm = new DismissEmployeeForm(_editEmployee);
+                dismissForm.ShowDialog();
+
+                if (_editEmployee.DismissalDate != currentDismissalDate)
+                {
+                    Close();
+                }
+            }
+        }
+
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -627,15 +701,15 @@ namespace PartsApp
                     this.Cursor = Cursors.WaitCursor;
                     Employee employee = GetEmployeeFromForm();
                     try
-                    {
-                        //Проверяем добавляется новая ед. товара или модиф-ся уже сущ-щая.                    
+                    {                
                         if (_editEmployee == null)
                         {
                             PartsDAL.AddEmployee(employee);
                         }
                         else
-                        {
+                        {                            
                             employee.EmployeeId = _editEmployee.EmployeeId;
+                            employee.DismissalDate = _editEmployee.DismissalDate;
                             UpdateEmployee(employee);
                         }
                     }
