@@ -26,7 +26,7 @@ namespace PartsApp
         {
             //Находим список всех сотрудников (сортируем по фамилии и имени) и делаем источником данных для ListBox.
             _employees = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
-            ActiveEmployeesCheckBox.Checked = true;          
+            ActiveEmployeesCheckBox.Checked = true;
 
             //Устанавливаем стартовый период в месяц.
             EndDateDTP.Value = DateTime.Now;
@@ -103,7 +103,7 @@ namespace PartsApp
 
             if (!ActiveEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
             {
-                EmployeeListBox.DataSource = GetAllEmployees();
+                ActiveEmployeesCheckBox.Checked = true;
             }
         }        
 
