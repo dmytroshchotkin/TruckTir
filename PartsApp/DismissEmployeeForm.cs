@@ -27,7 +27,7 @@ namespace PartsApp
                 PartsDAL.UpdateEmployee(_employee);
                                 
                 acceptDismissalButton.Visible = false;
-                dismissalActionLabel.Text = "Увольнение подтверждено";
+                dismissalActionLabel.Text = "Блокировка доступа подтверждена.";
             }
             catch (Exception)
             {

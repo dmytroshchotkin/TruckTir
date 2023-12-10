@@ -43,7 +43,7 @@
             this.dismissalActionLabel.Name = "dismissalActionLabel";
             this.dismissalActionLabel.Size = new System.Drawing.Size(260, 16);
             this.dismissalActionLabel.TabIndex = 0;
-            this.dismissalActionLabel.Text = "Подтвердите увольнение сотрудника:";
+            this.dismissalActionLabel.Text = "Подтвердите блокировку доступа для сотрудника:";
             // 
             // nameLabel
             // 
@@ -105,7 +105,7 @@
             this.Controls.Add(this.dismissalActionLabel);
             this.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
             this.Name = "DismissEmployeeForm";
-            this.Text = "Уволить сотрудника";
+            this.Text = "Заблокировать доступ для сотрудника";
             this.ResumeLayout(false);
             this.PerformLayout();
 
