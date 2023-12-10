@@ -140,8 +140,6 @@ namespace PartsApp
             // EmployeeEditingContextMenu
             //
             this.EmployeeEditingContextMenu = new ContextMenuStrip();
-            this.EmployeeEditingContextMenu.Items.Add(EditToolStripMenuItem);
-            this.EmployeeEditingContextMenu.Items.Add(DismissalToolStripMenuItem);
             // 
             // EmployeeListBox
             // 
@@ -153,8 +151,7 @@ namespace PartsApp
             this.EmployeeListBox.Size = new System.Drawing.Size(858, 110);
             this.EmployeeListBox.TabIndex = 0;
             this.EmployeeListBox.ValueMember = "EmployeeId";
-            this.EmployeeListBox.SelectedIndexChanged += new System.EventHandler(this.EmployeeListBox_SelectedIndexChanged);
-            this.EmployeeListBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnEmployeeListBoxMouseDown);
+            this.EmployeeListBox.SelectedIndexChanged += new System.EventHandler(this.EmployeeListBox_SelectedIndexChanged);          
             this.EmployeeListBox.ContextMenuStrip = this.EmployeeEditingContextMenu;     
             // 
             // ActiveEmployeesCheckBox

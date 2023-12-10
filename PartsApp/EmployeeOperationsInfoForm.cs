@@ -20,7 +20,12 @@ namespace PartsApp
         public EmployeeOperationsInfoForm()
         {
             InitializeComponent();
-        }
+
+            if (Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+            {
+                EnableEditingContextMenu();
+            }
+        }        
 
         private void EmployeeOperationsInfoForm_Load(object sender, EventArgs e)
         {
@@ -59,6 +64,13 @@ namespace PartsApp
             }
         }
 
+        private void EnableEditingContextMenu()
+        {
+            EmployeeEditingContextMenu.Items.Add(EditToolStripMenuItem);
+            EmployeeEditingContextMenu.Items.Add(DismissalToolStripMenuItem);
+            EmployeeListBox.MouseDown += new MouseEventHandler(OnEmployeeListBoxMouseDown);
+        }
+
         private void OnDismissalOptionClick(object sender, EventArgs e)
         {
             if (EmployeeListBox.SelectedItem is Employee emp)
@@ -84,6 +96,11 @@ namespace PartsApp
             }
         }
 
+        /// <summary>
+        /// Заполняет ListBox сотрудниками выбранного типа; если выбраны оба чекбокса, грузит всех; если не выбран ни один, грузит только Активных
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
         {
             if (!InactiveEmployeesCheckBox.Checked)

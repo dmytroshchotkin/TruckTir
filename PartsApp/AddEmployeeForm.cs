@@ -42,11 +42,6 @@ namespace PartsApp
             {
                 _employeeEditingInProcess = true;
 
-                foreach (Control c in Controls)
-                {
-                    c.Enabled = true;
-                }
-
                 FillTheForm(_editEmployee);
                 birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
             }
@@ -461,7 +456,7 @@ namespace PartsApp
                 else
                 {
                     SetTheAccessLayerConstraints(employee);
-                    dismissButton.Visible = true;                    
+                    dismissButton.Visible = true;
                 }                
             }
         }
