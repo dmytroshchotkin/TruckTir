@@ -455,8 +455,7 @@ namespace PartsApp
                 }
                 else
                 {
-                    SetTheAccessLayerConstraints(employee);
-                    dismissButton.Visible = true;
+                    SetTheAccessLayerConstraints(employee);                    
                 }                
             }
         }

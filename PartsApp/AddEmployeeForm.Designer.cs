@@ -98,7 +98,6 @@
             this.photoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dismissalDateLabel = new System.Windows.Forms.Label();
-            this.dismissButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).BeginInit();
             this.lastNameBackPanel.SuspendLayout();
             this.firstNameBackPanel.SuspendLayout();
@@ -796,19 +795,6 @@
             this.dismissalDateLabel.Text = "Дата увольнения: ";
             this.dismissalDateLabel.Visible = false;
             // 
-            // dismissButton
-            // 
-            this.dismissButton.Location = new System.Drawing.Point(406, 382);
-            this.dismissButton.Margin = new System.Windows.Forms.Padding(4);
-            this.dismissButton.Name = "dismissButton";
-            this.dismissButton.Size = new System.Drawing.Size(214, 28);
-            this.dismissButton.TabIndex = 86;
-            this.dismissButton.Text = "Заблокировать";
-            this.dismissButton.UseVisualStyleBackColor = true;
-            this.dismissButton.Visible = false;
-            this.dismissButton.UseVisualStyleBackColor = true;
-            this.dismissButton.Click += new System.EventHandler(this.OnDismissButtonClick);
-            // 
             // AddEmployeeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -816,7 +802,6 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(848, 1055);
-            this.Controls.Add(this.dismissButton);
             this.Controls.Add(this.dismissalDateLabel);
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.contactInfoPanel);
@@ -940,6 +925,5 @@
         private System.Windows.Forms.Label loginLabel;
         private System.Windows.Forms.Label loginStarLabel;
         private System.Windows.Forms.Label dismissalDateLabel;
-        private System.Windows.Forms.Button dismissButton;
     }
 }
