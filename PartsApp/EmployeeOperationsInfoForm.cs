@@ -16,6 +16,7 @@ namespace PartsApp
     public partial class EmployeeOperationsInfoForm : Form
     {
         private List<Employee> _employees;
+        private Employee _selectedEmployee;
 
         public EmployeeOperationsInfoForm()
         {
@@ -36,6 +37,12 @@ namespace PartsApp
             //Устанавливаем стартовый период в месяц.
             EndDateDTP.Value = DateTime.Now;
             BeginDateDTP.Value = DateTime.Today.AddMonths(-1);
+
+            // подписываем DateTimePicker'ы на события после того, как им были присвоены начальные значения,
+            // чтобы не грузить операции до выбора сотрудника юзером
+            BeginDateCheckBox.CheckedChanged += new EventHandler(DatesCheckBox_CheckedChanged);
+            EndDateCheckBox.CheckedChanged += new EventHandler(DatesCheckBox_CheckedChanged);
+            BeginDateDTP.ValueChanged += new EventHandler(DatesDTP_ValueChanged);
         }
 
         #region Вывод списков сотрудников (активных, уволенных, всех) и редактирование
@@ -48,9 +55,9 @@ namespace PartsApp
         {
             if (e.Button == MouseButtons.Right && Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
             {
-                if (EmployeeListBox.SelectedItem is Employee emp)
+                if (_selectedEmployee != null)
                 {
-                    if (emp.DismissalDate != default)
+                    if (_selectedEmployee.DismissalDate != default)
                     {
                         DismissalToolStripMenuItem.Visible = false;
                     }
@@ -73,12 +80,12 @@ namespace PartsApp
 
         private void OnDismissalOptionClick(object sender, EventArgs e)
         {
-            if (EmployeeListBox.SelectedItem is Employee emp)
+            if (_selectedEmployee != null)
             {
-                var dismissForm = new DismissEmployeeForm(emp);
+                var dismissForm = new DismissEmployeeForm(_selectedEmployee);
                 dismissForm.ShowDialog();
 
-                if (emp.DismissalDate != default)
+                if (_selectedEmployee.DismissalDate != default)
                 {
                     EmployeeListBox.DataSource = GetActiveEmployees();
                 }
@@ -87,9 +94,9 @@ namespace PartsApp
 
         private void OnEditingOptionClick(object sender, EventArgs e)
         {
-            if (EmployeeListBox.SelectedItem is Employee emp)
+            if (_selectedEmployee != null)
             {
-                var editingForm = new AddEmployeeForm(emp);
+                var editingForm = new AddEmployeeForm(_selectedEmployee);
                 editingForm.ShowDialog();
 
                 Close();
@@ -103,24 +110,34 @@ namespace PartsApp
         /// <param name="e"></param>
         private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
         {
-            if (!InactiveEmployeesCheckBox.Checked)
-            {
-                EmployeeListBox.DataSource = GetActiveEmployees();
-            }
-
-            if (InactiveEmployeesCheckBox.Checked && !ActiveEmployeesCheckBox.Checked)
-            {
-                EmployeeListBox.DataSource = GetFiredEmployees();
-            }
-
-            if (ActiveEmployeesCheckBox.Checked && InactiveEmployeesCheckBox.Checked)
-            {
-                EmployeeListBox.DataSource = GetAllEmployees();
-            }
-
             if (!ActiveEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
             {
-                ActiveEmployeesCheckBox.Checked = true;
+                EmployeeListBox.DataSource = null;
+                EmployeeListBox.Items.Clear();
+                _selectedEmployee = null;
+
+                EmployeeListBox.DisplayMember = "FullName";
+                EmployeeListBox.ValueMember = "EmployeeId";                
+            }
+            else
+            {
+                EmployeeListBox.Visible = true;
+                if (ActiveEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
+                {
+                    EmployeeListBox.DataSource = GetActiveEmployees();
+                }
+
+                else if (InactiveEmployeesCheckBox.Checked && !ActiveEmployeesCheckBox.Checked)
+                {
+                    EmployeeListBox.Visible = true;
+                    EmployeeListBox.DataSource = GetFiredEmployees();
+                }
+
+                else if (ActiveEmployeesCheckBox.Checked && InactiveEmployeesCheckBox.Checked)
+                {
+                    EmployeeListBox.Visible = true;
+                    EmployeeListBox.DataSource = GetAllEmployees();
+                }
             }
         }        
 
@@ -176,16 +193,19 @@ namespace PartsApp
         private void FillTheOperationDGV()
         {
             OperationsInfoDGV.Rows.Clear(); //Очищаем список операций.
+            
+            if (_selectedEmployee != null)
+            {
+                //Находим начальную и конечную дату требуемых операций.
+                DateTime? beginDate = BeginDateDTP.Enabled ? BeginDateDTP.Value : (DateTime?)null;
+                DateTime? endDate = EndDateDTP.Enabled ? EndDateDTP.Value : (DateTime?)null;
+                //Выводим список операций соответствующий заданным требованиям.
+                List<IOperation> operList = FindOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate);
+                FillTheOperationDGV(operList);
 
-            //Находим начальную и конечную дату требуемых операций.
-            DateTime? beginDate = BeginDateDTP.Enabled ? BeginDateDTP.Value : (DateTime?)null;
-            DateTime? endDate = EndDateDTP.Enabled ? EndDateDTP.Value : (DateTime?)null;
-            //Выводим список операций соответствующий заданным требованиям.
-            List<IOperation> operList = FindOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate);
-            FillTheOperationDGV(operList);
-
-            //Изменяем видимость строк по типу операции.
-            OperationsCheckBox_CheckedChanged(null, null);
+                //Изменяем видимость строк по типу операции.
+                OperationsCheckBox_CheckedChanged(null, null);
+            }
         }
 
         /// <summary>
@@ -230,6 +250,7 @@ namespace PartsApp
 
         private void EmployeeListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _selectedEmployee = EmployeeListBox.SelectedItem as Employee;
             FillTheOperationDGV(); //Заполняем таблицу операций.
         }
 

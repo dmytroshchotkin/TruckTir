@@ -405,7 +405,7 @@ namespace PartsApp
             this.toolTip1.SetToolTip(this.BeginDateCheckBox, "Если панель выбора даты отключена, значит ограничения по нижней дате не установле" +
         "но.");
             this.BeginDateCheckBox.UseVisualStyleBackColor = false;
-            this.BeginDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
+         //   this.BeginDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
             // 
             // BeginDateDTP
             // 
@@ -418,7 +418,7 @@ namespace PartsApp
             this.BeginDateDTP.TabIndex = 5;
             this.toolTip1.SetToolTip(this.BeginDateDTP, "Начальная дата");
             this.BeginDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
-            this.BeginDateDTP.ValueChanged += new System.EventHandler(this.DatesDTP_ValueChanged);
+       //     this.BeginDateDTP.ValueChanged += new System.EventHandler(this.DatesDTP_ValueChanged);
             // 
             // EndDatePanel
             // 
@@ -442,7 +442,7 @@ namespace PartsApp
             this.toolTip1.SetToolTip(this.EndDateCheckBox, "Если панель выбора даты отключена, значит ограничения по верхней дате не установл" +
         "ено.");
             this.EndDateCheckBox.UseVisualStyleBackColor = false;
-            this.EndDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
+          //  this.EndDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
             // 
             // EndDateDTP
             // 
