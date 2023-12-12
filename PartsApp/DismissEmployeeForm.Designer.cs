@@ -106,6 +106,9 @@
             this.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
             this.Name = "DismissEmployeeForm";
             this.Text = "Заблокировать доступ для сотрудника";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MinimizeBox = false;
+            this.MaximizeBox = false;
             this.ResumeLayout(false);
             this.PerformLayout();
 
