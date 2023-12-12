@@ -438,7 +438,7 @@ namespace PartsApp
                 dismissalDateLabel.Text += employee.DismissalDate?.ToString("d");
                 dismissalDateLabel.Visible = true;
 
-                DisableAccessControls();
+                DisableCredentialsControls();
             }
             else
             {
@@ -452,19 +452,21 @@ namespace PartsApp
         /// <summary>
         /// Отключает элементы управления, связанные с установкой / проверкой логина и пароля
         /// </summary>
-        private void DisableAccessControls()
+        private void DisableCredentialsControls()
         {
             accessLayerComboBox.Enabled = false;
+            accessLayerLabel.Enabled = false;
+            accessLayerStarLabel.Enabled = false;
+
             loginBackPanel.Enabled = false;
             loginLabel.Enabled = false;
             loginStarLabel.Enabled = false;
-            passwordAgainBackPanel.Enabled = false;
-            passwordBackPanel.Enabled = false;
-            accessLayerLabel.Enabled = false;
-            passwordAgainLabel.Enabled = false;
+
             passwordLabel.Enabled = false;
+            passwordBackPanel.Enabled = false;
             passwordStarLabel.Enabled = false;
-            accessLayerStarLabel.Enabled = false;
+            passwordAgainLabel.Enabled = false;
+            passwordAgainBackPanel.Enabled = false;
             passwordAgainStarLabel.Enabled = false;
         }
 
