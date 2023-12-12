@@ -407,15 +407,8 @@ namespace PartsApp
             middleNameTextBox.Text = employee.MiddleName;
 
             hireDateLabel.Text += employee.HireDate?.ToString("d");
-            hireDateTimePicker.Value = (DateTime)employee.HireDate;
-            hireDateTimePicker.Visible = false;
-
-            birthDateTimePicker.Value = (DateTime)employee.BirthDate;
-            if (employee.DismissalDate != default)
-            {
-                birthDateLabel.Text += employee.BirthDate?.ToString("d");
-                birthDateTimePicker.Visible = false;
-            }
+            //hireDateTimePicker.Value = (DateTime)employee.HireDate;
+            hireDateTimePicker.Visible = false;            
 
             descrRichTextBox.Text = employee.Note;
             passportNumTextBox.Text = employee.PassportNum;
@@ -437,9 +430,11 @@ namespace PartsApp
              //   employee.Photo = null;                 
              //}            }
 
-
-            if (employee.DismissalDate != default)
+            if (IsEmployeeDismissed(employee))
             {
+                birthDateLabel.Text += employee.BirthDate?.ToString("d");
+                birthDateTimePicker.Visible = false;
+
                 dismissalDateLabel.Text += employee.DismissalDate?.ToString("d");
                 dismissalDateLabel.Visible = true;
 
@@ -447,8 +442,11 @@ namespace PartsApp
             }
             else
             {
-                SetTheAccessLayerConstraints(employee);                    
-            }   
+                birthDateTimePicker.Value = (DateTime)employee.BirthDate;
+                birthDateTimePicker.Visible = true;
+
+                SetTheAccessLayerConstraints(employee);
+            }                 
         }
 
         /// <summary>
@@ -617,7 +615,8 @@ namespace PartsApp
         /// <returns></returns>
         private bool CheckAllConditionsForWrightValues()
         {
-            if (_editEmployee?.DismissalDate.HasValue == true && _editEmployee.DismissalDate != default)
+            // если сотрудник уволен, опускаем проверки на заполнение textbox'ов, связанных с доступом
+            if (_editEmployee?.DismissalDate.HasValue == true && IsEmployeeDismissed(_editEmployee))
             {
                 return true;
             }
@@ -688,6 +687,16 @@ namespace PartsApp
                     this.Close();
                 }
             }
+        }
+
+        /// <summary>
+        /// Если существует реальная дата увольнения, возвращает true
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        private static bool IsEmployeeDismissed(Employee employee)
+        {
+            return employee.DismissalDate != default;
         }
     }
 }
