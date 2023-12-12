@@ -15,11 +15,10 @@ namespace PartsApp
 {
     public partial class AddEmployeeForm : Form
     {
-        Employee _editEmployee = null;
-        bool _employeeEditingInProcess = false;
+        readonly Employee _editEmployee;
 
         const string employeePhotoFolder = @"Сотрудники\";
-        DateTime companyFoundingDate = new DateTime(2000, 1, 1);
+        readonly DateTime companyFoundingDate = new DateTime(2000, 1, 1);
         const int minAge = 16, maxAge = 80;
 
 
@@ -38,13 +37,8 @@ namespace PartsApp
             InitializeComponent();
 
             _editEmployee = editEmployee;
-            if (_editEmployee != null)
-            {
-                _employeeEditingInProcess = true;
-
-                FillTheForm(_editEmployee);
-                birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
-            }
+            FillTheForm(_editEmployee);
+            birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
         }
 
         private void AddEmployeeForm_Load(object sender, EventArgs e)
@@ -407,57 +401,54 @@ namespace PartsApp
         /// </summary>
         /// <param name="employee">Сотрудник чьей информацией заполняется форма.</param>
         private void FillTheForm(Employee employee)
-        {
-            if (_employeeEditingInProcess)
+        {            
+            lastNameTextBox.Text = employee.LastName;
+            firstNameTextBox.Text = employee.FirstName;
+            middleNameTextBox.Text = employee.MiddleName;
+
+            hireDateLabel.Text += employee.HireDate?.ToString("d");
+            hireDateTimePicker.Value = (DateTime)employee.HireDate;
+            hireDateTimePicker.Visible = false;
+
+            birthDateTimePicker.Value = (DateTime)employee.BirthDate;
+            if (employee.DismissalDate != default)
             {
-                lastNameTextBox.Text = employee.LastName;
-                firstNameTextBox.Text = employee.FirstName;
-                middleNameTextBox.Text = employee.MiddleName;
-
-                hireDateLabel.Text += employee.HireDate?.ToString("d");
-                hireDateTimePicker.Value = (DateTime)employee.HireDate;
-                hireDateTimePicker.Visible = false;
-
-                birthDateTimePicker.Value = (DateTime)employee.BirthDate;
-                if (employee.DismissalDate != default)
-                {
-                    birthDateLabel.Text += employee.BirthDate?.ToString("d");
-                    birthDateTimePicker.Visible = false;
-                }
-
-                descrRichTextBox.Text = employee.Note;
-                passportNumTextBox.Text = employee.PassportNum;
-                titleTextBox.Text = employee.Title;
-                loginTextBox.Text = employee.Login;
-                accessLayerComboBox.SelectedItem = employee.AccessLayer;
-                FillTheContactInfoPanel(employee.ContactInfo); //Заполняем контактную информацию.
-                                                               //Проверяем наличие фото.
-                                                               //photoPictureBox.Image = (employee.Photo != null) ? new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size) : null;
-                if (employee.Photo != null)
-                {
-                    if (System.IO.File.Exists(System.IO.Path.GetFullPath(employee.Photo)))
-                    {
-                        photoPictureBox.Image = new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size);
-                        toolTip.SetToolTip(photoPictureBox, System.IO.Path.GetFileName(employee.Photo));
-                    }
-                }//else //если путь фото указан, но такого фото уже нет в папке.
-                 //{
-                 //   employee.Photo = null;                 
-                 //}            }
-
-
-                if (employee.DismissalDate != default)
-                {
-                    dismissalDateLabel.Text += employee.DismissalDate?.ToString("d");
-                    dismissalDateLabel.Visible = true;
-
-                    DisableAccessControls();
-                }
-                else
-                {
-                    SetTheAccessLayerConstraints(employee);                    
-                }                
+                birthDateLabel.Text += employee.BirthDate?.ToString("d");
+                birthDateTimePicker.Visible = false;
             }
+
+            descrRichTextBox.Text = employee.Note;
+            passportNumTextBox.Text = employee.PassportNum;
+            titleTextBox.Text = employee.Title;
+            loginTextBox.Text = employee.Login;
+            accessLayerComboBox.SelectedItem = employee.AccessLayer;
+            FillTheContactInfoPanel(employee.ContactInfo); //Заполняем контактную информацию.
+                                                           //Проверяем наличие фото.
+                                                           //photoPictureBox.Image = (employee.Photo != null) ? new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size) : null;
+            if (employee.Photo != null)
+            {
+                if (System.IO.File.Exists(System.IO.Path.GetFullPath(employee.Photo)))
+                {
+                    photoPictureBox.Image = new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size);
+                    toolTip.SetToolTip(photoPictureBox, System.IO.Path.GetFileName(employee.Photo));
+                }
+            }//else //если путь фото указан, но такого фото уже нет в папке.
+             //{
+             //   employee.Photo = null;                 
+             //}            }
+
+
+            if (employee.DismissalDate != default)
+            {
+                dismissalDateLabel.Text += employee.DismissalDate?.ToString("d");
+                dismissalDateLabel.Visible = true;
+
+                DisableAccessControls();
+            }
+            else
+            {
+                SetTheAccessLayerConstraints(employee);                    
+            }   
         }
 
         /// <summary>
@@ -626,7 +617,7 @@ namespace PartsApp
         /// <returns></returns>
         private bool CheckAllConditionsForWrightValues()
         {
-            if (_editEmployee != null && _editEmployee.DismissalDate != default)
+            if (_editEmployee?.DismissalDate.HasValue == true && _editEmployee.DismissalDate != default)
             {
                 return true;
             }
@@ -666,26 +657,6 @@ namespace PartsApp
             }
         }
 
-        /// <summary>
-        /// Открывает форму подтверждения увольнения редактируемого сотрудника
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDismissButtonClick(object sender, EventArgs e)
-        {
-            if (_employeeEditingInProcess && _editEmployee != null)
-            {
-                var currentDismissalDate = _editEmployee.DismissalDate;
-                var dismissForm = new DismissEmployeeForm(_editEmployee);
-                dismissForm.ShowDialog();
-
-                if (_editEmployee.DismissalDate != currentDismissalDate)
-                {
-                    Close();
-                }
-            }
-        }
-
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -696,7 +667,7 @@ namespace PartsApp
                     Employee employee = GetEmployeeFromForm();
                     try
                     {                
-                        if (_editEmployee == null)
+                        if (_editEmployee is null)
                         {
                             PartsDAL.AddEmployee(employee);
                         }
