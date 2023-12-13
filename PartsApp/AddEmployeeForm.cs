@@ -48,15 +48,6 @@ namespace PartsApp
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
         {
-            //Проверяем есть ли уже введенная информация. 
-            if (contactInfoPanel.Visible == true)
-            {
-                if (IsThereContactInfo() == true)
-                {
-                    return;
-                }
-            }
-
             contactInfoPanel.Visible = !contactInfoPanel.Visible;
             if (contactInfoPanel.Visible == false)
             {
@@ -287,8 +278,8 @@ namespace PartsApp
         /// <returns></returns>
         private ContactInfo GetContactInfo()
         {
-            //Если ContactInfoPanel развернута.
-            if (contactInfoPanel.Visible == true && IsThereContactInfo() == true)
+            //Прочитываем данные ContactInfoPanel независимо от того, развернута она или свёрнута
+            if (IsThereContactInfo())
             {
                 //Если есть введенная инф-ция
                 ContactInfo contactInfo = new ContactInfo();
