@@ -191,7 +191,7 @@ namespace PartsApp
         /// <param name="employee">Сотрудник, значения которого необходимо обновить в базе.</param>
         public static void UpdateEmployeeWithoutPassword(Employee employee)
         {
-            EmployeeRepository.UpdateEmployeeWithoutPassword(employee);
+            EmployeeRepository.UpdateEmployee(employee, true);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
