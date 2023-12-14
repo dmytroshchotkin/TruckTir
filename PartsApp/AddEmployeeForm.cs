@@ -421,7 +421,7 @@ namespace PartsApp
              //   employee.Photo = null;                 
              //}            }
 
-            if (IsEmployeeDismissed(employee))
+            if (employee.IsDismissed)
             {
                 birthDateLabel.Text += employee.BirthDate?.ToString("d");
                 birthDateTimePicker.Visible = false;
@@ -609,7 +609,7 @@ namespace PartsApp
         private bool CheckAllConditionsForWrightValues()
         {
             // если сотрудник уволен, опускаем проверки на заполнение textbox'ов, связанных с доступом
-            if (_editEmployee?.DismissalDate.HasValue == true && IsEmployeeDismissed(_editEmployee))
+            if (_editEmployee?.DismissalDate.HasValue == true && _editEmployee.IsDismissed)
             {
                 return true;
             }
@@ -680,16 +680,6 @@ namespace PartsApp
                     this.Close();
                 }
             }
-        }
-
-        /// <summary>
-        /// Если существует реальная дата увольнения, возвращает true
-        /// </summary>
-        /// <param name="employee"></param>
-        /// <returns></returns>
-        private static bool IsEmployeeDismissed(Employee employee)
-        {
-            return employee.DismissalDate != default;
         }
     }
 }

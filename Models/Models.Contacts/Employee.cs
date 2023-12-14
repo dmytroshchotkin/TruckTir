@@ -31,6 +31,7 @@ namespace PartsApp.Models
         public string    AccessLayer   { get; set; }
         public string    Login         { get; set; }
         public string    Password      { get; set; }
+        public bool IsDismissed { get { return DismissalDate != default; } }
 
         public string FullName { get { return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName); } }
     
