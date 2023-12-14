@@ -423,19 +423,13 @@ namespace PartsApp
 
             if (employee.IsDismissed)
             {
-                birthDateLabel.Text += employee.BirthDate?.ToString("d");
-                birthDateTimePicker.Visible = false;
-
-                dismissalDateLabel.Text += employee.DismissalDate?.ToString("d");
-                dismissalDateLabel.Visible = true;
-
+                DisplayEmployeeBirthDateWithoutEditingControl(employee);
+                DisplayEmployeeDismissalDate(employee);
                 DisableCredentialsControls();
             }
             else
             {
-                birthDateTimePicker.Value = (DateTime)employee.BirthDate;
-                birthDateTimePicker.Visible = true;
-
+                SetEmployeeBirthDateInDateTimePicker(employee);
                 SetTheAccessLayerConstraints(employee);
             }                 
         }
@@ -680,6 +674,36 @@ namespace PartsApp
                     this.Close();
                 }
             }
+        }
+
+        /// <summary>
+        /// Добавляет дату рождения <param name="employee"></param> в соотв. Label и скрывает DateTimePicker
+        /// </summary>
+        /// <param name="employee"></param>
+        private void DisplayEmployeeBirthDateWithoutEditingControl(Employee employee)
+        {
+            birthDateLabel.Text += employee.BirthDate?.ToString("d");
+            birthDateTimePicker.Visible = false;
+        }
+
+        /// <summary>
+        /// Добавляет дату увольнения <param name="employee"></param> в соотв. Label и делает его видимым
+        /// </summary>
+        /// <param name="employee"></param>
+        private void DisplayEmployeeDismissalDate(Employee employee)
+        {
+            dismissalDateLabel.Text += employee.DismissalDate?.ToString("d");
+            dismissalDateLabel.Visible = true;
+        }
+
+        /// <summary>
+        /// Устанавливает значение birthDateTimePicker и делает его видимым
+        /// </summary>
+        /// <param name="employee"></param>
+        private void SetEmployeeBirthDateInDateTimePicker(Employee employee)
+        {
+            birthDateTimePicker.Value = (DateTime)employee.BirthDate;
+            birthDateTimePicker.Visible = true;
         }
     }
 }
