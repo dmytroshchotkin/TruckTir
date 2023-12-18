@@ -53,22 +53,24 @@ namespace PartsApp
         /// <param name="e"></param>
         private void OnEmployeeListBoxMouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right && Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+            if (e.Button == MouseButtons.Right && Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription() && _selectedEmployee != null)
             {
-                if (_selectedEmployee != null)
-                {
-                    if (_selectedEmployee.DismissalDate != default)
-                    {
-                        DismissalToolStripMenuItem.Visible = false;
-                    }
-                    else
-                    {
-                        DismissalToolStripMenuItem.Visible = true;
-                    }
-
-                    EmployeeEditingContextMenu.Show();
-                }
+                HandleToolStripMenuOptions(_selectedEmployee.IsDismissed);
             }
+        }
+
+        private void HandleToolStripMenuOptions(bool isDismissed)
+        {
+            if (isDismissed)
+            {
+                DismissalToolStripMenuItem.Visible = false;
+            }
+            else
+            {
+                DismissalToolStripMenuItem.Visible = true;
+            }
+
+            EmployeeEditingContextMenu.Show();
         }
 
         private void EnableEditingContextMenu()
@@ -110,36 +112,54 @@ namespace PartsApp
         /// <param name="e"></param>
         private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
         {
-            if (!ActiveEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
-            {
-                EmployeeListBox.DataSource = null;
-                EmployeeListBox.Items.Clear();
-                _selectedEmployee = null;
+            EmployeeListBox.DataSource = GetEmployees(ActiveEmployeesCheckBox.Checked, InactiveEmployeesCheckBox.Checked);
+            ClearEmployeeListBox();
+            ResetSelectedEmployee();
+        }        
 
-                EmployeeListBox.DisplayMember = "FullName";
-                EmployeeListBox.ValueMember = "EmployeeId";                
+        private List<Employee> GetEmployees(bool isActiveEmployeesCheckBoxChecked, bool isInactiveEmployeesCheckBoxChecked)
+        {           
+            if (isActiveEmployeesCheckBoxChecked && !isInactiveEmployeesCheckBoxChecked)
+            {
+                return GetActiveEmployees();
+            }
+            else if (isInactiveEmployeesCheckBoxChecked && !isActiveEmployeesCheckBoxChecked)
+            {                    
+                return GetFiredEmployees();
+            }
+            else if (isActiveEmployeesCheckBoxChecked && isInactiveEmployeesCheckBoxChecked)
+            {                    
+                return GetAllEmployees();
             }
             else
-            {
-                EmployeeListBox.Visible = true;
-                if (ActiveEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
-                {
-                    EmployeeListBox.DataSource = GetActiveEmployees();
-                }
-
-                else if (InactiveEmployeesCheckBox.Checked && !ActiveEmployeesCheckBox.Checked)
-                {
-                    EmployeeListBox.Visible = true;
-                    EmployeeListBox.DataSource = GetFiredEmployees();
-                }
-
-                else if (ActiveEmployeesCheckBox.Checked && InactiveEmployeesCheckBox.Checked)
-                {
-                    EmployeeListBox.Visible = true;
-                    EmployeeListBox.DataSource = GetAllEmployees();
-                }
+            { 
+                return null; 
             }
-        }        
+        }
+
+        /// <summary>
+        /// Очищает DataSource и обновляет настройки для ListBox 
+        /// </summary>
+        private void ClearEmployeeListBox()
+        {
+            if (EmployeeListBox.DataSource is null)
+            {
+                EmployeeListBox.Items.Clear();
+                EmployeeListBox.DisplayMember = "FullName";
+                EmployeeListBox.ValueMember = "EmployeeId";
+            }            
+        }
+
+        /// <summary>
+        /// Удаляет источник данных для таблицы операций ранее выбранного сотрудника, если список сотрудников пуст 
+        /// </summary>
+        private void ResetSelectedEmployee()
+        {
+            if (EmployeeListBox.DataSource is null && _selectedEmployee != null)
+            {
+                _selectedEmployee = null;
+            }
+        }
 
         private List<Employee> GetAllEmployees()
         {
