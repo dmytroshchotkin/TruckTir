@@ -53,27 +53,25 @@ namespace PartsApp
             {
                 //Проверяем введенные данные.
                 string inputPasswordHash = PasswordClass.GetHashString(passwordTextBox.Text.Trim());
-                try
+                while (true)
                 {
                     var employees = PartsDAL.FindEmployees().Where(empl => empl.Login == loginTextBox.Text.Trim());
-                    Employee employee = employees.Where(empl => empl.Password == inputPasswordHash).First();
+                    Employee employee = employees.Where(empl => empl.Password == inputPasswordHash).FirstOrDefault();                    
 
-                    Form1.CurEmployee = employee;
-
-                    if (employee.DismissalDate < DateTime.Now) 
+                    if (employee is null || employee.IsDismissed) 
                     {
-                        throw new Exception();
+                        toolTip.Show("Введены неверные данные.", this, okButton.Location, 3000);
+                        break;
                     }
-
-                    _isCorrectClose = true;
-                    this.Close();
-                }
-                catch
-                {
-                    toolTip.Show("Введены неверные данные.", this, okButton.Location, 3000);
+                    else
+                    {
+                        Form1.CurEmployee = employee;
+                        _isCorrectClose = true;
+                        this.Close();
+                        break;
+                    }
                 }
                 //var employeesList = PartsDAL.FindAllEmployees().Where(empl => empl.GetFullName() == fullNameTextBox.Text.Trim() && empl.Password == inputPasswordHash).First();
-
             }
         }
 
