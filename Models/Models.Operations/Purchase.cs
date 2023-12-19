@@ -55,6 +55,6 @@ namespace PartsApp.Models
                 _operationDetailsList = operationDetails;
             }
         }
-    } 
+    }
 
 }

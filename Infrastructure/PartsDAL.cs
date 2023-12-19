@@ -67,12 +67,10 @@ namespace PartsApp
             {
                 SupplierRepository.AddSupplier(contragent as Supplier);
             }
-
             else if (contragent is Customer)
             {
                 CustomerRepository.AddCustomer(contragent as Customer);
             }
-
             else
             {
                 throw new ArgumentException(InvalidTypeMessage);
@@ -89,12 +87,10 @@ namespace PartsApp
             {
                 SupplierRepository.UpdateSupplier(contragent as Supplier);
             }
-
             else if (contragent is Customer)
             {
                 CustomerRepository.UpdateCustomer(contragent as Customer);
             }
-
             else
             {
                 throw new ArgumentException(InvalidTypeMessage);
@@ -277,7 +273,7 @@ namespace PartsApp
         /// </summary>
         /// <returns></returns>
         public static List<Customer> FindCustomers()
-        {        
+        {
             return CustomerRepository.FindCustomers();
         }
 
@@ -463,7 +459,7 @@ namespace PartsApp
             if (System.IO.Directory.Exists(@"Data\Backup") == false)
             {
                 System.IO.Directory.CreateDirectory(@"Data\Backup");
-            }                
+            }
 
             //Создаём новый бэкап или обновляем существующий.
             using (SQLiteConnection source = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
@@ -549,7 +545,7 @@ namespace PartsApp
                     if (file.Name == fileName)
                     {
                         return file;
-                    }                        
+                    }
                 }
             }
 

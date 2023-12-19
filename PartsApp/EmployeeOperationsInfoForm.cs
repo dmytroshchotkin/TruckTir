@@ -26,7 +26,7 @@ namespace PartsApp
             {
                 EnableEditingContextMenu();
             }
-        }        
+        }
 
         private void EmployeeOperationsInfoForm_Load(object sender, EventArgs e)
         {
@@ -115,24 +115,24 @@ namespace PartsApp
             EmployeeListBox.DataSource = GetEmployees(ActiveEmployeesCheckBox.Checked, InactiveEmployeesCheckBox.Checked);
             ClearEmployeeListBox();
             ResetSelectedEmployee();
-        }        
+        }
 
         private List<Employee> GetEmployees(bool isActiveEmployeesCheckBoxChecked, bool isInactiveEmployeesCheckBoxChecked)
-        {           
+        {
             if (isActiveEmployeesCheckBoxChecked && !isInactiveEmployeesCheckBoxChecked)
             {
                 return GetActiveEmployees();
             }
             else if (isInactiveEmployeesCheckBoxChecked && !isActiveEmployeesCheckBoxChecked)
-            {                    
+            {
                 return GetFiredEmployees();
             }
             else if (isActiveEmployeesCheckBoxChecked && isInactiveEmployeesCheckBoxChecked)
-            {                    
+            {
                 return GetAllEmployees();
             }
             else
-            { 
+            {
                 return null; 
             }
         }
@@ -147,7 +147,7 @@ namespace PartsApp
                 EmployeeListBox.Items.Clear();
                 EmployeeListBox.DisplayMember = "FullName";
                 EmployeeListBox.ValueMember = "EmployeeId";
-            }            
+            }
         }
 
         /// <summary>

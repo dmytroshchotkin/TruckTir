@@ -18,7 +18,7 @@ namespace PartsApp.Models
 
         public Customer() { }
         public Customer(int contragentId, string contragentName, string code, string entity, ContactInfo contactInfo, string description, double balance)
-        { 
+        {
             ContragentId   = contragentId;
             ContragentName = contragentName;
             Code           = code;
@@ -26,6 +26,6 @@ namespace PartsApp.Models
             ContactInfo    = contactInfo;
             Description    = description;
             Balance        = balance;            
-        }    
+        }
     }
 }

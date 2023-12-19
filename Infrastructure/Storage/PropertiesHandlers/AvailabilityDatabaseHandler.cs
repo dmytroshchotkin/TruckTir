@@ -148,11 +148,11 @@ namespace Infrastructure.Storage.PropertiesHandlers
             if (availCount == operDet.Count)
             {
                 DeleteSparePartAvaliability(operDet.SparePart.SparePartId, operDet.Operation.OperationId, cmd);
-            }                    
+            }
             else
             {
                 UpdateSparePartСountAvaliability(operDet.SparePart.SparePartId, operDet.Operation.OperationId, availCount - operDet.Count, cmd);
-            }                
+            }
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +181,7 @@ namespace Infrastructure.Storage.PropertiesHandlers
                         while (dataReader.Read())
                         {
                             availabilityList.Add(CreateAvailability(dataReader, sparePart));
-                        }                            
+                        }
                     }
                 }
 

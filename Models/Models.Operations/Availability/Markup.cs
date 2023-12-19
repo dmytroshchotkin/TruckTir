@@ -29,32 +29,32 @@ namespace PartsApp.Models
             if (markup <= 0)
             {
                 return "Уценка";
-            }                
+            }
 
             int errorMargin = 5; //погрешность от значения Markup.Types.
             //Если 'Розница'.
             if (markup >= (int)Types.Retail - errorMargin && markup <= (int)Types.Retail + errorMargin)
             {
                 return Types.Retail.ToDescription();
-            }                
+            }
 
             //Если 'Малый опт'.
             if (markup >= (int)Types.SmallWholesale - errorMargin && markup <= (int)Types.SmallWholesale + errorMargin)
             {
                 return Types.SmallWholesale.ToDescription();
-            }                
+            }
 
             //Если 'Средний опт'.
             if (markup >= (int)Types.AverageWholesale - errorMargin && markup <= (int)Types.AverageWholesale + errorMargin)
             {
                 return Types.AverageWholesale.ToDescription();
-            }                
+            }
 
             //Если 'Крупный опт'.
             if (markup >= (int)Types.LargeWholesale - errorMargin && markup <= (int)Types.LargeWholesale + errorMargin)
             {
                 return Types.LargeWholesale.ToDescription();
-            }                
+            }
 
             return "Другая наценка";
         }

@@ -32,7 +32,7 @@ namespace Infrastructure.Storage
                             if (customer.ContactInfo != null)
                             {
                                 customer.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(customer.ContactInfo, cmd);
-                            }                                
+                            }
 
                             //Вставляем запись в Customers или Suppliers.
                             AddCustomer(customer, cmd);
@@ -101,7 +101,7 @@ namespace Infrastructure.Storage
                                 else
                                 {
                                     customer.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(customer.ContactInfo, cmd);
-                                }                                    
+                                }
                             }
 
                             //Вставляем запись в Customers или Suppliers.
@@ -111,7 +111,7 @@ namespace Infrastructure.Storage
                             if (contactInfo != null && customer.ContactInfo == null)
                             {
                                 ContactInfoDatabaseHandler.DeleteContactInfo(contactInfo.ContactInfoId, cmd);
-                            }                                
+                            }
 
                             trans.Commit();
                         }
@@ -177,7 +177,7 @@ namespace Infrastructure.Storage
                 while (dataReader.Read())
                 {
                     customers.Add(CreateCustomers(dataReader));
-                }                
+                }
 
                 connection.Close();
             }
@@ -208,7 +208,7 @@ namespace Infrastructure.Storage
                     while (dataReader.Read())
                     {
                         customer = CreateCustomers(dataReader);
-                    }                        
+                    }
                 }
 
                 connection.Close();
@@ -296,7 +296,7 @@ namespace Infrastructure.Storage
                     while (dataReader.Read())
                     {
                         contactInfo = ContactInfoDatabaseHandler.CreateContactInfo(dataReader);
-                    }                       
+                    }
                 }
 
                 connection.Close();

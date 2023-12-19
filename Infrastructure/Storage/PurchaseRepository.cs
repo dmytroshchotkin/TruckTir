@@ -38,7 +38,6 @@ namespace Infrastructure.Storage
                                 {
                                     purchase.Contragent.ContragentId = SupplierRepository.AddSupplier(purchase.Contragent as Supplier, cmd);
                                 }
-
                                 else if (purchase.Contragent is Customer)
                                 {
                                     purchase.Contragent.ContragentId = CustomerRepository.AddCustomer(purchase.Contragent as Customer, cmd);
@@ -259,7 +258,7 @@ namespace Infrastructure.Storage
                         while (dataReader.Read())
                         {
                             purchase = CreatePurchase(dataReader);
-                        }                            
+                        }
                     }
                 }
 
@@ -288,7 +287,7 @@ namespace Infrastructure.Storage
                 while (dataReader.Read())
                 {
                     purchases.Add(CreatePurchase(dataReader));
-                }                   
+                }
 
                 connection.Close();
             }
@@ -317,7 +316,7 @@ namespace Infrastructure.Storage
                     while (dataReader.Read())
                     {
                         purchases.Add(CreatePurchase(dataReader));
-                    }                        
+                    }
                 }
 
                 connection.Close();
@@ -356,7 +355,7 @@ namespace Infrastructure.Storage
                     while (dataReader.Read())
                     {
                         purchases.Add(CreatePurchase(dataReader));
-                    }                        
+                    }
                 }
 
                 connection.Close();
@@ -393,7 +392,7 @@ namespace Infrastructure.Storage
                     while (dataReader.Read())
                     {
                         purchases.Add(CreatePurchase(dataReader));
-                    }                       
+                    }
                 }
 
                 connection.Close();
@@ -447,7 +446,7 @@ namespace Infrastructure.Storage
                         while (dataReader.Read())
                         {
                             operDetList.Add(CreateOperationDetails(dataReader, purchase));
-                        }                            
+                        }
                     }
                 }
 
@@ -482,7 +481,7 @@ namespace Infrastructure.Storage
                         while (dataReader.Read())
                         {
                             operDetList.Add(CreateOperationDetails(dataReader, (Purchase)null));
-                        }                            
+                        }
                     }
                 }
 

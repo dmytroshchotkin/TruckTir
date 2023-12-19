@@ -24,7 +24,7 @@ namespace PartsApp.Models
         public string    MiddleName    { get; set; }
         public DateTime? BirthDate     { get; set; }
         public DateTime? HireDate      { get; set; }
-        public DateTime? DismissalDate { get; set; }        
+        public DateTime? DismissalDate { get; set; }
         public string    Photo         { get; set; }
         public string    Note          { get; set; }
         public string    PassportNum   { get; set; }
@@ -37,7 +37,7 @@ namespace PartsApp.Models
 
         public string FullName { get { return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName); } }
     
-        public ContactInfo ContactInfo { get; set; }    
+        public ContactInfo ContactInfo { get; set; }
                 
         /// <summary>
         /// Конструктор для добавления нового объекта в БД.
@@ -118,7 +118,7 @@ namespace PartsApp.Models
             if (info != null)
             {
                 ContactInfo = info;
-            }            
+            }
         }
 
     }

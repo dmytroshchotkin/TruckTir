@@ -350,7 +350,7 @@ namespace PartsApp
                     //Если фото выбрано, то подгоняем его размер под PictureBox и добавляем всплывающую подсказку.
                     photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
                     toolTip.SetToolTip(photoPictureBox, fileName);
-                }                //если выбранное фото не находится в нужной папке. 
+                }             //если выбранное фото не находится в нужной папке. 
                 else
                 {
                     if (System.IO.File.Exists(System.IO.Path.GetFullPath(path))) //проверяем есть ли фото с таким именем в нужной папке. 
@@ -361,7 +361,7 @@ namespace PartsApp
                         {
                             deselectToolStripMenuItem_Click(sender, e);
                         }
-                    }                    //Если файл не находится в нужной папке, и при этом нет совпадения имен, копируем его.
+                    }                 //Если файл не находится в нужной папке, и при этом нет совпадения имен, копируем его.
                     else
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
@@ -391,7 +391,7 @@ namespace PartsApp
         /// </summary>
         /// <param name="employee">Сотрудник чьей информацией заполняется форма.</param>
         private void FillTheForm(Employee employee)
-        {            
+        {
             lastNameTextBox.Text = employee.LastName;
             firstNameTextBox.Text = employee.FirstName;
             middleNameTextBox.Text = employee.MiddleName;
@@ -421,7 +421,7 @@ namespace PartsApp
             }//else //если путь фото указан, но такого фото уже нет в папке.
              //{
              //   employee.Photo = null;                 
-             //}            }
+             //}         }
         }
 
         private void SetEditingEmployeeControlsSettings(Employee employee)
@@ -438,9 +438,6 @@ namespace PartsApp
             }
         }
 
-        /// <summary>
-        /// Отключает элементы управления, связанные с установкой / проверкой логина и пароля
-        /// </summary>
         private void DisableCredentialsControls()
         {
             accessLayerComboBox.Enabled = false;
@@ -540,7 +537,7 @@ namespace PartsApp
                     {
                         PartsDAL.UpdateEmployee(employee);
                     }
-                }                //если права "Обычные"
+                }             //если права "Обычные"
                 else
                 {
                     //Если введен новый пароль, то обновляем его в базе, иначе ничего не делаем.
@@ -656,13 +653,13 @@ namespace PartsApp
                     this.Cursor = Cursors.WaitCursor;
                     Employee employee = GetEmployeeFromForm();
                     try
-                    {                
+                    {
                         if (_editEmployee is null)
                         {
                             PartsDAL.AddEmployee(employee);
                         }
                         else
-                        {                            
+                        {
                             employee.EmployeeId = _editEmployee.EmployeeId;
                             employee.DismissalDate = _editEmployee.DismissalDate;
                             UpdateEmployee(employee);
@@ -698,7 +695,7 @@ namespace PartsApp
             else
             {
                 filledBirthDateLabel.Visible = false;
-            }              
+            }
         }
     }
 }
