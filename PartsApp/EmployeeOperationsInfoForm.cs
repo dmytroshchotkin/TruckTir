@@ -87,9 +87,9 @@ namespace PartsApp
                 var dismissForm = new DismissEmployeeForm(_selectedEmployee);
                 dismissForm.ShowDialog();
 
-                if (_selectedEmployee.DismissalDate != default)
+                if (_selectedEmployee.IsDismissed)
                 {
-                    EmployeeListBox.DataSource = GetActiveEmployees();
+                    UpdateActiveEmployeesIfChecked();
                 }
             }
         }
@@ -158,6 +158,14 @@ namespace PartsApp
             if (EmployeeListBox.DataSource is null && _selectedEmployee != null)
             {
                 _selectedEmployee = null;
+            }
+        }
+
+        private void UpdateActiveEmployeesIfChecked()
+        {
+            if (ActiveEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
+            {
+                EmployeeListBox.DataSource = GetActiveEmployees();
             }
         }
 
