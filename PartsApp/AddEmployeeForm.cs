@@ -504,7 +504,7 @@ namespace PartsApp
             else //Если редактируемый юзер не является авторизованным юзером
             {
                 //если права "Админ" -- может редактировать всё, кроме пароля и логина.
-                if (employee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+                if (employee.IsAdmin)
                 {
                     passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
                     loginTextBox.Visible = loginLabel.Visible = loginStarLabel.Visible = false;
@@ -525,7 +525,7 @@ namespace PartsApp
             if (employee.EmployeeId == Form1.CurEmployee.EmployeeId)
             {
                 //Если права "Админ"  
-                if (Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+                if (Form1.CurEmployee.IsAdmin)
                 {
                     //Если пароль не менялся, обновляем без пароля, иначе обновляем полностью.
                     if (passwordTextBox.Text.Trim() == Form1.CurEmployee.Password)
@@ -550,7 +550,7 @@ namespace PartsApp
             else //Если редактируемый юзер не является авторизованным юзером
             {
                 //если права "Админ" 
-                if (Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+                if (Form1.CurEmployee.IsAdmin)
                 {
                     PartsDAL.UpdateEmployeeWithoutPassword(employee);
                 }

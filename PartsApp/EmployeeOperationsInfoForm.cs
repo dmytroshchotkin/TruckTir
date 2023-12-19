@@ -22,7 +22,7 @@ namespace PartsApp
         {
             InitializeComponent();
 
-            if (Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription())
+            if (Form1.CurEmployee.IsAdmin)
             {
                 EnableEditingContextMenu();
             }
@@ -53,7 +53,7 @@ namespace PartsApp
         /// <param name="e"></param>
         private void OnEmployeeListBoxMouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right && Form1.CurEmployee.AccessLayer == Employee.AccessLayers.Admin.ToDescription() && _selectedEmployee != null)
+            if (e.Button == MouseButtons.Right && Form1.CurEmployee.IsAdmin && _selectedEmployee != null)
             {
                 HandleToolStripMenuOptions(_selectedEmployee.IsDismissed);
             }
@@ -177,14 +177,14 @@ namespace PartsApp
         private List<Employee> GetFiredEmployees()
         {
             return _employees
-                .Where(e => e.DismissalDate != default && e.DismissalDate <= DateTime.Now)
+                .Where(e => e.IsDismissed)
                 .OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
         }
 
         private List<Employee> GetActiveEmployees()
         {
             return _employees
-                .Where(e => e.DismissalDate == default)
+                .Where(e => !e.IsDismissed)
                 .OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
         }
         #endregion
