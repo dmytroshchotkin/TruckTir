@@ -27,9 +27,7 @@ namespace PartsApp
             InitializeComponent();
             //Устанавливаем значения для дат.            
             birthDateTimePicker.MinDate = new DateTime(DateTime.Today.Year - maxAge, 1, 1);
-            birthDateTimePicker.MaxDate = new DateTime(DateTime.Today.Year - minAge, 12, 31);
-            birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
-
+            birthDateTimePicker.MaxDate = new DateTime(DateTime.Today.Year - minAge, 12, 31);   
         }
 
         public AddEmployeeForm(Employee editEmployee)
@@ -38,12 +36,13 @@ namespace PartsApp
 
             _editEmployee = editEmployee;
             FillTheForm(_editEmployee);
-            birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
+            SetEditingEmployeeControlsSettings(_editEmployee);
         }
 
         private void AddEmployeeForm_Load(object sender, EventArgs e)
         {
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
+            birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
         }
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
@@ -397,9 +396,12 @@ namespace PartsApp
             firstNameTextBox.Text = employee.FirstName;
             middleNameTextBox.Text = employee.MiddleName;
 
-            hireDateLabel.Text += employee.HireDate?.ToString("d");
-            //hireDateTimePicker.Value = (DateTime)employee.HireDate;
-            hireDateTimePicker.Visible = false;            
+            filledBirthDateLabel.Text = employee.BirthDate?.ToString("d");
+            filledHireDateLabel.Text = employee.HireDate?.ToString("d");
+            filledDismissalDateLabel.Text = employee.DismissalDate?.ToString("d");
+            //hireDateTimePicker.Value = (DateTime)employee.HireDate;         
+
+            birthDateTimePicker.Value = (DateTime)employee.BirthDate;
 
             descrRichTextBox.Text = employee.Note;
             passportNumTextBox.Text = employee.PassportNum;
@@ -420,18 +422,20 @@ namespace PartsApp
              //{
              //   employee.Photo = null;                 
              //}            }
+        }
+
+        private void SetEditingEmployeeControlsSettings(Employee employee)
+        {
+            SetVisibilityForEmployeeDatesControls(employee);
 
             if (employee.IsDismissed)
             {
-                DisplayEmployeeBirthDateWithoutEditingControl(employee);
-                DisplayEmployeeDismissalDate(employee);
                 DisableCredentialsControls();
             }
             else
             {
-                SetEmployeeBirthDateInDateTimePicker(employee);
                 SetTheAccessLayerConstraints(employee);
-            }                 
+            }
         }
 
         /// <summary>
@@ -676,34 +680,25 @@ namespace PartsApp
             }
         }
 
-        /// <summary>
-        /// Добавляет дату рождения <param name="employee"></param> в соотв. Label и скрывает DateTimePicker
-        /// </summary>
-        /// <param name="employee"></param>
-        private void DisplayEmployeeBirthDateWithoutEditingControl(Employee employee)
+        private void SetVisibilityForEmployeeDatesControls(Employee employee)
         {
-            birthDateLabel.Text += employee.BirthDate?.ToString("d");
-            birthDateTimePicker.Visible = false;
-        }
+            filledHireDateLabel.Visible = true;
+            hireDateTimePicker.Visible = false;
 
-        /// <summary>
-        /// Добавляет дату увольнения <param name="employee"></param> в соотв. Label и делает его видимым
-        /// </summary>
-        /// <param name="employee"></param>
-        private void DisplayEmployeeDismissalDate(Employee employee)
-        {
-            dismissalDateLabel.Text += employee.DismissalDate?.ToString("d");
-            dismissalDateLabel.Visible = true;
-        }
+            if (employee.IsDismissed)
+            {
+                birthDateTimePicker.Visible = false;
+                hireDateTimePicker.Visible = false;
 
-        /// <summary>
-        /// Устанавливает значение birthDateTimePicker и делает его видимым
-        /// </summary>
-        /// <param name="employee"></param>
-        private void SetEmployeeBirthDateInDateTimePicker(Employee employee)
-        {
-            birthDateTimePicker.Value = (DateTime)employee.BirthDate;
-            birthDateTimePicker.Visible = true;
+                filledBirthDateLabel.Visible = true;
+
+                dismissalDateLabel.Visible = true;
+                filledDismissalDateLabel.Visible = true;
+            }
+            else
+            {
+                filledBirthDateLabel.Visible = false;
+            }              
         }
     }
 }

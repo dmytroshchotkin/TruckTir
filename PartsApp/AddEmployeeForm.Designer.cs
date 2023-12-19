@@ -98,6 +98,9 @@
             this.photoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dismissalDateLabel = new System.Windows.Forms.Label();
+            this.filledBirthDateLabel = new System.Windows.Forms.Label();
+            this.filledHireDateLabel = new System.Windows.Forms.Label();
+            this.filledDismissalDateLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).BeginInit();
             this.lastNameBackPanel.SuspendLayout();
             this.firstNameBackPanel.SuspendLayout();
@@ -795,6 +798,30 @@
             this.dismissalDateLabel.Text = "Дата увольнения: ";
             this.dismissalDateLabel.Visible = false;
             // 
+            // filledBirthDateLabel
+            // 
+            this.filledBirthDateLabel.AutoSize = true;
+            this.filledBirthDateLabel.Location = new System.Drawing.Point(160, 342);
+            this.filledBirthDateLabel.Name = "filledBirthDateLabel";
+            this.filledBirthDateLabel.Size = new System.Drawing.Size(44, 16);
+            this.filledBirthDateLabel.TabIndex = 86;
+            // 
+            // filledHireDateLabel
+            // 
+            this.filledHireDateLabel.AutoSize = true;
+            this.filledHireDateLabel.Location = new System.Drawing.Point(587, 342);
+            this.filledHireDateLabel.Name = "filledHireDateLabel";
+            this.filledHireDateLabel.Size = new System.Drawing.Size(44, 16);
+            this.filledHireDateLabel.TabIndex = 87;
+            // 
+            // filledDismissalDateLabel
+            // 
+            this.filledDismissalDateLabel.AutoSize = true;
+            this.filledDismissalDateLabel.Location = new System.Drawing.Point(587, 385);
+            this.filledDismissalDateLabel.Name = "filledDismissalDateLabel";
+            this.filledDismissalDateLabel.Size = new System.Drawing.Size(44, 16);
+            this.filledDismissalDateLabel.TabIndex = 88;
+            // 
             // AddEmployeeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -802,6 +829,9 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(848, 1055);
+            this.Controls.Add(this.filledDismissalDateLabel);
+            this.Controls.Add(this.filledHireDateLabel);
+            this.Controls.Add(this.filledBirthDateLabel);
             this.Controls.Add(this.dismissalDateLabel);
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.contactInfoPanel);
@@ -925,5 +955,8 @@
         private System.Windows.Forms.Label loginLabel;
         private System.Windows.Forms.Label loginStarLabel;
         private System.Windows.Forms.Label dismissalDateLabel;
+        private System.Windows.Forms.Label filledBirthDateLabel;
+        private System.Windows.Forms.Label filledHireDateLabel;
+        private System.Windows.Forms.Label filledDismissalDateLabel;
     }
 }
