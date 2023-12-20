@@ -112,29 +112,22 @@ namespace PartsApp
         /// <param name="e"></param>
         private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
         {
-            EmployeeListBox.DataSource = GetEmployees(ActiveEmployeesCheckBox.Checked, InactiveEmployeesCheckBox.Checked);
+            var employees = GetEmployees(ActiveEmployeesCheckBox.Checked, InactiveEmployeesCheckBox.Checked);
+            EmployeeListBox.DataSource = employees.Any() ? employees : null;
             ClearEmployeeListBox();
             ResetSelectedEmployee();
         }
 
         private List<Employee> GetEmployees(bool isActiveEmployeesCheckBoxChecked, bool isInactiveEmployeesCheckBoxChecked)
         {
-            if (isActiveEmployeesCheckBoxChecked && !isInactiveEmployeesCheckBoxChecked)
+            if (isActiveEmployeesCheckBoxChecked)
             {
-                return GetActiveEmployees();
-            }
-            else if (isInactiveEmployeesCheckBoxChecked && !isActiveEmployeesCheckBoxChecked)
-            {
-                return GetFiredEmployees();
-            }
-            else if (isActiveEmployeesCheckBoxChecked && isInactiveEmployeesCheckBoxChecked)
-            {
-                return GetAllEmployees();
+                return isInactiveEmployeesCheckBoxChecked ? GetAllEmployees() : GetActiveEmployees();
             }
             else
             {
-                return null; 
-            }
+                return isInactiveEmployeesCheckBoxChecked ? GetFiredEmployees() : new List<Employee>();
+            }           
         }
 
         /// <summary>
