@@ -601,7 +601,7 @@ namespace PartsApp
         /// Возвращает true если все необходимые данные введены корректно, иначе false.
         /// </summary>
         /// <returns></returns>
-        private bool CheckAllConditionsForWrightValues()
+        private bool IsRequiredEmployeeDataFilledCorrectly()
         {
             // если сотрудник уволен, опускаем проверки на заполнение textbox'ов, связанных с доступом
             if (_editEmployee?.DismissalDate.HasValue == true && _editEmployee.IsDismissed)
@@ -646,34 +646,31 @@ namespace PartsApp
 
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && IsRequiredEmployeeDataFilledCorrectly())
             {
-                if (CheckAllConditionsForWrightValues() == true)
+                this.Cursor = Cursors.WaitCursor;
+                Employee employee = GetEmployeeFromForm();
+                try
                 {
-                    this.Cursor = Cursors.WaitCursor;
-                    Employee employee = GetEmployeeFromForm();
-                    try
+                    if (_editEmployee is null)
                     {
-                        if (_editEmployee is null)
-                        {
-                            PartsDAL.AddEmployee(employee);
-                        }
-                        else
-                        {
-                            employee.EmployeeId = _editEmployee.EmployeeId;
-                            employee.DismissalDate = _editEmployee.DismissalDate;
-                            UpdateEmployee(employee);
-                        }
+                        PartsDAL.AddEmployee(employee);
                     }
-                    catch
+                    else
                     {
-                        MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
-                        this.Cursor = Cursors.Default;
-                        return;
+                        employee.EmployeeId = _editEmployee.EmployeeId;
+                        employee.DismissalDate = _editEmployee.DismissalDate;
+                        UpdateEmployee(employee);
                     }
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
                 }
+                catch
+                {
+                    MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                    this.Cursor = Cursors.Default;
+                    return;
+                }
+                this.DialogResult = DialogResult.OK;
+                this.Close();                
             }
         }
 

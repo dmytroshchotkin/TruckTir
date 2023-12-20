@@ -46,11 +46,6 @@ namespace PartsApp
         }
 
         #region Вывод списков сотрудников (активных, уволенных, всех) и редактирование
-        /// <summary>
-        /// Выводим меню редактирования / увольнения сотрудника, если юзер является админом
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void OnEmployeeListBoxMouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right && Form1.CurEmployee.IsAdmin && _selectedEmployee != null)
@@ -105,11 +100,6 @@ namespace PartsApp
             }
         }
 
-        /// <summary>
-        /// Заполняет ListBox сотрудниками выбранного типа; если выбраны оба чекбокса, грузит всех; если не выбран ни один, грузит только Активных
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
         {
             var employees = GetEmployees(ActiveEmployeesCheckBox.Checked, InactiveEmployeesCheckBox.Checked);
