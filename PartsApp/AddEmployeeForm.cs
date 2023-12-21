@@ -550,7 +550,7 @@ namespace PartsApp
             }
             else //Если редактируемый юзер не является авторизованным юзером
             {
-                //если права "Админ" 
+                // обновляем юзера, только если права редактора "Админ" 
                 if (Form1.CurEmployee.IsAdmin)
                 {
                     PartsDAL.UpdateEmployeeWithoutPassword(employee);

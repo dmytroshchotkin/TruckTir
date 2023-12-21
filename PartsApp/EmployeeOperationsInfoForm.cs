@@ -108,16 +108,21 @@ namespace PartsApp
             ResetSelectedEmployee();
         }
 
-        private List<Employee> GetEmployees(bool isActiveEmployeesCheckBoxChecked, bool isInactiveEmployeesCheckBoxChecked)
+        private List<Employee> GetEmployees(bool selectActiveEmployees, bool selectInactiveEmployees)
         {
-            if (isActiveEmployeesCheckBoxChecked)
+            var employees = new List<Employee>();
+
+            if (selectActiveEmployees)
             {
-                return isInactiveEmployeesCheckBoxChecked ? GetAllEmployees() : GetActiveEmployees();
+                employees.AddRange(GetActiveEmployees());
             }
-            else
+
+            if (selectInactiveEmployees)
             {
-                return isInactiveEmployeesCheckBoxChecked ? GetFiredEmployees() : new List<Employee>();
+                employees.AddRange(GetInactiveEmployees());
             }           
+
+            return employees;
         }
 
         /// <summary>
@@ -157,7 +162,7 @@ namespace PartsApp
             return _employees.OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
         }
 
-        private List<Employee> GetFiredEmployees()
+        private List<Employee> GetInactiveEmployees()
         {
             return _employees
                 .Where(e => e.IsDismissed)
