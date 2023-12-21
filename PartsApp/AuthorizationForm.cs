@@ -14,8 +14,6 @@ namespace PartsApp
 {
     public partial class AuthorizationForm : Form
     {
-        private bool _isCorrectClose = false;
-
         public AuthorizationForm()
         {
             InitializeComponent();
@@ -25,25 +23,13 @@ namespace PartsApp
             {
                 loginTextBox.AutoCompleteCustomSource.Add(employee.Login);
             }
-
-        }
-
-        private void AuthorizationForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                if (_isCorrectClose == false)
-                {
-                    e.Cancel = true;
-                }
-            }
         }
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                this.Owner.Close();
+                Owner.Close();
             }
         }
 
@@ -55,7 +41,7 @@ namespace PartsApp
                 string inputPasswordHash = PasswordClass.GetHashString(passwordTextBox.Text.Trim());
 
                 var employees = PartsDAL.FindEmployees().Where(empl => empl.Login == loginTextBox.Text.Trim());
-                Employee employee = employees.Where(empl => empl.Password == inputPasswordHash).FirstOrDefault();
+                Employee employee = employees.FirstOrDefault(empl => empl.Password == inputPasswordHash);
 
                 if (employee is null || employee.IsDismissed)
                 {
@@ -64,13 +50,9 @@ namespace PartsApp
                 else
                 {
                     Form1.CurEmployee = employee;
-                    _isCorrectClose = true;
-                    this.Close();
+                    Close();
                 }
-
-                //var employeesList = PartsDAL.FindAllEmployees().Where(empl => empl.GetFullName() == fullNameTextBox.Text.Trim() && empl.Password == inputPasswordHash).First();
             }
         }
-
     }
 }

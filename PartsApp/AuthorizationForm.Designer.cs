@@ -110,10 +110,8 @@
             this.MinimizeBox = false;
             this.Name = "AuthorizationForm";
             this.Text = "Вход в  учетную запись.";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AuthorizationForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
