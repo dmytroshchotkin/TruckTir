@@ -1162,9 +1162,7 @@ namespace PartsApp
         {
             //Если Титор, тогда делаем бэкап (Для проверки на Lock conflict)
             if (CurEmployee?.EmployeeId == 1)
-            {
-                PartsDAL.CreateBackupInGoogleDrive(); //Копируем базу в облако.          
-
+            {       
                 PartsDAL.CreateLocalBackup(); //создаём локальный бэкап.
             }
         }
