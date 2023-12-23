@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using PartsApp.Models;
 using PartsApp.SupportClasses;
 using Models.Helper;
+using System.IO;
 
 namespace PartsApp
 {
@@ -43,6 +44,7 @@ namespace PartsApp
         {
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
             birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
+            EnsurePhotoDirectoryCreated();
         }
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
@@ -692,6 +694,14 @@ namespace PartsApp
             else
             {
                 filledBirthDateLabel.Visible = false;
+            }
+        }
+
+        private void EnsurePhotoDirectoryCreated()
+        {
+            if (!Directory.Exists(employeePhotoFolder))
+            {
+                Directory.CreateDirectory(employeePhotoFolder);
             }
         }
     }
