@@ -483,7 +483,7 @@ namespace PartsApp
         private void SetTheAccessLayerConstraints(Employee employee)
         {
             //Если редактируемый юзер это и есть тот кто сейчас авторизован
-            if (employee == Form1.CurEmployee)
+            if (employee.EmployeeId == Form1.CurEmployee.EmployeeId)
             {
                 //свои логин и пароль могут редактировать и Админы, и Обычные
                 passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
