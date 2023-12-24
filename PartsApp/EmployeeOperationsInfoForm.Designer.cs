@@ -1,4 +1,6 @@
-﻿namespace PartsApp
+﻿using System.Windows.Forms;
+
+namespace PartsApp
 {
     partial class EmployeeOperationsInfoForm
     {
@@ -38,8 +40,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.EmployeeGroupBox = new System.Windows.Forms.GroupBox();
             this.EmployeeListBox = new System.Windows.Forms.ListBox();
-            this.ActivEmployeesCheckBox = new System.Windows.Forms.CheckBox();
             this.InactiveEmployeesCheckBox = new System.Windows.Forms.CheckBox();
+            this.ActiveEmployeesCheckBox = new System.Windows.Forms.CheckBox();
             this.BottomSplitContainer = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
@@ -116,15 +118,28 @@
             // EmployeeGroupBox
             // 
             this.EmployeeGroupBox.Controls.Add(this.EmployeeListBox);
-            this.EmployeeGroupBox.Controls.Add(this.ActivEmployeesCheckBox);
             this.EmployeeGroupBox.Controls.Add(this.InactiveEmployeesCheckBox);
+            this.EmployeeGroupBox.Controls.Add(this.ActiveEmployeesCheckBox);
             this.EmployeeGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EmployeeGroupBox.Location = new System.Drawing.Point(0, 0);
             this.EmployeeGroupBox.Name = "EmployeeGroupBox";
             this.EmployeeGroupBox.Size = new System.Drawing.Size(864, 129);
             this.EmployeeGroupBox.TabIndex = 1;
             this.EmployeeGroupBox.TabStop = false;
-            this.EmployeeGroupBox.Text = "Сотрудники";
+            //
+            // EditToolStripMenuItem
+            //
+            this.EditToolStripMenuItem = new ToolStripMenuItem("Редактировать");
+            this.EditToolStripMenuItem.Click += OnEditingOptionClick;
+            //
+            // DismissalToolStripMenuItem
+            //
+            this.DismissalToolStripMenuItem = new ToolStripMenuItem("Заблокировать");
+            this.DismissalToolStripMenuItem.Click += OnDismissalOptionClick;
+            //
+            // EmployeeEditingContextMenu
+            //
+            this.EmployeeEditingContextMenu = new ContextMenuStrip();
             // 
             // EmployeeListBox
             // 
@@ -136,36 +151,38 @@
             this.EmployeeListBox.Size = new System.Drawing.Size(858, 110);
             this.EmployeeListBox.TabIndex = 0;
             this.EmployeeListBox.ValueMember = "EmployeeId";
-            this.EmployeeListBox.SelectedIndexChanged += new System.EventHandler(this.EmployeeListBox_SelectedIndexChanged);
+            this.EmployeeListBox.SelectedIndexChanged += new System.EventHandler(this.EmployeeListBox_SelectedIndexChanged);          
+            this.EmployeeListBox.ContextMenuStrip = this.EmployeeEditingContextMenu;     
             // 
-            // ActivEmployeesCheckBox
+            // ActiveEmployeesCheckBox
             // 
-            this.ActivEmployeesCheckBox.AutoSize = true;
-            this.ActivEmployeesCheckBox.Checked = true;
-            this.ActivEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ActivEmployeesCheckBox.Location = new System.Drawing.Point(86, 0);
-            this.ActivEmployeesCheckBox.Name = "ActivEmployeesCheckBox";
-            this.ActivEmployeesCheckBox.Size = new System.Drawing.Size(76, 17);
-            this.ActivEmployeesCheckBox.TabIndex = 1;
-            this.ActivEmployeesCheckBox.Text = "Активные";
-            this.toolTip1.SetToolTip(this.ActivEmployeesCheckBox, "Отображать дейстующих сотрудников");
-            this.ActivEmployeesCheckBox.UseVisualStyleBackColor = true;
-            this.ActivEmployeesCheckBox.Visible = false;
+            this.ActiveEmployeesCheckBox.AutoSize = true;
+            this.ActiveEmployeesCheckBox.Checked = false;
+            //  this.InactiveEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ActiveEmployeesCheckBox.Location = new System.Drawing.Point(2, 0);
+            this.ActiveEmployeesCheckBox.Name = "InactiveEmployeesCheckBox";
+            this.ActiveEmployeesCheckBox.Size = new System.Drawing.Size(92, 17);
+            this.ActiveEmployeesCheckBox.TabIndex = 2;
+            this.ActiveEmployeesCheckBox.Text = "Активные";
+            this.toolTip1.SetToolTip(this.ActiveEmployeesCheckBox, "Отображать действующих сотрудников");
+            this.ActiveEmployeesCheckBox.UseVisualStyleBackColor = true;
+            this.ActiveEmployeesCheckBox.Visible = true;
+            this.ActiveEmployeesCheckBox.CheckedChanged += OnEmployeesCheckBoxesCheckedChanged;
             // 
             // InactiveEmployeesCheckBox
             // 
             this.InactiveEmployeesCheckBox.AutoSize = true;
-            this.InactiveEmployeesCheckBox.Checked = true;
-            this.InactiveEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.InactiveEmployeesCheckBox.Location = new System.Drawing.Point(179, 0);
+            this.InactiveEmployeesCheckBox.Checked = false;
+          //  this.InactiveEmployeesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.InactiveEmployeesCheckBox.Location = new System.Drawing.Point(86, 0);
             this.InactiveEmployeesCheckBox.Name = "InactiveEmployeesCheckBox";
             this.InactiveEmployeesCheckBox.Size = new System.Drawing.Size(92, 17);
             this.InactiveEmployeesCheckBox.TabIndex = 2;
-            this.InactiveEmployeesCheckBox.Text = "Не активные";
-            this.toolTip1.SetToolTip(this.InactiveEmployeesCheckBox, "Отображать не действующих сотрудников. Неактивным считается сотрудник у которого " +
-        "в профиле заполнено поле \'Дата Увольнения\'.");
+            this.InactiveEmployeesCheckBox.Text = "Неактивные";
+            this.toolTip1.SetToolTip(this.InactiveEmployeesCheckBox, "Отображать неактивных сотрудников");
             this.InactiveEmployeesCheckBox.UseVisualStyleBackColor = true;
-            this.InactiveEmployeesCheckBox.Visible = false;
+            this.InactiveEmployeesCheckBox.Visible = true;
+            this.InactiveEmployeesCheckBox.CheckedChanged += OnEmployeesCheckBoxesCheckedChanged;
             // 
             // BottomSplitContainer
             // 
@@ -388,7 +405,7 @@
             this.toolTip1.SetToolTip(this.BeginDateCheckBox, "Если панель выбора даты отключена, значит ограничения по нижней дате не установле" +
         "но.");
             this.BeginDateCheckBox.UseVisualStyleBackColor = false;
-            this.BeginDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
+         //   this.BeginDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
             // 
             // BeginDateDTP
             // 
@@ -401,7 +418,7 @@
             this.BeginDateDTP.TabIndex = 5;
             this.toolTip1.SetToolTip(this.BeginDateDTP, "Начальная дата");
             this.BeginDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
-            this.BeginDateDTP.ValueChanged += new System.EventHandler(this.DatesDTP_ValueChanged);
+       //     this.BeginDateDTP.ValueChanged += new System.EventHandler(this.DatesDTP_ValueChanged);
             // 
             // EndDatePanel
             // 
@@ -425,7 +442,7 @@
             this.toolTip1.SetToolTip(this.EndDateCheckBox, "Если панель выбора даты отключена, значит ограничения по верхней дате не установл" +
         "ено.");
             this.EndDateCheckBox.UseVisualStyleBackColor = false;
-            this.EndDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
+          //  this.EndDateCheckBox.CheckedChanged += new System.EventHandler(this.DatesCheckBox_CheckedChanged);
             // 
             // EndDateDTP
             // 
@@ -598,8 +615,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
         private System.Windows.Forms.GroupBox EmployeeGroupBox;
         private System.Windows.Forms.ListBox EmployeeListBox;
-        private System.Windows.Forms.CheckBox ActivEmployeesCheckBox;
         private System.Windows.Forms.CheckBox InactiveEmployeesCheckBox;
+        private System.Windows.Forms.CheckBox ActiveEmployeesCheckBox;
         private System.Windows.Forms.DataGridView OperationsInfoDGV;
         private System.Windows.Forms.DataGridViewTextBoxColumn OperationTypeCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn OperationIdCol;
@@ -610,5 +627,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DescriptionCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TotalSumCol;
         private System.Windows.Forms.ToolStripStatusLabel OperationsCoubtLabel;
+        private ContextMenuStrip EmployeeEditingContextMenu;
+        private ToolStripMenuItem EditToolStripMenuItem;
+        private ToolStripMenuItem DismissalToolStripMenuItem;
     }
 }

@@ -110,7 +110,7 @@ namespace Infrastructure.Storage
                     while (dataReader.Read())
                     {
                         contactInfo = CreateContactInfo(dataReader);
-                    }                        
+                    }
                 }
 
                 connection.Close();

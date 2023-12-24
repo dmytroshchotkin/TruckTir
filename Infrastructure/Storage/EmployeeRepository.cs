@@ -27,9 +27,58 @@ namespace Infrastructure
                             if (employee.ContactInfo != null)
                             {
                                 employee.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(employee.ContactInfo, cmd);
-                            }                                
+                            }
                             //Вставляем записm в табл. Employees.
                             AddEmployee(employee, cmd);
+
+                            trans.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            trans.Rollback();
+                            throw new Exception(ex.Message);
+                        }
+                    }
+                }
+
+                connection.Close();
+            }
+        }
+
+        public static void UpdateEmployee(Employee employee, bool updateWithoutPassword = false)
+        {
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+
+                using (SQLiteTransaction trans = connection.BeginTransaction())
+                {
+                    using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
+                    {
+                        try
+                        {
+                            if (employee.ContactInfo != null)
+                            {
+                                ContactInfo contactInfo = FindContactInfo(employee);
+                                if (contactInfo != null)
+                                {
+                                    employee.ContactInfo.ContactInfoId = contactInfo.ContactInfoId;
+                                    ContactInfoDatabaseHandler.UpdateContactInfo(employee.ContactInfo, cmd);
+                                }
+                                else
+                                {
+                                    employee.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(employee.ContactInfo, cmd);
+                                }
+                            }
+
+                            if (updateWithoutPassword)
+                            {
+                                UpdateEmployeeWithoutPassword(employee, cmd);                                
+                            }
+                            else
+                            {
+                                UpdateEmployee(employee, cmd);
+                            }
 
                             trans.Commit();
                         }
@@ -113,80 +162,62 @@ namespace Infrastructure
         /// Метод обновляющий значения заданного сотрудника.
         /// </summary>
         /// <param name="employee">Сотрудник, значения которого необходимо обновить в базе.</param>
-        public static void UpdateEmployee(Employee employee)
+        private static void UpdateEmployee(Employee employee, SQLiteCommand cmd)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
+            cmd.CommandText = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
+                               + "BirthDate = @BirthDate, HireDate = strftime('%s', @HireDate), ContactInfoId = @ContactInfoId, "
+                               + "Photo = @Photo, Note = @Note, PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, "
+                               + "Login = @Login, Password = @Password, DismissalDate = strftime('%s', @DismissalDate) "
+                               + "WHERE EmployeeId = @EmployeeId;";
 
-                const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
-                                   + "BirthDate = @BirthDate, HireDate = strftime('%s', @HireDate), ContactInfoId = @ContactInfoId, "
-                                   + "Photo = @Photo, Note = @Note, PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, "
-                                   + "Login = @Login, Password = @Password, DismissalDate = strftime('%s', @DismissalDate) "
-                                   + "WHERE EmployeeId = @EmployeeId;";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
+            cmd.Parameters.AddWithValue("@LastName", employee.LastName);
+            cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
+            cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+            cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
+            cmd.Parameters.AddWithValue("@HireDate", (employee.HireDate != null) ? employee.HireDate : null);
+            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
+            cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
+            cmd.Parameters.AddWithValue("@Photo", employee.Photo);
+            cmd.Parameters.AddWithValue("@Note", employee.Note);
+            cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
+            cmd.Parameters.AddWithValue("@Title", employee.Title);
+            cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
+            cmd.Parameters.AddWithValue("@Login", employee.Login);
+            cmd.Parameters.AddWithValue("@Password", employee.Password);
 
-
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
-                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
-                cmd.Parameters.AddWithValue("@HireDate", (employee.HireDate != null) ? employee.HireDate : null);
-                cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
-                cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
-                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
-                cmd.Parameters.AddWithValue("@Note", employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title", employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Login", employee.Login);
-                cmd.Parameters.AddWithValue("@Password", employee.Password);
-
-                cmd.ExecuteNonQuery();
-
-                connection.Close();
-            }
+            cmd.ExecuteNonQuery();
         }
 
         /// <summary>
         /// Метод обновляющий значения заданного сотрудника, без обновления его пароля.
         /// </summary>
         /// <param name="employee">Сотрудник, значения которого необходимо обновить в базе.</param>
-        public static void UpdateEmployeeWithoutPassword(Employee employee)
+        private static void UpdateEmployeeWithoutPassword(Employee employee, SQLiteCommand cmd)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
-            {
-                connection.Open();
+            cmd.CommandText = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
+                               + "BirthDate = @BirthDate, HireDate = strftime('%s', @HireDate), ContactInfoId = @ContactInfoId, "
+                               + "Photo = @Photo, Note = @Note, PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, "
+                               + "Login = @Login, DismissalDate = strftime('%s', @DismissalDate) "
+                               + "WHERE EmployeeId = @EmployeeId;";
 
-                const string query = "UPDATE Employees SET LastName = @LastName, FirstName = @FirstName, MiddleName = @MiddleName, "
-                                   + "BirthDate = @BirthDate, HireDate = strftime('%s', @HireDate), ContactInfoId = @ContactInfoId, "
-                                   + "Photo = @Photo, Note = @Note, PassportNum = @PassportNum, Title = @Title, AccessLayer = @AccessLayer, "
-                                   + "Login = @Login, DismissalDate = strftime('%s', @DismissalDate) "
-                                   + "WHERE EmployeeId = @EmployeeId;";
+            cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
+            cmd.Parameters.AddWithValue("@LastName", employee.LastName);
+            cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
+            cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+            cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
+            cmd.Parameters.AddWithValue("@HireDate", (employee.HireDate != null) ? employee.HireDate : null);
+            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
+            cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
+            cmd.Parameters.AddWithValue("@Photo", employee.Photo);
+            cmd.Parameters.AddWithValue("@Note", employee.Note);
+            cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
+            cmd.Parameters.AddWithValue("@Title", employee.Title);
+            cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
+            cmd.Parameters.AddWithValue("@Login", employee.Login);
 
-                var cmd = new SQLiteCommand(query, connection);
-
-                cmd.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
-                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
-                cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
-                cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
-                cmd.Parameters.AddWithValue("@HireDate", (employee.HireDate != null) ? employee.HireDate : null);
-                cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
-                cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
-                cmd.Parameters.AddWithValue("@Photo", employee.Photo);
-                cmd.Parameters.AddWithValue("@Note", employee.Note);
-                cmd.Parameters.AddWithValue("@PassportNum", employee.PassportNum);
-                cmd.Parameters.AddWithValue("@Title", employee.Title);
-                cmd.Parameters.AddWithValue("@AccessLayer", employee.AccessLayer);
-                cmd.Parameters.AddWithValue("@Login", employee.Login);
-
-                cmd.ExecuteNonQuery();
-
-                connection.Close();
-            }
+            cmd.ExecuteNonQuery();
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
@@ -215,7 +246,7 @@ namespace Infrastructure
                     while (dataReader.Read())
                     {
                         employeesList.Add(CreateEmployee(dataReader));
-                    }                        
+                    }
                 }
 
                 connection.Close();
@@ -248,7 +279,7 @@ namespace Infrastructure
                     while (dataReader.Read())
                     {
                         employee = CreateEmployee(dataReader);
-                    }                        
+                    }
                 }
 
                 connection.Close();
@@ -276,7 +307,7 @@ namespace Infrastructure
                     while (dataReader.Read())
                     {
                         employees.Add(CreateEmployee(dataReader));
-                    }                        
+                    }
                 }
 
                 connection.Close();

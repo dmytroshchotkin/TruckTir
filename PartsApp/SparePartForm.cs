@@ -64,7 +64,7 @@ namespace PartsApp
                 if ((_sparePart.SparePartId != 0 && _sparePart.Articul.ToLower() == text.ToLower()) || PartsDAL.FindSparePartsByArticul(text).Count == 0)
                 {
                     ControlValidation.CorrectValueInput(toolTip, ArticulTextBox);
-                }                    
+                }
                 else
                 {
                     ControlValidation.WrongValueInput(toolTip, ArticulTextBox, "Такой артикул уже есть в базе", Color.Yellow);
@@ -79,7 +79,7 @@ namespace PartsApp
             if (String.IsNullOrWhiteSpace(TitleTextBox.Text) == false)
             {
                 TitleTextBox_Leave(null, null);
-            }               
+            }
         }
 
         private void TitleTextBox_Leave(object sender, EventArgs e)
@@ -94,16 +94,16 @@ namespace PartsApp
                     if (PartsDAL.FindSparePartsByArticul(ArticulTextBox.Text.Trim()).Any(sp => sp.Title.ToLower() == TitleTextBox.Text.Trim().ToLower()))
                     {
                         ControlValidation.WrongValueInput(toolTip, TitleTextBox, "Такая связка Артикул-Название уже есть в базе");
-                    }                        
+                    }
                     else
                     {
                         ControlValidation.CorrectValueInput(toolTip, TitleTextBox);
-                    }                        
+                    }
                 }
                 else   //если tilte введен правильно            
                 {
                     ControlValidation.CorrectValueInput(toolTip, TitleTextBox);
-                }                 
+                }
             }
             else //если Title не введен
             {
@@ -116,7 +116,7 @@ namespace PartsApp
             if (e.KeyCode == Keys.Enter)
             {
                 MeasureUnitComboBox.Select(); //переводим фокус на др. контрол, и инициируем тем самым событие OnLeave.
-            }                
+            }
         }
 
         private void ManufacturerTextBox_Leave(object sender, EventArgs e)
@@ -130,11 +130,11 @@ namespace PartsApp
                 if (manuf == null)
                 {
                     toolTip.Show("Такого производителя нет в базе! Он будет добавлен.", this, ManufacturerTextBox.Location, 2000);
-                }                    
+                }
                 else
                 {
                     ManufacturerTextBox.Text = manuf; //Выводим корректное имя контрагента.
-                }                    
+                }
             }
         }
 
@@ -144,11 +144,11 @@ namespace PartsApp
             if (MeasureUnitComboBox.SelectedIndex == -1)
             {
                 ControlValidation.WrongValueInput(toolTip, MeasureUnitComboBox, "Выберите ед. изм.");
-            }                
+            }
             else
             {
                 ControlValidation.CorrectValueInput(toolTip, MeasureUnitComboBox);
-            }               
+            }
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

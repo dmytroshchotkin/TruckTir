@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Helper;
 using PartsApp;
 
 namespace PartsApp.Models
@@ -23,7 +24,7 @@ namespace PartsApp.Models
         public string    MiddleName    { get; set; }
         public DateTime? BirthDate     { get; set; }
         public DateTime? HireDate      { get; set; }
-        public DateTime? DismissalDate { get; set; }        
+        public DateTime? DismissalDate { get; set; }
         public string    Photo         { get; set; }
         public string    Note          { get; set; }
         public string    PassportNum   { get; set; }
@@ -31,10 +32,12 @@ namespace PartsApp.Models
         public string    AccessLayer   { get; set; }
         public string    Login         { get; set; }
         public string    Password      { get; set; }
+        public bool IsDismissed { get { return DismissalDate != default; } }
+        public bool IsAdmin { get { return AccessLayer == AccessLayers.Admin.ToDescription(); } }
 
         public string FullName { get { return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName); } }
     
-        public ContactInfo ContactInfo { get; set; }    
+        public ContactInfo ContactInfo { get; set; }
                 
         /// <summary>
         /// Конструктор для добавления нового объекта в БД.
@@ -115,7 +118,7 @@ namespace PartsApp.Models
             if (info != null)
             {
                 ContactInfo = info;
-            }            
+            }
         }
 
     }

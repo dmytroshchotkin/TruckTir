@@ -33,27 +33,27 @@ namespace PartsApp.Models
             if (measureUnit == Types.Piece.ToDescription())
             {
                 return 1;//(int)Types.Meter;
-            }                
+            }
 
             if (measureUnit == Types.Meter.ToDescription())
             {
                 return 0.5f;
-            }                
+            }
 
             if (measureUnit == Types.Kgs.ToDescription())
             {
                 return 1;//(int)Types.Kgs;
-            }                
+            }
 
             if (measureUnit == Types.Liter.ToDescription())
             {
                 return 0.5f;//(int)Types.Liter;
-            }                
+            }
 
             if (measureUnit == Types.Set.ToDescription())
             {
                 return 1;//(int)Types.Set;
-            }      
+            }
             
             throw new IndexOutOfRangeException("Нет такой единицы измерения.");
         }
@@ -65,7 +65,7 @@ namespace PartsApp.Models
             foreach (MeasureUnit.Types item in Enum.GetValues(typeof(MeasureUnit.Types)))
             {
                 unitsDescrptnsList.Add(item.ToDescription());
-            }                
+            }
             
             return unitsDescrptnsList;
         }

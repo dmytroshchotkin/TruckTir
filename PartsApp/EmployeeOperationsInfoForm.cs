@@ -9,27 +9,175 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Models.Helper;
 
 namespace PartsApp
 {
     public partial class EmployeeOperationsInfoForm : Form
     {
+        private List<Employee> _employees;
+        private Employee _selectedEmployee;
+
         public EmployeeOperationsInfoForm()
         {
             InitializeComponent();
+
+            if (Form1.CurEmployee.IsAdmin)
+            {
+                EnableEditingContextMenu();
+            }
         }
 
         private void EmployeeOperationsInfoForm_Load(object sender, EventArgs e)
         {
             //Находим список всех сотрудников (сортируем по фамилии и имени) и делаем источником данных для ListBox.
-            EmployeeListBox.DataSource = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+            _employees = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+            ActiveEmployeesCheckBox.Checked = true;
 
             //Устанавливаем стартовый период в месяц.
             EndDateDTP.Value = DateTime.Now;
             BeginDateDTP.Value = DateTime.Today.AddMonths(-1);
+
+            // подписываем DateTimePicker'ы на события после того, как им были присвоены начальные значения,
+            // чтобы не грузить операции до выбора сотрудника юзером
+            BeginDateCheckBox.CheckedChanged += new EventHandler(DatesCheckBox_CheckedChanged);
+            EndDateCheckBox.CheckedChanged += new EventHandler(DatesCheckBox_CheckedChanged);
+            BeginDateDTP.ValueChanged += new EventHandler(DatesDTP_ValueChanged);
         }
 
+        #region Вывод списков сотрудников (активных, уволенных, всех) и редактирование
+        private void OnEmployeeListBoxMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && Form1.CurEmployee.IsAdmin && _selectedEmployee != null)
+            {
+                HandleToolStripMenuOptions(_selectedEmployee.IsDismissed);
+            }
+        }
 
+        private void HandleToolStripMenuOptions(bool isDismissed)
+        {
+            if (isDismissed)
+            {
+                DismissalToolStripMenuItem.Visible = false;
+            }
+            else
+            {
+                DismissalToolStripMenuItem.Visible = true;
+            }
+
+            EmployeeEditingContextMenu.Show();
+        }
+
+        private void EnableEditingContextMenu()
+        {
+            EmployeeEditingContextMenu.Items.Add(EditToolStripMenuItem);
+            EmployeeEditingContextMenu.Items.Add(DismissalToolStripMenuItem);
+            EmployeeListBox.MouseDown += new MouseEventHandler(OnEmployeeListBoxMouseDown);
+        }
+
+        private void OnDismissalOptionClick(object sender, EventArgs e)
+        {
+            if (_selectedEmployee != null)
+            {
+                var dismissForm = new DismissEmployeeForm(_selectedEmployee);
+                dismissForm.ShowDialog();
+
+                if (_selectedEmployee.IsDismissed)
+                {
+                    UpdateActiveEmployeesIfChecked();
+                }
+            }
+        }
+
+        private void OnEditingOptionClick(object sender, EventArgs e)
+        {
+            if (_selectedEmployee != null)
+            {
+                var editingForm = new AddEmployeeForm(_selectedEmployee);
+                editingForm.ShowDialog();
+
+                Close();
+            }
+        }
+
+        private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
+        {
+            var employees = GetEmployees(ActiveEmployeesCheckBox.Checked, InactiveEmployeesCheckBox.Checked);
+            EmployeeListBox.DataSource = employees.Any() ? employees : null;
+            ClearEmployeeListBox();
+            ResetSelectedEmployee();
+        }
+
+        private List<Employee> GetEmployees(bool selectActiveEmployees, bool selectInactiveEmployees)
+        {
+            var employees = new List<Employee>();
+
+            if (selectActiveEmployees)
+            {
+                employees.AddRange(GetActiveEmployees());
+            }
+
+            if (selectInactiveEmployees)
+            {
+                employees.AddRange(GetInactiveEmployees());
+            }           
+
+            return employees;
+        }
+
+        /// <summary>
+        /// Очищает DataSource и обновляет настройки для ListBox 
+        /// </summary>
+        private void ClearEmployeeListBox()
+        {
+            if (EmployeeListBox.DataSource is null)
+            {
+                EmployeeListBox.Items.Clear();
+                EmployeeListBox.DisplayMember = "FullName";
+                EmployeeListBox.ValueMember = "EmployeeId";
+            }
+        }
+
+        /// <summary>
+        /// Удаляет источник данных для таблицы операций ранее выбранного сотрудника, если список сотрудников пуст 
+        /// </summary>
+        private void ResetSelectedEmployee()
+        {
+            if (EmployeeListBox.DataSource is null && _selectedEmployee != null)
+            {
+                _selectedEmployee = null;
+            }
+        }
+
+        private void UpdateActiveEmployeesIfChecked()
+        {
+            if (ActiveEmployeesCheckBox.Checked && !InactiveEmployeesCheckBox.Checked)
+            {
+                EmployeeListBox.DataSource = GetActiveEmployees();
+            }
+        }
+
+        private List<Employee> GetAllEmployees()
+        {
+            return _employees.OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+        }
+
+        private List<Employee> GetInactiveEmployees()
+        {
+            return _employees
+                .Where(e => e.IsDismissed)
+                .OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+        }
+
+        private List<Employee> GetActiveEmployees()
+        {
+            return _employees
+                .Where(e => !e.IsDismissed)
+                .OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+        }
+        #endregion
+
+        #region Вывод операций по сотрудникам
         /// <summary>
         /// Изменяем доступность DTP в зависимости от состояния CheckBox-ов.
         /// </summary>
@@ -61,16 +209,19 @@ namespace PartsApp
         private void FillTheOperationDGV()
         {
             OperationsInfoDGV.Rows.Clear(); //Очищаем список операций.
+            
+            if (_selectedEmployee != null)
+            {
+                //Находим начальную и конечную дату требуемых операций.
+                DateTime? beginDate = BeginDateDTP.Enabled ? BeginDateDTP.Value : (DateTime?)null;
+                DateTime? endDate = EndDateDTP.Enabled ? EndDateDTP.Value : (DateTime?)null;
+                //Выводим список операций соответствующий заданным требованиям.
+                List<IOperation> operList = FindOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate);
+                FillTheOperationDGV(operList);
 
-            //Находим начальную и конечную дату требуемых операций.
-            DateTime? beginDate = BeginDateDTP.Enabled ? BeginDateDTP.Value : (DateTime?)null;
-            DateTime? endDate = EndDateDTP.Enabled ? EndDateDTP.Value : (DateTime?)null;
-            //Выводим список операций соответствующий заданным требованиям.
-            List<IOperation> operList = FindOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate);
-            FillTheOperationDGV(operList);
-
-            //Изменяем видимость строк по типу операции.
-            OperationsCheckBox_CheckedChanged(null, null);
+                //Изменяем видимость строк по типу операции.
+                OperationsCheckBox_CheckedChanged(null, null);
+            }
         }
 
         /// <summary>
@@ -115,6 +266,7 @@ namespace PartsApp
 
         private void EmployeeListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _selectedEmployee = EmployeeListBox.SelectedItem as Employee;
             FillTheOperationDGV(); //Заполняем таблицу операций.
         }
 
@@ -168,6 +320,6 @@ namespace PartsApp
 
             return operationsList;
         }
-
+        #endregion
     }
 }

@@ -147,7 +147,7 @@ namespace Infrastructure.Storage
                         while (dataReader.Read())
                         {
                             sparePart = CreateSparePart(dataReader);
-                        }                            
+                        }
                     }
                 }
 
@@ -181,7 +181,7 @@ namespace Infrastructure.Storage
                         while (dataReader.Read())
                         {
                             sparePartsList.Add(CreateSparePart(dataReader));
-                        }                            
+                        }
                     }
                 }
 
@@ -241,7 +241,7 @@ namespace Infrastructure.Storage
                         while (dataReader.Read())
                         {
                             spareParts.Add(CreateSparePart(dataReader));
-                        }                            
+                        }
                     }
                 }
 
@@ -272,12 +272,12 @@ namespace Infrastructure.Storage
                 foreach (int id in withoutIDs)
                 {
                     notIn.Append(id + ", ");
-                }                   
+                }
 
                 if (withoutIDs.Count > 0)
                 {
                     notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
-                }                    
+                }
 
                 string query = "SELECT sp.*, m.* FROM SpareParts AS sp "
                              + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
@@ -297,7 +297,7 @@ namespace Infrastructure.Storage
                         while (dataReader.Read())
                         {
                             spareParts.Add(CreateSparePart(dataReader));
-                        }                            
+                        }
                     }
                 }
 
@@ -328,12 +328,12 @@ namespace Infrastructure.Storage
                 foreach (int id in withoutIDs)
                 {
                     notIn.Append(id + ", ");
-                }                    
+                }
 
                 if (withoutIDs.Count > 0)
                 {
                     notIn.Remove(notIn.Length - 2, 2); //убираем последний добавленный пробел и запятую ", ".
-                }                    
+                }
 
                 string query = "SELECT sp.*, m.* FROM SpareParts AS sp "
                              + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
@@ -353,7 +353,7 @@ namespace Infrastructure.Storage
                         while (dataReader.Read())
                         {
                             spareParts.Add(CreateSparePart(dataReader));
-                        }                            
+                        }
                     }
                 }
 
@@ -435,7 +435,7 @@ namespace Infrastructure.Storage
             for (int i = 0; i < manuf.Length; ++i)
             {
                 manuf[i] = manufacturers[i];
-            }                
+            }
 
             return manuf;
         }

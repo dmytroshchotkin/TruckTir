@@ -21,13 +21,13 @@ namespace PartsApp.Models
         /// Цена продажи.
         /// </summary>
         public float SellingPrice 
-        { 
+        {
             get 
             {
                 return OperationDetails.Price + (OperationDetails.Price * Markup / 100);   
             }
             set 
-            { 
+            {
                 //Меняем наценку.
                 Markup = (value * 100 / OperationDetails.Price) - 100; 
             }
@@ -84,7 +84,7 @@ namespace PartsApp.Models
             foreach (Availability avail in availabilityList)
             {
                 newAvailList.Add(new Availability(avail));
-            }                
+            }
 
             return newAvailList;
         }

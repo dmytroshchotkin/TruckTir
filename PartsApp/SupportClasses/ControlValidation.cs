@@ -22,7 +22,7 @@ namespace PartsApp.SupportClasses
         //    Point location = GetControlLocation(inputControl);
 
         //    WrongValueInput(toolTip, inputControl, location, toolTipMessage, toolTipShowTime);
-        //}        ///// <summary>
+        //}     ///// <summary>
         /////  Метод выдачи визуального сообщения о том что введены некорректные данные.
         ///// </summary>
         ///// <param name="inputControl">Контрол ввода инф-ции</param>

@@ -117,7 +117,7 @@ namespace Infrastructure.Storage
                 if (cmd.ExecuteScalar() != null)
                 {
                     isCodeExist = true;
-                }                    
+                }
 
                 connection.Close();
             }
@@ -161,7 +161,7 @@ namespace Infrastructure.Storage
                             if (supplier.ContactInfo != null)
                             {
                                 supplier.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(supplier.ContactInfo, cmd);
-                            }                                
+                            }
 
                             //Вставляем запись в Customers или Suppliers.
                             AddSupplier(supplier, cmd);
@@ -230,7 +230,7 @@ namespace Infrastructure.Storage
                                 else
                                 {
                                     supplier.ContactInfo.ContactInfoId = ContactInfoDatabaseHandler.AddContactInfo(supplier.ContactInfo, cmd);
-                                }                                    
+                                }
                             }
 
                             //Вставляем запись в Customers или Suppliers.
@@ -240,7 +240,7 @@ namespace Infrastructure.Storage
                             if (contactInfo != null && supplier.ContactInfo == null)
                             {
                                 ContactInfoDatabaseHandler.DeleteContactInfo(contactInfo.ContactInfoId, cmd);
-                            }                                
+                            }
 
                             trans.Commit();
                         }
@@ -310,7 +310,7 @@ namespace Infrastructure.Storage
                     while (dataReader.Read())
                     {
                         contactInfo = ContactInfoDatabaseHandler.CreateContactInfo(dataReader);
-                    }                       
+                    }
                 }
 
                 connection.Close();
