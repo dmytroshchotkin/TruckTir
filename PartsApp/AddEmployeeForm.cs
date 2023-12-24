@@ -430,13 +430,10 @@ namespace PartsApp
         {
             SetVisibilityForEmployeeDatesControls(employee);
 
+            SetTheAccessLayerConstraints(employee);
             if (employee.IsDismissed)
             {
                 DisableCredentialsControls();
-            }
-            else
-            {
-                SetTheAccessLayerConstraints(employee);
             }
         }
 
@@ -488,8 +485,11 @@ namespace PartsApp
             //Если редактируемый юзер это и есть тот кто сейчас авторизован
             if (employee == Form1.CurEmployee)
             {
-                //Если права "Обычные" -- может редактировать только пароль и логин.
-                if (employee.AccessLayer == Employee.AccessLayers.User.ToDescription())
+                //свои логин и пароль могут редактировать и Админы, и Обычные
+                passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
+
+                //Если права "Обычные", скрываем для редактирования все поля, кроме логина и пароля
+                if (!employee.IsAdmin)
                 {
                     foreach (Control control in this.Controls)
                     {
@@ -499,21 +499,23 @@ namespace PartsApp
                     bottomPanel.Enabled = true;
                     accessLayerComboBox.Enabled = descrRichTextBox.Visible = descrLabel.Visible = false;
                 }
-                else //если права "Админ" -- может редактировать всё.
-                {
-                    passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
-                }
             }
             else //Если редактируемый юзер не является авторизованным юзером
             {
-                //если права "Админ" -- может редактировать всё, кроме пароля и логина.
-                if (employee.IsAdmin)
+                //редактирование доступно только для Админов, иначе шаги пропускаются
+                if (Form1.CurEmployee.IsAdmin)
                 {
+                    //заполняем пароль, делая его редактирование опциональным для Обычных сотрудников
                     passwordTextBox.Text = passwordAgainTextBox.Text = employee.Password;
-                    loginTextBox.Visible = loginLabel.Visible = loginStarLabel.Visible = false;
-                    passwordTextBox.Visible = passwordAgainTextBox.Visible = false;
-                    passwordAgainLabel.Visible = passwordLabel.Visible = false;
-                    passwordAgainStarLabel.Visible = passwordStarLabel.Visible = false;
+
+                    //если редактируемый сотрудник Админ, элементы, связанные с его логином и паролем, недоступны для редактирвания
+                    if (employee.IsAdmin)
+                    {
+                        loginTextBox.Visible = loginLabel.Visible = loginStarLabel.Visible = false;
+                        passwordTextBox.Visible = passwordAgainTextBox.Visible = false;
+                        passwordAgainLabel.Visible = passwordLabel.Visible = false;
+                        passwordAgainStarLabel.Visible = passwordStarLabel.Visible = false;
+                    }
                 }
             }
         }
@@ -605,12 +607,6 @@ namespace PartsApp
         /// <returns></returns>
         private bool IsRequiredEmployeeDataFilledCorrectly()
         {
-            // если сотрудник уволен, опускаем проверки на заполнение textbox'ов, связанных с доступом
-            if (_editEmployee?.DismissalDate.HasValue == true && _editEmployee.IsDismissed)
-            {
-                return true;
-            }
-
             //Проверяем корректность ввода необходимых данных.
             lastNameTextBox_Leave(null, null);
             firstNameTextBox_Leave(null, null);
