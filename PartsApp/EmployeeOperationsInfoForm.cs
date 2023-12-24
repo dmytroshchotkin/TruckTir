@@ -108,16 +108,28 @@ namespace PartsApp
             ResetSelectedEmployee();
         }
 
+<<<<<<< HEAD
         private List<Employee> GetEmployees(bool selectActiveEmployees, bool selectInactiveEmployees)
         {
             var employees = new List<Employee>();
 
             if (selectActiveEmployees)
+=======
+        private List<Employee> GetEmployees(bool areActiveEmployeesSelected, bool areInactiveEmployeesSelected)
+        {
+            var employees = new List<Employee>();
+
+            if (areActiveEmployeesSelected)
+>>>>>>> b283a9a (#15 Refactored GetEmployees method - 2)
             {
                 employees.AddRange(GetActiveEmployees());
             }
 
+<<<<<<< HEAD
             if (selectInactiveEmployees)
+=======
+            if (areInactiveEmployeesSelected)
+>>>>>>> b283a9a (#15 Refactored GetEmployees method - 2)
             {
                 employees.AddRange(GetInactiveEmployees());
             }           
