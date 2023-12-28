@@ -209,7 +209,8 @@ namespace PartsApp
         private void FillTheOperationDGV()
         {
             OperationsInfoDGV.Rows.Clear(); //Очищаем список операций.
-            
+            OperationDetailsDGV.Rows.Clear();
+
             if (_selectedEmployee != null)
             {
                 //Находим начальную и конечную дату требуемых операций.
