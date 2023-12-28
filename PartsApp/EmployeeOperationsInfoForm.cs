@@ -96,8 +96,16 @@ namespace PartsApp
                 var editingForm = new AddEmployeeForm(_selectedEmployee);
                 editingForm.ShowDialog();
 
-                Close();
+                _selectedEmployee = editingForm.EditEmployee;
+                ReplaceSelectedEmployeeDataAfterEditing();
+                OnEmployeesCheckBoxesCheckedChanged(null, null);
             }
+        }
+
+        private void ReplaceSelectedEmployeeDataAfterEditing()
+        {
+            _employees = _employees.Where(emp => emp.EmployeeId != _selectedEmployee.EmployeeId).ToList();
+            _employees.Add(_selectedEmployee);
         }
 
         private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
