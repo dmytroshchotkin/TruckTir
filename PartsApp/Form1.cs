@@ -68,9 +68,15 @@ namespace PartsApp
 
             #endregion
 
-            //Выводим окно авторизации.
+
+
+            //Выводим окно авторизации (автовыбираем сотрудника в DEBUG режиме, чтобы не вводить креды каждый раз при запуске)
+#if DEBUG
             CurEmployee = PartsDAL.FindEmployees(2);
-            //new AuthorizationForm().ShowDialog(this);
+#else
+            new AuthorizationForm().ShowDialog(this);
+#endif
+
             userNameLabel.Text = $"{CurEmployee.LastName} {CurEmployee.FirstName}";
 
             FormInitialize(); //Инициализация формы в зависимости от уровня доступа юзера.
