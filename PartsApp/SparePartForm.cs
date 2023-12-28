@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Infrastructure;
 using PartsApp.Models;
 using PartsApp.SupportClasses;
 
@@ -230,7 +232,7 @@ namespace PartsApp
                 //Если фото ещё нет в папке 'Товар', копируем его туда.
                 if (!System.IO.File.Exists(fullPath))
                 {
-                    System.IO.File.Copy(PhotoOpenFileDialog.FileName, fullPath);
+                    FilesStorageHelper.CopyFileSafely(PhotoOpenFileDialog.FileName, fullPath);
                 }
             }
         }

@@ -11,6 +11,7 @@ using PartsApp.Models;
 using PartsApp.SupportClasses;
 using Models.Helper;
 using System.IO;
+using Infrastructure;
 
 namespace PartsApp
 {
@@ -44,7 +45,6 @@ namespace PartsApp
         {
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
             birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
-            EnsurePhotoDirectoryCreated();
         }
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
@@ -575,7 +575,7 @@ namespace PartsApp
                 if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
                 {
                     string destFilePath = photoPictureBox.Tag as string;
-                    System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
+                    FilesStorageHelper.CopyFileSafely(photoOpenFileDialog.FileName, destFilePath);
                 }
                 photoPath = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
             }
@@ -690,14 +690,6 @@ namespace PartsApp
             else
             {
                 filledBirthDateLabel.Visible = false;
-            }
-        }
-
-        private void EnsurePhotoDirectoryCreated()
-        {
-            if (!Directory.Exists(employeePhotoFolder))
-            {
-                Directory.CreateDirectory(employeePhotoFolder);
             }
         }
     }
