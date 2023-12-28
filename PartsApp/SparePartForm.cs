@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,7 @@ namespace PartsApp
 
             //Добавляем в выпадающий список всех Производителей. /*ERROR!!!*/            
             ManufacturerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindAllManufacturersName());
+            EnsurePhotoDirectoryCreated();
         }
 
         #region Методы проверки корректности ввода.
@@ -334,6 +336,14 @@ namespace PartsApp
                     CopyPhotoToTheFolder(_sparePart.Photo); //Копируем фото в папку 'Товар', если необходимо.
                     this.Close();
                 }
+            }
+        }
+
+        private void EnsurePhotoDirectoryCreated()
+        {
+            if (!Directory.Exists(sparePartPhotoFolder))
+            {
+                Directory.CreateDirectory(sparePartPhotoFolder);
             }
         }
     }
