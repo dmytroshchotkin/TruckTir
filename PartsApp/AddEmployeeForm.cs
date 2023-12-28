@@ -656,9 +656,8 @@ namespace PartsApp
                     }
                     else
                     {
-                        employee.EmployeeId = _editEmployee.EmployeeId;
-                        employee.DismissalDate = _editEmployee.DismissalDate;
-                        UpdateEmployee(employee);
+                        UpdateEditingEmployeeProperties(employee);                       
+                        UpdateEmployee(_editEmployee);
                     }
                 }
                 catch
@@ -671,6 +670,28 @@ namespace PartsApp
                 this.Close();                
             }
         }
+
+        /// <summary>
+        /// Обновляет свойства редактируемого сотрудника данными из формы
+        /// </summary>
+        /// <param name="employee"></param>
+        private void UpdateEditingEmployeeProperties(Employee employee)
+        {
+            _editEmployee.Photo = employee.Photo;
+            _editEmployee.FirstName = employee.FirstName;
+            _editEmployee.LastName = employee.LastName;
+            _editEmployee.MiddleName = employee.MiddleName;
+            _editEmployee.BirthDate = employee.BirthDate;
+            _editEmployee.Title = employee.Title;
+            _editEmployee.PassportNum = employee.PassportNum;
+
+            _editEmployee.Note = employee.Note;        
+            _editEmployee.ContactInfo = employee.ContactInfo;
+
+            _editEmployee.AccessLayer = employee.AccessLayer;
+            _editEmployee.Login = employee.Login;
+            _editEmployee.Password = employee.Password;
+        }    
 
         private void SetVisibilityForEmployeeDatesControls(Employee employee)
         {
