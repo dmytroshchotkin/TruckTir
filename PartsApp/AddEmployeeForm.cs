@@ -17,14 +17,8 @@ namespace PartsApp
 {
     public partial class AddEmployeeForm : Form
     {
-<<<<<<< HEAD
-        readonly Employee _editEmployee;
-
-        const string employeePhotoFolder = @"Сотрудники\";
-=======
         internal Employee EditEmployee { get; private set; }
         
->>>>>>> 48eb302 (temp commit)
         readonly DateTime companyFoundingDate = new DateTime(2000, 1, 1);
         const int minAge = 16, maxAge = 80;
 
@@ -41,9 +35,9 @@ namespace PartsApp
         {
             InitializeComponent();
 
-            _editEmployee = editEmployee;
-            FillTheForm(_editEmployee);
-            SetEditingEmployeeControlsSettings(_editEmployee);
+            EditEmployee = editEmployee;
+            FillTheForm(EditEmployee);
+            SetEditingEmployeeControlsSettings(EditEmployee);
         }
 
         private void AddEmployeeForm_Load(object sender, EventArgs e)
@@ -104,7 +98,7 @@ namespace PartsApp
                 if (PartsDAL.FindEmployees().Where(empl => empl.PassportNum == passportNumTextBox.Text.Trim()).Count() > 0) //Если такой номер паспорта уже имеется в базе.
                 {
                     //Если редактируется существующий сотрудник, и паспортные данные не изменены, то всё корректно. Иначе проверяем на совпадение с другими паспортными данными.
-                    if (_editEmployee != null && _editEmployee.PassportNum == passportNumTextBox.Text.Trim())
+                    if (EditEmployee != null && EditEmployee.PassportNum == passportNumTextBox.Text.Trim())
                     {
                         CorrectValueInput(passportNumTextBox, passportNumBackPanel, passportNumBackPanel);
                     }
@@ -171,7 +165,7 @@ namespace PartsApp
                 if (PartsDAL.FindEmployees().Where(empl => empl.Login == loginTextBox.Text.Trim()).Count() > 0) //Если такой логин уже имеется в базе.
                 {
                     //Если редактируется существующий сотрудник, и логин не изменен, то всё корректно. Иначе проверяем на совпадение с другими логинами в базе.
-                    if (_editEmployee != null && _editEmployee.Login == loginTextBox.Text.Trim())
+                    if (EditEmployee != null && EditEmployee.Login == loginTextBox.Text.Trim())
                     {
                         CorrectValueInput(loginTextBox, loginBackPanel, loginStarLabel);
                     }
@@ -655,15 +649,17 @@ namespace PartsApp
                 Employee employee = GetEmployeeFromForm();
                 try
                 {
-                    if (_editEmployee is null)
+                    if (EditEmployee is null)
                     {
                         PartsDAL.AddEmployee(employee);
                     }
                     else
                     {
-                        employee.EmployeeId = _editEmployee.EmployeeId;
-                        employee.DismissalDate = _editEmployee.DismissalDate;
-                        UpdateEmployee(employee);
+                        employee.EmployeeId = EditEmployee.EmployeeId;
+                        employee.DismissalDate = EditEmployee.DismissalDate;
+                        
+                        EditEmployee = employee;                        
+                        UpdateEmployee(EditEmployee);
                     }
                 }
                 catch
