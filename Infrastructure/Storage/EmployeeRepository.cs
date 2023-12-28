@@ -9,6 +9,8 @@ namespace Infrastructure
 {
     public class EmployeeRepository
     {
+        public const string PhotoFolder = @"Сотрудники\";
+
         #region Модификация таблицы Employees.
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public static void AddEmployee(Employee employee)

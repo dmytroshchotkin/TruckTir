@@ -5,10 +5,15 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Text;
 
-namespace Infrastructure.Storage
+namespace Infrastructure
 {
     public class SparePartRepository
     {
+        /// <summary>
+        /// Название папки для хранения фото товаров.
+        /// </summary>
+        public const string PhotoFolder = @"Товар\";
+
         #region Модификация таблицы SpareParts.
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public static void AddSparePart(SparePart sparePart)

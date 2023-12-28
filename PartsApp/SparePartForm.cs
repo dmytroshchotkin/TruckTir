@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Infrastructure;
 using PartsApp.Models;
 using PartsApp.SupportClasses;
 
@@ -18,10 +20,6 @@ namespace PartsApp
         /// Объект для редактирования или записи в базу нового.
         /// </summary>
         SparePart _sparePart;
-        /// <summary>
-        /// Название папки для хранения фото товаров.
-        /// </summary>
-        const string sparePartPhotoFolder = @"Товар\";
 
         public SparePartForm()
         {
@@ -168,7 +166,7 @@ namespace PartsApp
             if (PhotoOpenFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string fileName = System.IO.Path.GetFileName(PhotoOpenFileDialog.FileName); //находим имя файла.
-                string fullPath = System.IO.Path.GetFullPath(sparePartPhotoFolder + fileName); //абсолютный путь файла.
+                string fullPath = System.IO.Path.GetFullPath(SparePartRepository.PhotoFolder + fileName); //абсолютный путь файла.
                 //Если файл с таким именем уже есть в папке 'Товар', выводим сообщение об этом. 
                 if (fullPath != PhotoOpenFileDialog.FileName && System.IO.File.Exists(fullPath))
                 {
@@ -230,7 +228,7 @@ namespace PartsApp
                 //Если фото ещё нет в папке 'Товар', копируем его туда.
                 if (!System.IO.File.Exists(fullPath))
                 {
-                    System.IO.File.Copy(PhotoOpenFileDialog.FileName, fullPath);
+                    FilesStorageHelper.CopyFileSafely(PhotoOpenFileDialog.FileName, fullPath);
                 }
             }
         }
@@ -265,7 +263,7 @@ namespace PartsApp
         /// <param name="employee">Товар, который будет заполнен инф-цией из формы.</param>
         private void FillTheSparePartFromForm(SparePart sparePart)
         {
-            sparePart.Photo = (PhotoPictureBox.Image != null) ? sparePartPhotoFolder + toolTip.GetToolTip(PhotoPictureBox) : null;
+            sparePart.Photo = (PhotoPictureBox.Image != null) ? SparePartRepository.PhotoFolder + toolTip.GetToolTip(PhotoPictureBox) : null;
             sparePart.Articul = ArticulTextBox.Text.Trim();
             sparePart.Title = TitleTextBox.Text.Trim();
             sparePart.Description = (!String.IsNullOrWhiteSpace(DescrRichTextBox.Text)) ? DescrRichTextBox.Text.Trim() : null;

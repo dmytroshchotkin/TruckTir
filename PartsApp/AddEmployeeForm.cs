@@ -11,14 +11,20 @@ using PartsApp.Models;
 using PartsApp.SupportClasses;
 using Models.Helper;
 using System.IO;
+using Infrastructure;
 
 namespace PartsApp
 {
     public partial class AddEmployeeForm : Form
     {
+<<<<<<< HEAD
         readonly Employee _editEmployee;
 
         const string employeePhotoFolder = @"Сотрудники\";
+=======
+        internal Employee EditEmployee { get; private set; }
+        
+>>>>>>> 48eb302 (temp commit)
         readonly DateTime companyFoundingDate = new DateTime(2000, 1, 1);
         const int minAge = 16, maxAge = 80;
 
@@ -44,7 +50,6 @@ namespace PartsApp
         {
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
             birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
-            EnsurePhotoDirectoryCreated();
         }
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
@@ -345,7 +350,7 @@ namespace PartsApp
 
                 toolTip.SetToolTip(photoPictureBox, fileName);
                 //Проверяем находится ли фото в нужной папке. 
-                string path = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
+                string path = EmployeeRepository.PhotoFolder + toolTip.GetToolTip(photoPictureBox);
 
                 if (System.IO.Path.GetFullPath(path) == photoOpenFileDialog.FileName)
                 {
@@ -575,9 +580,9 @@ namespace PartsApp
                 if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
                 {
                     string destFilePath = photoPictureBox.Tag as string;
-                    System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
+                    FilesStorageHelper.CopyFileSafely(photoOpenFileDialog.FileName, destFilePath);
                 }
-                photoPath = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
+                photoPath = EmployeeRepository.PhotoFolder + toolTip.GetToolTip(photoPictureBox);
             }
             Employee employee = new Employee
             (
@@ -690,14 +695,6 @@ namespace PartsApp
             else
             {
                 filledBirthDateLabel.Visible = false;
-            }
-        }
-
-        private void EnsurePhotoDirectoryCreated()
-        {
-            if (!Directory.Exists(employeePhotoFolder))
-            {
-                Directory.CreateDirectory(employeePhotoFolder);
             }
         }
     }
