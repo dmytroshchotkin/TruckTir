@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Models.Helper;
+using PartsApp.SupportClasses;
 
 namespace PartsApp
 {
@@ -17,6 +18,7 @@ namespace PartsApp
     {
         private List<Employee> _employees;
         private Employee _selectedEmployee;
+        private EmployeeOperationsCache _operationsCache;
 
         public EmployeeOperationsInfoForm()
         {
@@ -32,6 +34,7 @@ namespace PartsApp
         {
             //Находим список всех сотрудников (сортируем по фамилии и имени) и делаем источником данных для ListBox.
             _employees = PartsDAL.FindEmployees().OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
+            _operationsCache = new EmployeeOperationsCache();
             ActiveEmployeesCheckBox.Checked = true;
 
             //Устанавливаем стартовый период в месяц.
@@ -193,12 +196,13 @@ namespace PartsApp
         /// <param name="e"></param>
         private void DatesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            bool changePeriod = true;
             //Находим нужный DGV
             DateTimePicker dtp = (sender as CheckBox).Name == this.BeginDateCheckBox.Name ? BeginDateDTP : EndDateDTP;
             dtp.Enabled = !dtp.Enabled;
 
             //Заполняем таблицу операций.
-            FillTheOperationDGV();
+            FillTheOperationDGV(changePeriod);
         }
 
         /// <summary>
@@ -208,26 +212,31 @@ namespace PartsApp
         /// <param name="e"></param>
         private void DatesDTP_ValueChanged(object sender, EventArgs e)
         {
-            FillTheOperationDGV(); //Заполняем таблицу операций.
+            bool changePeriod = true;
+            FillTheOperationDGV(changePeriod); //Заполняем таблицу операций.
         }
 
         /// <summary>
         /// Заполняем таблицу операций для выделенного сотрудника.
         /// </summary>
-        private void FillTheOperationDGV()
+        /// <param name="changePeriod"></param> - передаём true, если необходимо выбрать операции за другой период;
+        ///                                       дефолт - период не изменяется при переключении между сотрудниками  
+        private void FillTheOperationDGV(bool changePeriod = false)
         {
             OperationsInfoDGV.Rows.Clear(); //Очищаем список операций.
             OperationDetailsDGV.Rows.Clear();
 
             if (_selectedEmployee != null)
             {
-                //Находим начальную и конечную дату требуемых операций.
+                //Находим начальную и конечную дату требуемых операций.                
                 DateTime? beginDate = BeginDateDTP.Enabled ? BeginDateDTP.Value : (DateTime?)null;
                 DateTime? endDate = EndDateDTP.Enabled ? EndDateDTP.Value : (DateTime?)null;
                 //Выводим список операций соответствующий заданным требованиям.
-                List<IOperation> operList = FindOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate);
-                FillTheOperationDGV(operList);
-
+                var operList = _operationsCache.GetOperations(EmployeeListBox.SelectedItem as Employee, beginDate, endDate, changePeriod);
+                if (operList.Any())
+                {
+                    FillTheOperationDGV(operList);                    
+                }
                 //Изменяем видимость строк по типу операции.
                 OperationsCheckBox_CheckedChanged(null, null);
             }
@@ -270,7 +279,7 @@ namespace PartsApp
                 row.Visible = (row.Cells[OperationTypeCol.Index].Value == "Приход" ? PurchaseCheckBox.Checked : SaleCheckBox.Checked);
             }
             //Выводим кол-во видимых строк.
-            OperationsCoubtLabel.Text = OperationsInfoDGV.Rows.GetRowCount(DataGridViewElementStates.Visible).ToString();
+            OperationsCountLabel.Text = _operationsCache.GetEmployeeOperationsCount(_selectedEmployee.EmployeeId).ToString();
         }
 
         private void EmployeeListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -311,23 +320,6 @@ namespace PartsApp
                 row.Cells[PriceCol.Index].Value = operDet.Price;
                 row.Cells[SumCol.Index].Value = operDet.Count * operDet.Price;
             }
-        }
-
-        /// <summary>
-        /// Возвращает список всех операций осуществлённых данным сотрудником.
-        /// </summary>
-        /// <param name="emp">Сотрудник по которому выдаются данные.</param>
-        /// <param name="startDate">Минимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <param name="endDate">Максимальная дата для операции входящей в список. Если null, то ограничения нет.</param>
-        /// <returns></returns>
-        private static List<IOperation> FindOperations(Employee emp, DateTime? startDate, DateTime? endDate)
-        {
-            List<IOperation> operationsList = new List<IOperation>();
-
-            PurchaseRepository.FindPurchases(emp, startDate, endDate).ForEach(p => operationsList.Add(p)); //Заполняем список операций всеми поставками.
-            SaleRepository.FindSales(emp, startDate, endDate).ForEach(s => operationsList.Add(s));     //Заполняем список операций всеми продажами.
-
-            return operationsList;
         }
         #endregion
     }

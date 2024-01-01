@@ -58,7 +58,7 @@ namespace PartsApp
             this.OperationsStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.OperationsCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.OperationsCoubtLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.OperationsCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.PurchaseCheckBox = new System.Windows.Forms.CheckBox();
             this.SaleCheckBox = new System.Windows.Forms.CheckBox();
             this.BeginDatePanel = new System.Windows.Forms.Panel();
@@ -333,7 +333,7 @@ namespace PartsApp
             this.OperationsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.OperationsCountStatusLabel,
-            this.OperationsCoubtLabel});
+            this.OperationsCountLabel});
             this.OperationsStatusStrip.Location = new System.Drawing.Point(3, 290);
             this.OperationsStatusStrip.Name = "OperationsStatusStrip";
             this.OperationsStatusStrip.Size = new System.Drawing.Size(858, 18);
@@ -353,9 +353,9 @@ namespace PartsApp
             // 
             // OperationsCoubtLabel
             // 
-            this.OperationsCoubtLabel.Name = "OperationsCoubtLabel";
-            this.OperationsCoubtLabel.Size = new System.Drawing.Size(13, 13);
-            this.OperationsCoubtLabel.Text = "0";
+            this.OperationsCountLabel.Name = "OperationsCoubtLabel";
+            this.OperationsCountLabel.Size = new System.Drawing.Size(13, 13);
+            this.OperationsCountLabel.Text = "0";
             // 
             // PurchaseCheckBox
             // 
@@ -626,7 +626,7 @@ namespace PartsApp
         private System.Windows.Forms.DataGridViewTextBoxColumn ContragentEmployeeCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn DescriptionCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TotalSumCol;
-        private System.Windows.Forms.ToolStripStatusLabel OperationsCoubtLabel;
+        private System.Windows.Forms.ToolStripStatusLabel OperationsCountLabel;
         private ContextMenuStrip EmployeeEditingContextMenu;
         private ToolStripMenuItem EditToolStripMenuItem;
         private ToolStripMenuItem DismissalToolStripMenuItem;
