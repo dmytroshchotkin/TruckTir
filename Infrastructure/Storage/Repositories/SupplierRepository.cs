@@ -133,7 +133,8 @@ namespace Infrastructure.Storage.Repositories
                 code: dataReader["Code"] as string,
                 entity: dataReader["Entity"] as string,
                 contactInfo: (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
-                description: dataReader["Description"] as string
+                description: dataReader["Description"] as string,
+                balance: (double)dataReader["Balance"]
             );
         }
         #endregion
