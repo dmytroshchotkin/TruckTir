@@ -209,7 +209,14 @@ namespace PartsApp
             codeMaskedTextBox.Text = _contragent.Code;
             entityComboBox.Text = _contragent.Entity;
             descrRichTextBox.Text = _contragent.Description;
+            DisplayContragentBalance();
             FillTheContactInfoPanel(_contragent.ContactInfo);
+        }
+
+        private void DisplayContragentBalance()
+        {
+            BalanceLabel.Visible = FilledBalanceLabel.Visible = true;
+            FilledBalanceLabel.Text = $"{_contragent.Balance:0.00} руб.";
         }
 
         /// <summary>
