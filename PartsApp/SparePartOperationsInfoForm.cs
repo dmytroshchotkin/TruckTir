@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Infrastructure.Storage;
+using Infrastructure.Storage.Repositories;
 using PartsApp.Models;
 
 namespace PartsApp

@@ -61,15 +61,15 @@
     <Compile Include="PartsDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\DbConnectionHelper\DbConnectionHelper.cs" />
-    <Compile Include="Storage\CustomerRepository.cs" />
+    <Compile Include="Storage\Repositories\CustomerRepository.cs" />
     <Compile Include="Storage\FilesStorageHelper.cs" />
     <Compile Include="Storage\PropertiesHandlers\AvailabilityDatabaseHandler.cs" />
     <Compile Include="Storage\PropertiesHandlers\ContactInfoDatabaseHandler.cs" />
-    <Compile Include="Storage\EmployeeRepository.cs" />
-    <Compile Include="Storage\PurchaseRepository.cs" />
-    <Compile Include="Storage\SaleRepository.cs" />
-    <Compile Include="Storage\SparePartRepository.cs" />
-    <Compile Include="Storage\SupplierRepository.cs" />
+    <Compile Include="Storage\Repositories\EmployeeRepository.cs" />
+    <Compile Include="Storage\Repositories\PurchaseRepository.cs" />
+    <Compile Include="Storage\Repositories\SaleRepository.cs" />
+    <Compile Include="Storage\Repositories\SparePartRepository.cs" />
+    <Compile Include="Storage\Repositories\SupplierRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

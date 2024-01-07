@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Text;
 
-namespace Infrastructure.Storage
+namespace Infrastructure.Storage.Repositories
 {
     public class SparePartRepository
     {
