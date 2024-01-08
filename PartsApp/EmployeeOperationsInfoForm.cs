@@ -171,11 +171,6 @@ namespace PartsApp
             }
         }
 
-        private List<Employee> GetAllEmployees()
-        {
-            return _employees.OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
-        }
-
         private List<Employee> GetInactiveEmployees()
         {
             return _employees
