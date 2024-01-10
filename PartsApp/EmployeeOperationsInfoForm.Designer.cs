@@ -137,6 +137,11 @@ namespace PartsApp
             this.DismissalToolStripMenuItem = new ToolStripMenuItem("Заблокировать");
             this.DismissalToolStripMenuItem.Click += OnDismissalOptionClick;
             //
+            // EnableToolStripMenuItem
+            //
+            this.EnableToolStripMenuItem = new ToolStripMenuItem("Восстановить доступ");
+            this.EnableToolStripMenuItem.Click += OnEnableOptionClick;
+            //
             // EmployeeEditingContextMenu
             //
             this.EmployeeEditingContextMenu = new ContextMenuStrip();
@@ -630,5 +635,6 @@ namespace PartsApp
         private ContextMenuStrip EmployeeEditingContextMenu;
         private ToolStripMenuItem EditToolStripMenuItem;
         private ToolStripMenuItem DismissalToolStripMenuItem;
+        private ToolStripMenuItem EnableToolStripMenuItem;
     }
 }

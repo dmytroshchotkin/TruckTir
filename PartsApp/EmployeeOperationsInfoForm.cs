@@ -60,10 +60,12 @@ namespace PartsApp
             if (isDismissed)
             {
                 DismissalToolStripMenuItem.Visible = false;
+                EnableToolStripMenuItem.Visible = true;
             }
             else
             {
                 DismissalToolStripMenuItem.Visible = true;
+                EnableToolStripMenuItem.Visible = false;
             }
 
             EmployeeEditingContextMenu.Show();
@@ -73,6 +75,7 @@ namespace PartsApp
         {
             EmployeeEditingContextMenu.Items.Add(EditToolStripMenuItem);
             EmployeeEditingContextMenu.Items.Add(DismissalToolStripMenuItem);
+            EmployeeEditingContextMenu.Items.Add(EnableToolStripMenuItem);
             EmployeeListBox.MouseDown += new MouseEventHandler(OnEmployeeListBoxMouseDown);
         }
 
@@ -99,6 +102,42 @@ namespace PartsApp
 
                 SetContentsOfEmployeeListBox(GetEmployees());
             }
+        }
+
+        private void OnEnableOptionClick(object sender, EventArgs e)
+        {
+            if (_selectedEmployee != null)
+            {
+                var input = ShowEnableUserMessageBox();
+                if (input == DialogResult.Yes)
+                {
+                    _selectedEmployee.DismissalDate = default;
+
+                    try
+                    {
+                        PartsDAL.UpdateEmployeeWithoutPassword(_selectedEmployee);
+                        SetContentsOfEmployeeListBox(GetEmployees());
+                    }
+                    catch (Exception) 
+                    {
+                        MessageBox.Show("Ошибка обновления данных, повторите попытку позже");
+                    }
+                }
+            }
+        }
+
+        private DialogResult ShowEnableUserMessageBox()
+        {
+            return MessageBox.Show(
+                    $"Вернуть доступ сотруднику {_selectedEmployee.FullName}? " +
+                    $"\n\nПраво доступа: {_selectedEmployee.AccessLayer}" +
+                    $"\nПринят на работу: {_selectedEmployee.HireDate?.ToString("d")}" +
+                    $"\nУволен: {_selectedEmployee.DismissalDate?.ToString("d")}",
+
+                    "Восстановление доступа",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
         }
 
         private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
