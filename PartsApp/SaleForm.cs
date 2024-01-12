@@ -11,6 +11,7 @@ using PartsApp.Models;
 using PartsApp.SupportClasses;
 using Excel = Microsoft.Office.Interop.Excel;
 using Models.Helper;
+using Infrastructure.Storage.Repositories;
 
 namespace PartsApp
 {
@@ -1420,26 +1421,64 @@ namespace PartsApp
 
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && TryValidateAvailability() && IsRequiredFieldsValid())
             {
-                //Если всё заполненно корректно.
-                if (IsRequiredFieldsValid())
-                {
-                    Sale sale = CreateSaleFromForm();
+                Sale sale = CreateSaleFromForm();
 
-                    try
+                try
+                {
+                    sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                    return;
+                }
+                saveInExcelAsync(sale, sellerTextBox.Text.Trim());
+                this.Close();
+            }
+        }
+
+        private bool TryValidateAvailability()
+        {
+            var rowsToRemove = new List<DataGridViewRow>();
+            foreach (DataGridViewRow r in SaleDGV.Rows)
+            {
+                if (r.Tag is SparePart sp)
+                {
+                    var updatedSp = SparePartRepository.FindSparePart(sp.SparePartId);
+                    if (Availability.GetTotalCount(updatedSp.AvailabilityList) != Availability.GetTotalCount(sp.AvailabilityList))
                     {
-                        sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
+                        DisplayInvalidAvailabilityMessageBox(sp);
+                        rowsToRemove.Add(r);
                     }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
-                        return;
-                    }
-                    saveInExcelAsync(sale, sellerTextBox.Text.Trim());
-                    this.Close();
                 }
             }
+
+            RemoveRowsFromSaleDGV(rowsToRemove);
+            return !rowsToRemove.Any();
+        }
+
+        private void RemoveRowsFromSaleDGV(List<DataGridViewRow> rows)
+        {
+            foreach (var r in rows)
+            {
+                if (r.Tag is SparePart sp)
+                {
+                    _operDetList.RemoveAll(od => od.SparePart.SparePartId == sp.SparePartId);
+                    SaleDGV.Rows.Remove(r);
+                    ExtSaleDGV.Rows.Clear();
+                    FillTheInTotal();
+                }
+            }
+        }
+
+        private void DisplayInvalidAvailabilityMessageBox(SparePart sp)
+        {
+            MessageBox.Show($"Изменилось количество товара:\n\n{sp.Articul}\n{sp.Title}\n\nПовторите выбор товара!",
+                "Сообщение",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
         }
     }
 }

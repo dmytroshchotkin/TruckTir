@@ -43,7 +43,7 @@ namespace PartsApp
                 var employees = PartsDAL.FindEmployees().Where(empl => empl.Login == loginTextBox.Text.Trim());
                 Employee employee = employees.FirstOrDefault(empl => empl.Password == inputPasswordHash);
 
-                if (employee is null || employee.IsDismissed)
+                if (employee is null || employee.IsDisabled)
                 {
                     toolTip.Show("Введены неверные данные.", this, okButton.Location, 3000);
                 }
