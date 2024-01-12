@@ -11,6 +11,7 @@ using PartsApp.Models;
 using PartsApp.SupportClasses;
 using Models.Helper;
 using System.IO;
+using Infrastructure;
 
 namespace PartsApp
 {
@@ -44,7 +45,6 @@ namespace PartsApp
         {
             bottomPanel.Location = new Point(bottomPanel.Location.X, bottomPanel.Location.Y - contactInfoPanel.Size.Height);
             birthDateTimePicker.ValueChanged += birthDateTimePicker_ValueChanged;
-            EnsurePhotoDirectoryCreated();
         }
 
         private void addContactInfoButton_Click(object sender, EventArgs e)
@@ -575,7 +575,7 @@ namespace PartsApp
                 if (photoPictureBox.Tag != null) //если false значит фото уже есть в нужной папке и мы просто записываем относительный путь иначе сначала копируем файл.  
                 {
                     string destFilePath = photoPictureBox.Tag as string;
-                    System.IO.File.Copy(photoOpenFileDialog.FileName, destFilePath);
+                    FilesStorageHelper.CopyFileSafely(photoOpenFileDialog.FileName, destFilePath);
                 }
                 photoPath = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
             }
@@ -656,9 +656,8 @@ namespace PartsApp
                     }
                     else
                     {
-                        employee.EmployeeId = _editEmployee.EmployeeId;
-                        employee.DismissalDate = _editEmployee.DismissalDate;
-                        UpdateEmployee(employee);
+                        UpdateEditingEmployeeProperties(employee);                       
+                        UpdateEmployee(_editEmployee);
                     }
                 }
                 catch
@@ -671,6 +670,28 @@ namespace PartsApp
                 this.Close();                
             }
         }
+
+        /// <summary>
+        /// Обновляет свойства редактируемого сотрудника данными из формы
+        /// </summary>
+        /// <param name="employee"></param>
+        private void UpdateEditingEmployeeProperties(Employee employee)
+        {
+            _editEmployee.Photo = employee.Photo;
+            _editEmployee.FirstName = employee.FirstName;
+            _editEmployee.LastName = employee.LastName;
+            _editEmployee.MiddleName = employee.MiddleName;
+            _editEmployee.BirthDate = employee.BirthDate;
+            _editEmployee.Title = employee.Title;
+            _editEmployee.PassportNum = employee.PassportNum;
+
+            _editEmployee.Note = employee.Note;        
+            _editEmployee.ContactInfo = employee.ContactInfo;
+
+            _editEmployee.AccessLayer = employee.AccessLayer;
+            _editEmployee.Login = employee.Login;
+            _editEmployee.Password = employee.Password;
+        }    
 
         private void SetVisibilityForEmployeeDatesControls(Employee employee)
         {
@@ -690,14 +711,6 @@ namespace PartsApp
             else
             {
                 filledBirthDateLabel.Visible = false;
-            }
-        }
-
-        private void EnsurePhotoDirectoryCreated()
-        {
-            if (!Directory.Exists(employeePhotoFolder))
-            {
-                Directory.CreateDirectory(employeePhotoFolder);
             }
         }
     }

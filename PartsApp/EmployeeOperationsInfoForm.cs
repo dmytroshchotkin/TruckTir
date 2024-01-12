@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Models.Helper;
+using Infrastructure.Storage.Repositories;
 
 namespace PartsApp
 {
@@ -96,16 +97,14 @@ namespace PartsApp
                 var editingForm = new AddEmployeeForm(_selectedEmployee);
                 editingForm.ShowDialog();
 
-                Close();
+                SetContentsOfEmployeeListBox(GetEmployees());
             }
         }
 
         private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
         {
-            var employees = GetEmployees(ActiveEmployeesCheckBox.Checked, InactiveEmployeesCheckBox.Checked);
-            EmployeeListBox.DataSource = employees.Any() ? employees : null;
-            ClearEmployeeListBox();
-            ResetSelectedEmployee();
+            var employees = GetEmployees();
+            SetContentsOfEmployeeListBox(employees);
         }
 
         private List<Employee> GetEmployees(bool selectActiveEmployees, bool selectInactiveEmployees)
@@ -123,6 +122,21 @@ namespace PartsApp
             }           
 
             return employees;
+        }
+
+        private List<Employee> GetEmployees()
+        {
+            return GetEmployees(ActiveEmployeesCheckBox.Checked, InactiveEmployeesCheckBox.Checked);
+        }
+
+        /// <summary>
+        /// Заполняет listbox сотрудниками выбранного типа
+        /// </summary>
+        private void SetContentsOfEmployeeListBox(List<Employee> employees)
+        {
+            EmployeeListBox.DataSource = employees.Any() ? employees : null;
+            ClearEmployeeListBox();
+            ResetSelectedEmployee();
         }
 
         /// <summary>
@@ -155,11 +169,6 @@ namespace PartsApp
             {
                 EmployeeListBox.DataSource = GetActiveEmployees();
             }
-        }
-
-        private List<Employee> GetAllEmployees()
-        {
-            return _employees.OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
         }
 
         private List<Employee> GetInactiveEmployees()
@@ -209,7 +218,8 @@ namespace PartsApp
         private void FillTheOperationDGV()
         {
             OperationsInfoDGV.Rows.Clear(); //Очищаем список операций.
-            
+            OperationDetailsDGV.Rows.Clear();
+
             if (_selectedEmployee != null)
             {
                 //Находим начальную и конечную дату требуемых операций.

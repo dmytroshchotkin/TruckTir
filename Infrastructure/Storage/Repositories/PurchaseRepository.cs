@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 
-namespace Infrastructure.Storage
+namespace Infrastructure.Storage.Repositories
 {
     public class PurchaseRepository
     {

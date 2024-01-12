@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 
-namespace Infrastructure
+namespace Infrastructure.Storage.Repositories
 {
     public class EmployeeRepository
     {
