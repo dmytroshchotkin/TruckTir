@@ -109,7 +109,7 @@ namespace Infrastructure.Storage.Repositories
                 middleName: dataReader["MiddleName"] as string,
                 birthDate: (dataReader["BirthDate"] != DBNull.Value) ? DateTimeParser.GetDateTime(dataReader["BirthDate"] as string) : (DateTime?)null,
                 hireDate: (dataReader["HireDate"] != DBNull.Value) ? DateTimeParser.GetDateTime(dataReader["HD"] as string) : (DateTime?)null,
-                dismissalDate: (dataReader["DismissalDate"] != DBNull.Value) ? DateTimeParser.GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
+                disableDate: (dataReader["DismissalDate"] != DBNull.Value) ? DateTimeParser.GetDateTime(dataReader["DD"] as string) : (DateTime?)null,
                 photo: dataReader["Photo"] as string,
                 note: dataReader["Note"] as string,
                 passportNum: dataReader["PassportNum"] as string,
@@ -145,7 +145,7 @@ namespace Infrastructure.Storage.Repositories
             cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
             cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
             cmd.Parameters.AddWithValue("@HireDate", (employee.HireDate != null) ? employee.HireDate : null);
-            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
+            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DisableDate != null) ? employee.DisableDate : null);
             cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Photo", employee.Photo);
             cmd.Parameters.AddWithValue("@Note", employee.Note);
@@ -177,7 +177,7 @@ namespace Infrastructure.Storage.Repositories
             cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
             cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
             cmd.Parameters.AddWithValue("@HireDate", (employee.HireDate != null) ? employee.HireDate : null);
-            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
+            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DisableDate != null) ? employee.DisableDate : null);
             cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Photo", employee.Photo);
             cmd.Parameters.AddWithValue("@Note", employee.Note);
@@ -208,7 +208,7 @@ namespace Infrastructure.Storage.Repositories
             cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
             cmd.Parameters.AddWithValue("@BirthDate", (employee.BirthDate != null) ? ((DateTime)employee.BirthDate).ToShortDateString() : null);
             cmd.Parameters.AddWithValue("@HireDate", (employee.HireDate != null) ? employee.HireDate : null);
-            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DismissalDate != null) ? employee.DismissalDate : null);
+            cmd.Parameters.AddWithValue("@DismissalDate", (employee.DisableDate != null) ? employee.DisableDate : null);
             cmd.Parameters.AddWithValue("@ContactInfoId", (employee.ContactInfo != null) ? employee.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Photo", employee.Photo);
             cmd.Parameters.AddWithValue("@Note", employee.Note);
