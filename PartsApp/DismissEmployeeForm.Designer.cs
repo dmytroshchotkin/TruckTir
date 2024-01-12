@@ -1,6 +1,6 @@
 ﻿namespace PartsApp
 {
-    partial class DismissEmployeeForm
+    partial class DisableEmployeeForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,22 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dismissalActionLabel = new System.Windows.Forms.Label();
+            this.disableActionLabel = new System.Windows.Forms.Label();
             this.nameLabel = new System.Windows.Forms.Label();
             this.hireDateTimeLabel = new System.Windows.Forms.Label();
             this.accessLevelLabel = new System.Windows.Forms.Label();
-            this.acceptDismissalButton = new System.Windows.Forms.Button();
-            this.dismissalDateTimeLabel = new System.Windows.Forms.Label();
+            this.acceptDisableButton = new System.Windows.Forms.Button();
+            this.disableDateTimeLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // dismissalActionLabel
+            // disableActionLabel
             // 
-            this.dismissalActionLabel.AutoSize = true;
-            this.dismissalActionLabel.Location = new System.Drawing.Point(19, 21);
-            this.dismissalActionLabel.Name = "dismissalActionLabel";
-            this.dismissalActionLabel.Size = new System.Drawing.Size(260, 16);
-            this.dismissalActionLabel.TabIndex = 0;
-            this.dismissalActionLabel.Text = "Подтвердите блокировку доступа для сотрудника:";
+            this.disableActionLabel.AutoSize = true;
+            this.disableActionLabel.Location = new System.Drawing.Point(19, 21);
+            this.disableActionLabel.Name = "disableActionLabel";
+            this.disableActionLabel.Size = new System.Drawing.Size(260, 16);
+            this.disableActionLabel.TabIndex = 0;
+            this.disableActionLabel.Text = "Подтвердите блокировку доступа для сотрудника:";
             // 
             // nameLabel
             // 
@@ -72,39 +72,39 @@
             this.accessLevelLabel.TabIndex = 3;
             this.accessLevelLabel.Text = "Право доступа: ";
             // 
-            // acceptDismissalButton
+            // acceptDisableButton
             // 
-            this.acceptDismissalButton.Location = new System.Drawing.Point(22, 184);
-            this.acceptDismissalButton.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
-            this.acceptDismissalButton.Name = "acceptDismissalButton";
-            this.acceptDismissalButton.Size = new System.Drawing.Size(257, 27);
-            this.acceptDismissalButton.TabIndex = 4;
-            this.acceptDismissalButton.Text = "Заблокировать";
-            this.acceptDismissalButton.UseVisualStyleBackColor = true;
-            this.acceptDismissalButton.Click += new System.EventHandler(this.OnAcceptDismissalButton);
+            this.acceptDisableButton.Location = new System.Drawing.Point(22, 184);
+            this.acceptDisableButton.Margin = new System.Windows.Forms.Padding(3, 7, 3, 0);
+            this.acceptDisableButton.Name = "acceptDisableButton";
+            this.acceptDisableButton.Size = new System.Drawing.Size(257, 27);
+            this.acceptDisableButton.TabIndex = 4;
+            this.acceptDisableButton.Text = "Заблокировать";
+            this.acceptDisableButton.UseVisualStyleBackColor = true;
+            this.acceptDisableButton.Click += new System.EventHandler(this.OnAcceptDisableButton);
             // 
-            // dismissalDateTimeLabel
+            // disableDateTimeLabel
             // 
-            this.dismissalDateTimeLabel.AutoSize = true;
-            this.dismissalDateTimeLabel.Location = new System.Drawing.Point(19, 143);
-            this.dismissalDateTimeLabel.Name = "dismissalDateTimeLabel";
-            this.dismissalDateTimeLabel.Size = new System.Drawing.Size(207, 16);
-            this.dismissalDateTimeLabel.TabIndex = 5;
-            this.dismissalDateTimeLabel.Text = "Доступ будет заблокирован ";
+            this.disableDateTimeLabel.AutoSize = true;
+            this.disableDateTimeLabel.Location = new System.Drawing.Point(19, 143);
+            this.disableDateTimeLabel.Name = "disableDateTimeLabel";
+            this.disableDateTimeLabel.Size = new System.Drawing.Size(207, 16);
+            this.disableDateTimeLabel.TabIndex = 5;
+            this.disableDateTimeLabel.Text = "Доступ будет заблокирован ";
             // 
-            // DismissEmployeeForm
+            // DisableEmployeeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(415, 253);
-            this.Controls.Add(this.dismissalDateTimeLabel);
-            this.Controls.Add(this.acceptDismissalButton);
+            this.Controls.Add(this.disableDateTimeLabel);
+            this.Controls.Add(this.acceptDisableButton);
             this.Controls.Add(this.accessLevelLabel);
             this.Controls.Add(this.hireDateTimeLabel);
             this.Controls.Add(this.nameLabel);
-            this.Controls.Add(this.dismissalActionLabel);
+            this.Controls.Add(this.disableActionLabel);
             this.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
-            this.Name = "DismissEmployeeForm";
+            this.Name = "DisableEmployeeForm";
             this.Text = "Заблокировать доступ для сотрудника";
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MinimizeBox = false;
@@ -116,11 +116,11 @@
 
         #endregion
 
-        private System.Windows.Forms.Label dismissalActionLabel;
+        private System.Windows.Forms.Label disableActionLabel;
         private System.Windows.Forms.Label nameLabel;
         private System.Windows.Forms.Label hireDateTimeLabel;
         private System.Windows.Forms.Label accessLevelLabel;
-        private System.Windows.Forms.Button acceptDismissalButton;
-        private System.Windows.Forms.Label dismissalDateTimeLabel;
+        private System.Windows.Forms.Button acceptDisableButton;
+        private System.Windows.Forms.Label disableDateTimeLabel;
     }
 }
