@@ -400,7 +400,7 @@ namespace PartsApp
 
             filledBirthDateLabel.Text = employee.BirthDate?.ToString("d");
             filledHireDateLabel.Text = employee.HireDate?.ToString("d");
-            filledDismissalDateLabel.Text = employee.DismissalDate?.ToString("d");
+            filledDisableDateLabel.Text = employee.DisableDate?.ToString("d");
             //hireDateTimePicker.Value = (DateTime)employee.HireDate;         
 
             birthDateTimePicker.Value = (DateTime)employee.BirthDate;
@@ -431,7 +431,7 @@ namespace PartsApp
             SetVisibilityForEmployeeDatesControls(employee);
 
             SetTheAccessLayerConstraints(employee);
-            if (employee.IsDismissed)
+            if (employee.IsDisabled)
             {
                 DisableCredentialsControls();
             }
@@ -588,7 +588,7 @@ namespace PartsApp
                 middleName: (!String.IsNullOrWhiteSpace(middleNameTextBox.Text)) ? middleNameTextBox.Text.Trim() : null,
                 birthDate: birthDateTimePicker.Value,
                 hireDate: hireDateTimePicker.Value,
-                dismissalDate: null,
+                disableDate: null,
                 note: (!String.IsNullOrWhiteSpace(descrRichTextBox.Text)) ? descrRichTextBox.Text.Trim() : null,
                 passportNum: (!String.IsNullOrWhiteSpace(passportNumTextBox.Text)) ? passportNumTextBox.Text.Trim() : null,
                 title: (!String.IsNullOrWhiteSpace(titleTextBox.Text)) ? titleTextBox.Text.Trim() : null,
@@ -698,15 +698,15 @@ namespace PartsApp
             filledHireDateLabel.Visible = true;
             hireDateTimePicker.Visible = false;
 
-            if (employee.IsDismissed)
+            if (employee.IsDisabled)
             {
                 birthDateTimePicker.Visible = false;
                 hireDateTimePicker.Visible = false;
 
                 filledBirthDateLabel.Visible = true;
 
-                dismissalDateLabel.Visible = true;
-                filledDismissalDateLabel.Visible = true;
+                disableDateLabel.Visible = true;
+                filledDisableDateLabel.Visible = true;
             }
             else
             {

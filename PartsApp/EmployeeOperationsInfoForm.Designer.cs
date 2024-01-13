@@ -132,10 +132,15 @@ namespace PartsApp
             this.EditToolStripMenuItem = new ToolStripMenuItem("Редактировать");
             this.EditToolStripMenuItem.Click += OnEditingOptionClick;
             //
-            // DismissalToolStripMenuItem
+            // DisableToolStripMenuItem
             //
-            this.DismissalToolStripMenuItem = new ToolStripMenuItem("Заблокировать");
-            this.DismissalToolStripMenuItem.Click += OnDismissalOptionClick;
+            this.DisableToolStripMenuItem = new ToolStripMenuItem("Заблокировать");
+            this.DisableToolStripMenuItem.Click += OnDisableOptionClick;
+            //
+            // EnableToolStripMenuItem
+            //
+            this.EnableToolStripMenuItem = new ToolStripMenuItem("Восстановить доступ");
+            this.EnableToolStripMenuItem.Click += OnEnableOptionClick;
             //
             // EmployeeEditingContextMenu
             //
@@ -151,7 +156,7 @@ namespace PartsApp
             this.EmployeeListBox.Size = new System.Drawing.Size(858, 110);
             this.EmployeeListBox.TabIndex = 0;
             this.EmployeeListBox.ValueMember = "EmployeeId";
-            this.EmployeeListBox.SelectedIndexChanged += new System.EventHandler(this.EmployeeListBox_SelectedIndexChanged);          
+            this.EmployeeListBox.SelectedIndexChanged += new System.EventHandler(this.EmployeeListBox_SelectedIndexChanged);
             this.EmployeeListBox.ContextMenuStrip = this.EmployeeEditingContextMenu;     
             // 
             // ActiveEmployeesCheckBox
@@ -629,6 +634,7 @@ namespace PartsApp
         private System.Windows.Forms.ToolStripStatusLabel OperationsCoubtLabel;
         private ContextMenuStrip EmployeeEditingContextMenu;
         private ToolStripMenuItem EditToolStripMenuItem;
-        private ToolStripMenuItem DismissalToolStripMenuItem;
+        private ToolStripMenuItem DisableToolStripMenuItem;
+        private ToolStripMenuItem EnableToolStripMenuItem;
     }
 }

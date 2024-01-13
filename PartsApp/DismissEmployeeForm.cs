@@ -4,30 +4,30 @@ using System.Windows.Forms;
 
 namespace PartsApp
 {
-    public partial class DismissEmployeeForm : Form
+    public partial class DisableEmployeeForm : Form
     {
         private readonly Employee _employee;
-        private readonly DateTime _dismissalDate = DateTime.Now;
+        private readonly DateTime _disableDate = DateTime.Now;
 
-        public DismissEmployeeForm(Employee employee)
+        public DisableEmployeeForm(Employee employee)
         {
             _employee = employee;
             InitializeComponent();
             nameLabel.Text += employee.FullName;
             hireDateTimeLabel.Text += employee.HireDate?.ToString("d");
             accessLevelLabel.Text += employee.AccessLayer;
-            dismissalDateTimeLabel.Text += _dismissalDate.ToString("d");
+            disableDateTimeLabel.Text += _disableDate.ToString("d");
         }
 
-        private void OnAcceptDismissalButton(object sender, EventArgs e)
+        private void OnAcceptDisableButton(object sender, EventArgs e)
         {
             try
             {
-                _employee.DismissalDate = DateTime.Now;
+                _employee.DisableDate = DateTime.Now;
                 PartsDAL.UpdateEmployee(_employee);
                                 
-                acceptDismissalButton.Visible = false;
-                dismissalActionLabel.Text = "Блокировка доступа подтверждена.";
+                acceptDisableButton.Visible = false;
+                disableActionLabel.Text = "Блокировка доступа подтверждена.";
             }
             catch (Exception)
             {

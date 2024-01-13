@@ -51,19 +51,21 @@ namespace PartsApp
         {
             if (e.Button == MouseButtons.Right && Form1.CurEmployee.IsAdmin && _selectedEmployee != null)
             {
-                HandleToolStripMenuOptions(_selectedEmployee.IsDismissed);
+                HandleToolStripMenuOptions(_selectedEmployee.IsDisabled);
             }
         }
 
-        private void HandleToolStripMenuOptions(bool isDismissed)
+        private void HandleToolStripMenuOptions(bool isDisabled)
         {
-            if (isDismissed)
+            if (isDisabled)
             {
-                DismissalToolStripMenuItem.Visible = false;
+                DisableToolStripMenuItem.Visible = false;
+                EnableToolStripMenuItem.Visible = true;
             }
             else
             {
-                DismissalToolStripMenuItem.Visible = true;
+                DisableToolStripMenuItem.Visible = true;
+                EnableToolStripMenuItem.Visible = false;
             }
 
             EmployeeEditingContextMenu.Show();
@@ -72,18 +74,19 @@ namespace PartsApp
         private void EnableEditingContextMenu()
         {
             EmployeeEditingContextMenu.Items.Add(EditToolStripMenuItem);
-            EmployeeEditingContextMenu.Items.Add(DismissalToolStripMenuItem);
+            EmployeeEditingContextMenu.Items.Add(DisableToolStripMenuItem);
+            EmployeeEditingContextMenu.Items.Add(EnableToolStripMenuItem);
             EmployeeListBox.MouseDown += new MouseEventHandler(OnEmployeeListBoxMouseDown);
         }
 
-        private void OnDismissalOptionClick(object sender, EventArgs e)
+        private void OnDisableOptionClick(object sender, EventArgs e)
         {
             if (_selectedEmployee != null)
             {
-                var dismissForm = new DismissEmployeeForm(_selectedEmployee);
-                dismissForm.ShowDialog();
+                var disableEmployeeForm = new DisableEmployeeForm(_selectedEmployee);
+                disableEmployeeForm.ShowDialog();
 
-                if (_selectedEmployee.IsDismissed)
+                if (_selectedEmployee.IsDisabled)
                 {
                     UpdateActiveEmployeesIfChecked();
                 }
@@ -99,6 +102,42 @@ namespace PartsApp
 
                 SetContentsOfEmployeeListBox(GetEmployees());
             }
+        }
+
+        private void OnEnableOptionClick(object sender, EventArgs e)
+        {
+            if (_selectedEmployee != null)
+            {
+                var input = ShowEnableUserMessageBox();
+                if (input == DialogResult.Yes)
+                {
+                    _selectedEmployee.DisableDate = default;
+
+                    try
+                    {
+                        PartsDAL.UpdateEmployeeWithoutPassword(_selectedEmployee);
+                        SetContentsOfEmployeeListBox(GetEmployees());
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Ошибка обновления данных, повторите попытку позже");
+                    }
+                }
+            }
+        }
+
+        private DialogResult ShowEnableUserMessageBox()
+        {
+            return MessageBox.Show(
+                    $"Вернуть доступ сотруднику {_selectedEmployee.FullName}? " +
+                    $"\n\nПраво доступа: {_selectedEmployee.AccessLayer}" +
+                    $"\nПринят на работу: {_selectedEmployee.HireDate?.ToString("d")}" +
+                    $"\nУволен: {_selectedEmployee.DisableDate?.ToString("d")}",
+
+                    "Восстановление доступа",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
         }
 
         private void OnEmployeesCheckBoxesCheckedChanged(object sender, EventArgs e)
@@ -174,14 +213,14 @@ namespace PartsApp
         private List<Employee> GetInactiveEmployees()
         {
             return _employees
-                .Where(e => e.IsDismissed)
+                .Where(e => e.IsDisabled)
                 .OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
         }
 
         private List<Employee> GetActiveEmployees()
         {
             return _employees
-                .Where(e => !e.IsDismissed)
+                .Where(e => !e.IsDisabled)
                 .OrderBy(emp => emp.LastName).ThenBy(emp => emp.FirstName).ToList();
         }
         #endregion

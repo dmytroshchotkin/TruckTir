@@ -24,7 +24,7 @@ namespace PartsApp.Models
         public string    MiddleName    { get; set; }
         public DateTime? BirthDate     { get; set; }
         public DateTime? HireDate      { get; set; }
-        public DateTime? DismissalDate { get; set; }
+        public DateTime? DisableDate { get; set; }
         public string    Photo         { get; set; }
         public string    Note          { get; set; }
         public string    PassportNum   { get; set; }
@@ -32,13 +32,13 @@ namespace PartsApp.Models
         public string    AccessLayer   { get; set; }
         public string    Login         { get; set; }
         public string    Password      { get; set; }
-        public bool IsDismissed { get { return DismissalDate != default; } }
+        public bool IsDisabled { get { return DisableDate != default; } }
         public bool IsAdmin { get { return AccessLayer == AccessLayers.Admin.ToDescription(); } }
 
         public string FullName { get { return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName); } }
     
         public ContactInfo ContactInfo { get; set; }
-                
+
         /// <summary>
         /// Конструктор для добавления нового объекта в БД.
         /// </summary>
@@ -47,7 +47,7 @@ namespace PartsApp.Models
         /// <param name="middleName"></param>
         /// <param name="birthDate"></param>
         /// <param name="hireDate"></param>
-        /// <param name="dismissalDate"></param>
+        /// <param name="disableDate"></param>
         /// <param name="photo"></param>
         /// <param name="note"></param>
         /// <param name="passportNum"></param>
@@ -57,7 +57,7 @@ namespace PartsApp.Models
         /// <param name="password"></param>
         /// <param name="contactInfo"></param>
         public Employee(int employeeId, string lastName, string firstName, string middleName, DateTime? birthDate,
-                        DateTime? hireDate, DateTime? dismissalDate, string photo, string note, string passportNum,
+                        DateTime? hireDate, DateTime? disableDate, string photo, string note, string passportNum,
                         string title, string accessLayer, string login, string password, ContactInfo contactInfo)
         {
             EmployeeId    = employeeId;
@@ -66,7 +66,7 @@ namespace PartsApp.Models
             MiddleName    = middleName;
             BirthDate     = birthDate;
             HireDate      = hireDate;
-            DismissalDate = dismissalDate;
+            DisableDate   = disableDate;
             Photo         = photo;
             Note          = note;
             PassportNum   = passportNum;
@@ -87,7 +87,7 @@ namespace PartsApp.Models
         /// <param name="middleName"></param>
         /// <param name="birthDate"></param>
         /// <param name="hireDate"></param>
-        /// <param name="dismissalDate"></param>
+        /// <param name="disableDate"></param>
         /// <param name="photo"></param>
         /// <param name="note"></param>
         /// <param name="passportNum"></param>
@@ -96,9 +96,9 @@ namespace PartsApp.Models
         /// <param name="login"></param>
         /// <param name="password"></param>
         public Employee(int employeeId, string lastName, string firstName, string middleName, DateTime? birthDate,
-                        DateTime? hireDate, DateTime? dismissalDate, string photo, string note, string passportNum,
+                        DateTime? hireDate, DateTime? disableDate, string photo, string note, string passportNum,
                         string title, string accessLayer, string login, string password)
-            : this(employeeId, lastName, firstName, middleName, birthDate, hireDate, dismissalDate,
+            : this(employeeId, lastName, firstName, middleName, birthDate, hireDate, disableDate,
                    photo, note, passportNum, title, accessLayer, login, password, null)
         { }
 

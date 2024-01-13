@@ -97,10 +97,10 @@
             this.photoOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.photoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deselectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dismissalDateLabel = new System.Windows.Forms.Label();
+            this.disableDateLabel = new System.Windows.Forms.Label();
             this.filledBirthDateLabel = new System.Windows.Forms.Label();
             this.filledHireDateLabel = new System.Windows.Forms.Label();
-            this.filledDismissalDateLabel = new System.Windows.Forms.Label();
+            this.filledDisableDateLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.photoPictureBox)).BeginInit();
             this.lastNameBackPanel.SuspendLayout();
             this.firstNameBackPanel.SuspendLayout();
@@ -787,16 +787,16 @@
             this.deselectToolStripMenuItem.Text = "Убрать фотографию";
             this.deselectToolStripMenuItem.Click += new System.EventHandler(this.deselectToolStripMenuItem_Click);
             // 
-            // dismissalDateLabel
+            // disableDateLabel
             // 
-            this.dismissalDateLabel.AutoSize = true;
-            this.dismissalDateLabel.Location = new System.Drawing.Point(403, 385);
-            this.dismissalDateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.dismissalDateLabel.Name = "dismissalDateLabel";
-            this.dismissalDateLabel.Size = new System.Drawing.Size(126, 16);
-            this.dismissalDateLabel.TabIndex = 85;
-            this.dismissalDateLabel.Text = "Дата увольнения: ";
-            this.dismissalDateLabel.Visible = false;
+            this.disableDateLabel.AutoSize = true;
+            this.disableDateLabel.Location = new System.Drawing.Point(403, 385);
+            this.disableDateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.disableDateLabel.Name = "disableDateLabel";
+            this.disableDateLabel.Size = new System.Drawing.Size(126, 16);
+            this.disableDateLabel.TabIndex = 85;
+            this.disableDateLabel.Text = "Дата увольнения: ";
+            this.disableDateLabel.Visible = false;
             // 
             // filledBirthDateLabel
             // 
@@ -814,13 +814,13 @@
             this.filledHireDateLabel.Size = new System.Drawing.Size(44, 16);
             this.filledHireDateLabel.TabIndex = 87;
             // 
-            // filledDismissalDateLabel
+            // filledDisableDateLabel
             // 
-            this.filledDismissalDateLabel.AutoSize = true;
-            this.filledDismissalDateLabel.Location = new System.Drawing.Point(587, 385);
-            this.filledDismissalDateLabel.Name = "filledDismissalDateLabel";
-            this.filledDismissalDateLabel.Size = new System.Drawing.Size(44, 16);
-            this.filledDismissalDateLabel.TabIndex = 88;
+            this.filledDisableDateLabel.AutoSize = true;
+            this.filledDisableDateLabel.Location = new System.Drawing.Point(587, 385);
+            this.filledDisableDateLabel.Name = "filledDisableDateLabel";
+            this.filledDisableDateLabel.Size = new System.Drawing.Size(44, 16);
+            this.filledDisableDateLabel.TabIndex = 88;
             // 
             // AddEmployeeForm
             // 
@@ -829,10 +829,10 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(848, 1055);
-            this.Controls.Add(this.filledDismissalDateLabel);
+            this.Controls.Add(this.filledDisableDateLabel);
             this.Controls.Add(this.filledHireDateLabel);
             this.Controls.Add(this.filledBirthDateLabel);
-            this.Controls.Add(this.dismissalDateLabel);
+            this.Controls.Add(this.disableDateLabel);
             this.Controls.Add(this.bottomPanel);
             this.Controls.Add(this.contactInfoPanel);
             this.Controls.Add(this.addContactInfoButton);
@@ -954,9 +954,9 @@
         private System.Windows.Forms.TextBox loginTextBox;
         private System.Windows.Forms.Label loginLabel;
         private System.Windows.Forms.Label loginStarLabel;
-        private System.Windows.Forms.Label dismissalDateLabel;
+        private System.Windows.Forms.Label disableDateLabel;
         private System.Windows.Forms.Label filledBirthDateLabel;
         private System.Windows.Forms.Label filledHireDateLabel;
-        private System.Windows.Forms.Label filledDismissalDateLabel;
+        private System.Windows.Forms.Label filledDisableDateLabel;
     }
 }
