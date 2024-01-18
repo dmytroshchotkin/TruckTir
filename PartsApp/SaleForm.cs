@@ -1337,7 +1337,7 @@ namespace PartsApp
             customer = (customer == null) ? new Customer(0, customerTextBox.Text.Trim(), null, null, null, null, 0) : customer;
 
             //Если внесена сумма отличающаяся от требуемой (галочка выключена), меняем баланс клиента.
-            if (PaidCheckBox.Checked == false)
+            if (!PaidCheckBox.Checked)
             {
                 customer.Balance += (double)PaidNumericUpDown.Value - Convert.ToDouble(inTotalNumberLabel.Text);
             }
@@ -1430,6 +1430,10 @@ namespace PartsApp
                     try
                     {
                         sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
+                        if ((double)PaidNumericUpDown.Value != sale.OperationDetailsList.Sum(o => o.Sum))
+                        {
+                            PartsDAL.UpdateContragent(sale.Contragent);
+                        }                        
                     }
                     catch (Exception)
                     {

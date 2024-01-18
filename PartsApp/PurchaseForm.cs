@@ -17,7 +17,7 @@ namespace PartsApp
     {
         bool _isCellEditError = false;
         DataGridViewCell _lastEditCell;
-
+        IContragent _supplier; 
 
         public PurchaseForm()
         {
@@ -581,7 +581,13 @@ namespace PartsApp
                 }
             }
             //Заполняем InTotalLabel расчитанным значением.
-            inTotalNumberLabel.Text = $"{Math.Round(inTotal, 2, MidpointRounding.AwayFromZero)}(руб)";
+            inTotalNumberLabel.Text = (Math.Round(inTotal, 2, MidpointRounding.AwayFromZero)).ToString("0.00");
+            resultCurrencyLabel.Left = inTotalNumberLabel.Right - 4;
+
+            if (paidCheckBox.Checked)
+            {
+                paidNumericUpDown.Value = (decimal)inTotal;
+            }
         }
 
         /// <summary>
@@ -1157,12 +1163,12 @@ namespace PartsApp
         {
             //Находим контрагента. Если такого ещё нет в базе, то создаем новый объект.
             IContragent supplier = PartsDAL.FindSuppliers(supplierTextBox.Text.Trim());
-            supplier = (supplier == null) ? new Supplier(0, supplierTextBox.Text.Trim(), null, null, null, null) : supplier;
+            _supplier = supplier == null ? new Supplier(0, supplierTextBox.Text.Trim(), null, null, null, null, 0) : supplier;
 
             Purchase purchase = new Purchase
             (
                 employee: Form1.CurEmployee,
-                contragent: supplier,
+                contragent: _supplier,
                 contragentEmployee: (!String.IsNullOrWhiteSpace(supplierAgentTextBox.Text)) ? supplierAgentTextBox.Text.Trim() : null,
                 operationDate: purchaseDateTimePicker.Value,
                 description: (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
@@ -1258,6 +1264,8 @@ namespace PartsApp
                     if (IsRequiredFieldsValid())
                     {
                         List<Availability> availList = CreateAvailabilityListFromForm();
+                        UpdateSupplierIfBalanceChanged();                    
+
                         try
                         {
                             availList[0].OperationDetails.Operation.OperationId = PartsDAL.AddPurchase(availList);
@@ -1272,6 +1280,23 @@ namespace PartsApp
                     }
                 }
                 this.Close();
+            }
+        }
+
+        private void OnPaidCheckBoxCheckedChanged(object sender, EventArgs e)
+        {
+            paidNumericUpDown.Enabled = !paidCheckBox.Checked;
+            Decimal.TryParse(inTotalNumberLabel.Text, out decimal result);
+
+            paidNumericUpDown.Value = paidCheckBox.Checked ? result : 0;
+        }
+        
+        private void UpdateSupplierIfBalanceChanged()
+        {
+            if (!paidCheckBox.Checked)
+            {
+                _supplier.Balance += Convert.ToDouble(inTotalNumberLabel.Text) - (double)paidNumericUpDown.Value;
+                PartsDAL.UpdateContragent(_supplier);
             }
         }
     }

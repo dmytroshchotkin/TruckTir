@@ -17,7 +17,7 @@ namespace PartsApp.Models
         public double       Balance        { get; set; }
 
         public Supplier() { }
-        public Supplier(int contragentId, string contragentName, string code, string entity, ContactInfo contactInfo, string description)
+        public Supplier(int contragentId, string contragentName, string code, string entity, ContactInfo contactInfo, string description,double balance)
         {
             ContragentId    = contragentId;
             ContragentName  = contragentName;
@@ -25,6 +25,7 @@ namespace PartsApp.Models
             Entity          = entity;
             ContactInfo     = contactInfo;
             Description     = description;
+            Balance = balance;
         }
     }
 }

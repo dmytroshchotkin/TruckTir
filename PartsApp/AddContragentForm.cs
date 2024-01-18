@@ -209,7 +209,14 @@ namespace PartsApp
             codeMaskedTextBox.Text = _contragent.Code;
             entityComboBox.Text = _contragent.Entity;
             descrRichTextBox.Text = _contragent.Description;
+            DisplayContragentBalance();
             FillTheContactInfoPanel(_contragent.ContactInfo);
+        }
+
+        private void DisplayContragentBalance()
+        {
+            BalanceLabel.Visible = FilledBalanceLabel.Visible = true;
+            FilledBalanceLabel.Text = $"{_contragent.Balance:0.00} руб.";
         }
 
         /// <summary>
@@ -249,7 +256,7 @@ namespace PartsApp
             double balance = (double)BalanceNumericUpDown.Value;
 
             //возвращаем объект в зависимости от его типа.
-            return (_contragent is Supplier) ? (IContragent)new Supplier(id, name, code, entity, contInfo, description)
+            return (_contragent is Supplier) ? (IContragent)new Supplier(id, name, code, entity, contInfo, description, balance)
                                              : (IContragent)new Customer(id, name, code, entity, contInfo, description, balance);
 
         }
