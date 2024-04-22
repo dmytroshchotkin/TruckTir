@@ -9,35 +9,46 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PartsApp.SupportClasses;
 using PartsApp.Models;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
 namespace PartsApp
 {
     public partial class ReturnForm : Form
     {
+        private readonly Sale _sale;
+
         public ReturnForm(Sale sale)
         {
             InitializeComponent();
-
+            _sale = sale;
             ReturnDGV.AutoGenerateColumns = false;
+            ClearSaleOperationsFromReturns(_sale);
 
-            List<OperationDetails> returnList = PartsDAL.FindReturnDetails(sale.OperationId); //Находим список товара кот. уже был возвращен по данной расходу.
-
-            //Отнимаем из всего списка продажи, товар кот. уже был возвращен.
-            foreach (OperationDetails operDet in returnList)
-            {
-                OperationDetails opDet = sale.OperationDetailsList.First(od => od.SparePart.SparePartId == operDet.SparePart.SparePartId);
-                opDet.Count -= operDet.Count;
-                if (opDet.Count == 0)
-                {
-                    sale.OperationDetailsList.Remove(opDet);
-                }
-            }
             //Заполняем таблицу
             sale.OperationDetailsList.ToList().ForEach(od => od.Tag = od.Count); //Запоминаем в Tag каждого объекта его начальное значение количества.
             ReturnDGV.DataSource = sale.OperationDetailsList;
 
             operationIdTextBox.Text = sale.OperationId.ToString();
             ContragentTextBox.Text = sale.Contragent.ContragentName;
+        }
+
+        private void ClearSaleOperationsFromReturns(Sale sale)
+        {
+            var returnsList = PartsDAL.FindReturnDetails(sale.OperationId); //Находим список товара кот. уже был возвращен по данной расходу.
+
+            //Отнимаем из всего списка продажи, товар кот. уже был возвращен.
+            foreach (var returnOperationDetail in returnsList)
+            {
+                var fullOperationDetail = sale.OperationDetailsList.First(od => od.SparePart.SparePartId == returnOperationDetail.SparePart.SparePartId);
+                if (fullOperationDetail != null)
+                {
+                    fullOperationDetail.Count -= returnOperationDetail.Count;
+                    if (fullOperationDetail.Count == 0)
+                    {
+                        sale.OperationDetailsList.Remove(fullOperationDetail);
+                    }
+                }
+            }
         }
 
         private void ReturnForm_Load(object sender, EventArgs e)
@@ -326,9 +337,7 @@ namespace PartsApp
         public Purchase CreatePurchaseFromForm()
         {
             //Находим весь возвращаемый товар.
-            List<OperationDetails> operDetList = new List<OperationDetails>();
-            var correctRows = ReturnDGV.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black);
-            correctRows.ToList().ForEach(r => operDetList.Add(r.DataBoundItem as OperationDetails));
+            var returns = GetReturnODsFromReturnDGV();
 
             Purchase purchase = new Purchase
             (
@@ -337,12 +346,19 @@ namespace PartsApp
                 contragentEmployee: (!String.IsNullOrWhiteSpace(ContragentEmployeeTextBox.Text)) ? ContragentEmployeeTextBox.Text.Trim() : null,
                 operationDate: OperationDateTimePicker.Value,
                 description: (!String.IsNullOrWhiteSpace(noteRichTextBox.Text)) ? noteRichTextBox.Text.Trim() : null,
-                operDetList: operDetList
+                operDetList: returns
             );
 
             return purchase;
         }
 
+        private List<OperationDetails> GetReturnODsFromReturnDGV()
+        {
+            var returns = new List<OperationDetails>();
+            var correctlyFilledRows = ReturnDGV.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black);
+            correctlyFilledRows.ToList().ForEach(r => returns.Add(r.DataBoundItem as OperationDetails));
+            return returns;
+        }
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
         {
@@ -356,15 +372,13 @@ namespace PartsApp
         }
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
-            //Если в таблице нет ни одной корректной записи, выдаём ошибку.
-            if (!ReturnDGV.Rows.Cast<DataGridViewRow>().Any(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black))
+            if (CheckIfReturnsAvailabilityChanged() || !CheckIfRequiredFielsFilledCorrectly())
             {
-                toolTip.Show("Выберети хотя бы один товар из таблицы.", this, okButton.Location, 3000);
                 return;
             }
             //Записываем данные в базу
             Purchase purchase = CreatePurchaseFromForm();
-            string note = (String.IsNullOrWhiteSpace(noteRichTextBox.Text)) ? null : noteRichTextBox.Text.Trim();
+            string note = string.IsNullOrWhiteSpace(noteRichTextBox.Text) ? null : noteRichTextBox.Text.Trim();
             try
             {
                 PartsDAL.AddReturn(purchase, note);
@@ -374,7 +388,99 @@ namespace PartsApp
                 MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
                 return;
             }
-            this.Close();
+            Close();
+        }
+
+        private bool CheckIfReturnsAvailabilityChanged()
+        {
+            var operationsWithChangedCount = GetODsWithChangedCount();
+            var spsWithChangedAvailabilities = GetSPsWithChangedReturnAvailability(operationsWithChangedCount);
+            if (!spsWithChangedAvailabilities.Any())
+            {
+                return false;                
+            }
+
+            UpdateCountDefaultValuesInReturnDGV(operationsWithChangedCount);
+            DisplayInvalidReturnAvailabilityMessageBox(spsWithChangedAvailabilities);
+            return true;
+        }
+
+        private List<OperationDetails> GetODsWithChangedCount()
+        {
+            var result = new List<OperationDetails>();
+
+            var checkSale = PartsDAL.FindSale(_sale.OperationId);
+            ClearSaleOperationsFromReturns(checkSale);
+
+            var returns = GetReturnODsFromReturnDGV();
+            foreach (var returnDetail in returns)
+            {
+                var match = checkSale.OperationDetailsList.Find(od => od.SparePart.SparePartId == returnDetail.SparePart.SparePartId);
+                if (match != null && match.Count < returnDetail.Count)
+                {
+                    result.Add(match);
+                }     
+                else if (match is null)
+                {
+                    result.Add(returnDetail);
+                }    
+            }
+
+            return result;
+        }
+
+        private List<SparePart> GetSPsWithChangedReturnAvailability(IEnumerable<OperationDetails> operationDetails)
+        {
+            var result = new List<SparePart>();
+            foreach (var od in operationDetails)
+            {
+                result.Add(od.SparePart);
+            }
+
+            return result;
+        }
+
+        private bool CheckIfRequiredFielsFilledCorrectly()
+        {
+            //Если в таблице нет ни одной корректной записи, выдаём ошибку.
+            if (!ReturnDGV.Rows.Cast<DataGridViewRow>().Any(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black))
+            {
+                toolTip.Show("Выберите хотя бы один товар из таблицы.", this, okButton.Location, 3000);
+                return false;
+            }
+            return true;
+        }
+
+        private void DisplayInvalidReturnAvailabilityMessageBox(IEnumerable<SparePart> spareParts)
+        {
+            var spArticlesAndTitles = new StringBuilder();
+            foreach (var sp in spareParts)
+            {
+                spArticlesAndTitles.Append($"\n{sp.Articul}\n{sp.Title}\n");
+            }
+
+            MessageBox.Show($"Изменилось количество товара, доступное для возврата:\n{spArticlesAndTitles}", "Возврат не проведён!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void UpdateCountDefaultValuesInReturnDGV(IEnumerable<OperationDetails> operationDetails)
+        {
+            var returns = GetReturnODsFromReturnDGV();
+            foreach (var operationDetail in operationDetails)
+            {
+                var odWithChangedCount = returns.Find(od => od.SparePart.SparePartId == operationDetail.SparePart.SparePartId);
+                if (odWithChangedCount == operationDetail)
+                {
+                    odWithChangedCount.Count = 0;
+                    odWithChangedCount.Tag = 0;
+                    int rowIndex = ReturnDGV.Rows.Cast<DataGridViewRow>().First(r => r.DataBoundItem == odWithChangedCount).Index;
+                    SetDefaultValueToCell(ReturnDGV[CountCol.Index, rowIndex]);
+                }
+                else 
+                {
+                    odWithChangedCount.Count = operationDetail.Count;
+                    odWithChangedCount.Tag = odWithChangedCount.Count;                    
+                }
+            }            
         }
     }
 }
