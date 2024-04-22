@@ -14,30 +14,41 @@ namespace PartsApp
 {
     public partial class ReturnForm : Form
     {
+        private readonly Sale _sale;
+
         public ReturnForm(Sale sale)
         {
             InitializeComponent();
-
+            _sale = sale;
             ReturnDGV.AutoGenerateColumns = false;
-
-            List<OperationDetails> returnList = PartsDAL.FindReturnDetails(sale.OperationId); //Находим список товара кот. уже был возвращен по данной расходу.
-
-            //Отнимаем из всего списка продажи, товар кот. уже был возвращен.
-            foreach (OperationDetails operDet in returnList)
-            {
-                OperationDetails opDet = sale.OperationDetailsList.First(od => od.SparePart.SparePartId == operDet.SparePart.SparePartId);
-                opDet.Count -= operDet.Count;
-                if (opDet.Count == 0)
-                {
-                    sale.OperationDetailsList.Remove(opDet);
-                }
-            }
+            TryUpdateSaleOperDetList();
+            
             //Заполняем таблицу
             sale.OperationDetailsList.ToList().ForEach(od => od.Tag = od.Count); //Запоминаем в Tag каждого объекта его начальное значение количества.
             ReturnDGV.DataSource = sale.OperationDetailsList;
 
             operationIdTextBox.Text = sale.OperationId.ToString();
             ContragentTextBox.Text = sale.Contragent.ContragentName;
+        }
+
+        private bool TryUpdateSaleOperDetList()
+        {
+            List<OperationDetails> returnList = PartsDAL.FindReturnDetails(_sale.OperationId); //Находим список товара кот. уже был возвращен по данной расходу.
+
+            //Отнимаем из всего списка продажи, товар кот. уже был возвращен.
+            foreach (var returnOperDet in returnList)
+            {
+                var fullOperDet = _sale.OperationDetailsList.Find(od => od.SparePart.SparePartId == returnOperDet.SparePart.SparePartId);
+                if (fullOperDet != null)
+                {
+                    fullOperDet.Count -= returnOperDet.Count;
+                    if (fullOperDet.Count == 0)
+                    {
+                        _sale.OperationDetailsList.Remove(fullOperDet);
+                    }
+                }                
+            }
+            return _sale.OperationDetailsList.Any();
         }
 
         private void ReturnForm_Load(object sender, EventArgs e)
@@ -356,25 +367,38 @@ namespace PartsApp
         }
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
-            //Если в таблице нет ни одной корректной записи, выдаём ошибку.
-            if (!ReturnDGV.Rows.Cast<DataGridViewRow>().Any(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black))
+            if (TryValidateSaleAvailabilityForReturn())
             {
-                toolTip.Show("Выберети хотя бы один товар из таблицы.", this, okButton.Location, 3000);
-                return;
+                //Если в таблице нет ни одной корректной записи, выдаём ошибку.
+                if (!ReturnDGV.Rows.Cast<DataGridViewRow>().Any(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black))
+                {
+                    toolTip.Show("Выберите хотя бы один товар из таблицы.", this, okButton.Location, 3000);
+                    return;
+                }
+                //Записываем данные в базу
+                Purchase purchase = CreatePurchaseFromForm();
+                string note = string.IsNullOrWhiteSpace(noteRichTextBox.Text) ? null : noteRichTextBox.Text.Trim();
+                try
+                {
+                    PartsDAL.AddReturn(purchase, note);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                    return;
+                }                
             }
-            //Записываем данные в базу
-            Purchase purchase = CreatePurchaseFromForm();
-            string note = (String.IsNullOrWhiteSpace(noteRichTextBox.Text)) ? null : noteRichTextBox.Text.Trim();
-            try
+            Close();
+        }
+
+        private bool TryValidateSaleAvailabilityForReturn()
+        {
+            if (!TryUpdateSaleOperDetList())
             {
-                PartsDAL.AddReturn(purchase, note);
+                MessageBox.Show("Товар по этому приходу уже возвращался.");
+                return false;
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
-                return;
-            }
-            this.Close();
+            return true;
         }
     }
 }
