@@ -11,6 +11,7 @@ using PartsApp.Models;
 using PartsApp.SupportClasses;
 using Excel = Microsoft.Office.Interop.Excel;
 using Models.Helper;
+using Infrastructure.Storage.Repositories;
 
 namespace PartsApp
 {
@@ -838,7 +839,7 @@ namespace PartsApp
                 {
                     SetCustomValueToCell(extCountCell, operDet.Count); //Задаем значение ячейки.
                 }
-                }
+            }
             //Сортируем таблицу по дате прихода.
             ExtSaleDGV.Sort(ExtPurchaseDateCol, ListSortDirection.Ascending);
             ExtSaleDGV.ClearSelection();
@@ -1384,7 +1385,7 @@ namespace PartsApp
         /// Возвращает true если все обязательные поля корректно заполнены, иначе false.
         /// </summary>
         /// <returns></returns>
-        private bool IsRequiredFieldsValid()
+        private bool CheckIfRequiredFieldsValid()
         {
             //Находим все BackPanel-контролы на форме. 
             List<Control> curAccBackControls = this.GetAllControls(typeof(Panel), "BackPanel");
@@ -1420,26 +1421,98 @@ namespace PartsApp
 
         private void okButton_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button != MouseButtons.Left)
             {
-                //Если всё заполненно корректно.
-                if (IsRequiredFieldsValid())
-                {
-                    Sale sale = CreateSaleFromForm();
+                return;
+            }
 
-                    try
-                    {
-                        sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
-                        return;
-                    }
-                    saveInExcelAsync(sale, sellerTextBox.Text.Trim());
-                    this.Close();
+            if (!CheckIfRequiredFieldsValid() || CheckIfSPsAvailabilityChanged())
+            {
+                return;
+            }
+
+            Sale sale = CreateSaleFromForm();
+            try
+            {
+                sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                return;
+            }
+            saveInExcelAsync(sale, sellerTextBox.Text.Trim());
+            Close();
+        }
+
+        private bool CheckIfSPsAvailabilityChanged()
+        {
+            var spsWithChangedAvailabilities = GetSPsWithChangedAvailability();
+            if (!spsWithChangedAvailabilities.Any())
+            {
+                return false;
+            }
+
+            DeleteRowsForSPs(spsWithChangedAvailabilities);
+            DisplayInvalidAvailabilityMessageBox(spsWithChangedAvailabilities);
+            return true;
+        }
+
+        private void DeleteRowsForSPs(IEnumerable<SparePart> spareParts)
+        {
+            var rowsToDelete = new List<DataGridViewRow>();
+            foreach (DataGridViewRow row in SaleDGV.Rows)
+            {
+                if (row.Tag is SparePart sp && spareParts.Contains(sp))
+                {
+                    rowsToDelete.Add(row);
                 }
             }
+
+            RemoveRowsFromSaleDGV(rowsToDelete);
+        }
+
+        private List<SparePart> GetSPsWithChangedAvailability()
+        {
+            var result = new List<SparePart>();
+            foreach (DataGridViewRow row in SaleDGV.Rows)
+            {
+                if (row.Tag is SparePart sp)
+                {
+                    var updatedSp = SparePartRepository.FindSparePart(sp.SparePartId);
+                    if (Availability.GetTotalCount(updatedSp.AvailabilityList) != Availability.GetTotalCount(sp.AvailabilityList))
+                    {
+                        result.Add(sp);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private void RemoveRowsFromSaleDGV(IEnumerable<DataGridViewRow> rows)
+        {
+            foreach (var row in rows)
+            {
+                if (row.Tag is SparePart sp)
+                {
+                    _operDetList.RemoveAll(od => od.SparePart.SparePartId == sp.SparePartId);
+                    SaleDGV.Rows.Remove(row);
+                    ExtSaleDGV.Rows.Clear();
+                    FillTheInTotal();
+                }
+            }
+        }
+
+        private void DisplayInvalidAvailabilityMessageBox(IEnumerable<SparePart> spareParts)
+        {
+            var spArticlesAndTitles = new StringBuilder();
+            foreach (var sp in spareParts)
+            {
+                spArticlesAndTitles.Append($"\n{sp.Articul}\n{sp.Title}\n");
+            }
+
+            MessageBox.Show($"Изменилось количество товара:\n{spArticlesAndTitles}\nПовторите выбор товара!", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
