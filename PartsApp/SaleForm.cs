@@ -1436,9 +1436,9 @@ namespace PartsApp
             {
                 sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                MessageBox.Show($"Операция завершена неправильно! Попробуйте ещё раз.\n\nОшибка:\n{ex.InnerException?.Message ?? ex.Message}");
                 return;
             }
             saveInExcelAsync(sale, sellerTextBox.Text.Trim());
