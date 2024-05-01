@@ -383,9 +383,9 @@ namespace PartsApp
             {
                 PartsDAL.AddReturn(purchase, note);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
+                MessageBox.Show($"Операция завершена неправильно! Попробуйте ещё раз.\n\nОшибка:\n{ex.InnerException?.Message ?? ex.Message}");
                 return;
             }
             Close();
