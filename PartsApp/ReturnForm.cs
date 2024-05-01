@@ -406,38 +406,55 @@ namespace PartsApp
         }
 
         private List<OperationDetails> GetODsWithChangedCount()
-        {
-            var result = new List<OperationDetails>();
-
+        {         
             var checkSale = PartsDAL.FindSale(_sale.OperationId);
             ClearSaleOperationsFromReturns(checkSale);
 
-            var returns = GetReturnODsFromReturnDGV();
-            foreach (var returnDetail in returns)
+            var returnODs = GetReturnODsFromReturnDGV();
+            return GetExistingMatchingReturnODs(checkSale, returnODs);
+        }
+
+        private List<OperationDetails> GetExistingMatchingReturnODs(Sale checkSale, List<OperationDetails> currentReturnODs)
+        {
+            var existingMatchingReturnODs = new List<OperationDetails>();
+            foreach (var returnOD in currentReturnODs)
             {
-                var match = checkSale.OperationDetailsList.Find(od => od.SparePart.SparePartId == returnDetail.SparePart.SparePartId);
-                if (match != null && match.Count < returnDetail.Count)
+                var returnODMatchingWIthCheckOD = GetMatchingReturnOD(checkSale, returnOD);
+                if (returnODMatchingWIthCheckOD != null)
                 {
-                    result.Add(match);
-                }     
-                else if (match is null)
-                {
-                    result.Add(returnDetail);
-                }    
+                    existingMatchingReturnODs.Add(returnODMatchingWIthCheckOD);
+                }
             }
 
-            return result;
+            return existingMatchingReturnODs;
+        }
+
+        private OperationDetails GetMatchingReturnOD(Sale checkSale, OperationDetails currentReturnOD)
+        {
+            var originalReturnOD = checkSale.OperationDetailsList.Find(od => od.SparePart.SparePartId == currentReturnOD.SparePart.SparePartId);
+            
+            if (originalReturnOD is null)
+            {
+                return currentReturnOD;
+            }
+
+            if (originalReturnOD.Count < currentReturnOD.Count)
+            {
+                return originalReturnOD;
+            }
+
+            return null;
         }
 
         private List<SparePart> GetSPsWithChangedReturnAvailability(IEnumerable<OperationDetails> operationDetails)
         {
-            var result = new List<SparePart>();
+            var spsWithChangedReturnAvailability = new List<SparePart>();
             foreach (var od in operationDetails)
             {
-                result.Add(od.SparePart);
+                spsWithChangedReturnAvailability.Add(od.SparePart);
             }
 
-            return result;
+            return spsWithChangedReturnAvailability;
         }
 
         private bool CheckIfRequiredFielsFilledCorrectly()
