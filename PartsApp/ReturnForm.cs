@@ -482,7 +482,8 @@ namespace PartsApp
             foreach (var operationDetail in operationDetails)
             {
                 var odWithChangedCount = returns.Find(od => od.SparePart.SparePartId == operationDetail.SparePart.SparePartId);
-                if (odWithChangedCount == operationDetail)
+                bool isSpFromOperationAvailable = odWithChangedCount != operationDetail;
+                if (!isSpFromOperationAvailable)
                 {
                     odWithChangedCount.Count = 0;
                     odWithChangedCount.Tag = 0;
