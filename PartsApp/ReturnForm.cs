@@ -482,20 +482,29 @@ namespace PartsApp
             foreach (var operationDetail in operationDetails)
             {
                 var odWithChangedCount = returns.Find(od => od.SparePart.SparePartId == operationDetail.SparePart.SparePartId);
-                bool isSpFromOperationAvailable = odWithChangedCount != operationDetail;
-                if (!isSpFromOperationAvailable)
+                if (odWithChangedCount == operationDetail)
                 {
-                    odWithChangedCount.Count = 0;
-                    odWithChangedCount.Tag = 0;
-                    int rowIndex = ReturnDGV.Rows.Cast<DataGridViewRow>().First(r => r.DataBoundItem == odWithChangedCount).Index;
-                    SetDefaultValueToCell(ReturnDGV[CountCol.Index, rowIndex]);
+                    SetDefaultCountValueForUnavailableSP(odWithChangedCount);
                 }
                 else 
                 {
-                    odWithChangedCount.Count = operationDetail.Count;
-                    odWithChangedCount.Tag = odWithChangedCount.Count;                    
-                }
-            }            
+                    SetCurrentCountValue(odWithChangedCount, operationDetail.Count);                                
+                }                
+            }
+
+            void SetDefaultCountValueForUnavailableSP(OperationDetails odWithZeroCount)
+            {
+                odWithZeroCount.Count = 0;
+                odWithZeroCount.Tag = 0;
+                int rowIndex = ReturnDGV.Rows.Cast<DataGridViewRow>().First(r => r.DataBoundItem == odWithZeroCount).Index;
+                SetDefaultValueToCell(ReturnDGV[CountCol.Index, rowIndex]);
+            }
+
+            void SetCurrentCountValue(OperationDetails odWithNewCount, float newCount)
+            {
+                odWithNewCount.Count = newCount;
+                odWithNewCount.Tag = newCount;
+            }
         }
     }
 }
