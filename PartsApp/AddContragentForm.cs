@@ -249,7 +249,7 @@ namespace PartsApp
             double balance = (double)BalanceNumericUpDown.Value;
 
             //возвращаем объект в зависимости от его типа.
-            return (_contragent is Supplier) ? (IContragent)new Supplier(id, name, code, entity, contInfo, description)
+            return (_contragent is Supplier) ? (IContragent)new Supplier(id, name, code, entity, contInfo, description, balance)
                                              : (IContragent)new Customer(id, name, code, entity, contInfo, description, balance);
 
         }
