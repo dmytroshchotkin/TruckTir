@@ -1157,7 +1157,7 @@ namespace PartsApp
         {
             //Находим контрагента. Если такого ещё нет в базе, то создаем новый объект.
             IContragent supplier = PartsDAL.FindSuppliers(supplierTextBox.Text.Trim());
-            supplier = (supplier == null) ? new Supplier(0, supplierTextBox.Text.Trim(), null, null, null, null) : supplier;
+            supplier = (supplier == null) ? new Supplier(0, supplierTextBox.Text.Trim(), null, null, null, null, 0) : supplier;
 
             Purchase purchase = new Purchase
             (

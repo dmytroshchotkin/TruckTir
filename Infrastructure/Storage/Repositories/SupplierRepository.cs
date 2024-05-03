@@ -1,5 +1,6 @@
 ﻿using PartsApp.Models;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data.SQLite;
 
@@ -18,7 +19,7 @@ namespace Infrastructure.Storage.Repositories
         /// <returns></returns>
         public static List<Supplier> FindSuppliers()
         {
-            List<Supplier> suppliers = new List<Supplier>();
+            List<Supplier> suppliers = new List<Supplier>();            
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {
@@ -133,7 +134,8 @@ namespace Infrastructure.Storage.Repositories
                 code: dataReader["Code"] as string,
                 entity: dataReader["Entity"] as string,
                 contactInfo: (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
-                description: dataReader["Description"] as string
+                description: dataReader["Description"] as string,
+                balance: (double)dataReader["Balance"]
             );
         }
         #endregion
@@ -180,6 +182,19 @@ namespace Infrastructure.Storage.Repositories
             }
         }
 
+        private static void EnsureBalanceColumnExistsInDB(SQLiteCommand cmd)
+        {
+            cmd.CommandText = $"SELECT COUNT(*) AS ColumnExists FROM sqlite_master WHERE type = 'table' AND name = '{TableName}' AND sql LIKE '%Balance%';";
+
+            bool columnExists = Convert.ToInt32(cmd.ExecuteScalar()) != 0;
+            if (!columnExists)
+            {
+                cmd.Parameters.Clear();
+                cmd.CommandText = $"ALTER TABLE {TableName} ADD COLUMN Balance REAL NOT NULL DEFAULT 0";
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         /// <summary>
         /// Добавляет переданный объект в БД и возращает его Id.
         /// </summary>
@@ -187,8 +202,10 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="cmd"></param>
         public static int AddSupplier(Supplier supplier, SQLiteCommand cmd)
         {
-            cmd.CommandText = "INSERT INTO " + TableName + " (ContragentName, Code, Entity, ContactInfoId, Description) "
-                            + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description); "
+            EnsureBalanceColumnExistsInDB(cmd);
+
+            cmd.CommandText = "INSERT INTO " + TableName + " (ContragentName, Code, Entity, ContactInfoId, Description, Balance) "
+                            + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description, @Balance); "
                             + "SELECT last_insert_rowid();";
 
             cmd.Parameters.Clear();
@@ -197,6 +214,7 @@ namespace Infrastructure.Storage.Repositories
             cmd.Parameters.AddWithValue("@Entity", supplier.Entity);
             cmd.Parameters.AddWithValue("@ContactInfoId", (supplier.ContactInfo != null) ? supplier.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description", supplier.Description);
+            cmd.Parameters.AddWithValue("@Balance", supplier.Balance);
 
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
@@ -263,6 +281,8 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="cmd"></param>
         public static void UpdateSupplier(Supplier supplier, SQLiteCommand cmd)
         {
+            EnsureBalanceColumnExistsInDB(cmd);
+
             cmd.CommandText = "UPDATE " + TableName
                             + " SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
                             + "ContactInfoId = @ContactInfoId, Description = @Description, Balance = @Balance "
