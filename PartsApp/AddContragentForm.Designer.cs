@@ -422,6 +422,8 @@
             this.BalanceNumericUpDown.Name = "BalanceNumericUpDown";
             this.BalanceNumericUpDown.Size = new System.Drawing.Size(76, 20);
             this.BalanceNumericUpDown.TabIndex = 70;
+            this.BalanceNumericUpDown.Minimum = decimal.MinValue;
+            this.BalanceNumericUpDown.Maximum = decimal.MaxValue;
             // 
             // AddContragentForm
             // 
