@@ -1435,6 +1435,7 @@ namespace PartsApp
             try
             {
                 sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
+                UpdateCustomerBalanceIfSaleIsNotFullyPaid(sale);
             }
             catch (Exception ex)
             {
@@ -1443,6 +1444,14 @@ namespace PartsApp
             }
             saveInExcelAsync(sale, sellerTextBox.Text.Trim());
             Close();
+        }
+
+        private void UpdateCustomerBalanceIfSaleIsNotFullyPaid(Sale sale)
+        {
+            if ((double)PaidNumericUpDown.Value != sale.OperationDetailsList.Sum(o => o.Sum))
+            {
+                PartsDAL.UpdateContragent(sale.Contragent);
+            }
         }
 
         private bool CheckIfSPsAvailabilityChanged()
