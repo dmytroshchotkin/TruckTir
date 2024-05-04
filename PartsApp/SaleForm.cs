@@ -1427,17 +1427,50 @@ namespace PartsApp
                 {
                     Sale sale = CreateSaleFromForm();
 
-                    try
-                    {
-                        sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
-                        return;
-                    }
-                    saveInExcelAsync(sale, sellerTextBox.Text.Trim());
-                    this.Close();
+            Sale sale = CreateSaleFromForm();
+            try
+            {
+                sale.OperationId = PartsDAL.AddSale(sale, _operDetList);
+                UpdateCustomerBalanceIfSaleIsNotFullyPaid(sale);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Операция завершена неправильно! Попробуйте ещё раз.\n\nОшибка:\n{ex.InnerException?.Message ?? ex.Message}");
+                return;
+            }
+            saveInExcelAsync(sale, sellerTextBox.Text.Trim());
+            Close();
+        }
+
+        private void UpdateCustomerBalanceIfSaleIsNotFullyPaid(Sale sale)
+        {
+            if ((double)PaidNumericUpDown.Value != sale.OperationDetailsList.Sum(o => o.Sum))
+            {
+                PartsDAL.UpdateContragent(sale.Contragent);
+            }
+        }
+
+        private bool CheckIfSPsAvailabilityChanged()
+        {
+            var spsWithChangedAvailabilities = GetSPsWithChangedAvailability();
+            if (!spsWithChangedAvailabilities.Any())
+            {
+                return false;
+            }
+
+            DeleteRowsForSPs(spsWithChangedAvailabilities);
+            DisplayInvalidAvailabilityMessageBox(spsWithChangedAvailabilities);
+            return true;
+        }
+
+        private void DeleteRowsForSPs(IEnumerable<SparePart> spareParts)
+        {
+            var rowsToDelete = new List<DataGridViewRow>();
+            foreach (DataGridViewRow row in SaleDGV.Rows)
+            {
+                if (row.Tag is SparePart sp && spareParts.Contains(sp))
+                {
+                    rowsToDelete.Add(row);
                 }
             }
         }
