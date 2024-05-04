@@ -209,6 +209,7 @@ namespace PartsApp
             codeMaskedTextBox.Text = _contragent.Code;
             entityComboBox.Text = _contragent.Entity;
             descrRichTextBox.Text = _contragent.Description;
+            BalanceNumericUpDown.Value = Convert.ToDecimal(_contragent.Balance);
             FillTheContactInfoPanel(_contragent.ContactInfo);
         }
 
