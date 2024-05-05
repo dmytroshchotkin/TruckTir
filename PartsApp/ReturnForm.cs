@@ -404,11 +404,11 @@ namespace PartsApp
 
         private List<OperationDetails> GetODsWithChangedCount()
         {         
-            var checkSale = PartsDAL.FindSale(_sale.OperationId);
-            ClearSaleOperationsFromReturns(checkSale);
+            var originalSale = PartsDAL.FindSale(_sale.OperationId);
+            ClearSaleOperationsFromReturns(originalSale);
 
-            var returnODs = GetReturnODsWithIndexesFromReturnDGV().Values.ToList();
-            return GetExistingMatchingReturnODs(checkSale, returnODs);
+            var currentReturnODs = GetReturnODsWithIndexesFromReturnDGV().Values.ToList();
+            return GetExistingMatchingReturnODs(originalSale, currentReturnODs);
         }
 
         private List<OperationDetails> GetExistingMatchingReturnODs(Sale checkSale, List<OperationDetails> currentReturnODs)
