@@ -476,35 +476,45 @@ namespace PartsApp
             MessageBox.Show($"Изменилось количество товара, доступное для возврата:\n{spArticlesAndTitles}", "Возврат не проведён!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private void UpdateCountDefaultValuesInReturnDGV(IEnumerable<OperationDetails> operationDetails)
+        private void UpdateCountDefaultValuesInReturnDGV(IEnumerable<OperationDetails> odsWithChangedCount)
         {
-            var returns = GetReturnODsWithIndexesFromReturnDGV();
+            var returnODsWithIndexesFromReturnDGV = GetReturnODsWithIndexesFromReturnDGV();
+            SetUpdatedValuesToODsWithChangedCount(returnODsWithIndexesFromReturnDGV, odsWithChangedCount);
+        }
 
-            foreach (var operationDetail in operationDetails)
+        private void SetUpdatedValuesToODsWithChangedCount(Dictionary<int, OperationDetails> returnODsWithIndexesFromReturnDGV, IEnumerable<OperationDetails> odsWithChangedCount)
+        {
+            var allReturnODs = returnODsWithIndexesFromReturnDGV.Values.ToList();
+            foreach (var operationDetail in odsWithChangedCount)
             {
-                var odWithChangedCount = returns.Values.ToList().Find(od => od.SparePart.SparePartId == operationDetail.SparePart.SparePartId);
-                if (odWithChangedCount == operationDetail)
+                var matchingODWithChangedCount = allReturnODs.Find(od => od.SparePart.SparePartId == operationDetail.SparePart.SparePartId);
+                if (matchingODWithChangedCount == operationDetail)
                 {
-                    SetDefaultCountValueForUnavailableSP(odWithChangedCount);
+                    SetDefaultCountValueForUnavailableSP(matchingODWithChangedCount);
                 }
-                else 
+                else
                 {
-                    SetCurrentCountValue(odWithChangedCount, operationDetail.Count);                                
-                }                
+                    SetCurrentCountValue(matchingODWithChangedCount, operationDetail.Count);
+                }
             }
 
             void SetDefaultCountValueForUnavailableSP(OperationDetails odWithZeroCount)
             {
                 odWithZeroCount.Count = 0;
                 odWithZeroCount.Tag = 0;
-                int rowIndex = returns.FirstOrDefault(r => r.Value == odWithZeroCount).Key;
-                SetDefaultValueToCell(ReturnDGV[CountCol.Index, rowIndex]);
+                SetDefaultValueToODCell(odWithZeroCount);
             }
 
             void SetCurrentCountValue(OperationDetails odWithNewCount, float newCount)
             {
                 odWithNewCount.Count = newCount;
                 odWithNewCount.Tag = newCount;
+            }
+
+            void SetDefaultValueToODCell(OperationDetails odWithZeroCount)
+            {
+                int rowIndex = returnODsWithIndexesFromReturnDGV.FirstOrDefault(r => r.Value == odWithZeroCount).Key;
+                SetDefaultValueToCell(ReturnDGV[CountCol.Index, rowIndex]);
             }
         }
     }
