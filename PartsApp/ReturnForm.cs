@@ -36,7 +36,7 @@ namespace PartsApp
             //Отнимаем из всего списка продажи, товар кот. уже был возвращен.
             foreach (var returnOperationDetail in returnsList)
             {
-                var fullOperationDetail = sale.OperationDetailsList.First(od => od.SparePart.SparePartId == returnOperationDetail.SparePart.SparePartId);
+                var fullOperationDetail = sale.OperationDetailsList.Find(od => od.SparePart.SparePartId == returnOperationDetail.SparePart.SparePartId);
                 if (fullOperationDetail != null)
                 {
                     fullOperationDetail.Count -= returnOperationDetail.Count;
