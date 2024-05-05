@@ -334,7 +334,7 @@ namespace PartsApp
         public Purchase CreatePurchaseFromForm()
         {
             //Находим весь возвращаемый товар.
-            var returns = GetReturnODsFromReturnDGV();
+            var returns = GetReturnODsWithIndexesFromReturnDGV().Values.ToList();
 
             Purchase purchase = new Purchase
             (
@@ -349,12 +349,12 @@ namespace PartsApp
             return purchase;
         }
 
-        private List<OperationDetails> GetReturnODsFromReturnDGV()
+        private Dictionary<int, OperationDetails> GetReturnODsWithIndexesFromReturnDGV()
         {
-            var returns = new List<OperationDetails>();
+            var returnsWithIndexes = new Dictionary<int, OperationDetails>();
             var correctlyFilledRows = ReturnDGV.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black);
-            correctlyFilledRows.ToList().ForEach(r => returns.Add(r.DataBoundItem as OperationDetails));
-            return returns;
+            correctlyFilledRows.ToList().ForEach(r => returnsWithIndexes.Add(r.Index, r.DataBoundItem as OperationDetails));
+            return returnsWithIndexes;
         }
 
         private void cancelButton_MouseClick(object sender, MouseEventArgs e)
@@ -407,7 +407,7 @@ namespace PartsApp
             var checkSale = PartsDAL.FindSale(_sale.OperationId);
             ClearSaleOperationsFromReturns(checkSale);
 
-            var returnODs = GetReturnODsFromReturnDGV();
+            var returnODs = GetReturnODsWithIndexesFromReturnDGV().Values.ToList();
             return GetExistingMatchingReturnODs(checkSale, returnODs);
         }
 
@@ -478,10 +478,11 @@ namespace PartsApp
 
         private void UpdateCountDefaultValuesInReturnDGV(IEnumerable<OperationDetails> operationDetails)
         {
-            var returns = GetReturnODsFromReturnDGV();
+            var returns = GetReturnODsWithIndexesFromReturnDGV();
+
             foreach (var operationDetail in operationDetails)
             {
-                var odWithChangedCount = returns.Find(od => od.SparePart.SparePartId == operationDetail.SparePart.SparePartId);
+                var odWithChangedCount = returns.Values.ToList().Find(od => od.SparePart.SparePartId == operationDetail.SparePart.SparePartId);
                 if (odWithChangedCount == operationDetail)
                 {
                     SetDefaultCountValueForUnavailableSP(odWithChangedCount);
@@ -496,7 +497,7 @@ namespace PartsApp
             {
                 odWithZeroCount.Count = 0;
                 odWithZeroCount.Tag = 0;
-                int rowIndex = ReturnDGV.Rows.Cast<DataGridViewRow>().First(r => r.DataBoundItem == odWithZeroCount).Index;
+                int rowIndex = returns.FirstOrDefault(r => r.Value == odWithZeroCount).Key;
                 SetDefaultValueToCell(ReturnDGV[CountCol.Index, rowIndex]);
             }
 
