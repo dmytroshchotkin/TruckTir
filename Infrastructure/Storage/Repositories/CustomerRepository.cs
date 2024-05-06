@@ -244,6 +244,7 @@ namespace Infrastructure.Storage.Repositories
                     customer.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
                     customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
                     customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
+                    customer.Balance = (dataReader["Balance"] == DBNull.Value) ? 0 : Convert.ToDouble(dataReader["Balance"]);
                 }
 
                 connection.Close();
