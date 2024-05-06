@@ -121,21 +121,43 @@ namespace PartsApp
         {
             if (ContragentsListView.SelectedItems[0].Tag is IContragent contragent)
             {
-                if (contragent is Supplier)
-                {
-                    contragent = PartsDAL.FindSuppliers(contragent.ContragentId);
-                }
-
-                if (contragent is Customer)
-                {
-                    contragent = PartsDAL.FindCustomers(contragent.ContragentId);
-                }
+                UpdateContragentWithOriginalDbEntryData(ref contragent);
 
                 //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
-                new AddContragentForm(contragent).Show();
+                new AddContragentForm(contragent).ShowDialog();
+                UpdateEditedContragentEntryInContragentsListView(contragent);
             }
         }
 
+        private void UpdateEditedContragentEntryInContragentsListView(IContragent contragent)
+        {
+            string currentContragentName = contragent.ContragentName;
+            UpdateContragentWithOriginalDbEntryData(ref contragent);
+            ResetContragentsListViewItemTexts();
+
+            void ResetContragentsListViewItemTexts()
+            {
+                var contragentListViewItem = ContragentsListView.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Text == currentContragentName);
+                if (contragentListViewItem != null)
+                {
+                    contragentListViewItem.Text = contragentListViewItem.SubItems[0].Text = contragent.ContragentName;
+                    contragentListViewItem.SubItems[1].Text = contragent.Balance.ToString("0.00");
+                }
+            }            
+        }
+
+        private void UpdateContragentWithOriginalDbEntryData(ref IContragent contragent)
+        {
+            if (contragent is Supplier)
+            {
+                contragent = PartsDAL.FindSuppliers(contragent.ContragentId);
+            }
+
+            if (contragent is Customer)
+            {
+                contragent = PartsDAL.FindCustomers(contragent.ContragentId);
+            }
+        }
 
         private void OperationsInfoDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
