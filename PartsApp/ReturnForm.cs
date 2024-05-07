@@ -374,7 +374,139 @@ namespace PartsApp
                 MessageBox.Show("Операция завершена неправильно! Попробуйте ещё раз.");
                 return;
             }
-            this.Close();
+            Close();
+        }
+
+        private bool CheckIfReturnsAvailabilityChanged()
+        {
+            var operationsWithChangedCount = GetODsWithChangedCount();
+            var spsWithChangedAvailabilities = GetSPsWithChangedReturnAvailability(operationsWithChangedCount);
+            if (!spsWithChangedAvailabilities.Any())
+            {
+                return false;                
+            }
+
+            UpdateCountDefaultValuesInReturnDGV(operationsWithChangedCount);
+            DisplayInvalidReturnAvailabilityMessageBox(spsWithChangedAvailabilities);
+            return true;
+        }
+
+        private List<OperationDetails> GetODsWithChangedCount()
+        {         
+            var originalSale = PartsDAL.FindSale(_sale.OperationId);
+            ClearSaleOperationsFromReturns(originalSale);
+
+            var currentReturnODs = GetReturnODsWithIndexesFromReturnDGV().Values.ToList();
+            return GetExistingMatchingReturnODs(originalSale, currentReturnODs);
+        }
+
+        private List<OperationDetails> GetExistingMatchingReturnODs(Sale checkSale, List<OperationDetails> currentReturnODs)
+        {
+            var existingMatchingReturnODs = new List<OperationDetails>();
+            foreach (var returnOD in currentReturnODs)
+            {
+                var returnODMatchingWIthCheckOD = GetMatchingReturnOD(checkSale, returnOD);
+                if (returnODMatchingWIthCheckOD != null)
+                {
+                    existingMatchingReturnODs.Add(returnODMatchingWIthCheckOD);
+                }
+            }
+
+            return existingMatchingReturnODs;
+        }
+
+        private OperationDetails GetMatchingReturnOD(Sale checkSale, OperationDetails currentReturnOD)
+        {
+            var originalReturnOD = checkSale.OperationDetailsList.Find(od => od.SparePart.SparePartId == currentReturnOD.SparePart.SparePartId);
+            
+            if (originalReturnOD is null)
+            {
+                return currentReturnOD;
+            }
+
+            if (originalReturnOD.Count < currentReturnOD.Count)
+            {
+                return originalReturnOD;
+            }
+
+            return null;
+        }
+
+        private List<SparePart> GetSPsWithChangedReturnAvailability(IEnumerable<OperationDetails> operationDetails)
+        {
+            var spsWithChangedReturnAvailability = new List<SparePart>();
+            foreach (var od in operationDetails)
+            {
+                spsWithChangedReturnAvailability.Add(od.SparePart);
+            }
+
+            return spsWithChangedReturnAvailability;
+        }
+
+        private bool CheckIfRequiredFielsFilledCorrectly()
+        {
+            //Если в таблице нет ни одной корректной записи, выдаём ошибку.
+            if (!ReturnDGV.Rows.Cast<DataGridViewRow>().Any(r => r.Cells[CountCol.Index].Style.ForeColor == Color.Black))
+            {
+                toolTip.Show("Выберите хотя бы один товар из таблицы.", this, okButton.Location, 3000);
+                return false;
+            }
+            return true;
+        }
+
+        private void DisplayInvalidReturnAvailabilityMessageBox(IEnumerable<SparePart> spareParts)
+        {
+            var spArticlesAndTitles = new StringBuilder();
+            foreach (var sp in spareParts)
+            {
+                spArticlesAndTitles.Append($"\n{sp.Articul}\n{sp.Title}\n");
+            }
+
+            MessageBox.Show($"Изменилось количество товара, доступное для возврата:\n{spArticlesAndTitles}", "Возврат не проведён!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void UpdateCountDefaultValuesInReturnDGV(IEnumerable<OperationDetails> odsWithChangedCount)
+        {
+            var returnODsWithIndexesFromReturnDGV = GetReturnODsWithIndexesFromReturnDGV();
+            SetUpdatedValuesToODsWithChangedCount(returnODsWithIndexesFromReturnDGV, odsWithChangedCount);
+        }
+
+        private void SetUpdatedValuesToODsWithChangedCount(Dictionary<int, OperationDetails> returnODsWithIndexesFromReturnDGV, IEnumerable<OperationDetails> odsWithChangedCount)
+        {
+            var allReturnODs = returnODsWithIndexesFromReturnDGV.Values.ToList();
+            foreach (var operationDetail in odsWithChangedCount)
+            {
+                var matchingODWithChangedCount = allReturnODs.Find(od => od.SparePart.SparePartId == operationDetail.SparePart.SparePartId);
+                if (matchingODWithChangedCount == operationDetail)
+                {
+                    SetDefaultCountValueForUnavailableSP(matchingODWithChangedCount);
+                }
+                else
+                {
+                    SetCurrentCountValue(matchingODWithChangedCount, operationDetail.Count);
+                }
+            }
+
+            void SetDefaultCountValueForUnavailableSP(OperationDetails odWithZeroCount)
+            {
+                odWithZeroCount.Count = 0;
+                odWithZeroCount.Tag = 0;
+                SetDefaultValueToODCell(odWithZeroCount);
+            }
+
+            void SetCurrentCountValue(OperationDetails odWithNewCount, float newCount)
+            {
+                odWithNewCount.Count = newCount;
+                odWithNewCount.Tag = newCount;
+            }
+
+            void SetDefaultValueToODCell(OperationDetails odWithZeroCount)
+            {
+                int rowIndex = returnODsWithIndexesFromReturnDGV.FirstOrDefault(r => r.Value == odWithZeroCount).Key;
+                var cell = ReturnDGV[CountCol.Index, rowIndex];
+                SetDefaultValueToCell(cell);
+                cell.ReadOnly = true;
+            }
         }
     }
 }
