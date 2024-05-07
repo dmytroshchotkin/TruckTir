@@ -105,16 +105,19 @@ namespace PartsApp
         private void ContragentsListBox_MouseDown(object sender, MouseEventArgs e)
         {
             //Если ПКМ по выделенному объекту, выводим контекстное меню.
-            if (e.Button == MouseButtons.Right)
+            if (e.Button != MouseButtons.Right || ContragentsListView.SelectedItems.Count == 0)
             {
-                Rectangle rect = ContragentsListView.GetItemRect(ContragentsListView.SelectedIndices[0]);
-                rect.Y += ContragentsGroupBox.Location.Y;
-
-                if (e.Y >= rect.Top && e.Y <= rect.Bottom)
-                {
-                    editContragentContextMenuStrip.Show(ContragentsListView, e.Location, ToolStripDropDownDirection.BelowRight);
-                }
+                return;
             }
+
+            Rectangle rect = ContragentsListView.GetItemRect(ContragentsListView.SelectedIndices[0]);
+            rect.Y += ContragentsGroupBox.Location.Y;
+
+            if (e.Y >= rect.Top && e.Y <= rect.Bottom)
+            {
+                editContragentContextMenuStrip.Show(ContragentsListView, e.Location, ToolStripDropDownDirection.BelowRight);
+            }
+
         }
 
         private void EditContragentToolStripMenuItem_Click(object sender, EventArgs e)
@@ -143,7 +146,7 @@ namespace PartsApp
                     contragentListViewItem.Text = contragentListViewItem.SubItems[0].Text = contragent.ContragentName;
                     contragentListViewItem.SubItems[1].Text = contragent.Balance.ToString("0.00");
                 }
-            }            
+            }
         }
 
         private void UpdateContragentWithOriginalDbEntryData(ref IContragent contragent)
