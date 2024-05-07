@@ -783,12 +783,20 @@ namespace PartsApp
                 return;
             }
 
+            ClearCellsSelectionInPartsDGV();
             PartsDGV[e.ColumnIndex, e.RowIndex].Selected = true;
             //Находим позицию в таблице, где был сделан клик и выводим контекстное меню.
             Rectangle cellRect = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
             partsDGVContextMenuStrip.Show(PartsDGV, new Point(cellRect.X, cellRect.Bottom));
         }
 
+        private void ClearCellsSelectionInPartsDGV()
+        {
+            foreach (DataGridViewCell selectedCell in PartsDGV.SelectedCells) 
+            {
+                selectedCell.Selected = false;
+            }
+        }
 
         //Событие исп-ся для регулирования ширины RowHeaders.
         private void partsDGV_DataSourceChanged(object sender, EventArgs e)
