@@ -19,12 +19,14 @@ namespace PartsApp.Models
         private Lazy<List<Availability>> _availabilityList;
         public List<Availability> AvailabilityList { get { return _availabilityList.Value; } }
 
+        public string StorageCell { get; set; }
+
         public SparePart() { }
         /// <summary>
         /// Конструктор для добавления нового объекта в БД.
         /// </summary>
         public SparePart(int sparePartId, string photo, string manufacturer, string articul,
-                         string title, string description, string measureUnit)
+                         string title, string description, string measureUnit, string storageCell = null)
         {
             SparePartId  = sparePartId;
             Photo        = photo;
@@ -33,6 +35,7 @@ namespace PartsApp.Models
             Title        = title;
             Description  = description;
             MeasureUnit  = measureUnit;
+            StorageCell = storageCell;
 
             // исключить из домена
             //_availabilityList = new Lazy<List<Availability>>(() => PartsDAL.FindAvailability(this));
@@ -40,7 +43,7 @@ namespace PartsApp.Models
 
         public SparePart(SparePart sparePart)
             : this (sparePart.SparePartId, sparePart.Photo, sparePart.Manufacturer, sparePart.Articul, sparePart.Title,
-                    sparePart.Description, sparePart.MeasureUnit)
+                    sparePart.Description, sparePart.MeasureUnit, sparePart.StorageCell)
         {
            
         }

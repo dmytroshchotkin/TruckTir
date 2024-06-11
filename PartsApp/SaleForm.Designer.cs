@@ -53,6 +53,7 @@
             this.saleGroupBox = new System.Windows.Forms.GroupBox();
             this.SaleDGV = new System.Windows.Forms.DataGridView();
             this.ArticulCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StorageCellCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TitleCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MeasureUnitCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -246,8 +247,9 @@
             this.SaleDGV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.SaleDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.SaleDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ArticulCol,
+            this.ArticulCol,            
             this.TitleCol,
+            this.StorageCellCol,
             this.MeasureUnitCol,
             this.CountCol,
             this.SellingPriceCol,
@@ -273,6 +275,15 @@
             this.ArticulCol.MinimumWidth = 130;
             this.ArticulCol.Name = "ArticulCol";
             this.ArticulCol.Width = 130;
+            // 
+            // StorageCellCol
+            // 
+            this.StorageCellCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.StorageCellCol.HeaderText = "Склад";
+            this.StorageCellCol.MinimumWidth = 10;
+            this.StorageCellCol.Name = "StorageCellCol";
+            this.StorageCellCol.ReadOnly = true;
+            this.StorageCellCol.Width = 80;
             // 
             // TitleCol
             // 
@@ -719,6 +730,7 @@
         private System.Windows.Forms.ContextMenuStrip saleContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn ArticulCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn StorageCellCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TitleCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn MeasureUnitCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn CountCol;
