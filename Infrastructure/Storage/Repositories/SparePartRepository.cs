@@ -16,7 +16,6 @@ namespace Infrastructure.Storage.Repositories
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
             {
                 connection.Open();
-
                 using (SQLiteTransaction trans = connection.BeginTransaction())
                 {
                     using (SQLiteCommand cmd = new SQLiteCommand(null, connection, trans))
@@ -27,8 +26,8 @@ namespace Infrastructure.Storage.Repositories
                             int? manufId = (sparePart.Manufacturer != null) ? FindManufacturerId(sparePart.Manufacturer) : (int?)null;
                             cmd.Parameters.AddWithValue("@ManufacturerId", (manufId == 0) ? AddManufacturer(sparePart.Manufacturer, cmd) : manufId);
 
-                            const string query = "INSERT INTO SpareParts(Photo, Articul, Title, Description, ManufacturerId, MeasureUnit) " +
-                                                 "VALUES(@Photo, @Articul, @Title, @Description, @ManufacturerId, @MeasureUnit);";
+                            const string query = "INSERT INTO SpareParts(Photo, Articul, Title, Description, ManufacturerId, MeasureUnit, StorageCell) " +
+                                                 "VALUES(@Photo, @Articul, @Title, @Description, @ManufacturerId, @MeasureUnit, @StorageCell);";
 
                             cmd.CommandText = query;
                             cmd.Parameters.AddWithValue("@Photo", sparePart.Photo);
@@ -36,6 +35,7 @@ namespace Infrastructure.Storage.Repositories
                             cmd.Parameters.AddWithValue("@Title", sparePart.Title);
                             cmd.Parameters.AddWithValue("@Description", sparePart.Description);
                             cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
+                            cmd.Parameters.AddWithValue("@StorageCell", sparePart.StorageCell);
 
                             cmd.ExecuteNonQuery();
 
@@ -73,7 +73,7 @@ namespace Infrastructure.Storage.Repositories
                             cmd.Parameters.AddWithValue("@ManufacturerId", (manufId == 0) ? AddManufacturer(sparePart.Manufacturer, cmd) : manufId);
 
                             const string query = "UPDATE SpareParts SET Photo = @Photo, Articul = @Articul, Title = @Title, "
-                                               + "Description = @Description, ManufacturerId = @ManufacturerId, MeasureUnit = @MeasureUnit "
+                                               + "Description = @Description, ManufacturerId = @ManufacturerId, MeasureUnit = @MeasureUnit, StorageCell = @StorageCell "
                                                + "WHERE SparePartId = @SparePartId;";
 
                             cmd.CommandText = query;
@@ -83,6 +83,7 @@ namespace Infrastructure.Storage.Repositories
                             cmd.Parameters.AddWithValue("@Title", sparePart.Title);
                             cmd.Parameters.AddWithValue("@Description", sparePart.Description);
                             cmd.Parameters.AddWithValue("@MeasureUnit", sparePart.MeasureUnit);
+                            cmd.Parameters.AddWithValue("@StorageCell", sparePart.StorageCell);
 
                             cmd.ExecuteNonQuery();
 
@@ -110,7 +111,8 @@ namespace Infrastructure.Storage.Repositories
                 title: dataReader["Title"] as string,
                 description: dataReader["Description"] as string,
                 manufacturer: dataReader["ManufacturerName"] as string,
-                measureUnit: dataReader["MeasureUnit"] as string
+                measureUnit: dataReader["MeasureUnit"] as string,
+                storageCell: dataReader["StorageCell"] as string
             );
 
             result.TrySetAvailabilities(new Lazy<List<Availability>>(() => AvailabilityDatabaseHandler.FindAvailability(result)));
@@ -220,16 +222,14 @@ namespace Infrastructure.Storage.Repositories
             List<SparePart> spareParts = new List<SparePart>();
 
             using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
-            {
+            {                
                 connection.Open();
-
                 string query = "SELECT DISTINCT sp.*, m.* FROM SpareParts AS sp "
                              + ((onlyInAvailability) ? "JOIN Avaliability AS a ON sp.SparePartId = a.SparePartId " : String.Empty)
                              + "LEFT JOIN Manufacturers AS m ON m.ManufacturerId = sp.ManufacturerId "
                              + "WHERE ToLower(sp.Articul) LIKE @TitleOrArticul OR ToLower(sp.Title) LIKE @TitleOrArticul "
                              + "OR ToLower(m.ManufacturerName) LIKE @TitleOrArticul "
                              + "LIMIT @limit;";
-
 
                 using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                 {

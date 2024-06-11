@@ -252,6 +252,7 @@ namespace PartsApp
             ManufacturerTextBox.Text = _sparePart.Manufacturer;
             DescrRichTextBox.Text = _sparePart.Description;
             MeasureUnitComboBox.SelectedItem = _sparePart.MeasureUnit;
+            StorageCellTextBox.Text = _sparePart.StorageCell;
 
             //Заполняем фото, если оно есть в соотв. папке.
             if (_sparePart.Photo != null && System.IO.File.Exists(System.IO.Path.GetFullPath(_sparePart.Photo)))
@@ -273,6 +274,7 @@ namespace PartsApp
             sparePart.Description = (!String.IsNullOrWhiteSpace(DescrRichTextBox.Text)) ? DescrRichTextBox.Text.Trim() : null;
             sparePart.Manufacturer = (!String.IsNullOrWhiteSpace(ManufacturerTextBox.Text)) ? ManufacturerTextBox.Text.Trim() : null;
             sparePart.MeasureUnit = MeasureUnitComboBox.SelectedValue.ToString();
+            sparePart.StorageCell = StorageCellTextBox.Text.Trim();
         }
 
         /// <summary>

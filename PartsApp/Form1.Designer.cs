@@ -98,16 +98,6 @@
             this.partsStatusStripPanel = new System.Windows.Forms.Panel();
             this.extPartsGroupBox = new System.Windows.Forms.GroupBox();
             this.ExtPartsDGV = new System.Windows.Forms.DataGridView();
-            this.SupplierExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PurchaseIdExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ArticulExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PurchaseDateExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StorageAddressExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MeasureUnitExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AvailabilityExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MarkupExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SellingPriceExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NoteExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.extPartsStatusStrip = new System.Windows.Forms.StatusStrip();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
@@ -119,6 +109,17 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.StorageCellExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SupplierExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PurchaseIdExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArticulExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PurchaseDateExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StorageAddressExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MeasureUnitExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AvailabilityExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MarkupExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SellingPriceExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NoteExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -788,6 +789,7 @@
             this.ExtPartsDGV.AllowUserToResizeRows = false;
             this.ExtPartsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ExtPartsDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.StorageCellExtCol,
             this.SupplierExtCol,
             this.PurchaseIdExtCol,
             this.ArticulExtCol,
@@ -809,6 +811,110 @@
             this.ExtPartsDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extPartsDGV_CellEndEdit);
             this.ExtPartsDGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.extPartsDGV_CellFormatting);
             this.ExtPartsDGV.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.extPartsDGV_DataBindingComplete);
+            // 
+            // extPartsStatusStrip
+            // 
+            this.extPartsStatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.extPartsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.progressBar});
+            this.extPartsStatusStrip.Location = new System.Drawing.Point(0, 206);
+            this.extPartsStatusStrip.Name = "extPartsStatusStrip";
+            this.extPartsStatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
+            this.extPartsStatusStrip.Size = new System.Drawing.Size(1305, 28);
+            this.extPartsStatusStrip.TabIndex = 0;
+            this.extPartsStatusStrip.Text = "statusStrip1";
+            this.extPartsStatusStrip.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
+            // 
+            // progressBar
+            // 
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(133, 20);
+            // 
+            // toolStripContainer1
+            // 
+            // 
+            // toolStripContainer1.ContentPanel
+            // 
+            this.toolStripContainer1.ContentPanel.Margin = new System.Windows.Forms.Padding(4);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(200, 215);
+            this.toolStripContainer1.LeftToolStripPanelVisible = false;
+            this.toolStripContainer1.Location = new System.Drawing.Point(465, 224);
+            this.toolStripContainer1.Margin = new System.Windows.Forms.Padding(4);
+            this.toolStripContainer1.Name = "toolStripContainer1";
+            this.toolStripContainer1.RightToolStripPanelVisible = false;
+            this.toolStripContainer1.Size = new System.Drawing.Size(200, 215);
+            this.toolStripContainer1.TabIndex = 0;
+            this.toolStripContainer1.Text = "toolStripContainer1";
+            this.toolStripContainer1.TopToolStripPanelVisible = false;
+            // 
+            // partsDGVContextMenuStrip
+            // 
+            this.partsDGVContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.partsDGVContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editSparePartToolStripMenuItem,
+            this.распечататьЦенникToolStripMenuItem,
+            this.посмотретьПередвижениеТовараToolStripMenuItem});
+            this.partsDGVContextMenuStrip.Name = "partsDGVContextMenuStrip";
+            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(323, 76);
+            // 
+            // editSparePartToolStripMenuItem
+            // 
+            this.editSparePartToolStripMenuItem.Name = "editSparePartToolStripMenuItem";
+            this.editSparePartToolStripMenuItem.Size = new System.Drawing.Size(322, 24);
+            this.editSparePartToolStripMenuItem.Text = "Редактировать ";
+            this.editSparePartToolStripMenuItem.Click += new System.EventHandler(this.editSparePartToolStripMenuItem_Click);
+            // 
+            // распечататьЦенникToolStripMenuItem
+            // 
+            this.распечататьЦенникToolStripMenuItem.Name = "распечататьЦенникToolStripMenuItem";
+            this.распечататьЦенникToolStripMenuItem.Size = new System.Drawing.Size(322, 24);
+            this.распечататьЦенникToolStripMenuItem.Text = "Распечатать ценник";
+            this.распечататьЦенникToolStripMenuItem.Click += new System.EventHandler(this.SpPriceListToExcelToolStripMenuItem_Click);
+            // 
+            // посмотретьПередвижениеТовараToolStripMenuItem
+            // 
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Name = "посмотретьПередвижениеТовараToolStripMenuItem";
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Size = new System.Drawing.Size(322, 24);
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Text = "Посмотреть передвижение товара";
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Click += new System.EventHandler(this.посмотретьПередвижениеТовараToolStripMenuItem_Click);
+            // 
+            // userNameLabel
+            // 
+            this.userNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.userNameLabel.AutoSize = true;
+            this.userNameLabel.ContextMenuStrip = this.userContextMenuStrip;
+            this.userNameLabel.Location = new System.Drawing.Point(976, 0);
+            this.userNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.userNameLabel.Name = "userNameLabel";
+            this.userNameLabel.Size = new System.Drawing.Size(108, 16);
+            this.userNameLabel.TabIndex = 12;
+            this.userNameLabel.Text = "ФИ сотрудника";
+            // 
+            // userContextMenuStrip
+            // 
+            this.userContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.userContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editEmployeeToolStripMenuItem});
+            this.userContextMenuStrip.Name = "userContextMenuStrip";
+            this.userContextMenuStrip.Size = new System.Drawing.Size(205, 28);
+            // 
+            // editEmployeeToolStripMenuItem
+            // 
+            this.editEmployeeToolStripMenuItem.Name = "editEmployeeToolStripMenuItem";
+            this.editEmployeeToolStripMenuItem.Size = new System.Drawing.Size(204, 24);
+            this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
+            this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
+            // 
+            // StorageCellExtCol
+            // 
+            this.StorageCellExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.StorageCellExtCol.DataPropertyName = "OperationDetails.SparePart.StorageCell";
+            this.StorageCellExtCol.HeaderText = "Склад";
+            this.StorageCellExtCol.MinimumWidth = 6;
+            this.StorageCellExtCol.Name = "StorageCellExtCol";
+            this.StorageCellExtCol.ReadOnly = true;
+            this.StorageCellExtCol.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.StorageCellExtCol.Width = 76;
             // 
             // SupplierExtCol
             // 
@@ -919,99 +1025,6 @@
             this.NoteExtCol.Name = "NoteExtCol";
             this.NoteExtCol.ReadOnly = true;
             this.NoteExtCol.Width = 129;
-            // 
-            // extPartsStatusStrip
-            // 
-            this.extPartsStatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.extPartsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.progressBar});
-            this.extPartsStatusStrip.Location = new System.Drawing.Point(0, 206);
-            this.extPartsStatusStrip.Name = "extPartsStatusStrip";
-            this.extPartsStatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.extPartsStatusStrip.Size = new System.Drawing.Size(1305, 28);
-            this.extPartsStatusStrip.TabIndex = 0;
-            this.extPartsStatusStrip.Text = "statusStrip1";
-            this.extPartsStatusStrip.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
-            // 
-            // progressBar
-            // 
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(133, 20);
-            // 
-            // toolStripContainer1
-            // 
-            // 
-            // toolStripContainer1.ContentPanel
-            // 
-            this.toolStripContainer1.ContentPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(200, 215);
-            this.toolStripContainer1.LeftToolStripPanelVisible = false;
-            this.toolStripContainer1.Location = new System.Drawing.Point(465, 224);
-            this.toolStripContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(200, 215);
-            this.toolStripContainer1.TabIndex = 0;
-            this.toolStripContainer1.Text = "toolStripContainer1";
-            this.toolStripContainer1.TopToolStripPanelVisible = false;
-            // 
-            // partsDGVContextMenuStrip
-            // 
-            this.partsDGVContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.partsDGVContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editSparePartToolStripMenuItem,
-            this.распечататьЦенникToolStripMenuItem,
-            this.посмотретьПередвижениеТовараToolStripMenuItem});
-            this.partsDGVContextMenuStrip.Name = "partsDGVContextMenuStrip";
-            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(323, 76);
-            // 
-            // editSparePartToolStripMenuItem
-            // 
-            this.editSparePartToolStripMenuItem.Name = "editSparePartToolStripMenuItem";
-            this.editSparePartToolStripMenuItem.Size = new System.Drawing.Size(322, 24);
-            this.editSparePartToolStripMenuItem.Text = "Редактировать ";
-            this.editSparePartToolStripMenuItem.Click += new System.EventHandler(this.editSparePartToolStripMenuItem_Click);
-            // 
-            // распечататьЦенникToolStripMenuItem
-            // 
-            this.распечататьЦенникToolStripMenuItem.Name = "распечататьЦенникToolStripMenuItem";
-            this.распечататьЦенникToolStripMenuItem.Size = new System.Drawing.Size(322, 24);
-            this.распечататьЦенникToolStripMenuItem.Text = "Распечатать ценник";
-            this.распечататьЦенникToolStripMenuItem.Click += new System.EventHandler(this.SpPriceListToExcelToolStripMenuItem_Click);
-            // 
-            // посмотретьПередвижениеТовараToolStripMenuItem
-            // 
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Name = "посмотретьПередвижениеТовараToolStripMenuItem";
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Size = new System.Drawing.Size(322, 24);
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Text = "Посмотреть передвижение товара";
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Click += new System.EventHandler(this.посмотретьПередвижениеТовараToolStripMenuItem_Click);
-            // 
-            // userNameLabel
-            // 
-            this.userNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.userNameLabel.AutoSize = true;
-            this.userNameLabel.ContextMenuStrip = this.userContextMenuStrip;
-            this.userNameLabel.Location = new System.Drawing.Point(976, 0);
-            this.userNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.userNameLabel.Name = "userNameLabel";
-            this.userNameLabel.Size = new System.Drawing.Size(108, 16);
-            this.userNameLabel.TabIndex = 12;
-            this.userNameLabel.Text = "ФИ сотрудника";
-            // 
-            // userContextMenuStrip
-            // 
-            this.userContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.userContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editEmployeeToolStripMenuItem});
-            this.userContextMenuStrip.Name = "userContextMenuStrip";
-            this.userContextMenuStrip.Size = new System.Drawing.Size(205, 28);
-            // 
-            // editEmployeeToolStripMenuItem
-            // 
-            this.editEmployeeToolStripMenuItem.Name = "editEmployeeToolStripMenuItem";
-            this.editEmployeeToolStripMenuItem.Size = new System.Drawing.Size(204, 24);
-            this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
-            this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -1127,6 +1140,15 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn MeasureUnitCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn AvaliabilityCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SellingPriceCol;
+        private System.Windows.Forms.ToolStripMenuItem ReturnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addReturnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripTextBox addReturnInputIdToolStripTextBox;
+        private System.Windows.Forms.ToolStripMenuItem editPurchaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripTextBox editPurchaseToolStripTextBox;
+        private System.Windows.Forms.ToolStripMenuItem ViewEmployeeInfoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewOperationsInfoPurchaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ViewOperationsInfoSaleToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn StorageCellExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SupplierExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PurchaseIdExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ArticulExtCol;
@@ -1137,14 +1159,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn MarkupExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SellingPriceExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn NoteExtCol;
-        private System.Windows.Forms.ToolStripMenuItem ReturnToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addReturnToolStripMenuItem;
-        private System.Windows.Forms.ToolStripTextBox addReturnInputIdToolStripTextBox;
-        private System.Windows.Forms.ToolStripMenuItem editPurchaseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripTextBox editPurchaseToolStripTextBox;
-        private System.Windows.Forms.ToolStripMenuItem ViewEmployeeInfoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ViewOperationsInfoPurchaseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ViewOperationsInfoSaleToolStripMenuItem;
     }
 }
 

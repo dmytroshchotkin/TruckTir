@@ -69,6 +69,7 @@
     <Compile Include="AddEmployeeForm.Designer.cs">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DatabaseHelper\DbSchemaCheck.cs" />
     <Compile Include="EmployeeOperationsInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,6 +82,7 @@
     <Compile Include="DismissEmployeeForm.Designer.cs">
       <DependentUpon>DismissEmployeeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExcelHelper\OperationsExcelHelper.cs" />
     <Compile Include="OperationsInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
