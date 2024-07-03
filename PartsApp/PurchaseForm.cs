@@ -46,7 +46,8 @@ namespace PartsApp
             currencyComboBox.SelectedIndex = 0;
 
             //Заполняем список автоподстановки для ввода контрагента.
-            supplierTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindSuppliers().Select(c => c.ContragentName).ToArray());
+            var suppliers = PartsDAL.FindSuppliers().Where(a => a.Enabled).Select(c => c.ContragentName).ToArray();
+            supplierTextBox.AutoCompleteCustomSource.AddRange(suppliers);
 
             //Вносим все типы наценок в markupComboBox             
             markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);

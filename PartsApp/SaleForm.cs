@@ -47,7 +47,8 @@ namespace PartsApp
             saleDateTimePicker.MinDate = saleDateTimePicker.Value = DateTime.Now;
 
             //Заполняем список автоподстановки для ввода контрагента.
-            customerTextBox.AutoCompleteCustomSource.AddRange(PartsDAL.FindCustomers().Select(c => c.ContragentName).ToArray());
+            var customers = PartsDAL.FindCustomers().Where(a => a.Enabled).Select(c => c.ContragentName).ToArray();
+            customerTextBox.AutoCompleteCustomSource.AddRange(customers);
 
             //Вносим все типы наценок в markupComboBox             
             markupComboBox.DataSource = new BindingSource(Models.Markup.GetValues(), null);
