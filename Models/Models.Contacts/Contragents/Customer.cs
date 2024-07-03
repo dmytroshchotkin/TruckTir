@@ -15,9 +15,10 @@ namespace PartsApp.Models
         public ContactInfo ContactInfo { get; set; }
         public string Description      { get; set; }
         public double Balance         { get; set; }
+        public bool Enabled           { get; set; }
 
         public Customer() { }
-        public Customer(int contragentId, string contragentName, string code, string entity, ContactInfo contactInfo, string description, double balance)
+        public Customer(int contragentId, string contragentName, string code, string entity, ContactInfo contactInfo, string description, double balance, bool enabled = true)
         {
             ContragentId   = contragentId;
             ContragentName = contragentName;
@@ -26,6 +27,7 @@ namespace PartsApp.Models
             ContactInfo    = contactInfo;
             Description    = description;
             Balance        = balance;            
+            Enabled        = enabled;
         }
     }
 }
