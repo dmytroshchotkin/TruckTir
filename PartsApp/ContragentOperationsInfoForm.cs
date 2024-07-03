@@ -105,11 +105,33 @@ namespace PartsApp
         private void ContragentsListBox_MouseDown(object sender, MouseEventArgs e)
         {
             //Если ПКМ по выделенному объекту, выводим контекстное меню.
+            // предотвращаем IndexOutOfRangeException, если клик по таблице без выбранных ячеек
             if (e.Button != MouseButtons.Right || ContragentsListView.SelectedItems.Count == 0)
             {
                 return;
             }
 
+            var contragent = GetSelectedContragent();
+            HandleToolStripMenuOptions(contragent.Enabled);
+            DisplayToolStripMenuBelowSelectedContragent(e);
+        }
+
+        private void HandleToolStripMenuOptions(bool contragentIsActive)
+        {
+            if (!contragentIsActive)
+            {
+                disableContragentToolStripMenuItem.Visible = false;
+                enableContragentToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                disableContragentToolStripMenuItem.Visible = true;
+                enableContragentToolStripMenuItem.Visible = false;
+            }            
+        }
+
+        private void DisplayToolStripMenuBelowSelectedContragent(MouseEventArgs e)
+        {
             Rectangle rect = ContragentsListView.GetItemRect(ContragentsListView.SelectedIndices[0]);
             rect.Y += ContragentsGroupBox.Location.Y;
 
@@ -121,23 +143,80 @@ namespace PartsApp
 
         private void EditContragentToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var contragent = GetSelectedContragent();
+
+            //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
+            new AddContragentForm(contragent).Show();            
+        }
+
+        private void OnDisableOrEnableContragentToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var contragent = GetSelectedContragent();
+            var input = contragent.Enabled ? ShowDisableContragentMessageBox(contragent) : ShowEnableContragentMessageBox(contragent);
+
+            if (input == DialogResult.Yes)
+            {
+                UpdateContragentEnability(contragent);
+            }
+        }
+
+        private void UpdateContragentEnability(IContragent contragent)
+        {
+            try
+            {
+                if (contragent.Enabled)
+                {
+                    PartsDAL.DisableContragent(contragent);
+                }
+                else
+                {
+                    PartsDAL.EnableContragent(contragent);
+                }                
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Ошибка обновления данных, повторите попытку позже");
+            }
+        }
+
+        private DialogResult ShowDisableContragentMessageBox(IContragent contragent)
+        {
+            return MessageBox.Show(
+                    $"Заблокировать {(contragent is Supplier ? "поставщика" : "покупателя")} {contragent.ContragentName}?" +
+                    $"\n\nПосле блокировки этот контрагент станет недоступен для проведения новых операций.",
+                    "Блокировка контрагента",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+        }        
+
+        private DialogResult ShowEnableContragentMessageBox(IContragent contragent)
+        {
+            return MessageBox.Show(
+                    $"Разблокировать {(contragent is Supplier ? "поставщика" : "покупателя")} {contragent.ContragentName}?",
+                    "Разблокировка контрагента",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+        }
+
+        private IContragent GetSelectedContragent()
+        {
             if (ContragentsListView.SelectedItems[0].Tag is IContragent contragent)
             {
                 if (contragent is Supplier)
                 {
-                    contragent = PartsDAL.FindSuppliers(contragent.ContragentId);
+                    return PartsDAL.FindSuppliers(contragent.ContragentId);
                 }
 
                 if (contragent is Customer)
                 {
-                    contragent = PartsDAL.FindCustomers(contragent.ContragentId);
+                    return PartsDAL.FindCustomers(contragent.ContragentId);
                 }
-
-                //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
-                new AddContragentForm(contragent).Show();
             }
-        }
 
+            return default;
+        }
 
         private void OperationsInfoDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {

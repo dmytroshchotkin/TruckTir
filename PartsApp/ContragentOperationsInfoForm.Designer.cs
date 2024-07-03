@@ -60,6 +60,8 @@
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.editContragentContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editContragentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disableContragentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enableContragentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editOperDescriptContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editOperDescriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -343,7 +345,7 @@
             // editContragentContextMenuStrip
             // 
             this.editContragentContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editContragentToolStripMenuItem});
+            this.editContragentToolStripMenuItem, this.disableContragentToolStripMenuItem, this.enableContragentToolStripMenuItem });
             this.editContragentContextMenuStrip.Name = "editContragentContextMenuStrip";
             this.editContragentContextMenuStrip.Size = new System.Drawing.Size(155, 26);
             // 
@@ -353,6 +355,20 @@
             this.editContragentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.editContragentToolStripMenuItem.Text = "Редактировать";
             this.editContragentToolStripMenuItem.Click += new System.EventHandler(this.EditContragentToolStripMenuItem_Click);
+            // 
+            // disableContragentToolStripMenuItem
+            // 
+            this.disableContragentToolStripMenuItem.Name = "disableContragentToolStripMenuItem";
+            this.disableContragentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.disableContragentToolStripMenuItem.Text = "Заблокировать";
+            this.disableContragentToolStripMenuItem.Click += new System.EventHandler(this.OnDisableOrEnableContragentToolStripMenuItemClick);
+            // 
+            // enableContragentToolStripMenuItem
+            // 
+            this.enableContragentToolStripMenuItem.Name = "enableContragentToolStripMenuItem";
+            this.enableContragentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.enableContragentToolStripMenuItem.Text = "Разблокировать";
+            this.enableContragentToolStripMenuItem.Click += new System.EventHandler(this.OnDisableOrEnableContragentToolStripMenuItemClick);
             // 
             // editOperDescriptContextMenuStrip
             // 
@@ -415,6 +431,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
         private System.Windows.Forms.ContextMenuStrip editContragentContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem editContragentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem disableContragentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem enableContragentToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn OperationIdCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeCol;
