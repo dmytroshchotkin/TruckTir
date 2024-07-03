@@ -210,7 +210,7 @@ namespace Infrastructure.Storage.Repositories
 
                 while (dataReader.Read())
                 {
-                    customers.Add(CreateCustomers(dataReader));
+                    customers.Add(CreateCustomer(dataReader));
                 }
 
                 connection.Close();
@@ -241,7 +241,7 @@ namespace Infrastructure.Storage.Repositories
                 {
                     while (dataReader.Read())
                     {
-                        customer = CreateCustomers(dataReader);
+                        customer = CreateCustomer(dataReader);
                     }
                 }
 
@@ -272,13 +272,7 @@ namespace Infrastructure.Storage.Repositories
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    customer.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
-                    customer.ContragentName = dataReader["ContragentName"] as string;
-                    customer.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    customer.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
-                    customer.Enabled = Convert.ToBoolean(dataReader["Enabled"]);
+                    customer = CreateCustomer(dataReader);
                 }
 
                 connection.Close();
@@ -286,7 +280,7 @@ namespace Infrastructure.Storage.Repositories
 
             return customer;
         }
-        private static Customer CreateCustomers(SQLiteDataReader dataReader)
+        private static Customer CreateCustomer(SQLiteDataReader dataReader)
         {
             return new Customer
             (
