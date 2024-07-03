@@ -94,6 +94,37 @@ namespace PartsApp
             }
         }
 
+        public static void DisableContragent(IContragent contragent)
+        {
+            if (contragent is Supplier)
+            {
+                SupplierRepository.DisableSupplier(contragent.ContragentId);
+            }
+            else if (contragent is Customer)
+            {
+                CustomerRepository.DisableCustomer(contragent.ContragentId);
+            }
+            else
+            {
+                throw new ArgumentException(InvalidTypeMessage);
+            }
+        }
+
+        public static void EnableContragent(IContragent contragent)
+        {
+            if (contragent is Supplier)
+            {
+                SupplierRepository.EnableSupplier(contragent.ContragentId);
+            }
+            else if (contragent is Customer)
+            {
+                CustomerRepository.EnableCustomer(contragent.ContragentId);
+            }
+            else
+            {
+                throw new ArgumentException(InvalidTypeMessage);
+            }
+        }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 
