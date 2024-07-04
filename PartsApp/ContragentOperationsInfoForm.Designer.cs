@@ -29,17 +29,19 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.ContragentsGroupBox = new System.Windows.Forms.GroupBox();
             this.ContragentsListView = new System.Windows.Forms.ListView();
             this.ContragentCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.BalanceCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.DisabledContragentsCheckBox = new System.Windows.Forms.CheckBox();
+            this.EnabledContragentsCheckBox = new System.Windows.Forms.CheckBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
@@ -104,6 +106,8 @@
             // 
             this.ContragentsGroupBox.BackColor = System.Drawing.SystemColors.Control;
             this.ContragentsGroupBox.Controls.Add(this.ContragentsListView);
+            this.ContragentsGroupBox.Controls.Add(this.DisabledContragentsCheckBox);
+            this.ContragentsGroupBox.Controls.Add(this.EnabledContragentsCheckBox);
             this.ContragentsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ContragentsGroupBox.Location = new System.Drawing.Point(0, 0);
             this.ContragentsGroupBox.Name = "ContragentsGroupBox";
@@ -120,6 +124,7 @@
             this.ContragentsListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ContragentsListView.FullRowSelect = true;
             this.ContragentsListView.GridLines = true;
+            this.ContragentsListView.HideSelection = false;
             this.ContragentsListView.Location = new System.Drawing.Point(3, 16);
             this.ContragentsListView.MultiSelect = false;
             this.ContragentsListView.Name = "ContragentsListView";
@@ -140,6 +145,26 @@
             this.BalanceCol.Text = "Баланс";
             this.BalanceCol.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.BalanceCol.Width = 99;
+            // 
+            // DisabledContragentsCheckBox
+            // 
+            this.DisabledContragentsCheckBox.AutoSize = true;
+            this.DisabledContragentsCheckBox.Location = new System.Drawing.Point(184, 0);
+            this.DisabledContragentsCheckBox.Name = "DisabledContragentsCheckBox";
+            this.DisabledContragentsCheckBox.Size = new System.Drawing.Size(89, 17);
+            this.DisabledContragentsCheckBox.TabIndex = 3;
+            this.DisabledContragentsCheckBox.Text = "Неактивные";
+            this.DisabledContragentsCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // EnabledContragentsCheckBox
+            // 
+            this.EnabledContragentsCheckBox.AutoSize = true;
+            this.EnabledContragentsCheckBox.Location = new System.Drawing.Point(100, 0);
+            this.EnabledContragentsCheckBox.Name = "EnabledContragentsCheckBox";
+            this.EnabledContragentsCheckBox.Size = new System.Drawing.Size(76, 17);
+            this.EnabledContragentsCheckBox.TabIndex = 2;
+            this.EnabledContragentsCheckBox.Text = "Активные";
+            this.EnabledContragentsCheckBox.UseVisualStyleBackColor = true;
             // 
             // splitContainer2
             // 
@@ -209,9 +234,9 @@
             // DateCol
             // 
             this.DateCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle43.Format = "dd.MM.yyyy \'г.\'   HH:mm";
-            dataGridViewCellStyle43.NullValue = null;
-            this.DateCol.DefaultCellStyle = dataGridViewCellStyle43;
+            dataGridViewCellStyle1.Format = "dd.MM.yyyy \'г.\'   HH:mm";
+            dataGridViewCellStyle1.NullValue = null;
+            this.DateCol.DefaultCellStyle = dataGridViewCellStyle1;
             this.DateCol.HeaderText = "Дата";
             this.DateCol.MinimumWidth = 80;
             this.DateCol.Name = "DateCol";
@@ -238,10 +263,10 @@
             // 
             // TotalSumCol
             // 
-            dataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle44.Format = "C2";
-            dataGridViewCellStyle44.NullValue = null;
-            this.TotalSumCol.DefaultCellStyle = dataGridViewCellStyle44;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "C2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.TotalSumCol.DefaultCellStyle = dataGridViewCellStyle2;
             this.TotalSumCol.HeaderText = "Сумма (руб.)";
             this.TotalSumCol.MinimumWidth = 100;
             this.TotalSumCol.Name = "TotalSumCol";
@@ -300,8 +325,8 @@
             // MeasureUnitCol
             // 
             this.MeasureUnitCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle45;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.MeasureUnitCol.DefaultCellStyle = dataGridViewCellStyle3;
             this.MeasureUnitCol.HeaderText = "Ед. изм.";
             this.MeasureUnitCol.MinimumWidth = 35;
             this.MeasureUnitCol.Name = "MeasureUnitCol";
@@ -311,8 +336,8 @@
             // CountCol
             // 
             this.CountCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CountCol.DefaultCellStyle = dataGridViewCellStyle46;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.CountCol.DefaultCellStyle = dataGridViewCellStyle4;
             this.CountCol.HeaderText = "Кол-во";
             this.CountCol.Name = "CountCol";
             this.CountCol.ReadOnly = true;
@@ -321,10 +346,10 @@
             // PriceCol
             // 
             this.PriceCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle47.Format = "N2";
-            dataGridViewCellStyle47.NullValue = null;
-            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle47;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle5.Format = "N2";
+            dataGridViewCellStyle5.NullValue = null;
+            this.PriceCol.DefaultCellStyle = dataGridViewCellStyle5;
             this.PriceCol.HeaderText = "Цена (руб.)";
             this.PriceCol.MinimumWidth = 50;
             this.PriceCol.Name = "PriceCol";
@@ -334,10 +359,10 @@
             // SumCol
             // 
             this.SumCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle48.Format = "C2";
-            dataGridViewCellStyle48.NullValue = null;
-            this.SumCol.DefaultCellStyle = dataGridViewCellStyle48;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "C2";
+            dataGridViewCellStyle6.NullValue = null;
+            this.SumCol.DefaultCellStyle = dataGridViewCellStyle6;
             this.SumCol.HeaderText = "Сумма (руб.)";
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
@@ -345,28 +370,30 @@
             // editContragentContextMenuStrip
             // 
             this.editContragentContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editContragentToolStripMenuItem, this.disableContragentToolStripMenuItem, this.enableContragentToolStripMenuItem });
+            this.editContragentToolStripMenuItem,
+            this.disableContragentToolStripMenuItem,
+            this.enableContragentToolStripMenuItem});
             this.editContragentContextMenuStrip.Name = "editContragentContextMenuStrip";
-            this.editContragentContextMenuStrip.Size = new System.Drawing.Size(155, 26);
+            this.editContragentContextMenuStrip.Size = new System.Drawing.Size(164, 70);
             // 
             // editContragentToolStripMenuItem
             // 
             this.editContragentToolStripMenuItem.Name = "editContragentToolStripMenuItem";
-            this.editContragentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.editContragentToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.editContragentToolStripMenuItem.Text = "Редактировать";
             this.editContragentToolStripMenuItem.Click += new System.EventHandler(this.EditContragentToolStripMenuItem_Click);
             // 
             // disableContragentToolStripMenuItem
             // 
             this.disableContragentToolStripMenuItem.Name = "disableContragentToolStripMenuItem";
-            this.disableContragentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.disableContragentToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.disableContragentToolStripMenuItem.Text = "Заблокировать";
             this.disableContragentToolStripMenuItem.Click += new System.EventHandler(this.OnDisableOrEnableContragentToolStripMenuItemClick);
             // 
             // enableContragentToolStripMenuItem
             // 
             this.enableContragentToolStripMenuItem.Name = "enableContragentToolStripMenuItem";
-            this.enableContragentToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.enableContragentToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.enableContragentToolStripMenuItem.Text = "Разблокировать";
             this.enableContragentToolStripMenuItem.Click += new System.EventHandler(this.OnDisableOrEnableContragentToolStripMenuItemClick);
             // 
@@ -399,6 +426,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ContragentsGroupBox.ResumeLayout(false);
+            this.ContragentsGroupBox.PerformLayout();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -444,5 +472,7 @@
         private System.Windows.Forms.ListView ContragentsListView;
         private System.Windows.Forms.ColumnHeader ContragentCol;
         private System.Windows.Forms.ColumnHeader BalanceCol;
+        private System.Windows.Forms.CheckBox EnabledContragentsCheckBox;
+        private System.Windows.Forms.CheckBox DisabledContragentsCheckBox;
     }
 }
