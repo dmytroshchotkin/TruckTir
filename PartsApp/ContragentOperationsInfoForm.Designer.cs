@@ -87,6 +87,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -98,8 +99,9 @@
             // 
             this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(739, 685);
-            this.splitContainer1.SplitterDistance = 288;
+            this.splitContainer1.Size = new System.Drawing.Size(985, 843);
+            this.splitContainer1.SplitterDistance = 354;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
             // 
             // ContragentsGroupBox
@@ -110,8 +112,10 @@
             this.ContragentsGroupBox.Controls.Add(this.EnabledContragentsCheckBox);
             this.ContragentsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ContragentsGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.ContragentsGroupBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ContragentsGroupBox.Name = "ContragentsGroupBox";
-            this.ContragentsGroupBox.Size = new System.Drawing.Size(739, 288);
+            this.ContragentsGroupBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ContragentsGroupBox.Size = new System.Drawing.Size(985, 354);
             this.ContragentsGroupBox.TabIndex = 1;
             this.ContragentsGroupBox.TabStop = false;
             this.ContragentsGroupBox.Text = "Контрагенты";
@@ -125,10 +129,11 @@
             this.ContragentsListView.FullRowSelect = true;
             this.ContragentsListView.GridLines = true;
             this.ContragentsListView.HideSelection = false;
-            this.ContragentsListView.Location = new System.Drawing.Point(3, 16);
+            this.ContragentsListView.Location = new System.Drawing.Point(4, 19);
+            this.ContragentsListView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ContragentsListView.MultiSelect = false;
             this.ContragentsListView.Name = "ContragentsListView";
-            this.ContragentsListView.Size = new System.Drawing.Size(733, 269);
+            this.ContragentsListView.Size = new System.Drawing.Size(977, 331);
             this.ContragentsListView.TabIndex = 1;
             this.ContragentsListView.UseCompatibleStateImageBehavior = false;
             this.ContragentsListView.View = System.Windows.Forms.View.Details;
@@ -149,28 +154,33 @@
             // DisabledContragentsCheckBox
             // 
             this.DisabledContragentsCheckBox.AutoSize = true;
-            this.DisabledContragentsCheckBox.Location = new System.Drawing.Point(184, 0);
+            this.DisabledContragentsCheckBox.Location = new System.Drawing.Point(245, 0);
+            this.DisabledContragentsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.DisabledContragentsCheckBox.Name = "DisabledContragentsCheckBox";
-            this.DisabledContragentsCheckBox.Size = new System.Drawing.Size(89, 17);
+            this.DisabledContragentsCheckBox.Size = new System.Drawing.Size(110, 20);
             this.DisabledContragentsCheckBox.TabIndex = 3;
             this.DisabledContragentsCheckBox.Text = "Неактивные";
             this.DisabledContragentsCheckBox.UseVisualStyleBackColor = true;
+            this.DisabledContragentsCheckBox.CheckedChanged += new System.EventHandler(this.OnContragentsCheckBoxesCheckedChanged);
             // 
             // EnabledContragentsCheckBox
             // 
             this.EnabledContragentsCheckBox.AutoSize = true;
-            this.EnabledContragentsCheckBox.Location = new System.Drawing.Point(100, 0);
+            this.EnabledContragentsCheckBox.Location = new System.Drawing.Point(133, 0);
+            this.EnabledContragentsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.EnabledContragentsCheckBox.Name = "EnabledContragentsCheckBox";
-            this.EnabledContragentsCheckBox.Size = new System.Drawing.Size(76, 17);
+            this.EnabledContragentsCheckBox.Size = new System.Drawing.Size(93, 20);
             this.EnabledContragentsCheckBox.TabIndex = 2;
             this.EnabledContragentsCheckBox.Text = "Активные";
             this.EnabledContragentsCheckBox.UseVisualStyleBackColor = true;
+            this.EnabledContragentsCheckBox.CheckedChanged += new System.EventHandler(this.OnContragentsCheckBoxesCheckedChanged);
             // 
             // splitContainer2
             // 
             this.splitContainer2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -182,8 +192,8 @@
             // 
             this.splitContainer2.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer2.Panel2.Controls.Add(this.OperationDetailsGroupBox);
-            this.splitContainer2.Size = new System.Drawing.Size(739, 393);
-            this.splitContainer2.SplitterDistance = 204;
+            this.splitContainer2.Size = new System.Drawing.Size(985, 484);
+            this.splitContainer2.SplitterDistance = 251;
             this.splitContainer2.SplitterWidth = 2;
             this.splitContainer2.TabIndex = 1;
             // 
@@ -193,8 +203,10 @@
             this.OperationsGroupBox.Controls.Add(this.OperationsInfoDGV);
             this.OperationsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationsGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.OperationsGroupBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.OperationsGroupBox.Name = "OperationsGroupBox";
-            this.OperationsGroupBox.Size = new System.Drawing.Size(739, 204);
+            this.OperationsGroupBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OperationsGroupBox.Size = new System.Drawing.Size(985, 251);
             this.OperationsGroupBox.TabIndex = 0;
             this.OperationsGroupBox.TabStop = false;
             this.OperationsGroupBox.Text = "Операции";
@@ -213,11 +225,13 @@
             this.DescriptionCol,
             this.TotalSumCol});
             this.OperationsInfoDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OperationsInfoDGV.Location = new System.Drawing.Point(3, 16);
+            this.OperationsInfoDGV.Location = new System.Drawing.Point(4, 19);
+            this.OperationsInfoDGV.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.OperationsInfoDGV.MultiSelect = false;
             this.OperationsInfoDGV.Name = "OperationsInfoDGV";
+            this.OperationsInfoDGV.RowHeadersWidth = 51;
             this.OperationsInfoDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.OperationsInfoDGV.Size = new System.Drawing.Size(733, 185);
+            this.OperationsInfoDGV.Size = new System.Drawing.Size(977, 228);
             this.OperationsInfoDGV.TabIndex = 1;
             this.OperationsInfoDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.OperationsInfoDGV_CellEndEdit);
             this.OperationsInfoDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.OperationsInfoDGV_CellMouseClick);
@@ -227,6 +241,7 @@
             // 
             this.OperationIdCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.OperationIdCol.HeaderText = "№ операции";
+            this.OperationIdCol.MinimumWidth = 6;
             this.OperationIdCol.Name = "OperationIdCol";
             this.OperationIdCol.ReadOnly = true;
             this.OperationIdCol.Width = 60;
@@ -246,20 +261,26 @@
             // EmployeeCol
             // 
             this.EmployeeCol.HeaderText = "Сотрудник";
+            this.EmployeeCol.MinimumWidth = 6;
             this.EmployeeCol.Name = "EmployeeCol";
             this.EmployeeCol.ReadOnly = true;
+            this.EmployeeCol.Width = 125;
             // 
             // ContragentEmployeeCol
             // 
             this.ContragentEmployeeCol.HeaderText = "Представитель контрагента";
+            this.ContragentEmployeeCol.MinimumWidth = 6;
             this.ContragentEmployeeCol.Name = "ContragentEmployeeCol";
             this.ContragentEmployeeCol.ReadOnly = true;
+            this.ContragentEmployeeCol.Width = 125;
             // 
             // DescriptionCol
             // 
             this.DescriptionCol.HeaderText = "Комментарий";
+            this.DescriptionCol.MinimumWidth = 6;
             this.DescriptionCol.Name = "DescriptionCol";
             this.DescriptionCol.ReadOnly = true;
+            this.DescriptionCol.Width = 125;
             // 
             // TotalSumCol
             // 
@@ -271,14 +292,17 @@
             this.TotalSumCol.MinimumWidth = 100;
             this.TotalSumCol.Name = "TotalSumCol";
             this.TotalSumCol.ReadOnly = true;
+            this.TotalSumCol.Width = 125;
             // 
             // OperationDetailsGroupBox
             // 
             this.OperationDetailsGroupBox.Controls.Add(this.OperationDetailsDGV);
             this.OperationDetailsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationDetailsGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.OperationDetailsGroupBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.OperationDetailsGroupBox.Name = "OperationDetailsGroupBox";
-            this.OperationDetailsGroupBox.Size = new System.Drawing.Size(739, 187);
+            this.OperationDetailsGroupBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OperationDetailsGroupBox.Size = new System.Drawing.Size(985, 231);
             this.OperationDetailsGroupBox.TabIndex = 1;
             this.OperationDetailsGroupBox.TabStop = false;
             this.OperationDetailsGroupBox.Text = "Доп. инф-ция по операции.";
@@ -298,27 +322,34 @@
             this.PriceCol,
             this.SumCol});
             this.OperationDetailsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OperationDetailsDGV.Location = new System.Drawing.Point(3, 16);
+            this.OperationDetailsDGV.Location = new System.Drawing.Point(4, 19);
+            this.OperationDetailsDGV.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.OperationDetailsDGV.Name = "OperationDetailsDGV";
-            this.OperationDetailsDGV.Size = new System.Drawing.Size(733, 168);
+            this.OperationDetailsDGV.RowHeadersWidth = 51;
+            this.OperationDetailsDGV.Size = new System.Drawing.Size(977, 208);
             this.OperationDetailsDGV.TabIndex = 0;
             // 
             // ManufacturerCol
             // 
             this.ManufacturerCol.HeaderText = "Производитель";
+            this.ManufacturerCol.MinimumWidth = 6;
             this.ManufacturerCol.Name = "ManufacturerCol";
             this.ManufacturerCol.ReadOnly = true;
+            this.ManufacturerCol.Width = 125;
             // 
             // ArticulCol
             // 
             this.ArticulCol.HeaderText = "Артикул";
+            this.ArticulCol.MinimumWidth = 6;
             this.ArticulCol.Name = "ArticulCol";
             this.ArticulCol.ReadOnly = true;
+            this.ArticulCol.Width = 125;
             // 
             // TitleCol
             // 
             this.TitleCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.TitleCol.HeaderText = "Название";
+            this.TitleCol.MinimumWidth = 6;
             this.TitleCol.Name = "TitleCol";
             this.TitleCol.ReadOnly = true;
             // 
@@ -339,6 +370,7 @@
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.CountCol.DefaultCellStyle = dataGridViewCellStyle4;
             this.CountCol.HeaderText = "Кол-во";
+            this.CountCol.MinimumWidth = 6;
             this.CountCol.Name = "CountCol";
             this.CountCol.ReadOnly = true;
             this.CountCol.Width = 50;
@@ -364,60 +396,65 @@
             dataGridViewCellStyle6.NullValue = null;
             this.SumCol.DefaultCellStyle = dataGridViewCellStyle6;
             this.SumCol.HeaderText = "Сумма (руб.)";
+            this.SumCol.MinimumWidth = 6;
             this.SumCol.Name = "SumCol";
             this.SumCol.ReadOnly = true;
+            this.SumCol.Width = 125;
             // 
             // editContragentContextMenuStrip
             // 
+            this.editContragentContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.editContragentContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editContragentToolStripMenuItem,
             this.disableContragentToolStripMenuItem,
             this.enableContragentToolStripMenuItem});
             this.editContragentContextMenuStrip.Name = "editContragentContextMenuStrip";
-            this.editContragentContextMenuStrip.Size = new System.Drawing.Size(164, 70);
+            this.editContragentContextMenuStrip.Size = new System.Drawing.Size(192, 76);
             // 
             // editContragentToolStripMenuItem
             // 
             this.editContragentToolStripMenuItem.Name = "editContragentToolStripMenuItem";
-            this.editContragentToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.editContragentToolStripMenuItem.Size = new System.Drawing.Size(191, 24);
             this.editContragentToolStripMenuItem.Text = "Редактировать";
             this.editContragentToolStripMenuItem.Click += new System.EventHandler(this.EditContragentToolStripMenuItem_Click);
             // 
             // disableContragentToolStripMenuItem
             // 
             this.disableContragentToolStripMenuItem.Name = "disableContragentToolStripMenuItem";
-            this.disableContragentToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.disableContragentToolStripMenuItem.Size = new System.Drawing.Size(191, 24);
             this.disableContragentToolStripMenuItem.Text = "Заблокировать";
             this.disableContragentToolStripMenuItem.Click += new System.EventHandler(this.OnDisableOrEnableContragentToolStripMenuItemClick);
             // 
             // enableContragentToolStripMenuItem
             // 
             this.enableContragentToolStripMenuItem.Name = "enableContragentToolStripMenuItem";
-            this.enableContragentToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.enableContragentToolStripMenuItem.Size = new System.Drawing.Size(191, 24);
             this.enableContragentToolStripMenuItem.Text = "Разблокировать";
             this.enableContragentToolStripMenuItem.Click += new System.EventHandler(this.OnDisableOrEnableContragentToolStripMenuItemClick);
             // 
             // editOperDescriptContextMenuStrip
             // 
+            this.editOperDescriptContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.editOperDescriptContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editOperDescriptToolStripMenuItem});
             this.editOperDescriptContextMenuStrip.Name = "editOperDescriptContextMenuStrip";
-            this.editOperDescriptContextMenuStrip.Size = new System.Drawing.Size(234, 26);
+            this.editOperDescriptContextMenuStrip.Size = new System.Drawing.Size(281, 28);
             // 
             // editOperDescriptToolStripMenuItem
             // 
             this.editOperDescriptToolStripMenuItem.Name = "editOperDescriptToolStripMenuItem";
-            this.editOperDescriptToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.editOperDescriptToolStripMenuItem.Size = new System.Drawing.Size(280, 24);
             this.editOperDescriptToolStripMenuItem.Text = "Редактировать комментарий";
             this.editOperDescriptToolStripMenuItem.Click += new System.EventHandler(this.editOperDescriptToolStripMenuItem_Click);
             // 
             // ContragentOperationsInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(739, 685);
+            this.ClientSize = new System.Drawing.Size(985, 843);
             this.Controls.Add(this.splitContainer1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ContragentOperationsInfoForm";
             this.Text = "Операции контрагентов";
             this.Load += new System.EventHandler(this.ContragentOperationsInfoForm_Load);
