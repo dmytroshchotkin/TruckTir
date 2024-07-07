@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PartsApp.DatabaseHelper;
 using PartsApp.Models;
 
 namespace PartsApp
@@ -101,7 +102,8 @@ namespace PartsApp
         {
             //Если ПКМ по выделенному объекту, выводим контекстное меню.
             // предотвращаем IndexOutOfRangeException, если клик по таблице без выбранных ячеек
-            if (e.Button != MouseButtons.Right || ContragentsListView.SelectedItems.Count == 0)
+            // закрываем редактирование "поставщика", зарезервированного для оформления возвратов
+            if (e.Button != MouseButtons.Right || ContragentsListView.SelectedItems.Count == 0 || !CanEditContragent())
             {
                 return;
             }
@@ -109,6 +111,12 @@ namespace PartsApp
             var contragent = GetSelectedContragentFromDB();
             HandleToolStripMenuOptions(contragent.Enabled);
             DisplayToolStripMenuBelowSelectedContragent(e);
+        }
+
+        private bool CanEditContragent()
+        {
+            var contragent = ContragentsListView.SelectedItems[0].Tag as IContragent;
+            return DataCheck.CanEditContragent(contragent);            
         }
 
         private void HandleToolStripMenuOptions(bool contragentEnabled)

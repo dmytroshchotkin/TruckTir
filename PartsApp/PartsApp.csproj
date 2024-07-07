@@ -70,6 +70,7 @@
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DatabaseHelper\DbSchemaCheck.cs" />
+    <Compile Include="DatabaseHelper\DataCheck.cs" />
     <Compile Include="EmployeeOperationsInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
