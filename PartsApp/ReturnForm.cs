@@ -514,7 +514,9 @@ namespace PartsApp
             void SetDefaultValueToODCell(OperationDetails odWithZeroCount)
             {
                 int rowIndex = returnODsWithIndexesFromReturnDGV.FirstOrDefault(r => r.Value == odWithZeroCount).Key;
-                SetDefaultValueToCell(ReturnDGV[CountCol.Index, rowIndex]);
+                var cell = ReturnDGV[CountCol.Index, rowIndex];
+                SetDefaultValueToCell(cell);
+                cell.ReadOnly = true;
             }
         }
     }
