@@ -105,15 +105,17 @@ namespace PartsApp
         private void ContragentsListBox_MouseDown(object sender, MouseEventArgs e)
         {
             //Если ПКМ по выделенному объекту, выводим контекстное меню.
-            if (e.Button == MouseButtons.Right)
+            if (e.Button != MouseButtons.Right || ContragentsListView.SelectedItems.Count == 0)
             {
-                Rectangle rect = ContragentsListView.GetItemRect(ContragentsListView.SelectedIndices[0]);
-                rect.Y += ContragentsGroupBox.Location.Y;
+                return;
+            }
 
-                if (e.Y >= rect.Top && e.Y <= rect.Bottom)
-                {
-                    editContragentContextMenuStrip.Show(ContragentsListView, e.Location, ToolStripDropDownDirection.BelowRight);
-                }
+            Rectangle rect = ContragentsListView.GetItemRect(ContragentsListView.SelectedIndices[0]);
+            rect.Y += ContragentsGroupBox.Location.Y;
+
+            if (e.Y >= rect.Top && e.Y <= rect.Bottom)
+            {
+                editContragentContextMenuStrip.Show(ContragentsListView, e.Location, ToolStripDropDownDirection.BelowRight);
             }
         }
 
