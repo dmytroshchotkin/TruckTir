@@ -777,18 +777,16 @@ namespace PartsApp
         //Событие для отображения расширенной информации о Наличии запчасти.
         private void partsDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            //Если клик сделан не по заголовку таблицы.
-            if (e.RowIndex != -1)
+            //Если клик ПКМ не по заголовку таблицы или крайнему столбцу.    
+            if (e.RowIndex == -1 || e.ColumnIndex == -1 || e.Button != MouseButtons.Right)
             {
-                //Если ПКМ, выводим контекстное меню.
-                if (e.Button == MouseButtons.Right)
-                {
-                    PartsDGV[e.ColumnIndex, e.RowIndex].Selected = true;
-                    //Находим позицию в таблице, где был сделан клик и выводим контекстное меню.
-                    Rectangle cellRect = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
-                    partsDGVContextMenuStrip.Show(PartsDGV, new Point(cellRect.X, cellRect.Bottom));
-                }
+                return;
             }
+        
+            PartsDGV[e.ColumnIndex, e.RowIndex].Selected = true;
+            //Находим позицию в таблице, где был сделан клик и выводим контекстное меню.
+            Rectangle cellRect = PartsDGV.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+            partsDGVContextMenuStrip.Show(PartsDGV, new Point(cellRect.X, cellRect.Bottom));
         }
 
         //Событие исп-ся для регулирования ширины RowHeaders.
@@ -1168,7 +1166,7 @@ namespace PartsApp
         {
             //Если Титор, тогда делаем бэкап (Для проверки на Lock conflict)
             if (CurEmployee?.EmployeeId == 1)
-            {                
+            {
                 PartsDAL.CreateLocalBackup(); //создаём локальный бэкап.
             }
         }
