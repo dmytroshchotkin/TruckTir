@@ -1104,7 +1104,7 @@ namespace PartsApp
                 if (row.Tag is SparePart sp)
                 {
                     var updatedSp = SparePartRepository.FindSparePart(sp.SparePartId);
-                    if (Availability.GetTotalCount(updatedSp.AvailabilityList) != Availability.GetTotalCount(sp.AvailabilityList))
+                    if (!DoSPsHaveEqualAvailability(sp, updatedSp))
                     {
                         result.Add(sp);
                     }
@@ -1112,6 +1112,20 @@ namespace PartsApp
             }
 
             return result;
+        }
+
+        private bool DoSPsHaveEqualAvailability(SparePart sp1, SparePart sp2)
+        {
+            foreach (var a in sp1.AvailabilityList)
+            {
+                if (!sp2.AvailabilityList.Exists(av => av.OperationDetails.Operation.OperationId == a.OperationDetails.Operation.OperationId
+                && a.OperationDetails.Count == av.OperationDetails.Count))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void RemoveRowsFromSaleDGV(IEnumerable<DataGridViewRow> rows)
