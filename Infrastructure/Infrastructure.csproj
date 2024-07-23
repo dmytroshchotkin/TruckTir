@@ -61,6 +61,7 @@
     <Compile Include="PartsDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\DbConnectionHelper\DbConnectionHelper.cs" />
+    <Compile Include="Helper\DbSchemaCheck.cs" />
     <Compile Include="Storage\Repositories\CustomerRepository.cs" />
     <Compile Include="Storage\FilesStorageHelper.cs" />
     <Compile Include="Storage\PropertiesHandlers\AvailabilityDatabaseHandler.cs" />
