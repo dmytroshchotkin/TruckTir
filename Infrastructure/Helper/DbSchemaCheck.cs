@@ -2,11 +2,11 @@
 using System;
 using System.Data.SQLite;
 
-namespace PartsApp.DatabaseHelper
+namespace Infrastructure.Helper
 {
-    internal static class DbSchemaCheck
+    public static class DbSchemaCheck
     {
-        internal static void EnsureNewColumnsExistsInDBTables()
+        public static void EnsureNewColumnsExistsInDBTables()
         {
             using (var connection = DbConnectionHelper.GetDatabaseConnection() as SQLiteConnection)
             {
