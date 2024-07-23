@@ -69,7 +69,7 @@
     <Compile Include="AddEmployeeForm.Designer.cs">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseHelper\DataCheck.cs" />
+    <Compile Include="OperationsDataCheck\DataCheck.cs" />
     <Compile Include="EmployeeOperationsInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>

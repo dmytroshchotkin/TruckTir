@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PartsApp.DatabaseHelper
+namespace PartsApp.OperationsDataCheck
 {
     internal static class DataCheck
     {
