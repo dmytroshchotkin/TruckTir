@@ -35,14 +35,13 @@ namespace PartsApp
             PurchaseDGV.AllowUserToAddRows = PurchaseDGV.AllowUserToDeleteRows = false;
             FillFormFromObject(purchase);//заполняем форму
 
-            markupCheckBox.Visible = storageLabel.Visible = storageComboBox.Visible = false;
+            markupCheckBox.Visible = false;
             purchaseDateTimePicker.Enabled = false;
             buyerTextBox.ReadOnly = supplierAgentTextBox.ReadOnly = supplierTextBox.ReadOnly = PurchaseDGV.ReadOnly = true;
         }
 
         private void PurchaseForm_Load(object sender, EventArgs e)
         {
-            storageComboBox.SelectedIndex = 0;
             currencyComboBox.SelectedIndex = 0;
 
             //Заполняем список автоподстановки для ввода контрагента.
@@ -55,34 +54,6 @@ namespace PartsApp
             buyerAgentTextBox.Text = $"{Form1.CurEmployee.LastName} {Form1.CurEmployee.FirstName}";
         }
 
-        private void storageComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (storageComboBox.SelectedIndex != 0)
-            {
-                storageAdressStarLabel.Visible = storageAdressLabel.Visible = storageAdressBackPanel.Visible = true;
-            }
-            else
-            {
-                storageAdressStarLabel.Visible = storageAdressLabel.Visible = storageAdressBackPanel.Visible = false;
-                storageAdressBackPanel.BackColor = SystemColors.Control;
-                storageAdressTextBox.Clear();
-            }
-        }
-
-        private void storageAdressTextBox_Leave(object sender, EventArgs e)
-        {
-            if (storageAdressTextBox.Visible)
-            {
-                if (String.IsNullOrWhiteSpace(storageAdressTextBox.Text))
-                {
-                    storageAdressBackPanel.BackColor = Color.Red;
-                }
-                else
-                {
-                    storageAdressBackPanel.BackColor = SystemColors.Control;
-                }
-            }
-        }
         #region Валидация вводимых данных.
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -819,7 +790,7 @@ namespace PartsApp
                     Availability avail = new Availability
                     (
                         operationDetails: operDet,
-                        storageAddress: (String.IsNullOrWhiteSpace(storageAdressTextBox.Text)) ? null : storageAdressTextBox.Text.Trim(),
+                        storageAddress: null,
                         markup: (row.Cells[MarkupCol.Index].Tag != null) ? Convert.ToSingle(row.Cells[MarkupCol.Index].Tag) : 0
                     );
                     availList.Add(avail);
