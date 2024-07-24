@@ -58,8 +58,8 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="cmd"></param>
         internal static int AddCustomer(Customer customer, SQLiteCommand cmd)
         {
-            cmd.CommandText = "INSERT INTO " + TableName + " (ContragentName, Code, Entity, ContactInfoId, Description) "
-                            + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description); "
+            cmd.CommandText = "INSERT INTO " + TableName + " (ContragentName, Code, Entity, ContactInfoId, Description, Enabled) "
+                            + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description, @Enabled); "
                             + "SELECT last_insert_rowid();";
 
             cmd.Parameters.Clear();
@@ -68,6 +68,7 @@ namespace Infrastructure.Storage.Repositories
             cmd.Parameters.AddWithValue("@Entity", customer.Entity);
             cmd.Parameters.AddWithValue("@ContactInfoId", (customer.ContactInfo != null) ? customer.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description", customer.Description);
+            cmd.Parameters.AddWithValue("@Enabled", customer.Enabled);
 
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
@@ -127,6 +128,38 @@ namespace Infrastructure.Storage.Repositories
             }
         }
 
+        internal static void DisableCustomer(int customerId)
+        {
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                UpdateCustomerEnability(customerId, true, connection);
+                connection.Close();
+            }
+        }
+
+        internal static void EnableCustomer(int customerId)
+        {
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                UpdateCustomerEnability(customerId, false, connection);
+                connection.Close();
+            }
+        }
+
+        private static void UpdateCustomerEnability(int customerId, bool disable, SQLiteConnection connection)
+        {
+            int enabilityValue = disable ? 0 : 1;
+            using (var cmd = new SQLiteCommand(connection))
+            {
+                cmd.CommandText = $"UPDATE {TableName} SET Enabled = @Enabled WHERE ContragentId = @ContragentId;";
+                cmd.Parameters.AddWithValue("@ContragentId", customerId);
+                cmd.Parameters.AddWithValue("@Enabled", enabilityValue);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         /// <summary>
         /// Обновляет контрагента в таблице.
         /// </summary>
@@ -136,7 +169,7 @@ namespace Infrastructure.Storage.Repositories
         {
             cmd.CommandText = "UPDATE " + TableName
                             + " SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
-                            + "ContactInfoId = @ContactInfoId, Description = @Description, Balance = @Balance "
+                            + "ContactInfoId = @ContactInfoId, Description = @Description, Balance = @Balance, Enabled = @Enabled "
                             + "WHERE ContragentId = @ContragentId;";
 
             cmd.Parameters.Clear();
@@ -147,6 +180,7 @@ namespace Infrastructure.Storage.Repositories
             cmd.Parameters.AddWithValue("@ContactInfoId", (customer.ContactInfo != null) ? customer.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description", customer.Description);
             cmd.Parameters.AddWithValue("@Balance", customer.Balance);
+            cmd.Parameters.AddWithValue("@Enabled", customer.Enabled);
 
             cmd.ExecuteNonQuery();
         }
@@ -161,7 +195,7 @@ namespace Infrastructure.Storage.Repositories
         /// Возвращает коллекцию из всех Customer.
         /// </summary>
         /// <returns></returns>
-        public static List<Customer> FindCustomers()   
+        public static List<Customer> FindCustomers()
         {
             List<Customer> customers = new List<Customer>();
 
@@ -176,7 +210,7 @@ namespace Infrastructure.Storage.Repositories
 
                 while (dataReader.Read())
                 {
-                    customers.Add(CreateCustomers(dataReader));
+                    customers.Add(CreateCustomer(dataReader));
                 }
 
                 connection.Close();
@@ -207,7 +241,7 @@ namespace Infrastructure.Storage.Repositories
                 {
                     while (dataReader.Read())
                     {
-                        customer = CreateCustomers(dataReader);
+                        customer = CreateCustomer(dataReader);
                     }
                 }
 
@@ -238,12 +272,7 @@ namespace Infrastructure.Storage.Repositories
                 var dataReader = cmd.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    customer.ContragentId = Convert.ToInt32(dataReader["ContragentId"]);
-                    customer.ContragentName = dataReader["ContragentName"] as string;
-                    customer.Code = (dataReader["Code"] == DBNull.Value) ? String.Empty : dataReader["Code"] as string;
-                    customer.Entity = (dataReader["Entity"] == DBNull.Value) ? String.Empty : dataReader["Entity"] as string;
-                    customer.ContactInfo = (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null;
-                    customer.Description = (dataReader["Description"] == DBNull.Value) ? null : dataReader["Description"] as string;
+                    customer = CreateCustomer(dataReader);
                 }
 
                 connection.Close();
@@ -251,7 +280,7 @@ namespace Infrastructure.Storage.Repositories
 
             return customer;
         }
-        private static Customer CreateCustomers(SQLiteDataReader dataReader)
+        private static Customer CreateCustomer(SQLiteDataReader dataReader)
         {
             return new Customer
             (
@@ -261,7 +290,8 @@ namespace Infrastructure.Storage.Repositories
                 entity: dataReader["Entity"] as string,
                 contactInfo: (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
                 description: dataReader["Description"] as string,
-                balance: (double)dataReader["Balance"]
+                balance: (double)dataReader["Balance"],
+                enabled: Convert.ToBoolean(dataReader["Enabled"])
             );
         }
 

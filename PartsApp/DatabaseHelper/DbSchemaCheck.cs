@@ -11,7 +11,8 @@ namespace PartsApp.DatabaseHelper
             using (var connection = DbConnectionHelper.GetDatabaseConnection() as SQLiteConnection)
             {
                 connection.Open();
-                EnsureStorageCellColumnExistsInSparePartsTable(connection);            
+                EnsureStorageCellColumnExistsInSparePartsTable(connection);
+                EnsureEnabledColumnExistsInCustomersAndSuppliersTables(connection);
                 connection.Close();
             }
         }
@@ -30,6 +31,30 @@ namespace PartsApp.DatabaseHelper
                     cmd.ExecuteNonQuery();
                 }
             }            
+        }
+
+        private static void EnsureEnabledColumnExistsInCustomersAndSuppliersTables(SQLiteConnection connection)
+        {
+            using (var cmd = new SQLiteCommand("", connection))
+            {
+                cmd.CommandText = $"SELECT COUNT(*) AS ColumnExists FROM sqlite_master WHERE type = 'table' AND name = 'Customers' AND sql LIKE '%Enabled%';";
+                bool columnExistsInCustomersTable = Convert.ToInt32(cmd.ExecuteScalar()) != 0;
+                if (!columnExistsInCustomersTable)
+                {
+                    cmd.Parameters.Clear();
+                    cmd.CommandText = $"ALTER TABLE Customers ADD COLUMN Enabled INTEGER CHECK (Enabled in (1,0)) NOT NULL DEFAULT 1";
+                    cmd.ExecuteNonQuery();
+                }
+
+                cmd.CommandText = $"SELECT COUNT(*) AS ColumnExists FROM sqlite_master WHERE type = 'table' AND name = 'Suppliers' AND sql LIKE '%Enabled%';";
+                bool columnExistsInSuppliersTable = Convert.ToInt32(cmd.ExecuteScalar()) != 0;
+                if (!columnExistsInSuppliersTable)
+                {
+                    cmd.Parameters.Clear();
+                    cmd.CommandText = $"ALTER TABLE Suppliers ADD COLUMN Enabled INTEGER CHECK (Enabled in (1,0)) NOT NULL DEFAULT 1";
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

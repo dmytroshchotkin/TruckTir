@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PartsApp.DatabaseHelper;
 using PartsApp.Models;
 
 namespace PartsApp
@@ -24,6 +26,7 @@ namespace PartsApp
         /// Ключ - Id контрагента. Значение - список операций данного контрагента.
         /// </summary>
         Dictionary<int, List<IOperation>> _contragentsOperations;
+        List<IContragent> _contragents = new List<IContragent>();
 
 
         public ContragentOperationsInfoForm(Type contragType)
@@ -46,29 +49,22 @@ namespace PartsApp
         private void FormInitialize()
         {
             //Заполняем таблицы инф-цией в зависимости от типа операции.
-            List<IContragent> contragList = null;
             if (_contragType == typeof(Supplier))
             {
-                contragList = PartsDAL.FindSuppliers().Cast<IContragent>().OrderBy(s => s.ContragentName).ToList();
+                _contragents = PartsDAL.FindSuppliers().Cast<IContragent>().OrderBy(s => s.ContragentName).ToList();
                 ContragentsGroupBox.Text = "Поставщики";
                 OperationsGroupBox.Text = "Поставки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по поставкам.";
             }
             else
             {
-                contragList = PartsDAL.FindCustomers().Cast<IContragent>().OrderBy(s => s.ContragentName).ToList();
+                _contragents = PartsDAL.FindCustomers().Cast<IContragent>().OrderBy(s => s.ContragentName).ToList();
                 ContragentsGroupBox.Text = "Покупатели";
                 OperationsGroupBox.Text = "Покупки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по покупкам.";
             }
-            //Заполняем лист контрагентами.
-            foreach (IContragent contrag in contragList)
-            {
-                ListViewItem item = new ListViewItem(contrag.ContragentName);
-                item.SubItems.Add(contrag.Balance == null ? null : ((double)contrag.Balance).ToString("0.00"));
-                item.Tag = contrag;
-                ContragentsListView.Items.Add(item);
-            }
+
+            EnabledContragentsCheckBox.Checked = true;            
         }
 
         private void ContragentsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -105,11 +101,40 @@ namespace PartsApp
         private void ContragentsListBox_MouseDown(object sender, MouseEventArgs e)
         {
             //Если ПКМ по выделенному объекту, выводим контекстное меню.
-            if (e.Button != MouseButtons.Right || ContragentsListView.SelectedItems.Count == 0)
+            // предотвращаем IndexOutOfRangeException, если клик по таблице без выбранных ячеек
+            // закрываем редактирование "поставщика", зарезервированного для оформления возвратов
+            if (e.Button != MouseButtons.Right || ContragentsListView.SelectedItems.Count == 0 || !CanEditContragent())
             {
                 return;
             }
 
+            var contragent = GetSelectedContragentFromDB();
+            HandleToolStripMenuOptions(contragent.Enabled);
+            DisplayToolStripMenuBelowSelectedContragent(e);
+        }
+
+        private bool CanEditContragent()
+        {
+            var contragent = ContragentsListView.SelectedItems[0].Tag as IContragent;
+            return DataCheck.CanEditContragent(contragent);            
+        }
+
+        private void HandleToolStripMenuOptions(bool contragentEnabled)
+        {
+            if (!contragentEnabled)
+            {
+                disableContragentToolStripMenuItem.Visible = false;
+                enableContragentToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                disableContragentToolStripMenuItem.Visible = true;
+                enableContragentToolStripMenuItem.Visible = false;
+            }            
+        }
+
+        private void DisplayToolStripMenuBelowSelectedContragent(MouseEventArgs e)
+        {
             Rectangle rect = ContragentsListView.GetItemRect(ContragentsListView.SelectedIndices[0]);
             rect.Y += ContragentsGroupBox.Location.Y;
 
@@ -121,23 +146,105 @@ namespace PartsApp
 
         private void EditContragentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ContragentsListView.SelectedItems[0].Tag is IContragent contragent)
+            var contragent = GetSelectedContragentFromDB();
+
+            //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
+            new AddContragentForm(contragent).Show();            
+        }
+
+        private void OnDisableOrEnableContragentToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var contragent = GetSelectedContragentFromCache();
+            var input = contragent.Enabled ? ShowDisableContragentMessageBox(contragent) : ShowEnableContragentMessageBox(contragent);
+
+            if (input == DialogResult.Yes)
             {
-                if (contragent is Supplier)
-                {
-                    contragent = PartsDAL.FindSuppliers(contragent.ContragentId);
-                }
-
-                if (contragent is Customer)
-                {
-                    contragent = PartsDAL.FindCustomers(contragent.ContragentId);
-                }
-
-                //Передаём в форму 'свежую'инф-цию из базы, на случай если она обновилась.
-                new AddContragentForm(contragent).Show();
+                UpdateContragentEnability(contragent);
             }
         }
 
+        private void UpdateContragentEnability(IContragent contragent)
+        {
+            try
+            {
+                if (contragent.Enabled)
+                {
+                    PartsDAL.DisableContragent(contragent);
+                }
+                else
+                {
+                    PartsDAL.EnableContragent(contragent);
+                }
+                UpdateContragentData(contragent);
+                SetContentsOfContragentsListView(GetContragents());
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Ошибка обновления данных, повторите попытку позже");
+            }
+        }
+
+        private void UpdateContragentData(IContragent contragent)
+        {
+            _contragents.Remove(_contragents.Find(c => c.ContragentId == contragent.ContragentId));
+            _contragents.Add(GetContragentFromDB(contragent));
+        }
+
+        private DialogResult ShowDisableContragentMessageBox(IContragent contragent)
+        {
+            return MessageBox.Show(
+                    $"Заблокировать {(contragent is Supplier ? "поставщика" : "покупателя")} {contragent.ContragentName}?" +
+                    $"\n\nПосле блокировки этот контрагент станет недоступен для проведения новых операций.",
+                    "Блокировка контрагента",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+        }        
+
+        private DialogResult ShowEnableContragentMessageBox(IContragent contragent)
+        {
+            return MessageBox.Show(
+                    $"Разблокировать {(contragent is Supplier ? "поставщика" : "покупателя")} {contragent.ContragentName}?",
+                    "Разблокировка контрагента",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+        }
+
+        private IContragent GetSelectedContragentFromDB()
+        {
+            if (ContragentsListView.SelectedItems[0].Tag is IContragent contragent)
+            {
+                return GetContragentFromDB(contragent);
+            }
+
+            return default;
+        }
+
+        private IContragent GetContragentFromDB(IContragent contragent)
+        {
+            if (contragent is Supplier)
+            {
+                return PartsDAL.FindSuppliers(contragent.ContragentId);
+            }
+
+            if (contragent is Customer)
+            {
+                return PartsDAL.FindCustomers(contragent.ContragentId);
+            }
+
+            return default;
+        }
+
+        private IContragent GetSelectedContragentFromCache()
+        {
+            if (ContragentsListView.SelectedItems[0].Tag is IContragent contragent)
+            {
+                return _contragents.Find(c => c.ContragentId == contragent.ContragentId);
+            }
+
+            return default;
+        }
 
         private void OperationsInfoDGV_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -255,6 +362,61 @@ namespace PartsApp
                 row.Cells[CountCol.Index].Value = operDet.Count;
                 row.Cells[PriceCol.Index].Value = operDet.Price;
                 row.Cells[SumCol.Index].Value = operDet.Count * operDet.Price;
+            }
+        }
+
+        private void OnContragentsCheckBoxesCheckedChanged(object sender, EventArgs e)
+        {
+            var contragents = GetContragents();
+            SetContentsOfContragentsListView(contragents);
+        }
+
+       private List<IContragent> GetContragents()
+        {
+            return GetContragents(EnabledContragentsCheckBox.Checked, DisabledContragentsCheckBox.Checked);
+        }
+
+        private List<IContragent> GetContragents(bool selectEnabledContragents, bool selectDisabledContragents)
+        {
+            var contragents = new List<IContragent>();
+
+            if (selectEnabledContragents)
+            {
+                contragents.AddRange(GetEnabledContragentsFromCache());
+            }
+
+            if (selectDisabledContragents)
+            {
+                contragents.AddRange(GetDisabledContragentsFromCache());
+            }
+
+            return contragents;
+        }
+
+        private List<IContragent> GetEnabledContragentsFromCache()
+        {
+            return _contragents
+                .Where(c => c.Enabled)
+                .OrderBy(c => c.ContragentName).ToList();
+        }
+
+        private List<IContragent> GetDisabledContragentsFromCache()
+        {
+            return _contragents
+                .Where(c => !c.Enabled)
+                .OrderBy(c => c.ContragentName).ToList();
+        }
+
+        private void SetContentsOfContragentsListView(List<IContragent> contragents)
+        {
+            ContragentsListView.Items.Clear();
+            OperationsInfoDGV.Rows.Clear();
+
+            foreach (var c in contragents)
+            {
+                var item = new ListViewItem(c.ContragentName) { Tag = c };
+                item.SubItems.Add(c.Balance.ToString("0.00"));
+                ContragentsListView.Items.Add(item);
             }
         }
     }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using PartsApp.SupportClasses;
 using PartsApp.Models;
+using PartsApp.DatabaseHelper;
 
 namespace PartsApp
 {
@@ -339,7 +340,7 @@ namespace PartsApp
             Purchase purchase = new Purchase
             (
                 employee: Form1.CurEmployee,
-                contragent: PartsDAL.FindSuppliers("Возврат"),
+                contragent: PartsDAL.FindSuppliers(DataCheck.ReturnContragentName),
                 contragentEmployee: (!String.IsNullOrWhiteSpace(ContragentEmployeeTextBox.Text)) ? ContragentEmployeeTextBox.Text.Trim() : null,
                 operationDate: OperationDateTimePicker.Value,
                 description: (!String.IsNullOrWhiteSpace(noteRichTextBox.Text)) ? noteRichTextBox.Text.Trim() : null,

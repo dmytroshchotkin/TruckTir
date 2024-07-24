@@ -133,7 +133,8 @@ namespace Infrastructure.Storage.Repositories
                 code: dataReader["Code"] as string,
                 entity: dataReader["Entity"] as string,
                 contactInfo: (dataReader["ContactInfoId"] != DBNull.Value) ? ContactInfoDatabaseHandler.FindContactInfo(Convert.ToInt32(dataReader["ContactInfoId"])) : null,
-                description: dataReader["Description"] as string
+                description: dataReader["Description"] as string,
+                enabled: Convert.ToBoolean(dataReader["Enabled"])
             );
         }
         #endregion
@@ -187,8 +188,8 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="cmd"></param>
         public static int AddSupplier(Supplier supplier, SQLiteCommand cmd)
         {
-            cmd.CommandText = "INSERT INTO " + TableName + " (ContragentName, Code, Entity, ContactInfoId, Description) "
-                            + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description); "
+            cmd.CommandText = "INSERT INTO " + TableName + " (ContragentName, Code, Entity, ContactInfoId, Description, Enabled) "
+                            + "VALUES (@ContragentName, @Code, @Entity, @ContactInfoId, @Description, @Enabled); "
                             + "SELECT last_insert_rowid();";
 
             cmd.Parameters.Clear();
@@ -197,6 +198,7 @@ namespace Infrastructure.Storage.Repositories
             cmd.Parameters.AddWithValue("@Entity", supplier.Entity);
             cmd.Parameters.AddWithValue("@ContactInfoId", (supplier.ContactInfo != null) ? supplier.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description", supplier.Description);
+            cmd.Parameters.AddWithValue("@Enabled", supplier.Enabled);
 
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
@@ -256,6 +258,38 @@ namespace Infrastructure.Storage.Repositories
             }
         }
 
+        internal static void DisableSupplier(int supplierId)
+        {
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                UpdateSupplierEnability(supplierId, true, connection);
+                connection.Close();
+            }
+        }
+
+        internal static void EnableSupplier(int supplierId)
+        {
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            {
+                connection.Open();
+                UpdateSupplierEnability(supplierId, false, connection);
+                connection.Close();
+            }
+        }
+
+        private static void UpdateSupplierEnability(int supplierId, bool disable, SQLiteConnection connection)
+        {
+            int enabilityValue = disable ? 0 : 1;
+            using (var cmd = new SQLiteCommand(connection))
+            {
+                cmd.CommandText = $"UPDATE {TableName} SET Enabled = @Enabled WHERE ContragentId = @ContragentId;";
+                cmd.Parameters.AddWithValue("@ContragentId", supplierId);
+                cmd.Parameters.AddWithValue("@Enabled", enabilityValue);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         /// <summary>
         /// Обновляет контрагента в таблице.
         /// </summary>
@@ -265,7 +299,7 @@ namespace Infrastructure.Storage.Repositories
         {
             cmd.CommandText = "UPDATE " + TableName
                             + " SET ContragentName = @ContragentName, Code = @Code, Entity = @Entity, "
-                            + "ContactInfoId = @ContactInfoId, Description = @Description, Balance = @Balance "
+                            + "ContactInfoId = @ContactInfoId, Description = @Description, Balance = @Balance, Enabled = @Enabled "
                             + "WHERE ContragentId = @ContragentId;";
 
             cmd.Parameters.Clear();
@@ -276,6 +310,7 @@ namespace Infrastructure.Storage.Repositories
             cmd.Parameters.AddWithValue("@ContactInfoId", (supplier.ContactInfo != null) ? supplier.ContactInfo.ContactInfoId : (int?)null);
             cmd.Parameters.AddWithValue("@Description", supplier.Description);
             cmd.Parameters.AddWithValue("@Balance", supplier.Balance);
+            cmd.Parameters.AddWithValue("@Enabled", supplier.Enabled);
 
             cmd.ExecuteNonQuery();
         }
