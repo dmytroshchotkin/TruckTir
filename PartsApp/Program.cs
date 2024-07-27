@@ -16,7 +16,7 @@ namespace PartsApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            DatabaseHelper.DbSchemaCheck.EnsureNewColumnsExistsInDBTables();
+            Infrastructure.Helper.DbSchemaCheck.EnsureNewColumnsExistsInDBTables();
             Application.Run(new Form1());
         }
     }
