@@ -18,7 +18,7 @@ namespace PartsApp
         {
             InitializeComponent();
             //Заполняем выпадающий список контрола для ввода ФИО.
-            IList<Employee> employees = PartsDAL.FindEmployees();
+            var employees = PartsDAL.FindEmployees().Where(e => !e.IsDisabled);
             foreach (Employee employee in employees)
             {
                 loginTextBox.AutoCompleteCustomSource.Add(employee.Login);
