@@ -13,7 +13,7 @@ namespace Infrastructure.Storage.Repositories
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public static void AddSparePart(SparePart sparePart)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 using (SQLiteTransaction trans = connection.BeginTransaction())
@@ -59,7 +59,7 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="avail">Товар инф-ция о котором модифицируется.</param>
         public static void UpdateSparePart(SparePart sparePart)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 using (SQLiteTransaction trans = connection.BeginTransaction())
@@ -134,7 +134,7 @@ namespace Infrastructure.Storage.Repositories
         {
             SparePart sparePart = null;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -168,7 +168,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<SparePart> sparePartsList = new List<SparePart>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -221,7 +221,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<SparePart> spareParts = new List<SparePart>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {                
                 connection.Open();
                 string query = "SELECT DISTINCT sp.*, m.* FROM SpareParts AS sp "
@@ -263,7 +263,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<SparePart> spareParts = new List<SparePart>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -319,7 +319,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<SparePart> spareParts = new List<SparePart>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -395,7 +395,7 @@ namespace Infrastructure.Storage.Repositories
         {
             int manufacturerId = 0;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -418,7 +418,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<string> manufacturers = new List<string>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 SQLiteCommand cmd = new SQLiteCommand("SELECT ManufacturerName FROM Manufacturers;", connection);

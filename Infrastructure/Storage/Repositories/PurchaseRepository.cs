@@ -21,7 +21,7 @@ namespace Infrastructure.Storage.Repositories
         {
             Purchase purchase = availList[0].OperationDetails.Operation as Purchase;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -99,7 +99,7 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="purchase">Объект. данными которого будет обновлена запись в БД</param>
         public static void UpdatePurchase(int purchaseId, string description)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -168,7 +168,7 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="note">Заметка по возврату</param>
         public static void AddReturn(Purchase purchase, string note)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -243,7 +243,7 @@ namespace Infrastructure.Storage.Repositories
         {
             Purchase purchase = null;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -272,7 +272,7 @@ namespace Infrastructure.Storage.Repositories
         {
             var purchases = new List<Purchase>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -299,7 +299,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<Purchase> purchases = new List<Purchase>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -336,7 +336,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<Purchase> purchases = new List<Purchase>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -375,7 +375,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<Purchase> purchases = new List<Purchase>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -431,7 +431,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<OperationDetails> operDetList = new List<OperationDetails>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 const string query = "SELECT * FROM PurchaseDetails "
@@ -465,7 +465,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<OperationDetails> operDetList = new List<OperationDetails>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 const string query = "SELECT * FROM Returns as r JOIN PurchaseDetails as pd "
@@ -500,7 +500,7 @@ namespace Infrastructure.Storage.Repositories
         {
             float minPrice = 0;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 const string query = "SELECT MIN(Price) FROM PurchaseDetails "

@@ -8,7 +8,7 @@ namespace Infrastructure.Helper
     {
         public static void EnsureNewColumnsExistsInDBTables()
         {
-            using (var connection = DbConnectionHelper.GetDatabaseConnection() as SQLiteConnection)
+            using (var connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 EnsureStorageCellColumnExistsInSparePartsTable(connection);
