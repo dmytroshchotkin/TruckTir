@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 namespace Infrastructure
 {
     public static class FilesStorageHelper
-    {        
+    {
+        public static readonly string DataDirectoryPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\PartsApp";        
+
         public static void CopyFileSafely(string sourceFilePath, string destinationFilePath)
         {
             try

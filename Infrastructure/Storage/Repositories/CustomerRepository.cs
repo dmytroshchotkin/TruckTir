@@ -18,7 +18,7 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="customer">Контрагент.</param>
         public static void AddCustomer(Customer customer)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -79,7 +79,7 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="customer">Обновляемый контрагент</param>
         public static void UpdateCustomer(Customer customer)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -130,7 +130,7 @@ namespace Infrastructure.Storage.Repositories
 
         internal static void DisableCustomer(int customerId)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 UpdateCustomerEnability(customerId, true, connection);
@@ -140,7 +140,7 @@ namespace Infrastructure.Storage.Repositories
 
         internal static void EnableCustomer(int customerId)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 UpdateCustomerEnability(customerId, false, connection);
@@ -199,7 +199,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<Customer> customers = new List<Customer>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -228,7 +228,7 @@ namespace Infrastructure.Storage.Repositories
         {
             Customer customer = null;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -260,7 +260,7 @@ namespace Infrastructure.Storage.Repositories
         {
             Customer customer = new Customer();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -309,7 +309,7 @@ namespace Infrastructure.Storage.Repositories
         {
             ContactInfo contactInfo = null;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 

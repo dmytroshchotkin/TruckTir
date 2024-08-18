@@ -84,7 +84,7 @@ namespace Infrastructure.Storage.PropertiesHandlers
         /// <param name="changeMarkupDict">Словарь типа (sparePartId, IDictionary(saleId, markup))</param>
         internal static void UpdateSparePartMarkup(List<Availability> availList)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -166,7 +166,7 @@ namespace Infrastructure.Storage.PropertiesHandlers
         {
             List<Availability> availabilityList = new List<Availability>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 

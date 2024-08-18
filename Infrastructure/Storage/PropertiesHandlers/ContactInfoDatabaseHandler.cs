@@ -96,7 +96,7 @@ namespace Infrastructure.Storage
         {
             ContactInfo contactInfo = new ContactInfo();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 

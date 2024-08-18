@@ -20,7 +20,7 @@ namespace Infrastructure.Storage.Repositories
         /// <returns></returns>
         public static int AddSale(Sale sale, List<OperationDetails> operDetList)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -109,7 +109,7 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="description">новое описание</param>
         public static void UpdateSale(int saleId, string description)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -183,7 +183,7 @@ namespace Infrastructure.Storage.Repositories
         {
             Sale sale = null;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -218,7 +218,7 @@ namespace Infrastructure.Storage.Repositories
         {
            var salesList = new List<Sale>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -245,7 +245,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<Sale> salesList = new List<Sale>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -282,7 +282,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<Sale> salesList = new List<Sale>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -321,7 +321,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<Sale> salesList = new List<Sale>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -372,7 +372,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<OperationDetails> operDetList = new List<OperationDetails>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 const string query = "SELECT * FROM SaleDetails "

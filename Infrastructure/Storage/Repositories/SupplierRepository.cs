@@ -20,7 +20,7 @@ namespace Infrastructure.Storage.Repositories
         {
             List<Supplier> suppliers = new List<Supplier>();
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -48,7 +48,7 @@ namespace Infrastructure.Storage.Repositories
         {
             Supplier supplier = null;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -77,7 +77,7 @@ namespace Infrastructure.Storage.Repositories
         {
             Supplier supplier = null;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -107,7 +107,7 @@ namespace Infrastructure.Storage.Repositories
         {
             bool isCodeExist = false;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 var cmd = new SQLiteCommand("SELECT * FROM Suppliers WHERE Code LIKE @Code;", connection);
@@ -148,7 +148,7 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="supplier">Контрагент.</param>
         public static void AddSupplier(Supplier supplier)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -209,7 +209,7 @@ namespace Infrastructure.Storage.Repositories
         /// <param name="supplier">Обновляемый контрагент</param>
         public static void UpdateSupplier(Supplier supplier)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -260,7 +260,7 @@ namespace Infrastructure.Storage.Repositories
 
         internal static void DisableSupplier(int supplierId)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 UpdateSupplierEnability(supplierId, true, connection);
@@ -270,7 +270,7 @@ namespace Infrastructure.Storage.Repositories
 
         internal static void EnableSupplier(int supplierId)
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
                 UpdateSupplierEnability(supplierId, false, connection);
@@ -328,7 +328,7 @@ namespace Infrastructure.Storage.Repositories
         {
             ContactInfo contactInfo = null;
 
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 

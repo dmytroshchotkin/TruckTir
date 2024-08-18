@@ -343,21 +343,19 @@ namespace PartsApp
             {
                 string fileName = System.IO.Path.GetFileName(photoOpenFileDialog.FileName);
 
-                toolTip.SetToolTip(photoPictureBox, fileName);
                 //Проверяем находится ли фото в нужной папке. 
-                string path = employeePhotoFolder + toolTip.GetToolTip(photoPictureBox);
+                string path = $"{FilesStorageHelper.DataDirectoryPath}\\{employeePhotoFolder}{fileName}";
 
-                if (System.IO.Path.GetFullPath(path) == photoOpenFileDialog.FileName)
+                if (path == photoOpenFileDialog.FileName)
                 {
                     //Если фото выбрано, то подгоняем его размер под PictureBox и добавляем всплывающую подсказку.
-                    photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
-                    toolTip.SetToolTip(photoPictureBox, fileName);
+                    photoPictureBox.Image = new Bitmap(Image.FromFile(path), photoPictureBox.Size);
                 }             //если выбранное фото не находится в нужной папке. 
                 else
                 {
-                    if (System.IO.File.Exists(System.IO.Path.GetFullPath(path))) //проверяем есть ли фото с таким именем в нужной папке. 
+                    if (System.IO.File.Exists(path)) //проверяем есть ли фото с таким именем в нужной папке. 
                     {
-                        photoPictureBox.Image = new Bitmap(Image.FromFile(System.IO.Path.GetFullPath(path)), photoPictureBox.Size);
+                        photoPictureBox.Image = new Bitmap(Image.FromFile(path), photoPictureBox.Size);
                         //Если файл в нужной папке не является подходящим, то очищаем pictureBox.
                         if (DialogResult.Cancel == MessageBox.Show("Этот файл или файл с таким именем уже существует в папке \"Сотрудники\".\nЕсли данное фото, является правильным, нажмите \"Ok\".\nИначе нажмите \"Отмена\" измените имя выбираемого файла и попробуйте ещё раз.", "Совпадение имен файлов", MessageBoxButtons.OKCancel))
                         {
@@ -368,9 +366,10 @@ namespace PartsApp
                     {
                         photoPictureBox.Image = new Bitmap(Image.FromFile(photoOpenFileDialog.FileName), photoPictureBox.Size);
                         //записываем конечный путь файла всв-во tag.
-                        photoPictureBox.Tag = System.IO.Path.GetFullPath(path);
+                        photoPictureBox.Tag = path;
                     }
                 }
+                toolTip.SetToolTip(photoPictureBox, fileName);
             }
         }
 
@@ -415,9 +414,10 @@ namespace PartsApp
                                                            //photoPictureBox.Image = (employee.Photo != null) ? new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size) : null;
             if (employee.Photo != null)
             {
-                if (System.IO.File.Exists(System.IO.Path.GetFullPath(employee.Photo)))
+                string fullPhotoPath = $"{FilesStorageHelper.DataDirectoryPath}\\{employee.Photo}";
+                if (System.IO.File.Exists(fullPhotoPath))
                 {
-                    photoPictureBox.Image = new Bitmap(Image.FromFile(employee.Photo), photoPictureBox.Size);
+                    photoPictureBox.Image = new Bitmap(Image.FromFile(fullPhotoPath), photoPictureBox.Size);
                     toolTip.SetToolTip(photoPictureBox, System.IO.Path.GetFileName(employee.Photo));
                 }
             }//else //если путь фото указан, но такого фото уже нет в папке.

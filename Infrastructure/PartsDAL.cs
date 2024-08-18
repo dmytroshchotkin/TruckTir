@@ -465,7 +465,7 @@ namespace PartsApp
         /// </summary>
         public static void RegistrateUDFs()
         {
-            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 connection.Open();
 
@@ -490,7 +490,7 @@ namespace PartsApp
             }
 
             //Создаём новый бэкап или обновляем существующий.
-            using (SQLiteConnection source = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.SparePartConfig) as SQLiteConnection)
+            using (SQLiteConnection source = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
             {
                 using (SQLiteConnection dest = DbConnectionHelper.GetDatabaseConnection("BackupConfig") as SQLiteConnection)
                 {

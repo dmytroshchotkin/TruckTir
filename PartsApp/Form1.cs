@@ -11,6 +11,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using PartsApp.SupportClasses;
 using PartsApp.Models;
 using Models.Helper;
+using Infrastructure;
 
 namespace PartsApp
 {
@@ -749,9 +750,10 @@ namespace PartsApp
                 //Если у данного объекта есть фото.
                 if (cell.Value != null)
                 {
-                    if (System.IO.File.Exists(cell.Value.ToString()))
+                    var picturePath = $"{FilesStorageHelper.DataDirectoryPath}\\{cell.Value}";
+                    if (System.IO.File.Exists(picturePath))
                     {
-                        photoPictureBox.Image = new Bitmap(cell.Value.ToString());
+                        photoPictureBox.Image = new Bitmap(Image.FromFile(picturePath));
 
                         //Задаём выводимый на экран размер фото. 
                         Size photoSize = new System.Drawing.Size(625, 450); //размер взят случайный. 

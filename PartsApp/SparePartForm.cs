@@ -170,7 +170,7 @@ namespace PartsApp
             if (PhotoOpenFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string fileName = System.IO.Path.GetFileName(PhotoOpenFileDialog.FileName); //находим имя файла.
-                string fullPath = System.IO.Path.GetFullPath(sparePartPhotoFolder + fileName); //абсолютный путь файла.
+                string fullPath = $"{FilesStorageHelper.DataDirectoryPath}\\{sparePartPhotoFolder}{fileName}"; //абсолютный путь файла.
                 //Если файл с таким именем уже есть в папке 'Товар', выводим сообщение об этом. 
                 if (fullPath != PhotoOpenFileDialog.FileName && System.IO.File.Exists(fullPath))
                 {
@@ -228,7 +228,7 @@ namespace PartsApp
             //Проверяем наличие фото.
             if (PhotoPictureBox.Image != null)
             {
-                string fullPath = System.IO.Path.GetFullPath(photoPath);
+                string fullPath = $"{FilesStorageHelper.DataDirectoryPath}\\{photoPath}";
                 //Если фото ещё нет в папке 'Товар', копируем его туда.
                 if (!System.IO.File.Exists(fullPath))
                 {
@@ -255,9 +255,10 @@ namespace PartsApp
             StorageCellTextBox.Text = _sparePart.StorageCell;
 
             //Заполняем фото, если оно есть в соотв. папке.
-            if (_sparePart.Photo != null && System.IO.File.Exists(System.IO.Path.GetFullPath(_sparePart.Photo)))
+            var fullPath = $"{FilesStorageHelper.DataDirectoryPath}\\{_sparePart.Photo}";
+            if (_sparePart.Photo != null && System.IO.File.Exists(fullPath))
             {
-                PhotoPictureBox.Image = new Bitmap(Image.FromFile(_sparePart.Photo), PhotoPictureBox.Size);
+                PhotoPictureBox.Image = new Bitmap(Image.FromFile(fullPath), PhotoPictureBox.Size);
                 toolTip.SetToolTip(PhotoPictureBox, System.IO.Path.GetFileName(_sparePart.Photo));
             }
         }
