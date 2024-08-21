@@ -85,6 +85,7 @@
             this.sellerAgentLabel = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.PaidCheckBox = new System.Windows.Forms.CheckBox();
+            this.PaidNonCashCheckBox = new System.Windows.Forms.CheckBox();
             this.PaidNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.saleContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -590,6 +591,7 @@
             // 
             // PaidCheckBox
             // 
+            this.PaidCheckBox.Visible = false;
             this.PaidCheckBox.AutoSize = true;
             this.PaidCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.PaidCheckBox.Checked = true;
@@ -604,8 +606,19 @@
             this.PaidCheckBox.UseVisualStyleBackColor = true;
             this.PaidCheckBox.CheckedChanged += new System.EventHandler(this.PaidCheckBox_CheckedChanged);
             // 
+            // PaidNonCashCheckBox
+            // 
+            this.PaidNonCashCheckBox.AutoSize = true;
+            this.PaidNonCashCheckBox.Location = new System.Drawing.Point(710, 402);
+            this.PaidNonCashCheckBox.Name = "PaidNonCashCheckBox";
+            this.PaidNonCashCheckBox.Size = new System.Drawing.Size(168, 20);
+            this.PaidNonCashCheckBox.TabIndex = 128;
+            this.PaidNonCashCheckBox.Text = "Безналичный расчет";
+            this.PaidNonCashCheckBox.UseVisualStyleBackColor = true;
+            // 
             // PaidNumericUpDown
             // 
+            this.PaidNumericUpDown.Visible = false;
             this.PaidNumericUpDown.DecimalPlaces = 2;
             this.PaidNumericUpDown.Enabled = false;
             this.PaidNumericUpDown.Location = new System.Drawing.Point(716, 399);
@@ -651,6 +664,7 @@
             this.Controls.Add(this.inTotalNumberLabel);
             this.Controls.Add(this.PaidNumericUpDown);
             this.Controls.Add(this.PaidCheckBox);
+            this.Controls.Add(this.PaidNonCashCheckBox);
             this.Controls.Add(this.autoCompleteListBox);
             this.Controls.Add(this.descriptionLabel);
             this.Controls.Add(this.descriptionRichTextBox);
@@ -747,6 +761,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ExtSellingPriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ExtNoteCol;
         private System.Windows.Forms.CheckBox PaidCheckBox;
+        private System.Windows.Forms.CheckBox PaidNonCashCheckBox;
         private System.Windows.Forms.NumericUpDown PaidNumericUpDown;
         private System.Windows.Forms.Label CurrencyLabel;
     }

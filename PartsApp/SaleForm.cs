@@ -976,12 +976,18 @@ namespace PartsApp
                 contragentEmployee: (!String.IsNullOrWhiteSpace(customerAgentTextBox.Text)) ? customerAgentTextBox.Text.Trim() : null,
                 operationDate: saleDateTimePicker.Value,
                 description: (!String.IsNullOrWhiteSpace(descriptionRichTextBox.Text)) ? descriptionRichTextBox.Text.Trim() : null,
-                operDetList: CreateOperationDetailsListFromForm()
+                operDetList: CreateOperationDetailsListFromForm(),
+                paidCash: IsSalePaidCash()
             );
             //Присваиваем 'Операцию' для каждого OperationDetails.
             sale.OperationDetailsList.ToList().ForEach(od => od.Operation = sale);
 
             return sale;
+        }
+
+        private bool IsSalePaidCash()
+        {
+            return !PaidNonCashCheckBox.Checked;
         }
 
         /// <summary>
