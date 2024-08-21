@@ -13,6 +13,7 @@ namespace Infrastructure.Helper
                 connection.Open();
                 EnsureStorageCellColumnExistsInSparePartsTable(connection);
                 EnsureEnabledColumnExistsInCustomersAndSuppliersTables(connection);
+                EnsurePaidCashColumnExistsInSalesTable(connection);
                 connection.Close();
             }
         }
@@ -52,6 +53,22 @@ namespace Infrastructure.Helper
                 {
                     cmd.Parameters.Clear();
                     cmd.CommandText = $"ALTER TABLE Suppliers ADD COLUMN Enabled INTEGER CHECK (Enabled in (1,0)) NOT NULL DEFAULT 1";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private static void EnsurePaidCashColumnExistsInSalesTable(SQLiteConnection connection)
+        {
+            using (var cmd = new SQLiteCommand("", connection))
+            {
+                cmd.CommandText = $"SELECT COUNT(*) AS ColumnExists FROM sqlite_master WHERE type = 'table' AND name = 'Sales' AND sql LIKE '%PaidCash%';";
+
+                bool columnExists = Convert.ToInt32(cmd.ExecuteScalar()) != 0;
+                if (!columnExists)
+                {
+                    cmd.Parameters.Clear();
+                    cmd.CommandText = $"ALTER TABLE Sales ADD COLUMN PaidCash INTEGER CHECK (PaidCash in (1,0)) NOT NULL DEFAULT 1";
                     cmd.ExecuteNonQuery();
                 }
             }
