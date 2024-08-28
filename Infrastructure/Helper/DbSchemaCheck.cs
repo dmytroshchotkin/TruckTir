@@ -31,7 +31,7 @@ namespace Infrastructure.Helper
                     cmd.CommandText = $"ALTER TABLE SpareParts ADD COLUMN StorageCell VARCHAR(100)";
                     cmd.ExecuteNonQuery();
                 }
-            }            
+            }
         }
 
         private static void EnsureEnabledColumnExistsInCustomersAndSuppliersTables(SQLiteConnection connection)

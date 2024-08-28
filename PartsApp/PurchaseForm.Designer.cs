@@ -38,8 +38,6 @@
             this.purchaseDateLabel = new System.Windows.Forms.Label();
             this.supplierLabel = new System.Windows.Forms.Label();
             this.buyerLabel = new System.Windows.Forms.Label();
-            this.storageLabel = new System.Windows.Forms.Label();
-            this.storageAdressLabel = new System.Windows.Forms.Label();
             this.purchaseGroupBox = new System.Windows.Forms.GroupBox();
             this.PurchaseDGV = new System.Windows.Forms.DataGridView();
             this.currencyLabel = new System.Windows.Forms.Label();
@@ -55,16 +53,12 @@
             this.buyerBackPanel = new System.Windows.Forms.Panel();
             this.buyerTextBox = new System.Windows.Forms.TextBox();
             this.buyerStarLabel = new System.Windows.Forms.Label();
-            this.storageComboBox = new System.Windows.Forms.ComboBox();
-            this.storageAdressTextBox = new System.Windows.Forms.TextBox();
             this.currencyComboBox = new System.Windows.Forms.ComboBox();
             this.inTotalNumberLabel = new System.Windows.Forms.Label();
             this.supplierAgentTextBox = new System.Windows.Forms.TextBox();
             this.buyerAgentTextBox = new System.Windows.Forms.TextBox();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.storageAdressStarLabel = new System.Windows.Forms.Label();
-            this.storageAdressBackPanel = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.markupCheckBox = new System.Windows.Forms.CheckBox();
             this.autoCompleteListBox = new System.Windows.Forms.ListBox();
@@ -90,7 +84,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.PurchaseDGV)).BeginInit();
             this.supplierBackPanel.SuspendLayout();
             this.buyerBackPanel.SuspendLayout();
-            this.storageAdressBackPanel.SuspendLayout();
             this.currencyBackPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).BeginInit();
             this.purchaseContextMenuStrip.SuspendLayout();
@@ -134,29 +127,7 @@
             this.buyerLabel.Name = "buyerLabel";
             this.buyerLabel.Size = new System.Drawing.Size(92, 16);
             this.buyerLabel.TabIndex = 3;
-            this.buyerLabel.Text = "Покупатель :";
-            // 
-            // storageLabel
-            // 
-            this.storageLabel.AutoSize = true;
-            this.storageLabel.Location = new System.Drawing.Point(663, 79);
-            this.storageLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.storageLabel.Name = "storageLabel";
-            this.storageLabel.Size = new System.Drawing.Size(113, 16);
-            this.storageLabel.TabIndex = 4;
-            this.storageLabel.Text = "Осн. / вирт. скл. :";
-            this.toolTip.SetToolTip(this.storageLabel, "Основной / виртуальный склад");
-            // 
-            // storageAdressLabel
-            // 
-            this.storageAdressLabel.AutoSize = true;
-            this.storageAdressLabel.Location = new System.Drawing.Point(663, 130);
-            this.storageAdressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.storageAdressLabel.Name = "storageAdressLabel";
-            this.storageAdressLabel.Size = new System.Drawing.Size(53, 16);
-            this.storageAdressLabel.TabIndex = 5;
-            this.storageAdressLabel.Text = "Адрес :";
-            this.storageAdressLabel.Visible = false;
+            this.buyerLabel.Text = "Покупатель :";            
             // 
             // purchaseGroupBox
             // 
@@ -338,31 +309,7 @@
             this.buyerStarLabel.Name = "buyerStarLabel";
             this.buyerStarLabel.Size = new System.Drawing.Size(23, 30);
             this.buyerStarLabel.TabIndex = 17;
-            this.buyerStarLabel.Text = "*";
-            // 
-            // storageComboBox
-            // 
-            this.storageComboBox.DisplayMember = "Осн. скл.";
-            this.storageComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.storageComboBox.FormattingEnabled = true;
-            this.storageComboBox.Items.AddRange(new object[] {
-            "Осн. скл.",
-            "Вирт. скл."});
-            this.storageComboBox.Location = new System.Drawing.Point(800, 75);
-            this.storageComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.storageComboBox.Name = "storageComboBox";
-            this.storageComboBox.Size = new System.Drawing.Size(115, 24);
-            this.storageComboBox.TabIndex = 18;
-            this.storageComboBox.SelectedIndexChanged += new System.EventHandler(this.storageComboBox_SelectedIndexChanged);
-            // 
-            // storageAdressTextBox
-            // 
-            this.storageAdressTextBox.Location = new System.Drawing.Point(3, 2);
-            this.storageAdressTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.storageAdressTextBox.Name = "storageAdressTextBox";
-            this.storageAdressTextBox.Size = new System.Drawing.Size(277, 22);
-            this.storageAdressTextBox.TabIndex = 19;
-            this.storageAdressTextBox.Leave += new System.EventHandler(this.storageAdressTextBox_Leave);
+            this.buyerStarLabel.Text = "*";            
             // 
             // currencyComboBox
             // 
@@ -429,28 +376,6 @@
             this.cancelButton.Text = "Отмена";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.cancelButton_MouseClick);
-            // 
-            // storageAdressStarLabel
-            // 
-            this.storageAdressStarLabel.AutoSize = true;
-            this.storageAdressStarLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.storageAdressStarLabel.Location = new System.Drawing.Point(648, 118);
-            this.storageAdressStarLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.storageAdressStarLabel.Name = "storageAdressStarLabel";
-            this.storageAdressStarLabel.Size = new System.Drawing.Size(23, 30);
-            this.storageAdressStarLabel.TabIndex = 27;
-            this.storageAdressStarLabel.Text = "*";
-            this.storageAdressStarLabel.Visible = false;
-            // 
-            // storageAdressBackPanel
-            // 
-            this.storageAdressBackPanel.Controls.Add(this.storageAdressTextBox);
-            this.storageAdressBackPanel.Location = new System.Drawing.Point(739, 121);
-            this.storageAdressBackPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.storageAdressBackPanel.Name = "storageAdressBackPanel";
-            this.storageAdressBackPanel.Size = new System.Drawing.Size(284, 30);
-            this.storageAdressBackPanel.TabIndex = 28;
-            this.storageAdressBackPanel.Visible = false;
             // 
             // markupCheckBox
             // 
@@ -690,13 +615,11 @@
             this.Controls.Add(this.excRateNumericUpDown);
             this.Controls.Add(this.currencyBackPanel);
             this.Controls.Add(this.markupCheckBox);
-            this.Controls.Add(this.storageAdressBackPanel);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.buyerAgentTextBox);
             this.Controls.Add(this.supplierAgentTextBox);
             this.Controls.Add(this.inTotalNumberLabel);
-            this.Controls.Add(this.storageComboBox);
             this.Controls.Add(this.buyerBackPanel);
             this.Controls.Add(this.supplierBackPanel);
             this.Controls.Add(this.purchaseDateTimePicker);
@@ -707,15 +630,12 @@
             this.Controls.Add(this.excRateLabel);
             this.Controls.Add(this.currencyLabel);
             this.Controls.Add(this.purchaseGroupBox);
-            this.Controls.Add(this.storageAdressLabel);
-            this.Controls.Add(this.storageLabel);
             this.Controls.Add(this.buyerLabel);
             this.Controls.Add(this.supplierLabel);
             this.Controls.Add(this.purchaseDateLabel);
             this.Controls.Add(this.purchaseIdLabel);
             this.Controls.Add(this.supplierStarLabel);
             this.Controls.Add(this.buyerStarLabel);
-            this.Controls.Add(this.storageAdressStarLabel);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -729,8 +649,6 @@
             this.supplierBackPanel.PerformLayout();
             this.buyerBackPanel.ResumeLayout(false);
             this.buyerBackPanel.PerformLayout();
-            this.storageAdressBackPanel.ResumeLayout(false);
-            this.storageAdressBackPanel.PerformLayout();
             this.currencyBackPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.excRateNumericUpDown)).EndInit();
             this.purchaseContextMenuStrip.ResumeLayout(false);
@@ -745,8 +663,6 @@
         private System.Windows.Forms.Label purchaseDateLabel;
         private System.Windows.Forms.Label supplierLabel;
         private System.Windows.Forms.Label buyerLabel;
-        private System.Windows.Forms.Label storageLabel;
-        private System.Windows.Forms.Label storageAdressLabel;
         private System.Windows.Forms.GroupBox purchaseGroupBox;
         private System.Windows.Forms.DataGridView PurchaseDGV;
         private System.Windows.Forms.Label currencyLabel;
@@ -762,16 +678,12 @@
         private System.Windows.Forms.Panel buyerBackPanel;
         private System.Windows.Forms.TextBox buyerTextBox;
         private System.Windows.Forms.Label buyerStarLabel;
-        private System.Windows.Forms.ComboBox storageComboBox;
-        private System.Windows.Forms.TextBox storageAdressTextBox;
         private System.Windows.Forms.ComboBox currencyComboBox;
         private System.Windows.Forms.Label inTotalNumberLabel;
         private System.Windows.Forms.TextBox supplierAgentTextBox;
         private System.Windows.Forms.TextBox buyerAgentTextBox;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.Label storageAdressStarLabel;
-        private System.Windows.Forms.Panel storageAdressBackPanel;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.CheckBox markupCheckBox;
         private System.Windows.Forms.ListBox autoCompleteListBox;

@@ -39,7 +39,7 @@ namespace PartsApp.Models
         public object Tag { get; set; }
 
 
-        public Availability(OperationDetails operationDetails, string storageAddress, float markup)
+        public Availability(OperationDetails operationDetails, float markup, string storageAddress = null)
         {
             OperationDetails = operationDetails;
             StorageAddress   = storageAddress;
@@ -47,7 +47,7 @@ namespace PartsApp.Models
         }
 
         public Availability(Availability avail)
-            : this(avail.OperationDetails, avail.StorageAddress, avail.Markup)
+            : this(avail.OperationDetails, avail.Markup, avail.StorageAddress)
         {
 
         }
