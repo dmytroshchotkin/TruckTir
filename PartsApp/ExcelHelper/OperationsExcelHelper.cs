@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Text.RegularExpressions;
 
 namespace PartsApp.ExcelHelper
 {
-    internal static class OperationsExcelHelper
+    public static class OperationsExcelHelper
     {        
         /// <summary>
         /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
@@ -41,6 +42,7 @@ namespace PartsApp.ExcelHelper
 
             Excel.Application ExcelApp = new Excel.Application();
             Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
+            ExcelWorkBook.Windows[1].Caption = GetValidExcelBookTitle(GetOperationTitle(operation));
             Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
             ExcelWorkSheet.PageSetup.Zoom = false;
             ExcelWorkSheet.PageSetup.FitToPagesWide = 1;
@@ -394,6 +396,57 @@ namespace PartsApp.ExcelHelper
 
             S = S + ARow.ToString();
             return S;
+        }
+
+        public static string GetValidExcelBookTitle(string title)
+        {
+            if (TrySetDefaultTitle(title, out string defaultTitle))
+            {
+                return defaultTitle;
+            }
+
+            var forbiddenSymbols = new char[] { '/', '\\', '|', ':', '*', '?', '"', '<', '>', ',', '\'', '~', '`', '?' };
+            var validatedString = new StringBuilder();
+
+            foreach (var c in title)
+            {
+                if (forbiddenSymbols.Contains(c))
+                {
+                    validatedString.Append(' ');
+                }
+                else
+                {
+                    validatedString.Append(c);
+                }
+            }
+
+            string clearedTitle = Regex.Replace(validatedString.ToString(), @"\s+", " ");
+
+            return TrySetDefaultTitle(clearedTitle, out string defaultT) ? defaultT : clearedTitle;
+        }
+
+        private static bool TrySetDefaultTitle(string title, out string result)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                result = $"{DateTime.Now:dd-MM-yyyy}_PartsApp";
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        private static string GetOperationTitle(IOperation operation)
+        {
+            string paymentTypeInfo = null;
+            if (operation is Sale sale && !sale.PaidCash)
+            {
+                paymentTypeInfo = "_безнал";
+                
+            }
+
+            return $"№{operation.OperationId}_{operation.OperationDate:dd-MM-yyyy}_{operation.Contragent.ContragentName}{paymentTypeInfo}";
         }
     }
 }

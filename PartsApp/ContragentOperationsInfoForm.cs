@@ -62,9 +62,15 @@ namespace PartsApp
                 ContragentsGroupBox.Text = "Покупатели";
                 OperationsGroupBox.Text = "Покупки";
                 OperationDetailsGroupBox.Text = "Доп. инф-ция по покупкам.";
+                AddPaidCashColumnToSalesOperationsGroupBox();
             }
 
             EnabledContragentsCheckBox.Checked = true;            
+        }
+
+        private void AddPaidCashColumnToSalesOperationsGroupBox()
+        {
+            OperationsInfoDGV.Columns.Add(PaidCashCol);
         }
 
         private void ContragentsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -321,6 +327,19 @@ namespace PartsApp
 
                 OperationsInfoDGV.ClearSelection();
                 OperationsInfoDGV.SelectionChanged += OperationsInfoDGV_SelectionChanged;
+            }
+            FillPaidCashColumnInOperationsInfoDGVForSales();
+        }
+
+        private void FillPaidCashColumnInOperationsInfoDGVForSales()
+        {
+            foreach (DataGridViewRow row in OperationsInfoDGV.Rows)
+            {
+                if (row.Tag is Sale sale)
+                {
+                    string paidCash = sale.PaidCash ? "нал." : "безнал.";
+                    row.Cells[PaidCashCol.Index].Value = paidCash;
+                }
             }
         }
 

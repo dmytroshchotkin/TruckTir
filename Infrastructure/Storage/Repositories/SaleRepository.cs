@@ -83,8 +83,8 @@ namespace Infrastructure.Storage.Repositories
         {
             int saleId;
 
-            string query = String.Format("INSERT INTO Sales (EmployeeID, ContragentId, ContragentEmployee, OperationDate, Description)"
-                                       + "VALUES (@EmployeeID, @ContragentId, @ContragentEmployee, strftime('%s', @OperationDate), @Description);"
+            string query = String.Format("INSERT INTO Sales (EmployeeID, ContragentId, ContragentEmployee, OperationDate, Description, PaidCash)"
+                                       + "VALUES (@EmployeeID, @ContragentId, @ContragentEmployee, strftime('%s', @OperationDate), @Description, @PaidCash);"
                                        + "SELECT OperationId FROM Sales WHERE rowid = last_insert_rowid();");
 
             cmd.CommandText = query;
@@ -95,6 +95,7 @@ namespace Infrastructure.Storage.Repositories
             cmd.Parameters.AddWithValue("@ContragentEmployee", sale.ContragentEmployee);
             cmd.Parameters.AddWithValue("@Description", sale.Description);
             cmd.Parameters.AddWithValue("@OperationDate", sale.OperationDate);
+            cmd.Parameters.AddWithValue("@PaidCash", sale.PaidCash);
 
             saleId = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -356,7 +357,8 @@ namespace Infrastructure.Storage.Repositories
                 contragent: CustomerRepository.FindCustomer(Convert.ToInt32(dataReader["ContragentId"])),
                 contragentEmployee: dataReader["ContragentEmployee"] as string,
                 operationDate: Convert.ToDateTime(dataReader["OD"]),
-                description: dataReader["Description"] as string
+                description: dataReader["Description"] as string,
+                paidCash: Convert.ToBoolean(dataReader["PaidCash"])
             );
 
             result.TrySetOperationDetails(new Lazy<List<OperationDetails>>(() => FindSaleDetails(result)));

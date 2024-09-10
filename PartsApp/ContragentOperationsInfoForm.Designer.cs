@@ -60,6 +60,7 @@
             this.CountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PaidCashCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.editContragentContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editContragentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableContragentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -293,6 +294,14 @@
             this.TotalSumCol.Name = "TotalSumCol";
             this.TotalSumCol.ReadOnly = true;
             this.TotalSumCol.Width = 125;
+            //
+            //  PaidCashCol
+            //
+            PaidCashCol.HeaderText = "Тип платежа";
+            PaidCashCol.MinimumWidth = 80;
+            PaidCashCol.Name = "PaidCashCol";
+            PaidCashCol.ReadOnly = true;
+            PaidCashCol.Width = 100;
             // 
             // OperationDetailsGroupBox
             // 
@@ -504,6 +513,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ContragentEmployeeCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn DescriptionCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TotalSumCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PaidCashCol;
         private System.Windows.Forms.ContextMenuStrip editOperDescriptContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem editOperDescriptToolStripMenuItem;
         private System.Windows.Forms.ListView ContragentsListView;
