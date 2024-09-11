@@ -70,6 +70,7 @@
             this.CountCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SumCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SalePaidCashCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -149,7 +150,8 @@
             this.ContragentCol,
             this.ContragentEmployeeCol,
             this.DescriptionCol,
-            this.TotalSumCol});
+            this.TotalSumCol,
+            this.SalePaidCashCol});
             this.OperationsInfoDGV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationsInfoDGV.Location = new System.Drawing.Point(3, 16);
             this.OperationsInfoDGV.MultiSelect = false;
@@ -219,6 +221,15 @@
             this.TotalSumCol.MinimumWidth = 100;
             this.TotalSumCol.Name = "TotalSumCol";
             this.TotalSumCol.ReadOnly = true;
+            //
+            //  PaidCashCol
+            //
+            SalePaidCashCol.HeaderText = "Тип платежа";
+            SalePaidCashCol.MinimumWidth = 80;
+            SalePaidCashCol.Name = "PaidCashCol";
+            SalePaidCashCol.ReadOnly = true;
+            SalePaidCashCol.Width = 100;
+            SalePaidCashCol.Visible = false;
             // 
             // label2
             // 
@@ -468,7 +479,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(864, 619);
+            this.ClientSize = new System.Drawing.Size(920, 619);
             this.Controls.Add(this.splitContainer1);
             this.Name = "OperationsInfoForm";
             this.Text = "Форма операций";
@@ -528,6 +539,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CountCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PriceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SumCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SalePaidCashCol;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button ExcelOutputButton;
     }

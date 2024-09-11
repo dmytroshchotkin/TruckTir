@@ -65,6 +65,7 @@ namespace PartsApp
         /// <param name="operList">Инф-ция для заполнения таблицы.</param>
         private void FillTheOperationDGV(IList<IOperation> operList)
         {
+            DisplayOrHidePaidCashColumn(operList.Any(o => o is Sale));
             foreach (IOperation operat in operList.OrderByDescending(p => p.OperationDate))
             {
                 int rowIndx = OperationsInfoDGV.Rows.Add();
@@ -78,9 +79,20 @@ namespace PartsApp
                 row.Cells[ContragentCol.Index].Value = operat.Contragent.ContragentName;
                 row.Cells[ContragentEmployeeCol.Index].Value = operat.ContragentEmployee;
                 row.Cells[TotalSumCol.Index].Value = operat.OperationDetailsList.Sum(od => od.Sum);
+                row.Cells[SalePaidCashCol.Index].Value = operat is Sale sale ? GetSalePaidCashDescription(sale) : null;
 
                 row.Tag = operat;
             }
+        }
+
+        private void DisplayOrHidePaidCashColumn(bool shouldDisplayPaidCashColumn)
+        {
+            SalePaidCashCol.Visible = shouldDisplayPaidCashColumn;
+        }
+
+        private string GetSalePaidCashDescription(Sale sale)
+        {
+            return sale.PaidCash ? "нал." : "безнал.";
         }
 
         /// <summary>
@@ -93,8 +105,11 @@ namespace PartsApp
             //Меняем видимость требуемых строк в зависимотси от установленных требований для данного типа операций.
             foreach (DataGridViewRow row in OperationsInfoDGV.Rows)
             {
-                row.Visible = (row.Cells[OperationTypeCol.Index].Value == "Приход" ? PurchaseCheckBox.Checked : SaleCheckBox.Checked);
+                row.Visible = (row.Cells[OperationTypeCol.Index].Value == "Приход" ? PurchaseCheckBox.Checked : SaleCheckBox.Checked);                
             }
+
+            DisplayOrHidePaidCashColumn(SaleCheckBox.Checked);
+
             //Выводим кол-во видимых строк.
             OperationsCoubtLabel.Text = OperationsInfoDGV.Rows.GetRowCount(DataGridViewElementStates.Visible).ToString();
         }
