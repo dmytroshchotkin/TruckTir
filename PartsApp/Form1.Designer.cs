@@ -114,7 +114,6 @@
             this.PurchaseIdExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ArticulExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PurchaseDateExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StorageAddressExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MeasureUnitExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AvailabilityExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MarkupExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -794,7 +793,6 @@
             this.PurchaseIdExtCol,
             this.ArticulExtCol,
             this.PurchaseDateExtCol,
-            this.StorageAddressExtCol,
             this.MeasureUnitExtCol,
             this.AvailabilityExtCol,
             this.MarkupExtCol,
@@ -956,17 +954,7 @@
             this.PurchaseDateExtCol.MinimumWidth = 6;
             this.PurchaseDateExtCol.Name = "PurchaseDateExtCol";
             this.PurchaseDateExtCol.ReadOnly = true;
-            this.PurchaseDateExtCol.Width = 80;
-            // 
-            // StorageAddressExtCol
-            // 
-            this.StorageAddressExtCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.StorageAddressExtCol.DataPropertyName = "StorageAddress";
-            this.StorageAddressExtCol.HeaderText = "Адрес хранилища";
-            this.StorageAddressExtCol.MinimumWidth = 2;
-            this.StorageAddressExtCol.Name = "StorageAddressExtCol";
-            this.StorageAddressExtCol.ReadOnly = true;
-            this.StorageAddressExtCol.Width = 137;
+            this.PurchaseDateExtCol.Width = 80;           
             // 
             // MeasureUnitExtCol
             // 
@@ -1153,7 +1141,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn PurchaseIdExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn ArticulExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PurchaseDateExtCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn StorageAddressExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn MeasureUnitExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn AvailabilityExtCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn MarkupExtCol;

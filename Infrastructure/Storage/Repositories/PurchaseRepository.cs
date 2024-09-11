@@ -192,7 +192,7 @@ namespace Infrastructure.Storage.Repositories
 
                                 //Вставляем записи в PurchaseDetails и Avaliability.
                                 AddPurchaseDetail(operDet, cmd);
-                                AvailabilityDatabaseHandler.AddSparePartAvaliability(new Availability(operDet, null, (float)Markup.Types.Retail), cmd);
+                                AvailabilityDatabaseHandler.AddSparePartAvaliability(new Availability(operDet, (float)Markup.Types.Retail), cmd);
                             }
 
                             trans.Commit();  //фиксируем изменения.

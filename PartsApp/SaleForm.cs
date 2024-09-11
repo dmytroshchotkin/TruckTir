@@ -810,7 +810,6 @@ namespace PartsApp
 
                 row.Cells[ExtSupplierCol.Index].Value = avail.OperationDetails.Operation.Contragent.ContragentName;
                 row.Cells[ExtMeasureUnitCol.Index].Value = avail.OperationDetails.SparePart.MeasureUnit;
-                row.Cells[ExtStorageAdressCol.Index].Value = avail.StorageAddress;
                 row.Cells[ExtPriceCol.Index].Value = avail.OperationDetails.Price;
                 row.Cells[ExtMarkupCol.Index].Value = Models.Markup.GetDescription(avail.Markup);
                 row.Cells[ExtSellingPriceCol.Index].Value = avail.SellingPrice;
@@ -818,11 +817,7 @@ namespace PartsApp
                 row.Cells[ExtPurchaseDateCol.Index].Value = avail.OperationDetails.Operation.OperationDate;
                 row.Cells[ExtNoteCol.Index].Value = avail.OperationDetails.Operation.Description;
 
-                //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.                
-                if (avail.StorageAddress != null)
-                {
-                    ExtStorageAdressCol.Visible = true;
-                }
+                //Делаем видимыми соотв. столбец, если в св-ве 'Примечание по поставке' есть данные.   
                 if (avail.OperationDetails.Operation.Description != null)
                 {
                     ExtNoteCol.Visible = true;

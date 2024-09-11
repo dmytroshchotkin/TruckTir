@@ -59,7 +59,6 @@ namespace PartsApp
             //PurchaseIdExtCol.DataPropertyName     = "OperationDetails.Operation.OperationId";
             //ArticulExtCol.DataPropertyName        = "OperationDetails.SparePart.Articul";
             //PurchaseDateExtCol.DataPropertyName   = "OperationDetails.Operation.OperationDate";
-            //StorageAddressExtCol.DataPropertyName = "StorageAddress";
             //MeasureUnitExtCol.DataPropertyName    = "OperationDetails.SparePart.MeasureUnit";
             //AvailabilityExtCol.DataPropertyName   = "OperationDetails.Count";
             //SellingPriceExtCol.DataPropertyName   = "SellingPrice";
@@ -841,18 +840,11 @@ namespace PartsApp
 
         private void extPartsDGV_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            StorageAddressExtCol.Visible = NoteExtCol.Visible = false;
             foreach (DataGridViewRow row in ExtPartsDGV.Rows)
             {
                 Availability avail = row.DataBoundItem as Availability;
 
                 row.Cells[MarkupExtCol.Index].Value = Markup.GetDescription(avail.Markup); //Заполняем ячейки столбца 'Тип наценки'
-
-                //Делаем видимыми соотв. столбцы если в св-вах 'Адрес хранилища' и 'Примечание по поставке' есть данные.
-                if (avail.StorageAddress != null)
-                {
-                    StorageAddressExtCol.Visible = true;
-                }
 
                 if (avail.OperationDetails.Operation.Description != null)
                 {
