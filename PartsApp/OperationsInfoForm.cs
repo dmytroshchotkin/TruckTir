@@ -199,7 +199,13 @@ namespace PartsApp
             {
                 OperationsExcelHelper.SaveInExcelAsync(operation.OperationDetailsList, "Truck Tir");
             }
-        }        
+        }
+
+        private void OnConfigSaveExcelFilesButtonClick(object sender, EventArgs e)
+        {
+            var configSaveExcelFilesForm = new ConfigSaveExcelFilesForm();
+            configSaveExcelFilesForm.ShowDialog();
+        }
         //==============================================================================================================================================================================
         #endregion
     }

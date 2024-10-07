@@ -38,6 +38,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.ExcelOutputButton = new System.Windows.Forms.Button();
+            this.ConfigSaveExcelFilesButton = new System.Windows.Forms.Button();
             this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
             this.OperationTypeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OperationIdCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -108,6 +109,7 @@
             // 
             this.OperationsGroupBox.BackColor = System.Drawing.SystemColors.Control;
             this.OperationsGroupBox.Controls.Add(this.ExcelOutputButton);
+            this.OperationsGroupBox.Controls.Add(this.ConfigSaveExcelFilesButton);
             this.OperationsGroupBox.Controls.Add(this.OperationsInfoDGV);
             this.OperationsGroupBox.Controls.Add(this.label2);
             this.OperationsGroupBox.Controls.Add(this.label1);
@@ -135,6 +137,17 @@
             this.toolTip1.SetToolTip(this.ExcelOutputButton, "Выгрузить текущую накладную в Excel.");
             this.ExcelOutputButton.UseVisualStyleBackColor = false;
             this.ExcelOutputButton.Click += new System.EventHandler(this.ExcelOutputButton_Click);
+            // 
+            // ConfigSaveExcelFilesButton
+            // 
+            this.ConfigSaveExcelFilesButton.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.ConfigSaveExcelFilesButton.Location = new System.Drawing.Point(800, 383);
+            this.ConfigSaveExcelFilesButton.Name = "ConfigSaveExcelFilesButton";
+            this.ConfigSaveExcelFilesButton.Size = new System.Drawing.Size(92, 20);
+            this.ConfigSaveExcelFilesButton.Text = "Настройка";
+            this.toolTip1.SetToolTip(this.ConfigSaveExcelFilesButton, "Настроить путь сохранения Excel файлов");
+            this.ConfigSaveExcelFilesButton.UseVisualStyleBackColor = false;
+            this.ConfigSaveExcelFilesButton.Click += new System.EventHandler(this.OnConfigSaveExcelFilesButtonClick);
             // 
             // OperationsInfoDGV
             // 
@@ -542,5 +555,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SalePaidCashCol;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button ExcelOutputButton;
+        private System.Windows.Forms.Button ConfigSaveExcelFilesButton;
     }
 }

@@ -69,6 +69,12 @@
     <Compile Include="AddEmployeeForm.Designer.cs">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConfigSaveExcelFilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigSaveExcelFilesForm.Designer.cs">
+      <DependentUpon>ConfigSaveExcelFilesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OperationsDataCheck\DataCheck.cs" />
     <Compile Include="EmployeeOperationsInfoForm.cs">
       <SubType>Form</SubType>
@@ -152,6 +158,9 @@
     <Compile Include="SupportClasses\SortableBindingList.cs" />
     <EmbeddedResource Include="AddEmployeeForm.resx">
       <DependentUpon>AddEmployeeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigSaveExcelFilesForm.resx">
+      <DependentUpon>ConfigSaveExcelFilesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EmployeeOperationsInfoForm.resx">
       <DependentUpon>EmployeeOperationsInfoForm.cs</DependentUpon>
