@@ -1067,7 +1067,7 @@ namespace PartsApp
                 MessageBox.Show($"Операция завершена неправильно! Попробуйте ещё раз.\n\nОшибка:\n{ex.InnerException?.Message ?? ex.Message}");
                 return;
             }
-            OperationsExcelHelper.SaveInExcelAsync(sale.OperationDetailsList, sellerTextBox.Text.Trim());
+            OperationsExcelHelper.SaveInExcelAsync(sale.OperationDetailsList, sellerTextBox.Text.Trim(), ExcelFilesStorageHelper.SalesFilesPath, true);
             Close();
         }
 

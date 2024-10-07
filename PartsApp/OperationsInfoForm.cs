@@ -5,8 +5,10 @@ using PartsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -105,7 +107,7 @@ namespace PartsApp
             //Меняем видимость требуемых строк в зависимотси от установленных требований для данного типа операций.
             foreach (DataGridViewRow row in OperationsInfoDGV.Rows)
             {
-                row.Visible = (row.Cells[OperationTypeCol.Index].Value == "Приход" ? PurchaseCheckBox.Checked : SaleCheckBox.Checked);                
+                row.Visible = (row.Cells[OperationTypeCol.Index].Value == "Приход" ? PurchaseCheckBox.Checked : SaleCheckBox.Checked);
             }
 
             DisplayOrHidePaidCashColumn(SaleCheckBox.Checked);
@@ -193,12 +195,79 @@ namespace PartsApp
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ExcelOutputButton_Click(object sender, EventArgs e)
-        {            
-            DataGridViewRow row = OperationsInfoDGV.SelectedRows[0];
-            if (row.Tag is IOperation operation)
+        {
+            bool saveMultipleExcelFiles = OperationsInfoDGV.SelectedRows.Count > 1;
+            if (saveMultipleExcelFiles)
             {
-                OperationsExcelHelper.SaveInExcelAsync(operation.OperationDetailsList, "Truck Tir");
+                SaveMultipleExcelDocsWithoutPrintingPreview();
             }
+            else
+            {
+                SaveSingleExcelDocWithPrintingPreview();
+            }
+        }
+
+        private void SaveSingleExcelDocWithPrintingPreview()
+        {
+            DataGridViewRow row = OperationsInfoDGV.SelectedRows[0];
+            if (row.Tag is Sale sale)
+            {
+                OperationsExcelHelper.SaveInExcelAsync(sale.OperationDetailsList, "Truck Tir", ExcelFilesStorageHelper.SalesFilesPath, true);
+            }
+            else if (row.Tag is Purchase purchase)
+            {
+                OperationsExcelHelper.SaveInExcelAsync(purchase.OperationDetailsList, "Truck Tir", ExcelFilesStorageHelper.PurchasesFilesPath, true);
+            }
+        }
+
+        private void SaveMultipleExcelDocsWithoutPrintingPreview()
+        {
+            var rows = OperationsInfoDGV.SelectedRows;            
+            var operations = new List<IOperation>();
+            foreach (DataGridViewRow row in rows)
+            {
+                if (row.Tag is IOperation operation)
+                {
+                    operations.Add(operation);
+                }
+            }
+
+            string directory;
+            if (!AreOperationsOfEqualTypeAndDate(operations))
+            {
+                directory = ExcelFilesStorageHelper.GetNewDirectoryInput();
+                if (directory != default)
+                {
+                    ExcelFilesStorageHelper.SaveMultipleOperationsInExcel(operations, directory);                  
+                }
+                else
+                {
+                    MessageBox.Show("Файлы Excel не сохранены!\n\nПовторите выбор файлов и папки.");
+                }
+            }
+            else
+            {
+                directory = ExcelFilesStorageHelper.GetDirectoryByOperationTypeAndDate(operations[0]);                
+                ExcelFilesStorageHelper.TryAddDuplicateNumberToDirectoryName(ref directory);
+                ExcelFilesStorageHelper.SaveMultipleOperationsInExcel(operations, directory);
+            }
+
+            ExcelFilesStorageHelper.TryOpenDirectory(directory);
+        }
+
+        private bool AreOperationsOfEqualTypeAndDate(List<IOperation> operations)
+        {
+            var type = operations[0].GetType();
+            int day = operations[0].OperationDate.Day;
+            for (int i = 1; i < operations.Count; i++)
+            {
+                if (operations[i].GetType() != type || operations[i].OperationDate.Day != day)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }        
         //==============================================================================================================================================================================
         #endregion

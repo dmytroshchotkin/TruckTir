@@ -10,21 +10,23 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Configuration;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace PartsApp.ExcelHelper
 {
     public static class OperationsExcelHelper
-    {        
+    {
         /// <summary>
         /// Асинхронный вывод в Excel инф-ции из переданного списка товаров.
         /// </summary>
         /// <param name="sparePart">Список товаров для вывода в Excel.</param>
         /// <param name="agent">Фирма-покупатель.</param>
-        internal static async void SaveInExcelAsync(IList<OperationDetails> operDetList, string agent)
+        internal static async void SaveInExcelAsync(IList<OperationDetails> operDetList, string agent, string directory, bool printPreview)
         {
             try
             {
-                await Task.Factory.StartNew(() => SaveInExcel(operDetList, agent));
+                await Task.Factory.StartNew(() => SaveInExcel(operDetList, agent, directory, printPreview));
             }
             catch
             {
@@ -37,7 +39,7 @@ namespace PartsApp.ExcelHelper
         /// </summary>
         /// <param name="availabilityList">Список оприходованных товаров.</param>
         /// <param name="agent">Фирма-покупатель.</param>
-        private static void SaveInExcel(IList<OperationDetails> operDetList, string agent)
+        private static void SaveInExcel(IList<OperationDetails> operDetList, string agent, string directory, bool saveSingleDocWithPreview)
         {
             var operation = operDetList[0].Operation;
 
@@ -75,52 +77,37 @@ namespace PartsApp.ExcelHelper
             //Выводим заметку к операции.
             DescriptionExcelOutput(ExcelWorkSheet, operation.Description, ref row, column);
 
-            //Вызываем нашу созданную эксельку.
-            ExcelApp.Visible = ExcelApp.UserControl = true;
-            SaveExcelFile(ExcelWorkBook, operation);
-            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.            
-        }
+            SaveExcelFile(ExcelWorkBook, directory);
 
-        private static void SaveExcelFile(Workbook workbook, IOperation operation)
-        {
-            string savingPath = operation is Sale ? ConfigurationManager.AppSettings["SalesFilesSavePath"] : ConfigurationManager.AppSettings["PurchasesFilesSavePath"];
-            if (!string.IsNullOrWhiteSpace(savingPath))
+            if (saveSingleDocWithPreview)
             {
-                SaveExcelFileToUserDefinedDirectory(workbook, savingPath);
+                //Вызываем нашу созданную эксельку.
+                ExcelApp.Visible = ExcelApp.UserControl = true;
+                ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра. 
             }
             else
             {
-                SaveExcelFileToTempDirectory(workbook);
+                ReleaseExcelResources(ExcelApp, ExcelWorkBook);
             }
         }
 
-        private static void SaveExcelFileToUserDefinedDirectory(Workbook workbook, string directory)
+        private static void ReleaseExcelResources(Excel.Application app, Workbook workbook)
         {
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
+            workbook.Close(false);
+            Marshal.ReleaseComObject(workbook);
+
+            app.Quit();
+            Marshal.ReleaseComObject(app);
+
+            Thread.Sleep(1000);
+        }
+
+        private static void SaveExcelFile(Workbook workbook, string directory)
+        {
             string fullPath = Path.Combine(directory, workbook.Title);
-            DeleteDuplicateFile(directory, workbook.Title);
+            ExcelFilesStorageHelper.TryAddDuplicateNumberToFileName(ref fullPath);
             workbook.SaveAs(fullPath);
-        }
-
-        private static void SaveExcelFileToTempDirectory(Workbook workbook)
-        {
-            string tempDirectory = Path.GetTempPath();
-            string tempFilesPath = Path.Combine(tempDirectory, workbook.Title);
-            DeleteDuplicateFile(tempDirectory, workbook.Title);
-            workbook.SaveAs(tempFilesPath);
-        }
-
-        private static void DeleteDuplicateFile(string directoryPath, string filePath)
-        {
-            var dirInfo = new DirectoryInfo(directoryPath);
-            var filesWithDefinedName = dirInfo.GetFiles($"{filePath}.*");
-            if (filesWithDefinedName.Length > 0)
-            {
-                File.Delete(filesWithDefinedName[0].FullName);
-            }
+            Thread.Sleep(1000);
         }
 
         private static string GetPurchaseAgentsDescriptionForDocHeader(IOperation purchase, string agent)
@@ -233,7 +220,7 @@ namespace PartsApp.ExcelHelper
             ExcelWorkSheet.Cells[row, column + 3] = operDet.SparePart.Title;
             //Выравнивание диапазона строк.
             ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).VerticalAlignment = Excel.Constants.xlTop;
-            ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;                     
+            ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
 
             ExcelWorkSheet.Cells[row, column] = operDet.SparePart.Manufacturer;
             ExcelWorkSheet.Cells[row, column + 1] = operDet.SparePart.StorageCell;
@@ -465,6 +452,7 @@ namespace PartsApp.ExcelHelper
             }
 
             string clearedTitle = Regex.Replace(validatedString.ToString(), @"\s+", " ");
+            clearedTitle = clearedTitle.Trim();
 
             return TrySetDefaultTitle(clearedTitle, out string defaultT) ? defaultT : clearedTitle;
         }
@@ -487,7 +475,7 @@ namespace PartsApp.ExcelHelper
             if (operation is Sale sale && !sale.PaidCash)
             {
                 paymentTypeInfo = "_безнал";
-                
+
             }
 
             return $"№{operation.OperationId}_{operation.OperationDate:dd-MM-yyyy}_{operation.Contragent.ContragentName}{paymentTypeInfo}";

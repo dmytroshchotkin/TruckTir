@@ -862,7 +862,7 @@ namespace PartsApp
                             return;
                         }
                         //Выводим в Excel.
-                        OperationsExcelHelper.SaveInExcelAsync(availList.Select(av => av.OperationDetails).ToList(), buyerAgentTextBox.Text.Trim());
+                        OperationsExcelHelper.SaveInExcelAsync(availList.Select(av => av.OperationDetails).ToList(), buyerAgentTextBox.Text.Trim(), ExcelFilesStorageHelper.PurchasesFilesPath, true);
                     }
                 }
                 this.Close();

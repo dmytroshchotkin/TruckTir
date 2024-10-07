@@ -154,7 +154,7 @@
             this.SalePaidCashCol});
             this.OperationsInfoDGV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationsInfoDGV.Location = new System.Drawing.Point(3, 16);
-            this.OperationsInfoDGV.MultiSelect = false;
+            this.OperationsInfoDGV.MultiSelect = true;
             this.OperationsInfoDGV.Name = "OperationsInfoDGV";
             this.OperationsInfoDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.OperationsInfoDGV.Size = new System.Drawing.Size(858, 366);
