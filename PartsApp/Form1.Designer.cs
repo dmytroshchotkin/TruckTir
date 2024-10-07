@@ -77,6 +77,7 @@
             this.cancelChangesButton = new System.Windows.Forms.Button();
             this.markupLabel = new System.Windows.Forms.Label();
             this.saveChangesButton = new System.Windows.Forms.Button();
+            this.configButton = new System.Windows.Forms.Button();
             this.searchTextBox = new System.Windows.Forms.TextBox();
             this.excRateLabel = new System.Windows.Forms.Label();
             this.searchLabel = new System.Windows.Forms.Label();
@@ -424,6 +425,7 @@
             this.componentPanel.Controls.Add(this.onlyAvaliabilityCheckBox);
             this.componentPanel.Controls.Add(this.excRateNumericUpDown);
             this.componentPanel.Controls.Add(this.markupComboBox);
+            this.componentPanel.Controls.Add(this.configButton);
             this.componentPanel.Controls.Add(this.cancelChangesButton);
             this.componentPanel.Controls.Add(this.markupLabel);
             this.componentPanel.Controls.Add(this.saveChangesButton);
@@ -500,6 +502,18 @@
             this.cancelChangesButton.Text = "Отменить изменения";
             this.cancelChangesButton.UseVisualStyleBackColor = true;
             this.cancelChangesButton.Click += new System.EventHandler(this.cancelChangesButton_Click);
+            // 
+            // configButton
+            // 
+            this.configButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.configButton.Location = new System.Drawing.Point(1275, 5);
+            this.configButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.configButton.Name = "configButton";
+            this.configButton.Size = new System.Drawing.Size(28, 28);
+            this.configButton.TabIndex = 13;
+            this.configButton.Text = "⚙";
+            this.configButton.UseVisualStyleBackColor = true;
+            this.configButton.Click += new System.EventHandler(this.OnConfigSaveExcelFilesButtonClick);
             // 
             // markupLabel
             // 
@@ -1077,6 +1091,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveInExcelToolStripMenuItem;
         private System.Windows.Forms.Panel componentPanel;
         private System.Windows.Forms.Button cancelChangesButton;
+        private System.Windows.Forms.Button configButton;
         private System.Windows.Forms.Label markupLabel;
         private System.Windows.Forms.Button saveChangesButton;
         private System.Windows.Forms.TextBox searchTextBox;
