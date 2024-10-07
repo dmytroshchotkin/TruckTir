@@ -91,7 +91,7 @@ namespace PartsApp
         private void FormInitialize()
         {
             //Если пользователь не обладает правами админа.
-            if (CurEmployee.AccessLayer == Employee.AccessLayers.User.ToDescription())
+            if (!CurEmployee.IsAdmin)
             {
                 purchaseToolStripMenuItem.Enabled = false; //Блокируем возможность приходовать товар
                 addNewSpToolStripMenuItem.Enabled = false; //Блокируем возм-ть добавлять новые единицы товара
@@ -99,6 +99,7 @@ namespace PartsApp
                 addNewSupplierToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять нового поставщика.
                 addNewCustomerToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять нового клиента.
                 addNewEmployeeToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять сотрудников.
+                configButton.Visible = false; // блокируем возможность менять путь сохранения Excel файлов
             }
         }
         #region Работа с Excel.
@@ -1153,6 +1154,11 @@ namespace PartsApp
             }
         }
 
+        private void OnConfigSaveExcelFilesButtonClick(object sender, EventArgs e)
+        {
+            var configSaveExcelFilesForm = new ConfigSaveExcelFilesForm();
+            configSaveExcelFilesForm.ShowDialog();
+        }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #endregion
 

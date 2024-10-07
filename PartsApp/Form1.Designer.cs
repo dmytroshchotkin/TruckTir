@@ -80,6 +80,7 @@
             this.searchTextBox = new System.Windows.Forms.TextBox();
             this.excRateLabel = new System.Windows.Forms.Label();
             this.searchLabel = new System.Windows.Forms.Label();
+            this.configButton = new System.Windows.Forms.Button();
             this.currencyComboBox = new System.Windows.Forms.ComboBox();
             this.photoPictureBox = new System.Windows.Forms.PictureBox();
             this.dataSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -98,6 +99,16 @@
             this.partsStatusStripPanel = new System.Windows.Forms.Panel();
             this.extPartsGroupBox = new System.Windows.Forms.GroupBox();
             this.ExtPartsDGV = new System.Windows.Forms.DataGridView();
+            this.StorageCellExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SupplierExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PurchaseIdExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArticulExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PurchaseDateExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MeasureUnitExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AvailabilityExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MarkupExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SellingPriceExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NoteExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.extPartsStatusStrip = new System.Windows.Forms.StatusStrip();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
@@ -109,16 +120,6 @@
             this.userNameLabel = new System.Windows.Forms.Label();
             this.userContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editEmployeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.StorageCellExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SupplierExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PurchaseIdExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ArticulExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PurchaseDateExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MeasureUnitExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AvailabilityExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MarkupExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SellingPriceExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NoteExtCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.partsStatusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.componentPanel.SuspendLayout();
@@ -188,10 +189,9 @@
             this.partsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel,
             this.rowsCountLabel});
-            this.partsStatusStrip.Location = new System.Drawing.Point(0, 2);
+            this.partsStatusStrip.Location = new System.Drawing.Point(0, 1);
             this.partsStatusStrip.Name = "partsStatusStrip";
-            this.partsStatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.partsStatusStrip.Size = new System.Drawing.Size(1305, 26);
+            this.partsStatusStrip.Size = new System.Drawing.Size(979, 22);
             this.partsStatusStrip.TabIndex = 0;
             this.partsStatusStrip.Text = "statusStrip1";
             this.partsStatusStrip.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
@@ -199,13 +199,13 @@
             // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(112, 20);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(88, 17);
             this.toolStripStatusLabel.Text = "Всего записей:";
             // 
             // rowsCountLabel
             // 
             this.rowsCountLabel.Name = "rowsCountLabel";
-            this.rowsCountLabel.Size = new System.Drawing.Size(17, 20);
+            this.rowsCountLabel.Size = new System.Drawing.Size(13, 17);
             this.rowsCountLabel.Text = "0";
             // 
             // menuStrip
@@ -222,7 +222,8 @@
             this.ReturnToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1305, 30);
+            this.menuStrip.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip.Size = new System.Drawing.Size(979, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip";
             this.menuStrip.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
@@ -232,13 +233,13 @@
             this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveInExcelToolStripMenuItem});
             this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
-            this.FileToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
+            this.FileToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.FileToolStripMenuItem.Text = "Файл";
             // 
             // saveInExcelToolStripMenuItem
             // 
             this.saveInExcelToolStripMenuItem.Name = "saveInExcelToolStripMenuItem";
-            this.saveInExcelToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
+            this.saveInExcelToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.saveInExcelToolStripMenuItem.Text = "Сохранить";
             this.saveInExcelToolStripMenuItem.Click += new System.EventHandler(this.saveInExcelToolStripMenuItem_Click);
             // 
@@ -247,13 +248,13 @@
             this.productToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addNewSpToolStripMenuItem});
             this.productToolStripMenuItem.Name = "productToolStripMenuItem";
-            this.productToolStripMenuItem.Size = new System.Drawing.Size(65, 26);
+            this.productToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.productToolStripMenuItem.Text = "Товар";
             // 
             // addNewSpToolStripMenuItem
             // 
             this.addNewSpToolStripMenuItem.Name = "addNewSpToolStripMenuItem";
-            this.addNewSpToolStripMenuItem.Size = new System.Drawing.Size(323, 26);
+            this.addNewSpToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.addNewSpToolStripMenuItem.Text = "Добавить новую единицу товара";
             this.addNewSpToolStripMenuItem.Click += new System.EventHandler(this.addNewSpToolStripMenuItem_Click);
             // 
@@ -263,20 +264,20 @@
             this.addNewEmployeeToolStripMenuItem,
             this.ViewEmployeeInfoToolStripMenuItem});
             this.employeesToolStripMenuItem.Name = "employeesToolStripMenuItem";
-            this.employeesToolStripMenuItem.Size = new System.Drawing.Size(105, 26);
+            this.employeesToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
             this.employeesToolStripMenuItem.Text = "Сотрудники";
             // 
             // addNewEmployeeToolStripMenuItem
             // 
             this.addNewEmployeeToolStripMenuItem.Name = "addNewEmployeeToolStripMenuItem";
-            this.addNewEmployeeToolStripMenuItem.Size = new System.Drawing.Size(360, 26);
+            this.addNewEmployeeToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
             this.addNewEmployeeToolStripMenuItem.Text = "Добавить нового сотрудника";
             this.addNewEmployeeToolStripMenuItem.Click += new System.EventHandler(this.addNewEmployeeToolStripMenuItem_Click);
             // 
             // ViewEmployeeInfoToolStripMenuItem
             // 
             this.ViewEmployeeInfoToolStripMenuItem.Name = "ViewEmployeeInfoToolStripMenuItem";
-            this.ViewEmployeeInfoToolStripMenuItem.Size = new System.Drawing.Size(360, 26);
+            this.ViewEmployeeInfoToolStripMenuItem.Size = new System.Drawing.Size(288, 22);
             this.ViewEmployeeInfoToolStripMenuItem.Text = "Посмотреть инф-цию по сотрудникам";
             this.ViewEmployeeInfoToolStripMenuItem.Click += new System.EventHandler(this.ViewEmployeeInfoToolStripMenuItem_Click);
             // 
@@ -286,20 +287,20 @@
             this.addNewSupplierToolStripMenuItem,
             this.ViewSuppliersInfoToolStripMenuItem});
             this.supplierToolStripMenuItem.Name = "supplierToolStripMenuItem";
-            this.supplierToolStripMenuItem.Size = new System.Drawing.Size(109, 26);
+            this.supplierToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
             this.supplierToolStripMenuItem.Text = "Поставщики";
             // 
             // addNewSupplierToolStripMenuItem
             // 
             this.addNewSupplierToolStripMenuItem.Name = "addNewSupplierToolStripMenuItem";
-            this.addNewSupplierToolStripMenuItem.Size = new System.Drawing.Size(364, 26);
+            this.addNewSupplierToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
             this.addNewSupplierToolStripMenuItem.Text = "Добавить нового поставщика";
             this.addNewSupplierToolStripMenuItem.Click += new System.EventHandler(this.addNewSupplierToolStripMenuItem_Click);
             // 
             // ViewSuppliersInfoToolStripMenuItem
             // 
             this.ViewSuppliersInfoToolStripMenuItem.Name = "ViewSuppliersInfoToolStripMenuItem";
-            this.ViewSuppliersInfoToolStripMenuItem.Size = new System.Drawing.Size(364, 26);
+            this.ViewSuppliersInfoToolStripMenuItem.Size = new System.Drawing.Size(292, 22);
             this.ViewSuppliersInfoToolStripMenuItem.Text = "Посмотреть инф-цию по поставщикам";
             this.ViewSuppliersInfoToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
             // 
@@ -309,20 +310,20 @@
             this.addNewCustomerToolStripMenuItem,
             this.ViewCustomersInfoToolStripMenuItem});
             this.customerToolStripMenuItem.Name = "customerToolStripMenuItem";
-            this.customerToolStripMenuItem.Size = new System.Drawing.Size(83, 26);
+            this.customerToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.customerToolStripMenuItem.Text = "Клиенты";
             // 
             // addNewCustomerToolStripMenuItem
             // 
             this.addNewCustomerToolStripMenuItem.Name = "addNewCustomerToolStripMenuItem";
-            this.addNewCustomerToolStripMenuItem.Size = new System.Drawing.Size(336, 26);
+            this.addNewCustomerToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
             this.addNewCustomerToolStripMenuItem.Text = "Добавить нового клиента";
             this.addNewCustomerToolStripMenuItem.Click += new System.EventHandler(this.addNewCustomerToolStripMenuItem_Click);
             // 
             // ViewCustomersInfoToolStripMenuItem
             // 
             this.ViewCustomersInfoToolStripMenuItem.Name = "ViewCustomersInfoToolStripMenuItem";
-            this.ViewCustomersInfoToolStripMenuItem.Size = new System.Drawing.Size(336, 26);
+            this.ViewCustomersInfoToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
             this.ViewCustomersInfoToolStripMenuItem.Text = "Посмотреть инф-цию по клиентам";
             this.ViewCustomersInfoToolStripMenuItem.Click += new System.EventHandler(this.ViewInfoByContragentToolStripMenuItem_Click);
             // 
@@ -333,14 +334,14 @@
             this.editPurchaseToolStripMenuItem,
             this.ViewOperationsInfoPurchaseToolStripMenuItem});
             this.purchaseToolStripMenuItem.Name = "purchaseToolStripMenuItem";
-            this.purchaseToolStripMenuItem.Size = new System.Drawing.Size(76, 26);
+            this.purchaseToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.purchaseToolStripMenuItem.Tag = "";
             this.purchaseToolStripMenuItem.Text = "Приход";
             // 
             // addNewPurchaseToolStripMenuItem
             // 
             this.addNewPurchaseToolStripMenuItem.Name = "addNewPurchaseToolStripMenuItem";
-            this.addNewPurchaseToolStripMenuItem.Size = new System.Drawing.Size(381, 26);
+            this.addNewPurchaseToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
             this.addNewPurchaseToolStripMenuItem.Text = "Поставить товар на приход";
             this.addNewPurchaseToolStripMenuItem.Click += new System.EventHandler(this.addNewPurchaseToolStripMenuItem_Click);
             // 
@@ -349,7 +350,7 @@
             this.editPurchaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editPurchaseToolStripTextBox});
             this.editPurchaseToolStripMenuItem.Name = "editPurchaseToolStripMenuItem";
-            this.editPurchaseToolStripMenuItem.Size = new System.Drawing.Size(381, 26);
+            this.editPurchaseToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
             this.editPurchaseToolStripMenuItem.Text = "Редактировать приходную накладную";
             this.editPurchaseToolStripMenuItem.Visible = false;
             // 
@@ -366,7 +367,7 @@
             // ViewOperationsInfoPurchaseToolStripMenuItem
             // 
             this.ViewOperationsInfoPurchaseToolStripMenuItem.Name = "ViewOperationsInfoPurchaseToolStripMenuItem";
-            this.ViewOperationsInfoPurchaseToolStripMenuItem.Size = new System.Drawing.Size(381, 26);
+            this.ViewOperationsInfoPurchaseToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
             this.ViewOperationsInfoPurchaseToolStripMenuItem.Text = "Посмотреть информацию по операциям";
             this.ViewOperationsInfoPurchaseToolStripMenuItem.Click += new System.EventHandler(this.ViewOperationsInfoSaleToolStripMenuItem_Click);
             // 
@@ -376,20 +377,20 @@
             this.addNewSaleToolStripMenuItem,
             this.ViewOperationsInfoSaleToolStripMenuItem});
             this.saleToolStripMenuItem.Name = "saleToolStripMenuItem";
-            this.saleToolStripMenuItem.Size = new System.Drawing.Size(87, 26);
+            this.saleToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.saleToolStripMenuItem.Text = "Продажа";
             // 
             // addNewSaleToolStripMenuItem
             // 
             this.addNewSaleToolStripMenuItem.Name = "addNewSaleToolStripMenuItem";
-            this.addNewSaleToolStripMenuItem.Size = new System.Drawing.Size(381, 26);
+            this.addNewSaleToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
             this.addNewSaleToolStripMenuItem.Text = "Продать товар";
             this.addNewSaleToolStripMenuItem.Click += new System.EventHandler(this.addNewSaleToolStripMenuItem_Click);
             // 
             // ViewOperationsInfoSaleToolStripMenuItem
             // 
             this.ViewOperationsInfoSaleToolStripMenuItem.Name = "ViewOperationsInfoSaleToolStripMenuItem";
-            this.ViewOperationsInfoSaleToolStripMenuItem.Size = new System.Drawing.Size(381, 26);
+            this.ViewOperationsInfoSaleToolStripMenuItem.Size = new System.Drawing.Size(302, 22);
             this.ViewOperationsInfoSaleToolStripMenuItem.Text = "Посмотреть информацию по операциям";
             this.ViewOperationsInfoSaleToolStripMenuItem.Click += new System.EventHandler(this.ViewOperationsInfoSaleToolStripMenuItem_Click);
             // 
@@ -398,7 +399,7 @@
             this.ReturnToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addReturnToolStripMenuItem});
             this.ReturnToolStripMenuItem.Name = "ReturnToolStripMenuItem";
-            this.ReturnToolStripMenuItem.Size = new System.Drawing.Size(79, 26);
+            this.ReturnToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
             this.ReturnToolStripMenuItem.Text = "Возврат";
             // 
             // addReturnToolStripMenuItem
@@ -406,7 +407,7 @@
             this.addReturnToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addReturnInputIdToolStripTextBox});
             this.addReturnToolStripMenuItem.Name = "addReturnToolStripMenuItem";
-            this.addReturnToolStripMenuItem.Size = new System.Drawing.Size(192, 26);
+            this.addReturnToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.addReturnToolStripMenuItem.Text = "Вернуть товар";
             // 
             // addReturnInputIdToolStripTextBox
@@ -431,20 +432,18 @@
             this.componentPanel.Controls.Add(this.excRateLabel);
             this.componentPanel.Controls.Add(this.searchLabel);
             this.componentPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.componentPanel.Location = new System.Drawing.Point(0, 30);
-            this.componentPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.componentPanel.Location = new System.Drawing.Point(0, 24);
             this.componentPanel.Name = "componentPanel";
-            this.componentPanel.Size = new System.Drawing.Size(1305, 37);
+            this.componentPanel.Size = new System.Drawing.Size(979, 30);
             this.componentPanel.TabIndex = 5;
             this.componentPanel.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
             // 
             // onlyAvaliabilityCheckBox
             // 
             this.onlyAvaliabilityCheckBox.AutoSize = true;
-            this.onlyAvaliabilityCheckBox.Location = new System.Drawing.Point(511, 9);
-            this.onlyAvaliabilityCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.onlyAvaliabilityCheckBox.Location = new System.Drawing.Point(383, 7);
             this.onlyAvaliabilityCheckBox.Name = "onlyAvaliabilityCheckBox";
-            this.onlyAvaliabilityCheckBox.Size = new System.Drawing.Size(144, 20);
+            this.onlyAvaliabilityCheckBox.Size = new System.Drawing.Size(114, 17);
             this.onlyAvaliabilityCheckBox.TabIndex = 11;
             this.onlyAvaliabilityCheckBox.Text = "только в наличии";
             this.onlyAvaliabilityCheckBox.UseVisualStyleBackColor = true;
@@ -459,15 +458,14 @@
             0,
             0,
             65536});
-            this.excRateNumericUpDown.Location = new System.Drawing.Point(57, 4);
-            this.excRateNumericUpDown.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.excRateNumericUpDown.Location = new System.Drawing.Point(43, 3);
             this.excRateNumericUpDown.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
             this.excRateNumericUpDown.Name = "excRateNumericUpDown";
-            this.excRateNumericUpDown.Size = new System.Drawing.Size(72, 22);
+            this.excRateNumericUpDown.Size = new System.Drawing.Size(54, 20);
             this.excRateNumericUpDown.TabIndex = 10;
             this.excRateNumericUpDown.Value = new decimal(new int[] {
             1,
@@ -481,10 +479,9 @@
             this.markupComboBox.DisplayMember = "Value";
             this.markupComboBox.Enabled = false;
             this.markupComboBox.FormattingEnabled = true;
-            this.markupComboBox.Location = new System.Drawing.Point(1112, 5);
-            this.markupComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.markupComboBox.Location = new System.Drawing.Point(834, 4);
             this.markupComboBox.Name = "markupComboBox";
-            this.markupComboBox.Size = new System.Drawing.Size(160, 24);
+            this.markupComboBox.Size = new System.Drawing.Size(142, 21);
             this.markupComboBox.TabIndex = 7;
             this.markupComboBox.ValueMember = "Key";
             this.markupComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.markupComboBox_KeyDown);
@@ -492,10 +489,9 @@
             // cancelChangesButton
             // 
             this.cancelChangesButton.Enabled = false;
-            this.cancelChangesButton.Location = new System.Drawing.Point(871, 4);
-            this.cancelChangesButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cancelChangesButton.Location = new System.Drawing.Point(653, 3);
             this.cancelChangesButton.Name = "cancelChangesButton";
-            this.cancelChangesButton.Size = new System.Drawing.Size(165, 28);
+            this.cancelChangesButton.Size = new System.Drawing.Size(124, 23);
             this.cancelChangesButton.TabIndex = 9;
             this.cancelChangesButton.Text = "Отменить изменения";
             this.cancelChangesButton.UseVisualStyleBackColor = true;
@@ -504,20 +500,18 @@
             // markupLabel
             // 
             this.markupLabel.AutoSize = true;
-            this.markupLabel.Location = new System.Drawing.Point(1044, 6);
-            this.markupLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.markupLabel.Location = new System.Drawing.Point(783, 5);
             this.markupLabel.Name = "markupLabel";
-            this.markupLabel.Size = new System.Drawing.Size(67, 16);
+            this.markupLabel.Size = new System.Drawing.Size(54, 13);
             this.markupLabel.TabIndex = 8;
             this.markupLabel.Text = "Наценка:";
             // 
             // saveChangesButton
             // 
             this.saveChangesButton.Enabled = false;
-            this.saveChangesButton.Location = new System.Drawing.Point(693, 4);
-            this.saveChangesButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.saveChangesButton.Location = new System.Drawing.Point(520, 3);
             this.saveChangesButton.Name = "saveChangesButton";
-            this.saveChangesButton.Size = new System.Drawing.Size(169, 28);
+            this.saveChangesButton.Size = new System.Drawing.Size(127, 23);
             this.saveChangesButton.TabIndex = 7;
             this.saveChangesButton.Text = "Сохранить изменения";
             this.saveChangesButton.UseVisualStyleBackColor = true;
@@ -527,10 +521,9 @@
             // 
             this.searchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.searchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.searchTextBox.Location = new System.Drawing.Point(220, 9);
-            this.searchTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.searchTextBox.Location = new System.Drawing.Point(165, 7);
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(281, 22);
+            this.searchTextBox.Size = new System.Drawing.Size(212, 20);
             this.searchTextBox.TabIndex = 0;
             this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
             this.searchTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchTextBox_KeyDown);
@@ -538,10 +531,9 @@
             // excRateLabel
             // 
             this.excRateLabel.AutoSize = true;
-            this.excRateLabel.Location = new System.Drawing.Point(16, 6);
-            this.excRateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.excRateLabel.Location = new System.Drawing.Point(12, 5);
             this.excRateLabel.Name = "excRateLabel";
-            this.excRateLabel.Size = new System.Drawing.Size(41, 16);
+            this.excRateLabel.Size = new System.Drawing.Size(34, 13);
             this.excRateLabel.TabIndex = 2;
             this.excRateLabel.Text = "Курс:";
             // 
@@ -550,12 +542,25 @@
             this.searchLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.searchLabel.AutoSize = true;
-            this.searchLabel.Location = new System.Drawing.Point(168, 9);
-            this.searchLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.searchLabel.Location = new System.Drawing.Point(126, 7);
             this.searchLabel.Name = "searchLabel";
-            this.searchLabel.Size = new System.Drawing.Size(50, 16);
+            this.searchLabel.Size = new System.Drawing.Size(42, 13);
             this.searchLabel.TabIndex = 3;
             this.searchLabel.Text = "Поиск:";
+            // 
+            // configButton
+            // 
+            this.configButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.configButton.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.configButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.configButton.Location = new System.Drawing.Point(953, 1);
+            this.configButton.Margin = new System.Windows.Forms.Padding(2);
+            this.configButton.Name = "configButton";
+            this.configButton.Size = new System.Drawing.Size(23, 23);
+            this.configButton.TabIndex = 13;
+            this.configButton.Text = "⚙";
+            this.configButton.UseVisualStyleBackColor = true;
+            this.configButton.Click += new System.EventHandler(this.OnConfigSaveExcelFilesButtonClick);
             // 
             // currencyComboBox
             // 
@@ -565,18 +570,16 @@
             "€ EUR",
             "₽ RUB",
             "₴ UAH"});
-            this.currencyComboBox.Location = new System.Drawing.Point(291, 25);
-            this.currencyComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.currencyComboBox.Location = new System.Drawing.Point(218, 20);
             this.currencyComboBox.Name = "currencyComboBox";
-            this.currencyComboBox.Size = new System.Drawing.Size(301, 24);
+            this.currencyComboBox.Size = new System.Drawing.Size(227, 21);
             this.currencyComboBox.TabIndex = 4;
             // 
             // photoPictureBox
             // 
-            this.photoPictureBox.Location = new System.Drawing.Point(140, 44);
-            this.photoPictureBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.photoPictureBox.Location = new System.Drawing.Point(105, 36);
             this.photoPictureBox.Name = "photoPictureBox";
-            this.photoPictureBox.Size = new System.Drawing.Size(112, 143);
+            this.photoPictureBox.Size = new System.Drawing.Size(84, 116);
             this.photoPictureBox.TabIndex = 1;
             this.photoPictureBox.TabStop = false;
             this.photoPictureBox.Visible = false;
@@ -585,8 +588,7 @@
             // 
             this.dataSplitContainer.BackColor = System.Drawing.Color.Red;
             this.dataSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataSplitContainer.Location = new System.Drawing.Point(0, 67);
-            this.dataSplitContainer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataSplitContainer.Location = new System.Drawing.Point(0, 54);
             this.dataSplitContainer.Name = "dataSplitContainer";
             this.dataSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -601,9 +603,9 @@
             this.dataSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.dataSplitContainer.Panel2.Controls.Add(this.extPartsGroupBox);
             this.dataSplitContainer.Panel2.Controls.Add(this.extPartsStatusStrip);
-            this.dataSplitContainer.Size = new System.Drawing.Size(1305, 835);
-            this.dataSplitContainer.SplitterDistance = 595;
-            this.dataSplitContainer.SplitterWidth = 6;
+            this.dataSplitContainer.Size = new System.Drawing.Size(979, 679);
+            this.dataSplitContainer.SplitterDistance = 483;
+            this.dataSplitContainer.SplitterWidth = 5;
             this.dataSplitContainer.TabIndex = 6;
             // 
             // partsPanel
@@ -613,9 +615,8 @@
             this.partsPanel.Controls.Add(this.PartsDGV);
             this.partsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.partsPanel.Location = new System.Drawing.Point(0, 0);
-            this.partsPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.partsPanel.Name = "partsPanel";
-            this.partsPanel.Size = new System.Drawing.Size(1305, 567);
+            this.partsPanel.Size = new System.Drawing.Size(979, 460);
             this.partsPanel.TabIndex = 3;
             // 
             // autoCompleteListBox
@@ -623,11 +624,9 @@
             this.autoCompleteListBox.BackColor = System.Drawing.SystemColors.Menu;
             this.autoCompleteListBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.autoCompleteListBox.FormattingEnabled = true;
-            this.autoCompleteListBox.ItemHeight = 17;
-            this.autoCompleteListBox.Location = new System.Drawing.Point(220, 0);
-            this.autoCompleteListBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.autoCompleteListBox.Location = new System.Drawing.Point(165, 0);
             this.autoCompleteListBox.Name = "autoCompleteListBox";
-            this.autoCompleteListBox.Size = new System.Drawing.Size(281, 21);
+            this.autoCompleteListBox.Size = new System.Drawing.Size(212, 17);
             this.autoCompleteListBox.TabIndex = 12;
             this.autoCompleteListBox.Visible = false;
             this.autoCompleteListBox.DataSourceChanged += new System.EventHandler(this.autoCompleteListBox_DataSourceChanged);
@@ -653,11 +652,10 @@
             this.SellingPriceCol});
             this.PartsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PartsDGV.Location = new System.Drawing.Point(0, 0);
-            this.PartsDGV.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.PartsDGV.Name = "PartsDGV";
             this.PartsDGV.ReadOnly = true;
             this.PartsDGV.RowHeadersWidth = 51;
-            this.PartsDGV.Size = new System.Drawing.Size(1305, 567);
+            this.PartsDGV.Size = new System.Drawing.Size(979, 460);
             this.PartsDGV.TabIndex = 0;
             this.PartsDGV.DataSourceChanged += new System.EventHandler(this.partsDGV_DataSourceChanged);
             this.PartsDGV.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.partsDGV_CellMouseClick);
@@ -682,7 +680,7 @@
             this.PhotoCol.MinimumWidth = 6;
             this.PhotoCol.Name = "PhotoCol";
             this.PhotoCol.ReadOnly = true;
-            this.PhotoCol.Width = 70;
+            this.PhotoCol.Width = 60;
             // 
             // ManufacturerCol
             // 
@@ -692,7 +690,7 @@
             this.ManufacturerCol.MinimumWidth = 6;
             this.ManufacturerCol.Name = "ManufacturerCol";
             this.ManufacturerCol.ReadOnly = true;
-            this.ManufacturerCol.Width = 140;
+            this.ManufacturerCol.Width = 111;
             // 
             // ArticulCol
             // 
@@ -741,7 +739,7 @@
             this.AvaliabilityCol.MinimumWidth = 6;
             this.AvaliabilityCol.Name = "AvaliabilityCol";
             this.AvaliabilityCol.ReadOnly = true;
-            this.AvaliabilityCol.Width = 94;
+            this.AvaliabilityCol.Width = 75;
             // 
             // SellingPriceCol
             // 
@@ -754,16 +752,15 @@
             this.SellingPriceCol.MinimumWidth = 75;
             this.SellingPriceCol.Name = "SellingPriceCol";
             this.SellingPriceCol.ReadOnly = true;
-            this.SellingPriceCol.Width = 107;
+            this.SellingPriceCol.Width = 80;
             // 
             // partsStatusStripPanel
             // 
             this.partsStatusStripPanel.Controls.Add(this.partsStatusStrip);
             this.partsStatusStripPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.partsStatusStripPanel.Location = new System.Drawing.Point(0, 567);
-            this.partsStatusStripPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.partsStatusStripPanel.Location = new System.Drawing.Point(0, 460);
             this.partsStatusStripPanel.Name = "partsStatusStripPanel";
-            this.partsStatusStripPanel.Size = new System.Drawing.Size(1305, 28);
+            this.partsStatusStripPanel.Size = new System.Drawing.Size(979, 23);
             this.partsStatusStripPanel.TabIndex = 2;
             // 
             // extPartsGroupBox
@@ -772,10 +769,8 @@
             this.extPartsGroupBox.Controls.Add(this.ExtPartsDGV);
             this.extPartsGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extPartsGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.extPartsGroupBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.extPartsGroupBox.Name = "extPartsGroupBox";
-            this.extPartsGroupBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.extPartsGroupBox.Size = new System.Drawing.Size(1305, 206);
+            this.extPartsGroupBox.Size = new System.Drawing.Size(979, 169);
             this.extPartsGroupBox.TabIndex = 1;
             this.extPartsGroupBox.TabStop = false;
             this.extPartsGroupBox.Text = "Доп. информ.";
@@ -800,108 +795,14 @@
             this.NoteExtCol});
             this.ExtPartsDGV.DataMember = "AvailabilityList";
             this.ExtPartsDGV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ExtPartsDGV.Location = new System.Drawing.Point(4, 19);
-            this.ExtPartsDGV.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ExtPartsDGV.Location = new System.Drawing.Point(3, 16);
             this.ExtPartsDGV.Name = "ExtPartsDGV";
             this.ExtPartsDGV.RowHeadersWidth = 51;
-            this.ExtPartsDGV.Size = new System.Drawing.Size(1297, 183);
+            this.ExtPartsDGV.Size = new System.Drawing.Size(973, 150);
             this.ExtPartsDGV.TabIndex = 2;
             this.ExtPartsDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.extPartsDGV_CellEndEdit);
             this.ExtPartsDGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.extPartsDGV_CellFormatting);
             this.ExtPartsDGV.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.extPartsDGV_DataBindingComplete);
-            // 
-            // extPartsStatusStrip
-            // 
-            this.extPartsStatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.extPartsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.progressBar});
-            this.extPartsStatusStrip.Location = new System.Drawing.Point(0, 206);
-            this.extPartsStatusStrip.Name = "extPartsStatusStrip";
-            this.extPartsStatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.extPartsStatusStrip.Size = new System.Drawing.Size(1305, 28);
-            this.extPartsStatusStrip.TabIndex = 0;
-            this.extPartsStatusStrip.Text = "statusStrip1";
-            this.extPartsStatusStrip.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
-            // 
-            // progressBar
-            // 
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(133, 20);
-            // 
-            // toolStripContainer1
-            // 
-            // 
-            // toolStripContainer1.ContentPanel
-            // 
-            this.toolStripContainer1.ContentPanel.Margin = new System.Windows.Forms.Padding(4);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(200, 215);
-            this.toolStripContainer1.LeftToolStripPanelVisible = false;
-            this.toolStripContainer1.Location = new System.Drawing.Point(465, 224);
-            this.toolStripContainer1.Margin = new System.Windows.Forms.Padding(4);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(200, 215);
-            this.toolStripContainer1.TabIndex = 0;
-            this.toolStripContainer1.Text = "toolStripContainer1";
-            this.toolStripContainer1.TopToolStripPanelVisible = false;
-            // 
-            // partsDGVContextMenuStrip
-            // 
-            this.partsDGVContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.partsDGVContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editSparePartToolStripMenuItem,
-            this.распечататьЦенникToolStripMenuItem,
-            this.посмотретьПередвижениеТовараToolStripMenuItem});
-            this.partsDGVContextMenuStrip.Name = "partsDGVContextMenuStrip";
-            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(323, 76);
-            // 
-            // editSparePartToolStripMenuItem
-            // 
-            this.editSparePartToolStripMenuItem.Name = "editSparePartToolStripMenuItem";
-            this.editSparePartToolStripMenuItem.Size = new System.Drawing.Size(322, 24);
-            this.editSparePartToolStripMenuItem.Text = "Редактировать ";
-            this.editSparePartToolStripMenuItem.Click += new System.EventHandler(this.editSparePartToolStripMenuItem_Click);
-            // 
-            // распечататьЦенникToolStripMenuItem
-            // 
-            this.распечататьЦенникToolStripMenuItem.Name = "распечататьЦенникToolStripMenuItem";
-            this.распечататьЦенникToolStripMenuItem.Size = new System.Drawing.Size(322, 24);
-            this.распечататьЦенникToolStripMenuItem.Text = "Распечатать ценник";
-            this.распечататьЦенникToolStripMenuItem.Click += new System.EventHandler(this.SpPriceListToExcelToolStripMenuItem_Click);
-            // 
-            // посмотретьПередвижениеТовараToolStripMenuItem
-            // 
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Name = "посмотретьПередвижениеТовараToolStripMenuItem";
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Size = new System.Drawing.Size(322, 24);
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Text = "Посмотреть передвижение товара";
-            this.посмотретьПередвижениеТовараToolStripMenuItem.Click += new System.EventHandler(this.посмотретьПередвижениеТовараToolStripMenuItem_Click);
-            // 
-            // userNameLabel
-            // 
-            this.userNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.userNameLabel.AutoSize = true;
-            this.userNameLabel.ContextMenuStrip = this.userContextMenuStrip;
-            this.userNameLabel.Location = new System.Drawing.Point(976, 0);
-            this.userNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.userNameLabel.Name = "userNameLabel";
-            this.userNameLabel.Size = new System.Drawing.Size(108, 16);
-            this.userNameLabel.TabIndex = 12;
-            this.userNameLabel.Text = "ФИ сотрудника";
-            // 
-            // userContextMenuStrip
-            // 
-            this.userContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.userContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editEmployeeToolStripMenuItem});
-            this.userContextMenuStrip.Name = "userContextMenuStrip";
-            this.userContextMenuStrip.Size = new System.Drawing.Size(205, 28);
-            // 
-            // editEmployeeToolStripMenuItem
-            // 
-            this.editEmployeeToolStripMenuItem.Name = "editEmployeeToolStripMenuItem";
-            this.editEmployeeToolStripMenuItem.Size = new System.Drawing.Size(204, 24);
-            this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
-            this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
             // StorageCellExtCol
             // 
@@ -912,7 +813,7 @@
             this.StorageCellExtCol.Name = "StorageCellExtCol";
             this.StorageCellExtCol.ReadOnly = true;
             this.StorageCellExtCol.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.StorageCellExtCol.Width = 76;
+            this.StorageCellExtCol.Width = 63;
             // 
             // SupplierExtCol
             // 
@@ -954,7 +855,7 @@
             this.PurchaseDateExtCol.MinimumWidth = 6;
             this.PurchaseDateExtCol.Name = "PurchaseDateExtCol";
             this.PurchaseDateExtCol.ReadOnly = true;
-            this.PurchaseDateExtCol.Width = 80;           
+            this.PurchaseDateExtCol.Width = 80;
             // 
             // MeasureUnitExtCol
             // 
@@ -979,7 +880,7 @@
             this.AvailabilityExtCol.MinimumWidth = 6;
             this.AvailabilityExtCol.Name = "AvailabilityExtCol";
             this.AvailabilityExtCol.ReadOnly = true;
-            this.AvailabilityExtCol.Width = 94;
+            this.AvailabilityExtCol.Width = 75;
             // 
             // MarkupExtCol
             // 
@@ -988,7 +889,7 @@
             this.MarkupExtCol.MinimumWidth = 6;
             this.MarkupExtCol.Name = "MarkupExtCol";
             this.MarkupExtCol.ReadOnly = true;
-            this.MarkupExtCol.Width = 110;
+            this.MarkupExtCol.Width = 88;
             // 
             // SellingPriceExtCol
             // 
@@ -1002,7 +903,7 @@
             this.SellingPriceExtCol.MinimumWidth = 6;
             this.SellingPriceExtCol.Name = "SellingPriceExtCol";
             this.SellingPriceExtCol.ReadOnly = true;
-            this.SellingPriceExtCol.Width = 119;
+            this.SellingPriceExtCol.Width = 97;
             // 
             // NoteExtCol
             // 
@@ -1012,22 +913,111 @@
             this.NoteExtCol.MinimumWidth = 2;
             this.NoteExtCol.Name = "NoteExtCol";
             this.NoteExtCol.ReadOnly = true;
-            this.NoteExtCol.Width = 129;
+            this.NoteExtCol.Width = 104;
+            // 
+            // extPartsStatusStrip
+            // 
+            this.extPartsStatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.extPartsStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.progressBar});
+            this.extPartsStatusStrip.Location = new System.Drawing.Point(0, 169);
+            this.extPartsStatusStrip.Name = "extPartsStatusStrip";
+            this.extPartsStatusStrip.Size = new System.Drawing.Size(979, 22);
+            this.extPartsStatusStrip.TabIndex = 0;
+            this.extPartsStatusStrip.Text = "statusStrip1";
+            this.extPartsStatusStrip.Click += new System.EventHandler(this.ExtPartsDGVClearSelection);
+            // 
+            // progressBar
+            // 
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(100, 16);
+            // 
+            // toolStripContainer1
+            // 
+            // 
+            // toolStripContainer1.ContentPanel
+            // 
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(150, 175);
+            this.toolStripContainer1.LeftToolStripPanelVisible = false;
+            this.toolStripContainer1.Location = new System.Drawing.Point(349, 182);
+            this.toolStripContainer1.Name = "toolStripContainer1";
+            this.toolStripContainer1.RightToolStripPanelVisible = false;
+            this.toolStripContainer1.Size = new System.Drawing.Size(150, 175);
+            this.toolStripContainer1.TabIndex = 0;
+            this.toolStripContainer1.Text = "toolStripContainer1";
+            this.toolStripContainer1.TopToolStripPanelVisible = false;
+            // 
+            // partsDGVContextMenuStrip
+            // 
+            this.partsDGVContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.partsDGVContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editSparePartToolStripMenuItem,
+            this.распечататьЦенникToolStripMenuItem,
+            this.посмотретьПередвижениеТовараToolStripMenuItem});
+            this.partsDGVContextMenuStrip.Name = "partsDGVContextMenuStrip";
+            this.partsDGVContextMenuStrip.Size = new System.Drawing.Size(265, 70);
+            // 
+            // editSparePartToolStripMenuItem
+            // 
+            this.editSparePartToolStripMenuItem.Name = "editSparePartToolStripMenuItem";
+            this.editSparePartToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.editSparePartToolStripMenuItem.Text = "Редактировать ";
+            this.editSparePartToolStripMenuItem.Click += new System.EventHandler(this.editSparePartToolStripMenuItem_Click);
+            // 
+            // распечататьЦенникToolStripMenuItem
+            // 
+            this.распечататьЦенникToolStripMenuItem.Name = "распечататьЦенникToolStripMenuItem";
+            this.распечататьЦенникToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.распечататьЦенникToolStripMenuItem.Text = "Распечатать ценник";
+            this.распечататьЦенникToolStripMenuItem.Click += new System.EventHandler(this.SpPriceListToExcelToolStripMenuItem_Click);
+            // 
+            // посмотретьПередвижениеТовараToolStripMenuItem
+            // 
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Name = "посмотретьПередвижениеТовараToolStripMenuItem";
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Size = new System.Drawing.Size(264, 22);
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Text = "Посмотреть передвижение товара";
+            this.посмотретьПередвижениеТовараToolStripMenuItem.Click += new System.EventHandler(this.посмотретьПередвижениеТовараToolStripMenuItem_Click);
+            // 
+            // userNameLabel
+            // 
+            this.userNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.userNameLabel.AutoSize = true;
+            this.userNameLabel.ContextMenuStrip = this.userContextMenuStrip;
+            this.userNameLabel.Location = new System.Drawing.Point(732, 0);
+            this.userNameLabel.Name = "userNameLabel";
+            this.userNameLabel.Size = new System.Drawing.Size(87, 13);
+            this.userNameLabel.TabIndex = 12;
+            this.userNameLabel.Text = "ФИ сотрудника";
+            // 
+            // userContextMenuStrip
+            // 
+            this.userContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.userContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editEmployeeToolStripMenuItem});
+            this.userContextMenuStrip.Name = "userContextMenuStrip";
+            this.userContextMenuStrip.Size = new System.Drawing.Size(173, 26);
+            // 
+            // editEmployeeToolStripMenuItem
+            // 
+            this.editEmployeeToolStripMenuItem.Name = "editEmployeeToolStripMenuItem";
+            this.editEmployeeToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.editEmployeeToolStripMenuItem.Text = "Изменить данные";
+            this.editEmployeeToolStripMenuItem.Click += new System.EventHandler(this.editEmployeeToolStripMenuItem_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1305, 902);
+            this.ClientSize = new System.Drawing.Size(979, 733);
             this.Controls.Add(this.userNameLabel);
+            this.Controls.Add(this.configButton);
             this.Controls.Add(this.dataSplitContainer);
             this.Controls.Add(this.componentPanel);
             this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.toolStripContainer1);
             this.Controls.Add(this.currencyComboBox);
             this.MainMenuStrip = this.menuStrip;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -1077,6 +1067,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveInExcelToolStripMenuItem;
         private System.Windows.Forms.Panel componentPanel;
         private System.Windows.Forms.Button cancelChangesButton;
+        private System.Windows.Forms.Button configButton;
         private System.Windows.Forms.Label markupLabel;
         private System.Windows.Forms.Button saveChangesButton;
         private System.Windows.Forms.TextBox searchTextBox;

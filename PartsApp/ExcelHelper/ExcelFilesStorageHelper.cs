@@ -13,11 +13,11 @@ namespace PartsApp.ExcelHelper
 {
     internal static class ExcelFilesStorageHelper
     {
-        private static readonly string TempSalesFilesPath = GetTempFilesPath("Продажи");
-        private static readonly string TempPurchasesFilesPath = GetTempFilesPath("Приходы");
+        internal static readonly string TempSalesFilesPath = GetTempFilesPath("Продажи");
+        internal static readonly string TempPurchasesFilesPath = GetTempFilesPath("Приходы");
 
-        internal static readonly string SalesFilesPath = GetSalesFilesPath();
-        internal static readonly string PurchasesFilesPath = GetPurchasesFilesPath();
+        internal static string SalesFilesPath { get; private set; } = GetSalesFilesPath();
+        internal static string PurchasesFilesPath { get; private set; } = GetPurchasesFilesPath();
 
         internal static readonly string ExcelFilesExtension = "xlsx";
 
@@ -129,6 +129,22 @@ namespace PartsApp.ExcelHelper
                 }
                 return default;
             }
+        }
+
+        internal static void UpdateExcelFilesPaths()
+        {
+            UpdateSalesFilesPath();
+            UpdatePurchasesFilesPath();
+        }
+
+        internal static void UpdateSalesFilesPath()
+        {
+            SalesFilesPath = GetSalesFilesPath();
+        }
+
+        internal static void UpdatePurchasesFilesPath()
+        {
+            PurchasesFilesPath = GetPurchasesFilesPath();
         }
 
         private static DialogResult AcceptChangeOfDirectory(string newPath)
