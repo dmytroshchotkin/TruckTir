@@ -38,6 +38,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.OperationsGroupBox = new System.Windows.Forms.GroupBox();
             this.ExcelOutputButton = new System.Windows.Forms.Button();
+            this.ExcelOutputForDayButton = new System.Windows.Forms.Button();
             this.ConfigSaveExcelFilesButton = new System.Windows.Forms.Button();
             this.OperationsInfoDGV = new System.Windows.Forms.DataGridView();
             this.OperationTypeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -109,6 +110,7 @@
             // 
             this.OperationsGroupBox.BackColor = System.Drawing.SystemColors.Control;
             this.OperationsGroupBox.Controls.Add(this.ExcelOutputButton);
+            this.OperationsGroupBox.Controls.Add(this.ExcelOutputForDayButton);
             this.OperationsGroupBox.Controls.Add(this.ConfigSaveExcelFilesButton);
             this.OperationsGroupBox.Controls.Add(this.OperationsInfoDGV);
             this.OperationsGroupBox.Controls.Add(this.label2);
@@ -129,7 +131,7 @@
             // ExcelOutputButton
             // 
             this.ExcelOutputButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ExcelOutputButton.Location = new System.Drawing.Point(679, 383);
+            this.ExcelOutputButton.Location = new System.Drawing.Point(542, 383);
             this.ExcelOutputButton.Name = "ExcelOutputButton";
             this.ExcelOutputButton.Size = new System.Drawing.Size(92, 20);
             this.ExcelOutputButton.TabIndex = 11;
@@ -137,6 +139,17 @@
             this.toolTip1.SetToolTip(this.ExcelOutputButton, "Выгрузить текущую накладную в Excel.");
             this.ExcelOutputButton.UseVisualStyleBackColor = false;
             this.ExcelOutputButton.Click += new System.EventHandler(this.ExcelOutputButton_Click);
+            // 
+            // ExcelOutputForDayButton
+            // 
+            this.ExcelOutputForDayButton.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.ExcelOutputForDayButton.Location = new System.Drawing.Point(642, 383);
+            this.ExcelOutputForDayButton.Name = "ExcelOutputForDayButton";
+            this.ExcelOutputForDayButton.Size = new System.Drawing.Size(150, 20);
+            this.ExcelOutputForDayButton.Text = "Все документы на дату";
+            this.toolTip1.SetToolTip(this.ExcelOutputForDayButton, "Выгрузить все Excel документы за день");
+            this.ExcelOutputForDayButton.UseVisualStyleBackColor = false;
+            this.ExcelOutputForDayButton.Click += new System.EventHandler(this.OnExcelOutputForDayButtonClick);
             // 
             // ConfigSaveExcelFilesButton
             // 
@@ -555,6 +568,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SalePaidCashCol;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button ExcelOutputButton;
+        private System.Windows.Forms.Button ExcelOutputForDayButton;
         private System.Windows.Forms.Button ConfigSaveExcelFilesButton;
     }
 }
