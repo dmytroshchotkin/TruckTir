@@ -75,6 +75,7 @@
     <Compile Include="ConfigSaveExcelFilesForm.Designer.cs">
       <DependentUpon>ConfigSaveExcelFilesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExcelHelper\ExcelFilesStorageHelper.cs" />
     <Compile Include="OperationsDataCheck\DataCheck.cs" />
     <Compile Include="EmployeeOperationsInfoForm.cs">
       <SubType>Form</SubType>

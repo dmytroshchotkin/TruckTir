@@ -10,6 +10,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Configuration;
+using System.Runtime.InteropServices;
 
 namespace PartsApp.ExcelHelper
 {
@@ -20,11 +21,11 @@ namespace PartsApp.ExcelHelper
         /// </summary>
         /// <param name="sparePart">Список товаров для вывода в Excel.</param>
         /// <param name="agent">Фирма-покупатель.</param>
-        internal static async void SaveInExcelAsync(IList<OperationDetails> operDetList, string agent)
+        internal static async void SaveInExcelAsync(IList<OperationDetails> operDetList, string agent, bool printPreview = true)
         {
             try
             {
-                await Task.Factory.StartNew(() => SaveInExcel(operDetList, agent));
+                await Task.Factory.StartNew(() => SaveInExcel(operDetList, agent, printPreview));
             }
             catch
             {
@@ -37,7 +38,7 @@ namespace PartsApp.ExcelHelper
         /// </summary>
         /// <param name="availabilityList">Список оприходованных товаров.</param>
         /// <param name="agent">Фирма-покупатель.</param>
-        private static void SaveInExcel(IList<OperationDetails> operDetList, string agent)
+        private static void SaveInExcel(IList<OperationDetails> operDetList, string agent, bool saveSingleDocWithPreview = true)
         {
             var operation = operDetList[0].Operation;
 
@@ -74,19 +75,39 @@ namespace PartsApp.ExcelHelper
 
             //Выводим заметку к операции.
             DescriptionExcelOutput(ExcelWorkSheet, operation.Description, ref row, column);
+            
+            SaveExcelFile(ExcelWorkBook, operation, saveSingleDocWithPreview);
 
-            //Вызываем нашу созданную эксельку.
-            ExcelApp.Visible = ExcelApp.UserControl = true;
-            SaveExcelFile(ExcelWorkBook, operation);
-            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.            
+            if (saveSingleDocWithPreview)
+            {
+                //Вызываем нашу созданную эксельку.
+                ExcelApp.Visible = ExcelApp.UserControl = true;
+                ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра. 
+            }
+            else
+            {
+                ReleaseExcelResources(ExcelApp, ExcelWorkBook);
+            }
         }
 
-        private static void SaveExcelFile(Workbook workbook, IOperation operation)
+        private static void ReleaseExcelResources(Excel.Application app, Workbook workbook)
+        {
+            workbook.Close(false);
+            Marshal.ReleaseComObject(workbook);
+
+            app.Quit();
+            Marshal.ReleaseComObject(app);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        private static void SaveExcelFile(Workbook workbook, IOperation operation, bool saveToMainFolder)
         {
             string savingPath = operation is Sale ? ConfigurationManager.AppSettings["SalesFilesSavePath"] : ConfigurationManager.AppSettings["PurchasesFilesSavePath"];
             if (!string.IsNullOrWhiteSpace(savingPath))
             {
-                SaveExcelFileToUserDefinedDirectory(workbook, savingPath);
+                SaveExcelFileToUserDefinedDirectory(workbook, savingPath, saveToMainFolder, operation.OperationDate);
             }
             else
             {
@@ -94,11 +115,12 @@ namespace PartsApp.ExcelHelper
             }
         }
 
-        private static void SaveExcelFileToUserDefinedDirectory(Workbook workbook, string directory)
+        private static void SaveExcelFileToUserDefinedDirectory(Workbook workbook, string directory, bool saveToMainFolder, DateTime date)
         {
-            if (!Directory.Exists(directory))
+            string fullDirectoryName = saveToMainFolder ? directory : Path.Combine(directory, date.ToString("dd-MM-yyyy"));
+            if (!Directory.Exists(fullDirectoryName))
             {
-                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(fullDirectoryName);
             }
             string fullPath = Path.Combine(directory, workbook.Title);
             DeleteDuplicateFile(directory, workbook.Title);
