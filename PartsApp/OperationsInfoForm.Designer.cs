@@ -131,7 +131,8 @@
             // ExcelOutputButton
             // 
             this.ExcelOutputButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ExcelOutputButton.Location = new System.Drawing.Point(542, 383);
+            this.ExcelOutputButton.Location = new System.Drawing.Point(500, 383);
+            this.ExcelOutputButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ExcelOutputButton.Name = "ExcelOutputButton";
             this.ExcelOutputButton.Size = new System.Drawing.Size(92, 20);
             this.ExcelOutputButton.TabIndex = 11;
@@ -143,7 +144,8 @@
             // ExcelOutputForDayButton
             // 
             this.ExcelOutputForDayButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ExcelOutputForDayButton.Location = new System.Drawing.Point(642, 383);
+            this.ExcelOutputForDayButton.Location = new System.Drawing.Point(600, 383);
+            this.ExcelOutputForDayButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ExcelOutputForDayButton.Name = "ExcelOutputForDayButton";
             this.ExcelOutputForDayButton.Size = new System.Drawing.Size(150, 20);
             this.ExcelOutputForDayButton.Text = "Все документы на дату";
@@ -154,7 +156,8 @@
             // ConfigSaveExcelFilesButton
             // 
             this.ConfigSaveExcelFilesButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ConfigSaveExcelFilesButton.Location = new System.Drawing.Point(800, 383);
+            this.ConfigSaveExcelFilesButton.Location = new System.Drawing.Point(758, 383);
+            this.ConfigSaveExcelFilesButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ConfigSaveExcelFilesButton.Name = "ConfigSaveExcelFilesButton";
             this.ConfigSaveExcelFilesButton.Size = new System.Drawing.Size(92, 20);
             this.ConfigSaveExcelFilesButton.Text = "Настройка";
