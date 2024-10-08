@@ -128,7 +128,8 @@
             // ExcelOutputButton
             // 
             this.ExcelOutputButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ExcelOutputButton.Location = new System.Drawing.Point(542, 383);
+            this.ExcelOutputButton.Location = new System.Drawing.Point(500, 383);
+            this.ExcelOutputButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ExcelOutputButton.Name = "ExcelOutputButton";
             this.ExcelOutputButton.Size = new System.Drawing.Size(92, 20);
             this.ExcelOutputButton.TabIndex = 11;
