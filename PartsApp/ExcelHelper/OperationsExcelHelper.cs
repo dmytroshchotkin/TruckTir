@@ -442,7 +442,7 @@ namespace PartsApp.ExcelHelper
                 return defaultTitle;
             }
 
-            var forbiddenSymbols = new char[] { '/', '\\', '|', ':', '*', '?', '"', '<', '>', ',', '\'', '~', '`', '?' };
+            var forbiddenSymbols = new char[] { '/', '\\', '|', ':', '*', '?', '"', '<', '>', ',', '\'', '~', '`', '?', '.' };
             var validatedString = new StringBuilder();
 
             foreach (var c in title)
