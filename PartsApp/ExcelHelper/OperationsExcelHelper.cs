@@ -254,7 +254,7 @@ namespace PartsApp.ExcelHelper
             ExcelWorkSheet.Cells[row, column + 2] = operDet.SparePart.Articul;
             ExcelWorkSheet.Cells[row, column + 3] = operDet.SparePart.Title;
             //Выравнивание диапазона строк.
-            ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).VerticalAlignment = Excel.Constants.xlTop;
+            ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).VerticalAlignment = Excel.Constants.xlCenter;
             ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;                     
 
             ExcelWorkSheet.Cells[row, column] = operDet.SparePart.Manufacturer;
