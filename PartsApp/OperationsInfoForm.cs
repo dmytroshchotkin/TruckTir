@@ -5,8 +5,10 @@ using PartsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -199,7 +201,48 @@ namespace PartsApp
             {
                 OperationsExcelHelper.SaveInExcelAsync(operation.OperationDetailsList, "Truck Tir");
             }
-        }        
+        }
+
+        private void OnConfigSaveExcelFilesButtonClick(object sender, EventArgs e)
+        {
+            var configSaveExcelFilesForm = new ConfigSaveExcelFilesForm();
+            configSaveExcelFilesForm.ShowDialog();
+        }
+
+        /// <summary>
+        /// Сохраняет в Excel без открытия превью все операции на первую дату, выбранную в DateTimePicker'е 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnExcelOutputForDayButtonClick(object sender, EventArgs e)
+        {
+            var rows = OperationsInfoDGV.Rows;
+            foreach (DataGridViewRow row in rows)
+            {
+                if (row.Tag is IOperation operation && operation.OperationDate == BeginDateDTP.Value)
+                {
+                    OperationsExcelHelper.SaveInExcelAsync(operation.OperationDetailsList, "Truck Tir", false);
+                }
+            }
+
+            OpenFoldersWithExcelFiles();
+        }
+
+        private void OpenFoldersWithExcelFiles()
+        {
+            if (SaleCheckBox.Checked)
+            {
+                string salePath = ConfigurationManager.AppSettings["SalesFilesSavePath"];
+                string dayDocsDirectory = Path.Combine(salePath, BeginDateDTP.Value.ToString("dd-MM-yyyy"));
+                ExcelFilesStorageHelper.TryOpenDirectory(dayDocsDirectory);
+            }
+            if (PurchaseCheckBox.Checked)
+            {
+                string purchasePath = ConfigurationManager.AppSettings["PurchasesFilesSavePath"];
+                string dayDocsDirectory = Path.Combine(purchasePath, BeginDateDTP.Value.ToString("dd-MM-yyyy"));
+                ExcelFilesStorageHelper.TryOpenDirectory(dayDocsDirectory);
+            }
+        }
         //==============================================================================================================================================================================
         #endregion
     }
