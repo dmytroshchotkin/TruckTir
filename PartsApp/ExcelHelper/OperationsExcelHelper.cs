@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Configuration;
+using System.Runtime.InteropServices;
 
 namespace PartsApp.ExcelHelper
 {
@@ -18,11 +21,11 @@ namespace PartsApp.ExcelHelper
         /// </summary>
         /// <param name="sparePart">Список товаров для вывода в Excel.</param>
         /// <param name="agent">Фирма-покупатель.</param>
-        internal static async void SaveInExcelAsync(IList<OperationDetails> operDetList, string agent)
+        internal static async void SaveInExcelAsync(IList<OperationDetails> operDetList, string agent, bool printPreview = true)
         {
             try
             {
-                await Task.Factory.StartNew(() => SaveInExcel(operDetList, agent));
+                await Task.Factory.StartNew(() => SaveInExcel(operDetList, agent, printPreview));
             }
             catch
             {
@@ -35,14 +38,13 @@ namespace PartsApp.ExcelHelper
         /// </summary>
         /// <param name="availabilityList">Список оприходованных товаров.</param>
         /// <param name="agent">Фирма-покупатель.</param>
-        private static void SaveInExcel(IList<OperationDetails> operDetList, string agent)
+        private static void SaveInExcel(IList<OperationDetails> operDetList, string agent, bool saveSingleDocWithPreview = true)
         {
-            //Purchase purchase = operDetList[0].Operation as Purchase;
             var operation = operDetList[0].Operation;
 
             Excel.Application ExcelApp = new Excel.Application();
             Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
-            ExcelWorkBook.Windows[1].Caption = GetValidExcelBookTitle(GetOperationTitle(operation));
+            ExcelWorkBook.Windows[1].Caption = ExcelWorkBook.Title = GetValidExcelBookTitle(GetOperationTitle(operation));
             Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
             ExcelWorkSheet.PageSetup.Zoom = false;
             ExcelWorkSheet.PageSetup.FitToPagesWide = 1;
@@ -73,10 +75,84 @@ namespace PartsApp.ExcelHelper
 
             //Выводим заметку к операции.
             DescriptionExcelOutput(ExcelWorkSheet, operation.Description, ref row, column);
+            
+            SaveExcelFile(ExcelWorkBook, operation, saveSingleDocWithPreview);
 
-            //Вызываем нашу созданную эксельку.
-            ExcelApp.Visible = ExcelApp.UserControl = true;
-            ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра.            
+            if (saveSingleDocWithPreview)
+            {
+                //Вызываем нашу созданную эксельку.
+                ExcelApp.Visible = ExcelApp.UserControl = true;
+                ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра. 
+            }
+            else
+            {
+                ReleaseExcelResources(ExcelApp, ExcelWorkBook);
+            }
+        }
+
+        private static void ReleaseExcelResources(Excel.Application app, Workbook workbook)
+        {
+            workbook.Close(false);
+            Marshal.ReleaseComObject(workbook);
+
+            app.Quit();
+            Marshal.ReleaseComObject(app);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        private static void SaveExcelFile(Workbook workbook, IOperation operation, bool saveToMainFolder)
+        {
+            string savingPath = operation is Sale ? ConfigurationManager.AppSettings["SalesFilesSavePath"] : ConfigurationManager.AppSettings["PurchasesFilesSavePath"];
+            if (!string.IsNullOrWhiteSpace(savingPath))
+            {
+                SaveExcelFileToUserDefinedDirectory(workbook, savingPath, saveToMainFolder, operation.OperationDate);
+            }
+            else
+            {
+                SaveExcelFileToTempDirectory(workbook, saveToMainFolder, operation);
+            }
+        }
+
+        private static void SaveExcelFileToUserDefinedDirectory(Workbook workbook, string directory, bool saveToMainFolder, DateTime date)
+        {
+            string fullDirectoryName = saveToMainFolder ? directory : Path.Combine(directory, date.ToString("dd-MM-yyyy"));
+            if (!Directory.Exists(fullDirectoryName))
+            {
+                Directory.CreateDirectory(fullDirectoryName);
+            }
+            string fullPath = Path.Combine(directory, workbook.Title);
+            DeleteDuplicateFile(directory, workbook.Title);
+            workbook.SaveAs(fullPath);
+        }
+
+        private static void SaveExcelFileToTempDirectory(Workbook workbook, bool saveToMainFolder, IOperation operation)
+        {
+            string directory = operation is Sale ? ExcelFilesStorageHelper.TempSalesFilesPath : ExcelFilesStorageHelper.TempPurchasesFilesPath; ;
+            if (!saveToMainFolder)
+            {
+                directory = Path.Combine(directory, operation.OperationDate.ToString("dd-MM-yyyy"));
+            }
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            string tempFilesPath = Path.Combine(directory, workbook.Title);
+            DeleteDuplicateFile(directory, workbook.Title);
+            workbook.SaveAs(tempFilesPath);
+        }
+
+        private static void DeleteDuplicateFile(string directoryPath, string filePath)
+        {
+            var dirInfo = new DirectoryInfo(directoryPath);
+            var filesWithDefinedName = dirInfo.GetFiles($"{filePath}.*");
+            if (filesWithDefinedName.Length > 0)
+            {
+                File.Delete(filesWithDefinedName[0].FullName);
+            }
         }
 
         private static string GetPurchaseAgentsDescriptionForDocHeader(IOperation purchase, string agent)
@@ -188,7 +264,7 @@ namespace PartsApp.ExcelHelper
             ExcelWorkSheet.Cells[row, column + 2] = operDet.SparePart.Articul;
             ExcelWorkSheet.Cells[row, column + 3] = operDet.SparePart.Title;
             //Выравнивание диапазона строк.
-            ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).VerticalAlignment = Excel.Constants.xlTop;
+            ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).VerticalAlignment = Excel.Constants.xlCenter;
             ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;                     
 
             ExcelWorkSheet.Cells[row, column] = operDet.SparePart.Manufacturer;
@@ -405,7 +481,7 @@ namespace PartsApp.ExcelHelper
                 return defaultTitle;
             }
 
-            var forbiddenSymbols = new char[] { '/', '\\', '|', ':', '*', '?', '"', '<', '>', ',', '\'', '~', '`', '?' };
+            var forbiddenSymbols = new char[] { '/', '\\', '|', ':', '*', '?', '"', '<', '>', ',', '\'', '~', '`', '?', '.' };
             var validatedString = new StringBuilder();
 
             foreach (var c in title)

@@ -14,6 +14,7 @@
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
+            if (disposing && (components != null))
             {
                 components.Dispose();
             }
@@ -127,12 +128,13 @@
             // ExcelOutputButton
             // 
             this.ExcelOutputButton.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ExcelOutputButton.Location = new System.Drawing.Point(679, 383);
+            this.ExcelOutputButton.Location = new System.Drawing.Point(500, 383);
+            this.ExcelOutputButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ExcelOutputButton.Name = "ExcelOutputButton";
             this.ExcelOutputButton.Size = new System.Drawing.Size(92, 20);
             this.ExcelOutputButton.TabIndex = 11;
             this.ExcelOutputButton.Text = "Excel";
-            this.toolTip1.SetToolTip(this.ExcelOutputButton, "Выгрузить текущую накладную в Excel.");
+            this.toolTip1.SetToolTip(this.ExcelOutputButton, "Выгрузить одну или несколько накладных в Excel.");
             this.ExcelOutputButton.UseVisualStyleBackColor = false;
             this.ExcelOutputButton.Click += new System.EventHandler(this.ExcelOutputButton_Click);
             // 
@@ -154,7 +156,7 @@
             this.SalePaidCashCol});
             this.OperationsInfoDGV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OperationsInfoDGV.Location = new System.Drawing.Point(3, 16);
-            this.OperationsInfoDGV.MultiSelect = false;
+            this.OperationsInfoDGV.MultiSelect = true;
             this.OperationsInfoDGV.Name = "OperationsInfoDGV";
             this.OperationsInfoDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.OperationsInfoDGV.Size = new System.Drawing.Size(858, 366);

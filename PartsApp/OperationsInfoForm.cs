@@ -5,8 +5,10 @@ using PartsApp.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -193,13 +195,60 @@ namespace PartsApp
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ExcelOutputButton_Click(object sender, EventArgs e)
-        {            
+        {
+            bool saveMultipleExcelFiles = OperationsInfoDGV.SelectedRows.Count > 1;
+            if (saveMultipleExcelFiles)
+            {
+                SaveMultipleExcelDocsWithoutPrintingPreview();
+            }
+            else
+            {
+                SaveSingleExcelDocWithPrintingPreview();
+            }            
+        }
+
+        private void SaveSingleExcelDocWithPrintingPreview()
+        {
             DataGridViewRow row = OperationsInfoDGV.SelectedRows[0];
             if (row.Tag is IOperation operation)
             {
                 OperationsExcelHelper.SaveInExcelAsync(operation.OperationDetailsList, "Truck Tir");
             }
-        }        
+        }
+
+        private void SaveMultipleExcelDocsWithoutPrintingPreview()
+        {
+            var rows = OperationsInfoDGV.SelectedRows;
+            var directories = new HashSet<string>();
+            foreach (DataGridViewRow row in rows)
+            {
+                if (row.Tag is IOperation operation)
+                {
+                    OperationsExcelHelper.SaveInExcelAsync(operation.OperationDetailsList, "Truck Tir", false);
+                    UpdateDirectoriesForOpening(directories, operation);
+                }
+            }
+
+            OpenFoldersWithExcelFiles(directories);
+        }
+
+        private static void UpdateDirectoriesForOpening(HashSet<string> directories, IOperation operation)
+        {
+            string directory = ExcelFilesStorageHelper.GetDirectoryByOperationTypeAndDate(operation);
+            
+            if (directory != null)
+            {
+                directories.Add(directory);
+            }
+        }
+             
+        private void OpenFoldersWithExcelFiles(HashSet<string> directories)
+        {
+            foreach (var d in directories)
+            {
+                ExcelFilesStorageHelper.TryOpenDirectory(d);
+            }            
+        }
         //==============================================================================================================================================================================
         #endregion
     }
