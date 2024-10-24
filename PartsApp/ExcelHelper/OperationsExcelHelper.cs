@@ -111,7 +111,7 @@ namespace PartsApp.ExcelHelper
             }
             else
             {
-                SaveExcelFileToTempDirectory(workbook);
+                SaveExcelFileToTempDirectory(workbook, saveToMainFolder, operation);
             }
         }
 
@@ -127,11 +127,21 @@ namespace PartsApp.ExcelHelper
             workbook.SaveAs(fullPath);
         }
 
-        private static void SaveExcelFileToTempDirectory(Workbook workbook)
+        private static void SaveExcelFileToTempDirectory(Workbook workbook, bool saveToMainFolder, IOperation operation)
         {
-            string tempDirectory = Path.GetTempPath();
-            string tempFilesPath = Path.Combine(tempDirectory, workbook.Title);
-            DeleteDuplicateFile(tempDirectory, workbook.Title);
+            string directory = operation is Sale ? ExcelFilesStorageHelper.TempSalesFilesPath : ExcelFilesStorageHelper.TempPurchasesFilesPath; ;
+            if (!saveToMainFolder)
+            {
+                directory = Path.Combine(directory, operation.OperationDate.ToString("dd-MM-yyyy"));
+            }
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            string tempFilesPath = Path.Combine(directory, workbook.Title);
+            DeleteDuplicateFile(directory, workbook.Title);
             workbook.SaveAs(tempFilesPath);
         }
 

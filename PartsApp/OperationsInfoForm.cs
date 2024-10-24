@@ -234,18 +234,8 @@ namespace PartsApp
 
         private static void UpdateDirectoriesForOpening(HashSet<string> directories, IOperation operation)
         {
-            string directory = default;
-            if (operation is Sale)
-            {
-                string salePath = ConfigurationManager.AppSettings["SalesFilesSavePath"];
-                directory = Path.Combine(salePath, operation.OperationDate.ToString("dd-MM-yyyy"));
-            }
-            else if (operation is Purchase)
-            {
-                string purchasePath = ConfigurationManager.AppSettings["PurchasesFilesSavePath"];
-                directory = Path.Combine(purchasePath, operation.OperationDate.ToString("dd-MM-yyyy"));
-            }
-
+            string directory = ExcelFilesStorageHelper.GetDirectoryByOperationTypeAndDate(operation);
+            
             if (directory != null)
             {
                 directories.Add(directory);
