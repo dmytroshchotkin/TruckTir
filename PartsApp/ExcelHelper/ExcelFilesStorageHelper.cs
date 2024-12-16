@@ -16,10 +16,14 @@ namespace PartsApp.ExcelHelper
         internal static readonly string TempSalesFilesPath = GetTempFilesPath("Продажи");
         internal static readonly string TempPurchasesFilesPath = GetTempFilesPath("Приходы");
 
+        internal static readonly string TempPriceTagsFilesPath = GetTempFilesPath("Ценники", true);
+        internal static readonly string TempSparePartsListsFilesPath = GetTempFilesPath("Товары", true);
+
+        
         internal static string SalesFilesPath { get; private set; } = GetSalesFilesPath();
         internal static string PurchasesFilesPath { get; private set; } = GetPurchasesFilesPath();
 
-        internal static readonly string ExcelFilesExtension = "xlsx";
+        internal const string ExcelFilesExtension = "xlsx";
 
         internal static void SaveMultipleOperationsInExcel(List<IOperation> operations, string directory)
         {
@@ -215,7 +219,7 @@ namespace PartsApp.ExcelHelper
             return directory;
         }
 
-        private static string GetTempFilesPath(string directoryTitle)
+        private static string GetTempFilesPath(string directoryTitle, bool includeExtension = false)
         {
             string path = Path.Combine(Path.GetTempPath(), $"TruckTir\\{directoryTitle}");
             if (!Directory.Exists(path))
@@ -223,7 +227,7 @@ namespace PartsApp.ExcelHelper
                 Directory.CreateDirectory(path);
             }
 
-            return path;
+            return includeExtension ? $"{path}.{ExcelFilesExtension}" : path;
         }
 
         public static void CleanupTempDirectory()
