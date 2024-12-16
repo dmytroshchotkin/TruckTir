@@ -117,7 +117,7 @@ namespace PartsApp
         {
             //Находим соотв. объекты SparePart для всех выведенных в таблице строк.
             List<SparePart> sparePartsList = PartsDGV.Rows.Cast<DataGridViewRow>().Select(r => r.DataBoundItem as SparePart).ToList();
-            PriceTagsExcelHelper.SaveInExcelAsync(sparePartsList); //Выводим в Excel.
+            SparePartsSpecificationsExcelHelper.SaveInExcelAsync(sparePartsList); //Выводим в Excel.
         }
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         #endregion
@@ -132,7 +132,7 @@ namespace PartsApp
             //Находим соотв. объекты из выделенных строк.
             List<SparePart> sparePartsList = selectedRows.Select(r => r.DataBoundItem as SparePart).ToList();
             //Выводим в Excel.
-            PriceTagsExcelHelper.ExcelSaveSparePartPriceListAsync(sparePartsList);
+            PriceTagsExcelHelper.SaveInExcelAsync(sparePartsList);
         }
         #endregion
 
