@@ -61,7 +61,7 @@ namespace PartsApp.ExcelHelper
                 }
 
                 string filePath = ExcelFilesStorageHelper.TempPriceTagsFilesPath;
-                ExcelFilesStorageHelper.SaveWorkbookToTempDirectoryAndOpenForPreview(workbook, filePath);
+                ExcelFilesStorageHelper.SaveExcelFile(workbook, filePath, true);
             }
         }
 
