@@ -12,6 +12,9 @@ using System.IO;
 using System.Configuration;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace PartsApp.ExcelHelper
 {
@@ -43,71 +46,44 @@ namespace PartsApp.ExcelHelper
         {
             var operation = operDetList[0].Operation;
 
-            Excel.Application ExcelApp = new Excel.Application();
-            Excel.Workbook ExcelWorkBook = ExcelApp.Workbooks.Add(System.Reflection.Missing.Value); //Книга.
-            ExcelWorkBook.Windows[1].Caption = ExcelWorkBook.Title = GetValidExcelBookTitle(GetOperationTitle(operation));
-            Excel.Worksheet ExcelWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1); //Таблица.
-            ExcelWorkSheet.PageSetup.Zoom = false;
-            ExcelWorkSheet.PageSetup.FitToPagesWide = 1;
-
-            //Настраиваем горизонтальные и вертикальные границы области печати.
-            ExcelWorkSheet.PageSetup.TopMargin = ExcelWorkSheet.PageSetup.BottomMargin = 7;
-            ExcelWorkSheet.PageSetup.LeftMargin = ExcelWorkSheet.PageSetup.RightMargin = 7;
-
-            int row = 1, column = 1;
-
-            //Выводим Id и Дату. 
-            OperationIdAndDateExcelOutput(ExcelWorkSheet, operation, row);
-
-            //Выводим поставщика и покупателя / продавца и покупателя.
-            row += 2;
-            ExcelApp.Cells[row, column].Font.Name = "Consolas";
-            ExcelApp.Cells[row, column] = operation is Purchase ? GetPurchaseAgentsDescriptionForDocHeader(operation, agent) : GetSaleAgentsDescriptionForDocHeader(operation, agent);
-
-            //Заполняем таблицу.
-            FillTheExcelList(ExcelWorkSheet, operDetList, ref row, column);
-
-            //Выводим имена агентов.
-            row += 2;
-            ExcelApp.Cells[row, column].Font.Name = "Consolas"; //моноширинный шрифт
-            ExcelApp.Cells[row, column] = operation is Purchase ? GetPurchaseAgentsDescriptionForDocVisas(operation) : GetSaleAgentsDescriptionForDocVisas(operation);
-            //Делаем визуальное отделение информации от заметки, с помощью линии.
-            row += 2;
-
-            //Выводим заметку к операции.
-            DescriptionExcelOutput(ExcelWorkSheet, operation.Description, ref row, column);
-
-            SaveExcelFile(ExcelWorkBook, directory);
-
-            if (saveSingleDocWithPreview)
+            using (var workbook = new ClosedXML.Excel.XLWorkbook())
             {
-                //Вызываем нашу созданную эксельку.
-                ExcelApp.Visible = ExcelApp.UserControl = true;
-                ExcelWorkBook.PrintPreview(); //открываем окно предварительного просмотра. 
+                var worksheet = workbook.Worksheets.Add();
+                worksheet.PageSetup.PageOrientation = ClosedXML.Excel.XLPageOrientation.Portrait;
+                worksheet.PageSetup.AdjustTo(100);
+                worksheet.PageSetup.PagesWide = 1; // ширина, равная границе печати
+
+                //Настраиваем горизонтальные и вертикальные границы области печати.
+                worksheet.PageSetup.Margins.Top = worksheet.PageSetup.Margins.Bottom = worksheet.PageSetup.Margins.Left = worksheet.PageSetup.Margins.Right = 7;
+
+                int row = 1, column = 1;
+
+                //Выводим Id и Дату.
+                OperationIdAndDateExcelOutput(worksheet, operation, ref row);
+
+                //Выводим поставщика и покупателя / продавца и покупателя после отступа строки
+                row += 2;
+                worksheet.Cell(row, column).Style.Font.FontName = "Consolas";
+                worksheet.Cell(row, column).Value = operation is Purchase ? GetPurchaseAgentsDescriptionForDocHeader(operation, agent) : GetSaleAgentsDescriptionForDocHeader(operation, agent);
+
+                //Заполняем таблицу.
+                FillTheExcelList(worksheet, operDetList, ref row, column);
+
+                // Выводим имена агентов.
+                row += 2;
+                worksheet.Cell(row, column).Style.Font.FontName = "Consolas";
+                worksheet.Cell(row, column).Value = operation is Purchase ? GetPurchaseAgentsDescriptionForDocVisas(operation) : GetSaleAgentsDescriptionForDocVisas(operation);
+
+                //Выводим заметку к операции.
+                row += 2;
+
+                DescriptionExcelOutput(worksheet, operation.Description, ref row, column);
+
+                var filePath = Path.Combine(directory, GetOperationTitle(operation));
+                filePath = Path.ChangeExtension(filePath, ExcelFilesStorageHelper.ExcelFilesExtension);
+
+                ExcelFilesStorageHelper.SaveExcelFile(workbook, filePath, saveSingleDocWithPreview);
             }
-            else
-            {
-                ReleaseExcelResources(ExcelApp, ExcelWorkBook);
-            }
-        }
-
-        private static void ReleaseExcelResources(Excel.Application app, Workbook workbook)
-        {
-            workbook.Close(false);
-            Marshal.ReleaseComObject(workbook);
-
-            app.Quit();
-            Marshal.ReleaseComObject(app);
-
-            Thread.Sleep(1000);
-        }
-
-        private static void SaveExcelFile(Workbook workbook, string directory)
-        {
-            string fullPath = Path.Combine(directory, workbook.Title);
-            ExcelFilesStorageHelper.TryAddDuplicateNumberToFileName(ref fullPath);
-            workbook.SaveAs(fullPath);
-            Thread.Sleep(1000);
         }
 
         private static string GetPurchaseAgentsDescriptionForDocHeader(IOperation purchase, string agent)
@@ -141,108 +117,111 @@ namespace PartsApp.ExcelHelper
         /// <summary>
         /// Заполняем Excel инф-цией из переданного списка.
         /// </summary>
-        /// <param name="ExcelWorkSheet">Рабочая страница</param>
+        /// <param name="worksheet">Рабочая страница</param>
         /// <param name="operDetList">Список деталей операции.</param>
         /// <param name="row">Индекс строки.</param>
         /// <param name="column">Индекс столбца.</param>
-        private static void FillTheExcelList(Excel.Worksheet ExcelWorkSheet, IList<OperationDetails> operDetList, ref int row, int column)
+        private static void FillTheExcelList(IXLWorksheet worksheet, IList<OperationDetails> operDetList, ref int row, int column)
         {
             row += 2;
-            //Выводим заголовок.
-            FillTheTitlesRow(ExcelWorkSheet, row, column);
 
-            //Уменьшаем ширину колонки "Ед. изм."
-            ExcelWorkSheet.Cells[row, column + 4].VerticalAlignment = Excel.XlHAlign.xlHAlignDistributed;
-            ExcelWorkSheet.Cells[row, column + 4].Columns.ColumnWidth = 5;
+            //Выводим заголовок.
+            FillTheTitlesRow(worksheet, row, column);
 
             //Устанавливаем ширину столбцов.
-            int titleColWidth = 30, articulColWidth = 20; // -- Взято методом тыка.  
-            SetColumnsWidth(operDetList, ExcelWorkSheet.Cells[row, column + 3], ExcelWorkSheet.Cells[row, column + 2], ExcelWorkSheet.Cells[row, column]);
+            worksheet.Column(column + 4).Width = 5;
+            SetColumnsWidth(operDetList, worksheet.Column(column + 3), worksheet.Column(column + 2), worksheet.Column(column));
+
+            int titleColWidth = 30, articulColWidth = 20;
+            float inTotal = 0;
 
             //Выводим список товаров.
-            float inTotal = 0;
-            foreach (OperationDetails operDet in operDetList)
+            foreach (var operDet in operDetList)
             {
-                FillExcelRow(ExcelWorkSheet, operDet, ++row, column, titleColWidth, articulColWidth);
+                FillExcelRow(worksheet, operDet, ++row, column, titleColWidth, articulColWidth);
                 inTotal += operDet.Price * operDet.Count;
             }
-            //Обводим талицу рамкой. 
-            ExcelWorkSheet.get_Range("A" + (row - operDetList.Count + 1).ToString(), "H" + row.ToString()).Borders.ColorIndex = Excel.XlRgbColor.rgbBlack;
+
+            //Обводим таблицу рамкой. 
+            worksheet.Range($"A{row - operDetList.Count + 1}:H{row}").Style.Border.SetOutsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin).Border.SetInsideBorder(ClosedXML.Excel.XLBorderStyleValues.Thin);
 
             ++row;
+
             //Выводим 'Итого'.
-            InTotalExcelOutput(ExcelWorkSheet, inTotal, row, column);
+            InTotalExcelOutput(worksheet, inTotal, row, column);
         }
 
         /// <summary>
         /// Заполняет строку заголовками для таблицы.
         /// </summary>
-        /// <param name="ExcelWorkSheet">Рабочий лист.</param>
+        /// <param name="worksheet">Рабочий лист.</param>
         /// <param name="row">Индекс строки.</param>
         /// <param name="column">Индекс столбца.</param>
-        private static void FillTheTitlesRow(Excel.Worksheet ExcelWorkSheet, int row, int column)
+        private static void FillTheTitlesRow(IXLWorksheet worksheet, int row, int column)
         {
             //Заполняем заголовки строк.
-            ExcelWorkSheet.Cells[row, column] = "Произв.";
-            ExcelWorkSheet.Cells[row, column + 1] = "Склад";
-            ExcelWorkSheet.Cells[row, column + 2] = "Артикул";
-            ExcelWorkSheet.Cells[row, column + 3] = "Название";
-            ExcelWorkSheet.Cells[row, column + 4] = "Ед. изм.";
-            ExcelWorkSheet.Cells[row, column + 5] = "Кол-во";
-            ExcelWorkSheet.Cells[row, column + 6] = "Цена";
-            ExcelWorkSheet.Cells[row, column + 7] = "Сумма";
+            worksheet.Cell(row, column).Value = "Произв.";
+            worksheet.Cell(row, column + 1).Value = "Склад";
+            worksheet.Cell(row, column + 2).Value = "Артикул";
+            worksheet.Cell(row, column + 3).Value = "Название";
+            worksheet.Cell(row, column + 4).Value = "Ед. изм.";
+            worksheet.Cell(row, column + 5).Value = "Кол-во";
+            worksheet.Cell(row, column + 6).Value = "Цена";
+            worksheet.Cell(row, column + 7).Value = "Сумма";
 
-            //Настраиваем вид клеток.
-            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString());
-            excelCells.VerticalAlignment = Excel.XlHAlign.xlHAlignCenter;
-            excelCells.Font.Bold = true;
-            excelCells.Font.Size = 12;
-            excelCells.Borders.ColorIndex = Excel.XlRgbColor.rgbBlack; //Обводим заголовки таблицы рамкой.            
-            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium; //Устанавливаем стиль и толщину линии
+            //Настраиваем вид ячеек заголовков
+            var headerRange = worksheet.Range($"A{row}:H{row}");
+            headerRange.Style.Alignment.Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Left;
+            headerRange.Style.Alignment.Vertical = ClosedXML.Excel.XLAlignmentVerticalValues.Center;
+            headerRange.Style.Alignment.WrapText = true;
+            headerRange.Style.Font.Bold = true;
+            headerRange.Style.Font.FontSize = 12;
+            headerRange.Style.Border.OutsideBorder = headerRange.Style.Border.InsideBorder = ClosedXML.Excel.XLBorderStyleValues.Medium; //Обводим заголовки таблицы рамкой.
         }
 
         /// <summary>
         /// Заполянет строку данными из переданного объекта.
         /// </summary>
-        /// <param name="ExcelWorkSheet">Рабочая страница</param>
+        /// <param name="worksheet">Рабочая страница</param>
         /// <param name="sparePart">Объект товара.</param>
         /// <param name="row">Индекс строки.</param>
         /// <param name="column">Индекс столбца.</param>
         /// <param name="titleColWidth">ширина столбца 'Название'.</param>
         /// <param name="articulColWidth">ширина столбца 'Артикул'.</param>
-        private static void FillExcelRow(Excel.Worksheet ExcelWorkSheet, OperationDetails operDet, int row, int column, int titleColWidth, int articulColWidth)
+        private static void FillExcelRow(IXLWorksheet worksheet, OperationDetails operDet, int row, int column, int titleColWidth, int articulColWidth)
         {
-            SetStringExcelNumberFormatForArticulAndStorageCell(ExcelWorkSheet, row, column);
+            SetStringExcelNumberFormatForArticulAndStorageCell(worksheet, row, column);
             // Устанавливаем перенос по словам для всей строки
-            ExcelWorkSheet.Rows[row].WrapText = true;
+            worksheet.Row(row).Style.Alignment.WrapText = true;
 
-            ExcelWorkSheet.Cells[row, column + 2] = operDet.SparePart.Articul;
-            ExcelWorkSheet.Cells[row, column + 3] = operDet.SparePart.Title;
+            worksheet.Cell(row, column).Value = operDet.SparePart.Manufacturer;
+            worksheet.Cell(row, column + 1).Value = operDet.SparePart.StorageCell;
+            worksheet.Cell(row, column + 2).Value = operDet.SparePart.Articul;
+            worksheet.Cell(row, column + 3).Value = operDet.SparePart.Title;
+            worksheet.Cell(row, column + 4).Value = operDet.SparePart.MeasureUnit;
+            worksheet.Cell(row, column + 5).Value = operDet.Count;
+            worksheet.Cell(row, column + 6).Value = operDet.Price;
+            worksheet.Cell(row, column + 7).Value = operDet.Price * operDet.Count;
+
             //Выравнивание диапазона строк.
-            ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).VerticalAlignment = Excel.Constants.xlCenter;
-            ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString()).HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;                     
-
-            ExcelWorkSheet.Cells[row, column] = operDet.SparePart.Manufacturer;
-            ExcelWorkSheet.Cells[row, column + 1] = operDet.SparePart.StorageCell;
-            ExcelWorkSheet.Cells[row, column + 4] = operDet.SparePart.MeasureUnit;
-            ExcelWorkSheet.Cells[row, column + 5] = operDet.Count;
-            ExcelWorkSheet.Cells[row, column + 6] = operDet.Price;
-            ExcelWorkSheet.Cells[row, column + 7] = operDet.Price * operDet.Count;
+            var range = worksheet.Range($"A{row}:H{row}");
+            range.Style.Alignment.Vertical = ClosedXML.Excel.XLAlignmentVerticalValues.Center;
+            range.Style.Alignment.Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Left;
         }
 
-        private static void SetStringExcelNumberFormatForArticulAndStorageCell(Excel.Worksheet excelWorkSheet, int row, int column)
+        private static void SetStringExcelNumberFormatForArticulAndStorageCell(IXLWorksheet worksheet, int row, int column)
         {
-            excelWorkSheet.Cells[row, column + 1].NumberFormat = excelWorkSheet.Cells[row, column + 2].NumberFormat = "@";
+            //worksheet.Cell(row, column + 1).DataType = worksheet.Cell(row, column + 2).DataType = ClosedXML.Excel.XLDataType.Text; 
         }
 
         /// <summary>
         /// Выводим 'Итого' в заданной клетке.
         /// </summary>
-        /// <param name="ExcelWorkSheet">Рабочий лист.</param>
+        /// <param name="worksheet">Рабочий лист.</param>
         /// <param name="inTotal">Общая сумма операции.</param>
         /// <param name="row">Индекс строки.</param>
         /// <param name="column">Индекс столбца.</param>
-        private static void InTotalExcelOutput(Excel.Worksheet ExcelWorkSheet, float inTotal, int row, int column)
+        private static void InTotalExcelOutput(IXLWorksheet worksheet, float inTotal, int row, int column)
         {
             //В зависимости от длины выводимой "Итого" размещаем её или точно под колонкой "сумма" или левее.
             int indent = 0; //отступ
@@ -251,56 +230,62 @@ namespace PartsApp.ExcelHelper
                 indent = 1;
             }
 
-            ExcelWorkSheet.Cells[row, column + 5 + indent] = "Итого : ";
-            ExcelWorkSheet.Cells[row, column + 6 + indent] = inTotal.ToString("0.00");
-            ExcelWorkSheet.Cells[row, column + 6 + indent].Font.Underline = true;
-            ExcelWorkSheet.Cells[row, column + 6 + indent].Font.Size = ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Size = 12;
-            ExcelWorkSheet.Cells[row, column + 6 + indent].Font.Bold = ExcelWorkSheet.Cells[row, column + 5 + indent].Font.Bold = true;
-            ExcelWorkSheet.get_Range("G" + row.ToString(), "H" + row.ToString()).Cells.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+            worksheet.Cell(row, column + 5 + indent).Value = "Итого : ";
+            worksheet.Cell(row, column + 5 + indent).Style.Font.Bold = true;
+            worksheet.Cell(row, column + 5 + indent).Style.Font.FontSize = 12;
+
+            worksheet.Cell(row, column + 6 + indent).Value = inTotal.ToString("0.00");
+            worksheet.Cell(row, column + 6 + indent).Style.Font.Bold = true;
+            worksheet.Cell(row, column + 6 + indent).Style.Font.FontSize = 12;
+            worksheet.Cell(row, column + 6 + indent).Style.Font.Underline = XLFontUnderlineValues.Single;
+
+            worksheet.Range(row, column + 5 + indent, row, column + 6 + indent).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
         }
 
         /// <summary>
         /// Заполняет заданную строку Id операции и датой.
         /// </summary>
-        /// <param name="ExcelWorkSheet">Рабочий лист</param>
+        /// <param name="worksheet">Рабочий лист</param>
         /// <param name="operation">Объект операции.</param>
         /// <param name="row">Индекс строки</param>
         /// <param name="column">Индекс столбца</param>
-        private static void OperationIdAndDateExcelOutput(Excel.Worksheet ExcelWorkSheet, IOperation operation, int row)
+        private static void OperationIdAndDateExcelOutput(IXLWorksheet worksheet, IOperation operation, ref int row)
         {
             string titlePattern = operation is Purchase ? "Приходная накладная №{0} от {1}г." : "Расходная накладная №{0} от {1}г.";
 
-            Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString());
-            excelCells.Merge(true);
-            excelCells.Font.Bold = true;
-            excelCells.Font.Underline = true;
-            excelCells.Font.Size = 18;
-            excelCells.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-            excelCells.Value = String.Format(titlePattern, operation.OperationId, operation.OperationDate.ToString("dd/MM/yyyy"));
+            var titleRange = worksheet.Range(row, 1, row, 8);
+            titleRange.Merge();
+
+            titleRange.Value = string.Format(titlePattern, operation.OperationId, operation.OperationDate.ToString("dd/MM/yyyy"));
+            titleRange.Style.Font.FontSize = 18;
+            titleRange.Style.Font.Bold = true;
+            titleRange.Style.Font.Underline = XLFontUnderlineValues.Single;
+            titleRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
         }
 
         /// <summary>
         /// Выводит заметку об операции.
         /// </summary>
-        /// <param name="ExcelWorkSheet">Рабочий лист</param>
+        /// <param name="worksheet">Рабочий лист</param>
         /// <param name="description">заметка</param>
         /// <param name="row">Индекс строки</param>
         /// <param name="column">Индекс столбца</param>
-        private static void DescriptionExcelOutput(Excel.Worksheet ExcelWorkSheet, string description, ref int row, int column)
+        private static void DescriptionExcelOutput(IXLWorksheet worksheet, string description, ref int row, int column)
         {
             if (description != null)
             {
-                //Делаем визуальное отделение информации от заметки, с помощью линии.
-                ExcelWorkSheet.Cells[row, column].Value = "                                                                                                                                                                                                                                 ";//longEmptyString.ToString();
-                ExcelWorkSheet.Cells[row, column].Font.Underline = true;
-                //Выводим заметку
+                //Делаем визуальное отделение информации от заметки с помощью пустой строки.
+                worksheet.Cell(row, column).Value = new string(' ', 200);
+                worksheet.Cell(row, column).Style.Font.Underline = XLFontUnderlineValues.Single;
                 row++;
-                // объединим область ячеек  строки "вместе"? для вывода операции.
-                Excel.Range excelCells = ExcelWorkSheet.get_Range("A" + row.ToString(), "H" + row.ToString());
-                excelCells.Merge(true);
-                excelCells.WrapText = true;
-                excelCells.Value = description;
-                AutoFitMergedCellRowHeight((ExcelWorkSheet.Cells[row, column] as Excel.Range));
+
+                // объединяем ячейки, присваиваем значение description объединённой ячейке и настраиваем перенос
+                var descriptionRange = worksheet.Range(row, column, row, column + 7);
+                descriptionRange.Merge();
+                descriptionRange.Value = description;
+                descriptionRange.Style.Alignment.WrapText = true;
+
+                worksheet.Row(row).AdjustToContents();
             }
         }
 
@@ -308,10 +293,10 @@ namespace PartsApp.ExcelHelper
         /// Устанавливает ширину столбцов.
         /// </summary>
         /// <param name="availabilityList">Коллекция эл-тов заполняюхий таблицу</param>
-        /// <param name="titleCol">Столбец "Название".</param>
-        /// <param name="articulCol">Столбец "Артикул".</param>
-        /// <param name="manufCol">Столбец "Производитель".</param>
-        private static void SetColumnsWidth(IList<OperationDetails> operDetList, Excel.Range titleCol, Excel.Range articulCol, Excel.Range manufCol)
+        /// <param name="titleColumn">Столбец "Название".</param>
+        /// <param name="articulColumn">Столбец "Артикул".</param>
+        /// <param name="manufacturerColumn">Столбец "Производитель".</param>
+        private static void SetColumnsWidth(IList<OperationDetails> operDetList, IXLColumn titleColumn, IXLColumn articulColumn, IXLColumn manufacturerColumn)
         {
             //Устанавливаем ширину первой Колонок
             double titleColWidth = 30; // -- Взято методом тыка.  
@@ -319,154 +304,23 @@ namespace PartsApp.ExcelHelper
             int manufColWidth = 15, minManufColWidth = 8; //  -- Взято методом тыка.
 
             //Проверяем по факту максимальную длину колонки Manufacturer и если она меньше заявленной длины, дополняем лишнее в Title
-            int maxManufLenght = 0;
-            var sparePartsManufacturers = operDetList.Select(od => od.SparePart.Manufacturer).Where(man => man != null);
+            int maxManufacturerColumnLength = 0;
+            var sparePartsManufacturers = operDetList.Select(od => od.SparePart.Manufacturer).Where(m => m != null);
             if (sparePartsManufacturers.Count() > 0)
             {
-                maxManufLenght = sparePartsManufacturers.Max(man => man.Length);
+                maxManufacturerColumnLength = sparePartsManufacturers.Max(m => m.Length);
             }
 
-            if (maxManufLenght < manufColWidth)
+            if (maxManufacturerColumnLength < manufColWidth)
             {
-                int different = manufColWidth - maxManufLenght; //разница между дефолтной шириной столбца и фактической.
+                int different = manufColWidth - maxManufacturerColumnLength; //разница между дефолтной шириной столбца и фактической.
                 titleColWidth += (manufColWidth - different < minManufColWidth) ? minManufColWidth : different;
                 manufColWidth = (manufColWidth - different < minManufColWidth) ? minManufColWidth : manufColWidth - different;
             }
-            manufCol.Columns.ColumnWidth = manufColWidth;
-            articulCol.Columns.ColumnWidth = articulColWidth;
-            titleCol.Columns.ColumnWidth = titleColWidth;
-        }
 
-        private static void AutoFitMergedCellRowHeight(Excel.Range rng)
-        {
-            double mergedCellRgWidth = 0;
-            double rngWidth, possNewRowHeight;
-
-            if (rng.MergeCells)
-            {
-                // здесь использована самописная функция перевода стиля R1C1 в A1                
-                if (xlRCtoA1(rng.Row, rng.Column) == xlRCtoA1(rng.Range["A1"].Row, rng.Range["A1"].Column))
-                {
-                    rng = rng.MergeArea;
-                    if (rng.Rows.Count == 1 && rng.WrapText == true)
-                    {
-                        (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = false;
-                        rngWidth = rng.Cells.Item[1, 1].ColumnWidth;
-                        mergedCellRgWidth = GetRangeWidth(rng);
-                        rng.MergeCells = false;
-                        rng.Cells.Item[1, 1].ColumnWidth = mergedCellRgWidth;
-                        rng.EntireRow.AutoFit();
-                        possNewRowHeight = rng.RowHeight;
-                        rng.Cells.Item[1, 1].ColumnWidth = rngWidth;
-                        rng.MergeCells = true;
-                        rng.RowHeight = possNewRowHeight;
-                        (rng.Parent as Excel._Worksheet).Application.ScreenUpdating = true;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Возвращает ширину заданной области.
-        /// </summary>
-        /// <param name="rng">Область ширина которой считается.</param>
-        /// <returns></returns>
-        private static double GetRangeWidth(Excel.Range rng)
-        {
-            double rngWidth = 0;
-            for (int i = 1; i <= rng.Columns.Count; ++i)
-            {
-                rngWidth += rng.Cells.Item[1, i].ColumnWidth;
-            }
-            return rngWidth;
-        }
-
-        private static string xlRCtoA1(int ARow, int ACol, bool RowAbsolute = false, bool ColAbsolute = false)
-        {
-            int A1 = 'A' - 1;  // номер "A" минус 1 (65 - 1 = 64)
-            int AZ = 'Z' - A1; // кол-во букв в англ. алфавите (90 - 64 = 26)
-
-            int t, m;
-            string S;
-
-            t = ACol / AZ; // целая часть
-            m = (ACol % AZ); // остаток?
-            if (m == 0)
-            {
-                t--;
-            }
-            if (t > 0)
-            {
-                S = Convert.ToString((char)(A1 + t));
-            }
-            else
-            {
-                S = String.Empty;
-            }
-
-            if (m == 0)
-            {
-                t = AZ;
-            }
-            else
-            {
-                t = m;
-            }
-
-            S = S + (char)(A1 + t);
-
-            //весь адрес.
-            if (ColAbsolute)
-            {
-                S = '$' + S;
-            }
-            if (RowAbsolute)
-            {
-                S = S + '$';
-            }
-
-            S = S + ARow.ToString();
-            return S;
-        }
-
-        public static string GetValidExcelBookTitle(string title)
-        {
-            if (TrySetDefaultTitle(title, out string defaultTitle))
-            {
-                return defaultTitle;
-            }
-
-            var forbiddenSymbols = new char[] { '/', '\\', '|', ':', '*', '?', '"', '<', '>', ',', '\'', '~', '`', '?', '.' };
-            var validatedString = new StringBuilder();
-
-            foreach (var c in title)
-            {
-                if (forbiddenSymbols.Contains(c))
-                {
-                    validatedString.Append(' ');
-                }
-                else
-                {
-                    validatedString.Append(c);
-                }
-            }
-
-            string clearedTitle = Regex.Replace(validatedString.ToString(), @"\s+", " ");
-            clearedTitle = clearedTitle.Trim();
-
-            return TrySetDefaultTitle(clearedTitle, out string defaultT) ? defaultT : clearedTitle;
-        }
-
-        private static bool TrySetDefaultTitle(string title, out string result)
-        {
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                result = $"{DateTime.Now:dd-MM-yyyy}_PartsApp";
-                return true;
-            }
-
-            result = default;
-            return false;
+            manufacturerColumn.Width = manufColWidth;
+            articulColumn.Width = articulColWidth;
+            titleColumn.Width = titleColWidth;
         }
 
         private static string GetOperationTitle(IOperation operation)
@@ -478,7 +332,7 @@ namespace PartsApp.ExcelHelper
 
             }
 
-            return $"№{operation.OperationId}_{operation.OperationDate:dd-MM-yyyy}_{operation.Contragent.ContragentName}{paymentTypeInfo}";
+            return $"№{operation.OperationId}_{operation.OperationDate:dd-MM-yyyy}{(string.IsNullOrWhiteSpace(paymentTypeInfo) ? "" : paymentTypeInfo)}";
         }
     }
 }
