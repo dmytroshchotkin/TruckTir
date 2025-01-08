@@ -47,7 +47,7 @@ namespace PartsApp.ExcelHelper
                 FillExcelList(worksheet, spareParts);
 
                 string filePath = ExcelFilesStorageHelper.TempSparePartsListsFilesPath;
-                ExcelFilesStorageHelper.SaveWorkbookToTempDirectoryAndOpenForPreview(workbook, filePath);
+                ExcelFilesStorageHelper.SaveExcelFile(workbook, filePath, true);
             }
         }
 

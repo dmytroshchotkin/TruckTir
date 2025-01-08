@@ -84,18 +84,15 @@ namespace PartsApp.ExcelHelper
         internal static void TryAddDuplicateNumberToFileName(ref string path)
         {
             int duplicateNumber = 1;
-            string pathWithExtension = $"{path}.{ExcelFilesStorageHelper.ExcelFilesExtension}";
+            string pathWithoutExtension = Path.GetFileNameWithoutExtension(path);
+            string extension = Path.GetExtension(path);
 
-            while (File.Exists(pathWithExtension))
+            while (File.Exists(path))
             {
                 duplicateNumber++;
-                pathWithExtension = $"{path}({duplicateNumber}).{ExcelFilesStorageHelper.ExcelFilesExtension}";
+                path = $"{pathWithoutExtension}({duplicateNumber}){extension}";
             }
 
-            if (duplicateNumber > 1)
-            {
-                path = $"{path}({duplicateNumber})";
-            }
         }
 
         internal static void TryAddDuplicateNumberToDirectoryName(ref string path)
@@ -250,5 +247,18 @@ namespace PartsApp.ExcelHelper
                 }
             }
         }
+
+        internal static void SaveExcelFile(IXLWorkbook workbook, string filePath, bool shouldOpenFile)
+        {
+            TryAddDuplicateNumberToFileName(ref filePath);
+            workbook.SaveAs(filePath);
+
+            if (shouldOpenFile)
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = filePath, UseShellExecute = true });
+
+            }
+        }
+
     }
 }
