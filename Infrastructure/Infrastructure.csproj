@@ -106,6 +106,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
+      <Project>{b75ead82-42e9-4949-9980-b2aec589f256}</Project>
+      <Name>BusinessLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
       <Project>{4561bdf6-a883-4c7e-be88-0d4009a365f6}</Project>
       <Name>Models</Name>
