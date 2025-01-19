@@ -341,7 +341,7 @@
             this.BeginDateDTP.TabIndex = 5;
             this.toolTip1.SetToolTip(this.BeginDateDTP, "Начальная дата");
             this.BeginDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
-            this.BeginDateDTP.ValueChanged += new System.EventHandler(this.DatesDTP_ValueChanged);
+            this.BeginDateDTP.CloseUp += new System.EventHandler(this.DatesDTP_CloseUp);
             // 
             // EndDatePanel
             // 
@@ -378,7 +378,7 @@
             this.EndDateDTP.TabIndex = 5;
             this.toolTip1.SetToolTip(this.EndDateDTP, "Конечная дата");
             this.EndDateDTP.Value = new System.DateTime(2017, 9, 21, 0, 0, 0, 0);
-            this.EndDateDTP.ValueChanged += new System.EventHandler(this.DatesDTP_ValueChanged);
+            this.EndDateDTP.CloseUp += new System.EventHandler(this.DatesDTP_CloseUp);
             // 
             // OperationDetailsGroupBox
             // 
