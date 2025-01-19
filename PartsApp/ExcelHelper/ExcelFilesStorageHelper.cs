@@ -225,5 +225,25 @@ namespace PartsApp.ExcelHelper
 
             return path;
         }
+
+        public static void CleanupTempDirectory()
+        {
+            string path = Path.Combine(Path.GetTempPath(), "TruckTir");
+            if (Directory.Exists(path))
+            {
+                var di = new DirectoryInfo(path);
+                foreach (var d in di.GetDirectories())
+                {
+                    foreach (var f in d.GetFiles())
+                    {
+                        try
+                        {
+                            f.Delete();
+                        }
+                        catch (IOException) { }
+                    }
+                }
+            }
+        }
     }
 }

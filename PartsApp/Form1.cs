@@ -909,6 +909,7 @@ namespace PartsApp
             if (CurEmployee?.EmployeeId == 1)
             {
                 PartsDAL.CreateLocalBackup(); //создаём локальный бэкап.
+                ExcelFilesStorageHelper.CleanupTempDirectory();
             }
         }
     }
