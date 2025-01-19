@@ -94,12 +94,18 @@ namespace PartsApp
             if (!CurEmployee.IsAdmin)
             {
                 purchaseToolStripMenuItem.Enabled = false; //Блокируем возможность приходовать товар
+                saleToolStripMenuItem.Enabled = false; // Блокируем возможность продавать и просматривать продажи
                 addNewSpToolStripMenuItem.Enabled = false; //Блокируем возм-ть добавлять новые единицы товара
                 editSparePartToolStripMenuItem.Enabled = false;  //Блокируем возм-ть редактировать данные об единиице товара.
                 addNewSupplierToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять нового поставщика.
                 addNewCustomerToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять нового клиента.
                 addNewEmployeeToolStripMenuItem.Enabled = false; //Блок-ем возм-ть добавлять сотрудников.
                 configButton.Visible = false; // блокируем возможность менять путь сохранения Excel файлов
+
+                // скрываем столбцы с ценами и наценкой
+                SellingPriceCol.Visible = false;
+                SellingPriceExtCol.Visible = false;
+                MarkupExtCol.Visible = false;
             }
         }
         #region Работа с Excel.
