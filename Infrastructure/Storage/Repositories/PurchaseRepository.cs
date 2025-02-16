@@ -1,4 +1,5 @@
-﻿using Infrastructure.Storage.PropertiesHandlers;
+﻿using BusinessLogic;
+using Infrastructure.Storage.PropertiesHandlers;
 using PartsApp.Models;
 using System;
 using System.Collections.Generic;
@@ -187,8 +188,10 @@ namespace Infrastructure.Storage.Repositories
                             purchase.OperationDetailsList[0].Operation.OperationId = purchase.OperationId; //Меняем на Id нового прихода
                             foreach (OperationDetails operDet in purchase.OperationDetailsList)
                             {
-                                //Присваиваем мин. цену прихода для данного товара.
-                                operDet.Price = FindMinSparePartPurchasePrice(operDet.SparePart.SparePartId);
+                                // Устанавливаем среднюю цену по последним приходам
+                                var priceHandler = new ReturnPriceHandler(operDet);
+                                var operations = FindPurchasesDetails(operDet.SparePart.SparePartId);
+                                priceHandler.SetMeanPrice(operations);
 
                                 //Вставляем записи в PurchaseDetails и Avaliability.
                                 AddPurchaseDetail(operDet, cmd);
@@ -323,6 +326,39 @@ namespace Infrastructure.Storage.Repositories
             }
 
             return purchases;
+        }
+
+        /// <summary>
+        /// Возвращает детали операции последних приходов в заданном количестве
+        /// </summary>
+        /// <param name="sparePart">Товар</param>
+        /// <param name="purchasesLimit">Количество последних приходов для расчёта</param>
+        /// <returns></returns>
+        public static List<OperationDetails> FindPurchasesDetails(int sparePartId, int purchasesLimit = 4)
+        {
+            var purchaseDetails = new List<OperationDetails>();
+            using (SQLiteConnection connection = DbConnectionHelper.GetDatabaseConnection(DbConnectionHelper.ConnectionString) as SQLiteConnection)
+            {
+                connection.Open();
+
+                string query = $"SELECT * FROM PurchaseDetails pd JOIN Purchases p ON pd.OperationId = p.OperationId " +
+                    $"WHERE pd.SparePartId = @SparePartId ORDER BY p.OperationDate DESC LIMIT {purchasesLimit};";
+
+                SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.AddWithValue("@SparePartId", sparePartId);
+
+                using (SQLiteDataReader dataReader = cmd.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        purchaseDetails.Add(CreateOperationDetails(dataReader));
+                    }
+                }
+
+                connection.Close();
+            }
+
+            return purchaseDetails;
         }
 
         /// <summary>
@@ -525,6 +561,17 @@ namespace Infrastructure.Storage.Repositories
             (
                 sparePart: SparePartRepository.FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
                 operation: operat,
+                count: Convert.ToSingle(dataReader["Count"]),
+                price: Convert.ToSingle(dataReader["Price"])
+            );
+        }
+
+        private static OperationDetails CreateOperationDetails(SQLiteDataReader dataReader)
+        {
+            return new OperationDetails
+            (
+                sparePart: SparePartRepository.FindSparePart(Convert.ToInt32(dataReader["SparePartId"])),
+                operation: FindPurchase(Convert.ToInt32(dataReader["OperationId"])),
                 count: Convert.ToSingle(dataReader["Count"]),
                 price: Convert.ToSingle(dataReader["Price"])
             );
