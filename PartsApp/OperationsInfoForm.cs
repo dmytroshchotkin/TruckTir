@@ -19,6 +19,9 @@ namespace PartsApp
 {
     public partial class OperationsInfoForm : Form
     {
+        private DateTime _currentBeginDateTime;
+        private DateTime _currentEndDateTime;
+
         public OperationsInfoForm()
         {
             InitializeComponent();
@@ -26,11 +29,9 @@ namespace PartsApp
 
         private void OperationsInfoForm_Load(object sender, EventArgs e)
         {
-            //Устанавливаем стартовый период в месяц. (Убираем а затем добавляем событие ValueChanged на BeginDateDTP, для того чтобы метод DatesDTP_ValueChanged не вызвался дважды.)
-            BeginDateDTP.ValueChanged -= new System.EventHandler(this.DatesDTP_ValueChanged);
-            BeginDateDTP.Value = DateTime.Today.AddMonths(-1);
-            EndDateDTP.Value = DateTime.Now;
-            BeginDateDTP.ValueChanged += new System.EventHandler(this.DatesDTP_ValueChanged);
+            BeginDateDTP.Value = _currentBeginDateTime = DateTime.Today.AddMonths(-1);
+            EndDateDTP.Value = _currentEndDateTime = DateTime.Now;
+            FillTheOperationDGV();
         }
 
         /// <summary>
@@ -38,9 +39,14 @@ namespace PartsApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DatesDTP_ValueChanged(object sender, EventArgs e)
+        private void DatesDTP_CloseUp(object sender, EventArgs e)
         {
-            FillTheOperationDGV(); //Заполняем таблицу операций.
+            if (BeginDateDTP.Value.Date != _currentBeginDateTime.Date || EndDateDTP.Value.Date != _currentEndDateTime.Date)
+            {
+                FillTheOperationDGV(); //Заполняем таблицу операций.
+                _currentBeginDateTime = BeginDateDTP.Value;
+                _currentEndDateTime = EndDateDTP.Value;
+            }            
         }
 
         /// <summary>
